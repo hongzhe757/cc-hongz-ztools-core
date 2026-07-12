@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 
 /**
@@ -14,6 +15,11 @@ import java.nio.file.Files;
  * @author hongzhe.qin
  */
 public final class FileUtil {
+
+    /**
+     * JAR 文件扩展名.
+     */
+    public static final String JAR_FILE_EXT = ".jar";
 
     /**
      * 私有构造，禁止实例化.
@@ -175,6 +181,19 @@ public final class FileUtil {
      */
     public static String getType(final File file) throws IORuntimeException {
         return FileTypeUtil.getType(file);
+    }
+
+    /**
+     * 根据URL获取文件对象.
+     *
+     * @param url URL
+     * @return 文件对象
+     */
+    public static File file(final URL url) {
+        if (url == null) {
+            return null;
+        }
+        return new File(url.getFile());
     }
 
     // --------------------------------------- Static method end

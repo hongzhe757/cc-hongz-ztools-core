@@ -1,5 +1,12 @@
 # 变更日志
 
+## 2026-07-12
+
+- **迁移 `net` 包**：自 Hutool `hutool-core` 迁入 `RFC3986`、`URLEncodeUtil`、`URLDecoder` 至 `cc.hongz.ztools.core.net`，基于已有的 `PercentCodec`（BitSet）实现 RFC3986 编码层级（UNRESERVED → PCHAR → SEGMENT → PATH → QUERY → FRAGMENT）
+- **重构 `URLUtil`**：encode/decode 方法从 JDK `URLEncoder`/`URLDecoder` + 字符串替换改为委托 `URLEncodeUtil`/`URLDecoder`，消除字面量 `%2F` 被错误替换的缺陷，减少 166 行代码
+- **补强 `CharUtil`**：新增 `isNumber`、`isHexChar`、`digit16` 方法（`URLDecoder` 依赖）
+- 新增单元测试 3 类 75 个用例：`URLEncodeUtilTest`（44）、`URLDecoderTest`（22）、`RFC3986Test`（9）；`URLUtilTest` 保持 105 个用例全通过；总计 **180** 个用例
+
 ## 2026-06-22
 
 - `RadixUtil` 34/59 选型说明迁入 **模块 `README.md`**「RadixUtil 任意进制」；源码 Javadoc 改为摘要 + 指向 README

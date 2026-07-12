@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.io;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -8,7 +9,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.nio.charset.Charset;
 
 import cc.hongz.ztools.core.util.HexUtil;
 
@@ -222,6 +226,22 @@ public final class IoUtil {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    /**
+     * 获取 {@link BufferedReader}.
+     *
+     * @param in      输入流
+     * @param charset 字符集
+     * @return {@link BufferedReader}
+     */
+    public static BufferedReader getReader(final InputStream in, final Charset charset) {
+        if (in == null) {
+            return null;
+        }
+        final Charset cs = charset == null ? Charset.defaultCharset() : charset;
+        final Reader reader = new InputStreamReader(in, cs);
+        return new BufferedReader(reader);
     }
 
     /**

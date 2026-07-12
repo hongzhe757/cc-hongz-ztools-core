@@ -15,8 +15,8 @@ Hongz 平台 **核心公共库**（`jar`），对应 Hutool **`hutool-core`**，
 
 | 维度 | Hutool `hutool-core` | 本模块 `hongz-ztools-core` |
 |------|----------------------|----------------------------|
-| 源文件数 | **713** | **75**（约 11%） |
-| 顶层包 | 24 个 | 8 个 |
+| 源文件数 | **713** | **78**（约 11%） |
+| 顶层包 | 24 个 | 9 个 |
 
 | 包 | Hutool 文件数 | 已迁入 | 说明 |
 |----|---------------|--------|------|
@@ -28,8 +28,9 @@ Hongz 平台 **核心公共库**（`jar`），对应 Hutool **`hutool-core`**，
 | `lang` | 127 | **8** | Assert、Filter、Segment、UUID、Mutable… |
 | `math` | 7 | **1** | Calculator |
 | `exceptions` | 9 | **7** | UtilException、ExceptionUtil（轻量）、StatefulException… |
+| `net` | 7 | **3** | RFC3986、URLEncodeUtil、URLDecoder（URL 编解码） |
 
-尚未迁入的主要包：`lang`（剩余）、`collection`、`convert`、`date`（Hutool 版）、`map`、`bean`、`reflect`、`net`、`thread`、`compress` 等。
+尚未迁入的主要包：`lang`（剩余）、`collection`、`convert`、`date`（Hutool 版）、`map`、`bean`、`reflect`、`thread`、`compress` 等。
 
 ### 依赖层次（决定迁移顺序）
 
@@ -96,7 +97,7 @@ Hongz 平台 **核心公共库**（`jar`），对应 Hutool **`hutool-core`**，
 | `date`（43） | 已有 IVICS `DateUtil`；Hutool 版功能更全但体积大 |
 | `bean` / `reflect` | IVICS 自有 `ReflectUtils`；Hutool 链依赖最深 |
 | `io` 剩余 | `ResourceUtil`、`FileWatcher` 等按文件上传 / 配置场景再迁 |
-| `net` / `thread` / `compress` | 有对应场景再迁 |
+| `thread` / `compress` | 有对应场景再迁 |
 | `annotation` / `compiler` / `swing` | **建议不迁** |
 
 ### 暂不建议迁入
@@ -117,8 +118,9 @@ Hongz 平台 **核心公共库**（`jar`），对应 Hutool **`hutool-core`**，
 第 1 批：ByteUtil + RadixUtil + Filter          ✅ 已完成
 第 2 批：Segment + DefaultSegment + PageUtil    ✅ 已完成
 第 3 批：lang.UUID + exceptions 补齐            ✅ 已完成
-第 4 批：IterUtil → ReUtil（按方法子集）        ← 建议下一批
-第 5 批：评估 CollUtil 子集 / IdUtil 链
+第 4 批：net 包（URLUtil + URLEncodeUtil + URLDecoder + RFC3986）  ✅ 已完成
+第 5 批：IterUtil → ReUtil（按方法子集）        ← 建议下一批
+第 6 批：评估 CollUtil 子集 / IdUtil 链
 ```
 
 每批 checklist：
@@ -292,6 +294,32 @@ Hutool codec 目录已整体迁入 `hongz-ztools-core`，按用途分类如下�
 
 ---
 
+## URL 编解码（`cc.hongz.ztools.core.net`）
+
+自 Hutool `hutool-core` 迁入，基于 `PercentCodec`（BitSet）实现 RFC3986 编码规范。
+
+### RFC3986 编码层级
+
+| 方法 | 规范 | 保留字符 |
+|------|------|---------|
+| `encodeAll` | UNRESERVED | ALPHA / DIGIT / `-` / `.` / `_` / `~` |
+| `encodePathSegment` | SEGMENT | pchar（不含 `/`） |
+| `encode` | PATH | pchar + `/` |
+| `encodeQuery` | QUERY | pchar + `/` + `?` |
+| `encodeFragment` | FRAGMENT | 同 QUERY |
+
+### 类说明
+
+| 类 | 对齐 Hutool | 说明 |
+|---|---|---|
+| `RFC3986` | `cn.hutool.core.net.RFC3986` | 编码字符集常量（UNRESERVED、PCHAR、SEGMENT、PATH、QUERY、FRAGMENT 等） |
+| `URLEncodeUtil` | `cn.hutool.core.net.URLEncodeUtil` | URL 编码工具，提供五种层级编码方法 |
+| `URLDecoder` | `cn.hutool.core.net.URLDecoder` | URL 解码工具，独立实现不依赖 JDK `URLDecoder`，非法 `%` 序列不抛异常 |
+
+`URLUtil` 的 encode/decode 方法委托给 `URLEncodeUtil`/`URLDecoder`，保持 API 不变。
+
+---
+
 ## 常见编码方式对照（公开资料）
 
 下表列出业界常见编码及在本模块中的状态，便于选型与后续扩展。
@@ -301,7 +329,7 @@ Hutool codec 目录已整体迁入 `hongz-ztools-core`，按用途分类如下�
 | Hex（Base16） | 每字节 2 个十六进制字符 | **已有** `Base16Codec` |
 | Base32 / Base58 / Base62 / Base64 | Base-N 族 | **已有** 对应类 |
 | Base64URL | JWT、OAuth 无 padding 变体 | **已有** `Base64.encodeUrlSafe` 等 |
-| URL 百分号编码 | `application/x-www-form-urlencoded` | **已有** `PercentCodec` |
+| URL 百分号编码 | RFC 3986 / `application/x-www-form-urlencoded` | **已有** `PercentCodec`、`RFC3986`、`URLEncodeUtil`、`URLDecoder` |
 | Punycode / IDNA | 国际化域名 | **已有** `PunyCode` |
 | Quoted-Printable | MIME 邮件可打印编码 | **已有** `QuotedPrintable` |
 | UUencode / yEnc | 早期 Usenet 附件 | **已有** `UuCodec` / `YEnc` |
@@ -318,7 +346,7 @@ Hutool codec 目录已整体迁入 `hongz-ztools-core`，按用途分类如下�
 mvn -f hongz-ztools/hongz-ztools-core/pom.xml clean test
 ```
 
-测试目录与 `src/main/java` 包结构一致：`src/test/java/cc/hongz/core/**/{Class}Test.java`。`codec` 包含 **27** 个测试类，**209** 个用例。
+测试目录与 `src/main/java` 包结构一致：`src/test/java/cc/hongz/core/**/{Class}Test.java`。`codec` 包含 **27** 个测试类，**209** 个用例；`net` 包含 **3** 个测试类，**75** 个用例；`util` 包含 `URLUtilTest` **105** 个用例。
 
 ## 变更记录
 

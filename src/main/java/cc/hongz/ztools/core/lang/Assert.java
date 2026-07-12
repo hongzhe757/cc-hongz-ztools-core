@@ -69,6 +69,35 @@ public final class Assert {
     }
 
     /**
+     * 断言字符串非空白.
+     *
+     * @param str           被检查字符串
+     * @param errorMsgTemplate 错误消息模板
+     * @param params        模板参数
+     * @return 非空字符串
+     * @throws IllegalArgumentException 字符串为空白时
+     */
+    public static String notBlank(final CharSequence str,
+                                  final String errorMsgTemplate,
+                                  final Object... params) throws IllegalArgumentException {
+        if (StrUtil.isBlank(str)) {
+            throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
+        }
+        return str.toString();
+    }
+
+    /**
+     * 断言字符串非空白.
+     *
+     * @param str 被检查字符串
+     * @return 非空字符串
+     * @throws IllegalArgumentException 字符串为空白时
+     */
+    public static String notBlank(final CharSequence str) throws IllegalArgumentException {
+        return notBlank(str, "[Assertion failed] - this string argument must not be blank");
+    }
+
+    /**
      * 检查整数值是否在指定范围内（含边界）.
      *
      * @param value 值

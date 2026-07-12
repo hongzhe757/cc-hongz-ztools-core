@@ -390,6 +390,116 @@ public final class StrUtil {
     }
 
     /**
+     * 判断字符串是否非空（非 null 且长度大于 0）.
+     *
+     * @param str 字符串
+     * @return 是否非空
+     */
+    public static boolean isNotEmpty(final CharSequence str) {
+        return !isEmpty(str);
+    }
+
+    /**
+     * 去除字符串首尾空白.
+     *
+     * @param str 字符串
+     * @return 去除空白后的字符串，str 为 null 时返回 null
+     */
+    public static String trim(final CharSequence str) {
+        return str == null ? null : str.toString().trim();
+    }
+
+    /**
+     * 如果字符串不是以 prefix 开头，则添加前缀.
+     *
+     * @param str    字符串
+     * @param prefix 前缀
+     * @return 添加前缀后的字符串
+     */
+    public static String addPrefixIfNot(final CharSequence str, final CharSequence prefix) {
+        if (str == null || prefix == null) {
+            return str == null ? null : str.toString();
+        }
+        final String s = str.toString();
+        final String p = prefix.toString();
+        if (s.startsWith(p)) {
+            return s;
+        }
+        return p + s;
+    }
+
+    /**
+     * 截取字符串从开头到指定索引（不含）.
+     *
+     * @param str     字符串
+     * @param toIndex 截止索引（不含）
+     * @return 截取后的字符串
+     */
+    public static String subPre(final CharSequence str, final int toIndex) {
+        if (str == null) {
+            return null;
+        }
+        final int len = str.length();
+        if (toIndex <= 0) {
+            return EMPTY;
+        }
+        if (toIndex >= len) {
+            return str.toString();
+        }
+        return str.subSequence(0, toIndex).toString();
+    }
+
+    /**
+     * 截取字符串从指定索引到结尾.
+     *
+     * @param str       字符串
+     * @param fromIndex 起始索引（含）
+     * @return 截取后的字符串
+     */
+    public static String subSuf(final CharSequence str, final int fromIndex) {
+        if (str == null) {
+            return null;
+        }
+        final int len = str.length();
+        if (fromIndex <= 0) {
+            return str.toString();
+        }
+        if (fromIndex >= len) {
+            return EMPTY;
+        }
+        return str.subSequence(fromIndex, len).toString();
+    }
+
+    /**
+     * 查找字符在字符串中首次出现的索引.
+     *
+     * @param str        字符串
+     * @param searchChar 查找字符
+     * @return 索引，未找到返回 -1
+     */
+    public static int indexOf(final CharSequence str, final char searchChar) {
+        if (str == null) {
+            return -1;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == searchChar) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 将 null 转为空字符串.
+     *
+     * @param str 字符串
+     * @return 非空字符串
+     */
+    public static String nullToEmpty(final CharSequence str) {
+        return str == null ? EMPTY : str.toString();
+    }
+
+    /**
      * 是否与任一字符串相等（忽略大小写）.
      *
      * @param str  字符串
