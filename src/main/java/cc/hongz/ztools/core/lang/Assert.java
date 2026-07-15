@@ -115,4 +115,30 @@ public final class Assert {
     }
 
     // --------------------------------------- Static method end
+
+    /**
+     * 断言表达式为 true.
+     *
+     * @param expression       表达式
+     * @param errorMsgTemplate 错误消息模板
+     * @param params           模板参数
+     * @throws IllegalArgumentException 表达式为 false 时
+     */
+    public static void isTrue(final boolean expression,
+                              final String errorMsgTemplate,
+                              final Object... params) throws IllegalArgumentException {
+        if (!expression) {
+            throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
+        }
+    }
+
+    /**
+     * 断言表达式为 true.
+     *
+     * @param expression 表达式
+     * @throws IllegalArgumentException 表达式为 false 时
+     */
+    public static void isTrue(final boolean expression) throws IllegalArgumentException {
+        isTrue(expression, "[Assertion failed] - this expression must be true");
+    }
 }

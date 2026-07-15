@@ -151,5 +151,35 @@ public final class NumberUtil {
         return result;
     }
 
+    // --------------------------------------- equals
+
+    /**
+     * 比较大小，值相等 返回true.
+     * <p>
+     * 通过调用 {@link Double#doubleToLongBits(double)} 方法来判断是否相等，
+     * 此方法判断值相等时忽略精度，即 0.00 == 0.
+     *
+     * @param num1 数字1
+     * @param num2 数字2
+     * @return 是否相等
+     */
+    public static boolean equals(final double num1, final double num2) {
+        return Double.doubleToLongBits(num1) == Double.doubleToLongBits(num2);
+    }
+
+    /**
+     * 比较大小，值相等 返回true.
+     * <p>
+     * 通过调用 {@link Float#floatToIntBits(float)} 方法来判断是否相等，
+     * 此方法判断值相等时忽略精度，即 0.00f == 0f.
+     *
+     * @param num1 数字1
+     * @param num2 数字2
+     * @return 是否相等
+     */
+    public static boolean equals(final float num1, final float num2) {
+        return Float.floatToIntBits(num1) == Float.floatToIntBits(num2);
+    }
+
     // --------------------------------------- Static method end
 }
