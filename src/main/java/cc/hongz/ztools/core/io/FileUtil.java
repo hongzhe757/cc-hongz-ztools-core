@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 /**
@@ -181,6 +182,60 @@ public final class FileUtil {
      */
     public static String getType(final File file) throws IORuntimeException {
         return FileTypeUtil.getType(file);
+    }
+
+    /**
+     * 读取文件内容为字符串.
+     *
+     * @param file    文件
+     * @param charset 字符集，null 时使用系统默认编码
+     * @return 文件内容，file 为 null 时返回 null
+     * @throws IORuntimeException IO 异常
+     */
+    public static String readString(final File file, final Charset charset) throws IORuntimeException {
+        if (file == null) {
+            return null;
+        }
+        try {
+            final Charset cs = charset != null ? charset : Charset.defaultCharset();
+            return new String(Files.readAllBytes(file.toPath()), cs);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * 将字符串写入文件（覆盖）.
+     *
+     * @param content 字符串内容
+     * @param dest    目标文件
+     * @param charset 字符集，null 时使用系统默认编码
+     * @return 目标文件，dest 为 null 时返回 null
+     * @throws IORuntimeException IO 异常
+     */
+    public static File writeString(final String content, final File dest, final Charset charset)
+            throws IORuntimeException {
+        if (dest == null) {
+            return null;
+        }
+        try {
+            final Charset cs = charset != null ? charset : Charset.defaultCharset();
+            touch(dest);
+            Files.write(dest.toPath(), (content == null ? "" : content).getBytes(cs));
+            return dest;
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * 是否为 Windows 操作系统.
+     *
+     * @return 是否为 Windows
+     */
+    public static boolean isWindows() {
+        final String osName = System.getProperty("os.name");
+        return osName != null && osName.toLowerCase().startsWith("windows");
     }
 
     /**
