@@ -22,6 +22,26 @@ public final class StrUtil {
     public static final String EMPTY = "";
 
     /**
+     * 点号字符串 {@code "."}.
+     */
+    public static final String DOT = ".";
+
+    /**
+     * 斜杠字符串 {@code "/"}.
+     */
+    public static final String SLASH = "/";
+
+    /**
+     * 点号字符 {@code '.'}.
+     */
+    public static final char C_DOT = '.';
+
+    /**
+     * 斜杠字符 {@code '/'}.
+     */
+    public static final char C_SLASH = '/';
+
+    /**
      * 表示 null 的字符串字面量.
      */
     public static final String NULL = "null";
@@ -490,6 +510,24 @@ public final class StrUtil {
     }
 
     /**
+     * 比较两个字符串是否相等.
+     *
+     * @param str1       字符串1
+     * @param str2       字符串2
+     * @param ignoreCase 是否忽略大小写
+     * @return 是否相等
+     */
+    public static boolean equals(final CharSequence str1, final CharSequence str2, final boolean ignoreCase) {
+        if (str1 == null || str2 == null) {
+            return str1 == str2;
+        }
+        if (ignoreCase) {
+            return str1.toString().equalsIgnoreCase(str2.toString());
+        }
+        return str1.toString().equals(str2.toString());
+    }
+
+    /**
      * 将 null 转为空字符串.
      *
      * @param str 字符串
@@ -497,6 +535,94 @@ public final class StrUtil {
      */
     public static String nullToEmpty(final CharSequence str) {
         return str == null ? EMPTY : str.toString();
+    }
+
+    /**
+     * 去掉字符串前缀.
+     *
+     * @param str    字符串
+     * @param prefix 前缀
+     * @return 去掉前缀后的字符串
+     */
+    public static String removePrefix(final CharSequence str, final CharSequence prefix) {
+        if (isEmpty(str) || isEmpty(prefix)) {
+            return str == null ? null : str.toString();
+        }
+        final String s = str.toString();
+        final String p = prefix.toString();
+        if (s.startsWith(p)) {
+            return s.substring(p.length());
+        }
+        return s;
+    }
+
+    /**
+     * 如果字符串不是以 suffix 结尾，则添加后缀.
+     *
+     * @param str    字符串
+     * @param suffix 后缀
+     * @return 添加后缀后的字符串
+     */
+    public static String addSuffixIfNot(final CharSequence str, final CharSequence suffix) {
+        if (str == null || suffix == null) {
+            return str == null ? null : str.toString();
+        }
+        final String s = str.toString();
+        final String suf = suffix.toString();
+        if (s.endsWith(suf)) {
+            return s;
+        }
+        return s + suf;
+    }
+
+    /**
+     * 截取指定分隔符之前的字符串.
+     *
+     * @param string          字符串
+     * @param separator       分隔符
+     * @param isLastSeparator 是否从最后一个分隔符处截取
+     * @return 分隔符之前的字符串
+     */
+    public static String subBefore(final CharSequence string, final CharSequence separator, final boolean isLastSeparator) {
+        if (isEmpty(string) || separator == null) {
+            return string == null ? null : string.toString();
+        }
+        final String str = string.toString();
+        final String sep = separator.toString();
+        if (sep.isEmpty()) {
+            return EMPTY;
+        }
+        final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
+        if (pos == -1) {
+            return str;
+        }
+        if (pos == 0) {
+            return EMPTY;
+        }
+        return str.substring(0, pos);
+    }
+
+    /**
+     * 截取指定分隔符之前的字符串.
+     *
+     * @param string          字符串
+     * @param separator       分隔符字符
+     * @param isLastSeparator 是否从最后一个分隔符处截取
+     * @return 分隔符之前的字符串
+     */
+    public static String subBefore(final CharSequence string, final char separator, final boolean isLastSeparator) {
+        if (isEmpty(string)) {
+            return string == null ? null : EMPTY;
+        }
+        final String str = string.toString();
+        final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
+        if (pos == -1) {
+            return str;
+        }
+        if (pos == 0) {
+            return EMPTY;
+        }
+        return str.substring(0, pos);
     }
 
     /**

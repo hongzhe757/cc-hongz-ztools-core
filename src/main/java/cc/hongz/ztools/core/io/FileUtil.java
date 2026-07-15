@@ -23,6 +23,11 @@ public final class FileUtil {
     public static final String JAR_FILE_EXT = ".jar";
 
     /**
+     * Class 文件扩展名.
+     */
+    public static final String CLASS_EXT = ".class";
+
+    /**
      * 私有构造，禁止实例化.
      */
     private FileUtil() {
