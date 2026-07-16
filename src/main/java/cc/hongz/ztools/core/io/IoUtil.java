@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.Collection;
 
 import cc.hongz.ztools.core.util.HexUtil;
 
@@ -261,6 +262,52 @@ public final class IoUtil {
             } catch (IOException ignored) {
                 // ignore
             }
+        }
+    }
+
+    /**
+     * 从输入流读取全部内容为字符串.
+     *
+     * @param in      输入流
+     * @param charset 字符集
+     * @return 字符串内容
+     * @throws IORuntimeException IO 异常
+     */
+    public static String read(final InputStream in, final Charset charset) throws IORuntimeException {
+        if (in == null) {
+            return null;
+        }
+        final Charset cs = charset == null ? Charset.defaultCharset() : charset;
+        try {
+            final byte[] bytes = readBytes(in, true);
+            return new String(bytes, cs);
+        } catch (Exception e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * 从输入流按行读取内容到集合中.
+     *
+     * @param in         输入流
+     * @param charset    字符集
+     * @param collection 结果集合
+     * @param <T>        集合类型
+     * @return 结果集合
+     * @throws IORuntimeException IO 异常
+     */
+    public static <T extends Collection<String>> T readLines(final InputStream in, final Charset charset, final T collection) throws IORuntimeException {
+        final BufferedReader reader = getReader(in, charset);
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                collection.add(line);
+            }
+            return collection;
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        } finally {
+            close(reader);
         }
     }
 
