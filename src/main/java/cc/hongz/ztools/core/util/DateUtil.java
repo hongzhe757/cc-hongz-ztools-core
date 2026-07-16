@@ -1,10 +1,12 @@
 package cc.hongz.ztools.core.util;
 
+import cc.hongz.ztools.core.date.DateTime;
 import cc.hongz.ztools.core.exceptions.UtilException;
 
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -247,5 +249,101 @@ public final class DateUtil {
         long min = diff % nd % nh / nm;
         // 计算差多少秒//输出结果
         return day + "天" + hour + "小时" + min + "分钟";
+    }
+
+    // --------------------------------------- 以下为 IdcardUtil 迁移补充方法
+
+    /**
+     * 将日期字符串按指定格式解析为 {@link DateTime}.
+     *
+     * @param dateStr 日期字符串
+     * @param format  格式
+     * @return DateTime
+     */
+    public static DateTime parse(final String dateStr, final String format) {
+        if (dateStr == null || format == null) {
+            return null;
+        }
+        try {
+            return new DateTime(new SimpleDateFormat(format).parse(dateStr));
+        } catch (ParseException e) {
+            throw new UtilException("Parse date failed: " + dateStr + ", format: " + format, e);
+        }
+    }
+
+    /**
+     * 获取当前日期（DateTime 类型）.
+     *
+     * @return DateTime
+     */
+    public static DateTime date() {
+        return new DateTime();
+    }
+
+    /**
+     * 获取日期的年份.
+     *
+     * @param date 日期
+     * @return 年份
+     */
+    public static int year(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.YEAR);
+    }
+
+    /**
+     * 计算相对于 dateToCompare 的年龄（周岁）.
+     *
+     * @param birthday      生日
+     * @param dateToCompare 需要对比的日期
+     * @return 年龄
+     */
+    public static int age(final Date birthday, final Date dateToCompare) {
+        if (birthday == null) {
+            throw new IllegalArgumentException("Birthday can not be null !");
+        }
+        final Calendar cal = Calendar.getInstance();
+
+        cal.setTime(dateToCompare);
+        final int yearNow = cal.get(Calendar.YEAR);
+        final int monthNow = cal.get(Calendar.MONTH);
+        final int dayNow = cal.get(Calendar.DAY_OF_MONTH);
+
+        cal.setTime(birthday);
+        final int yearBirth = cal.get(Calendar.YEAR);
+        final int monthBirth = cal.get(Calendar.MONTH);
+        final int dayBirth = cal.get(Calendar.DAY_OF_MONTH);
+
+        int age = yearNow - yearBirth;
+        if (monthNow <= monthBirth) {
+            if (monthNow == monthBirth) {
+                if (dayNow <= dayBirth) {
+                    age--;
+                }
+            } else {
+                age--;
+            }
+        }
+        return age;
+    }
+
+    /**
+     * 是否闰年.
+     *
+     * @param year 年
+     * @return 是否闰年
+     */
+    public static boolean isLeapYear(final int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
+
+    /**
+     * 获取当前时间戳的秒数.
+     *
+     * @return 当前秒数
+     */
+    public static long currentSeconds() {
+        return System.currentTimeMillis() / 1000;
     }
 }

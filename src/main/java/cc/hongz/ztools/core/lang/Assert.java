@@ -114,6 +114,23 @@ public final class Assert {
         return value;
     }
 
+    /**
+     * 检查 long 值是否在指定范围内（含边界）.
+     *
+     * @param value 值
+     * @param min   最小值
+     * @param max   最大值
+     * @return 检查后的值
+     * @throws IllegalArgumentException 越界时
+     */
+    public static long checkBetween(final long value, final long min, final long max) {
+        if (value < min || value > max) {
+            throw new IllegalArgumentException(
+                    StrUtil.format("The value must be between {} and {}.", min, max));
+        }
+        return value;
+    }
+
     // --------------------------------------- Static method end
 
     /**

@@ -663,5 +663,78 @@ public final class StrUtil {
         return false;
     }
 
+    /**
+     * 判断字符串是否以指定字符开头.
+     *
+     * @param str    字符串
+     * @param prefix 前缀字符
+     * @return 是否以指定字符开头
+     */
+    public static boolean startWith(final CharSequence str, final char prefix) {
+        return str != null && str.length() > 0 && str.charAt(0) == prefix;
+    }
+
+    /**
+     * 获取字符串长度，如果为 null 则返回 0.
+     *
+     * @param str 字符串
+     * @return 字符串长度
+     */
+    public static int length(final CharSequence str) {
+        return str == null ? 0 : str.length();
+    }
+
+    /**
+     * 替换字符串中的指定字符序列.
+     *
+     * @param str        原字符串
+     * @param searchFor  被替换的字符序列
+     * @param replaceWith 替换的字符序列
+     * @return 替换后的字符串
+     */
+    public static String replace(final CharSequence str, final CharSequence searchFor, final CharSequence replaceWith) {
+        if (str == null || searchFor == null) {
+            return str == null ? null : str.toString();
+        }
+        return str.toString().replace(searchFor, replaceWith);
+    }
+
+    /**
+     * 隐藏字符串中指定区间的字符为“*”.
+     *
+     * @param str          字符串
+     * @param startInclude 开始位置（包含）
+     * @param endExclude   结束位置（不包含）
+     * @return 隐藏后的字符串
+     */
+    public static String hide(final CharSequence str, final int startInclude, final int endExclude) {
+        if (str == null) {
+            return null;
+        }
+        final String s = str.toString();
+        final int len = s.length();
+        final int start = Math.max(0, startInclude);
+        final int end = Math.min(len, endExclude);
+        if (start >= end || start >= len) {
+            return s;
+        }
+        final StringBuilder sb = new StringBuilder(len);
+        sb.append(s, 0, start);
+        for (int i = start; i < end; i++) {
+            sb.append('*');
+        }
+        sb.append(s, end, len);
+        return sb.toString();
+    }
+
+    /**
+     * 创建 JDK {@link StringBuilder}.
+     *
+     * @return StringBuilder
+     */
+    public static StringBuilder stringBuilder() {
+        return new StringBuilder();
+    }
+
     // --------------------------------------- Static method end
 }
