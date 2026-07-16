@@ -5,6 +5,7 @@ import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.lang.Filter;
 import cc.hongz.ztools.core.lang.NullWrapperBean;
+import cc.hongz.ztools.core.text.Convert;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -12,11 +13,18 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -75,7 +83,61 @@ public final class ReflectUtil {
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T>[] getConstructors(final Class<T> beanClass) throws SecurityException {
         Assert.notNull(beanClass);
-        return (Constructor<T>[]) beanClass.getDeclaredConstructors();
+        return (Constructor<T>[]) getConstructorsDirectly(beanClass);
+    }
+
+    /**
+     * 获得一个类中所有构造列表，直接反射获取，无缓存.
+     *
+     * @param beanClass 类
+     * @return 构造列表
+     * @throws SecurityException 安全检查异常
+     */
+    public static Constructor<?>[] getConstructorsDirectly(final Class<?> beanClass) throws SecurityException {
+        return beanClass.getDeclaredConstructors();
+    }
+
+    // --------------------------------------------------------------------------------------------------------- Field
+
+    /**
+     * 查找指定类中是否包含指定名称对应的字段，包括所有字段（包括非 public 字段），也包括父类和 Object 类的字段.
+     *
+     * @param beanClass 被查找字段的类，不能为 null
+     * @param name      字段名
+     * @return 是否包含字段
+     * @throws SecurityException 安全异常
+     */
+    public static boolean hasField(final Class<?> beanClass, final String name) throws SecurityException {
+        return null != getField(beanClass, name);
+    }
+
+    /**
+     * 获取字段名.
+     *
+     * @param field 字段
+     * @return 字段名
+     */
+    public static String getFieldName(final Field field) {
+        if (null == field) {
+            return null;
+        }
+        return field.getName();
+    }
+
+    /**
+     * 获取指定类中字段名和字段对应的有序 Map，包括其父类中的字段.
+     * 如果子类与父类中存在同名字段，则后者覆盖前者。
+     *
+     * @param beanClass 类
+     * @return 字段名和字段对应的 Map，有序
+     */
+    public static Map<String, Field> getFieldMap(final Class<?> beanClass) {
+        final Field[] fields = getFields(beanClass);
+        final LinkedHashMap<String, Field> map = new LinkedHashMap<>(fields.length);
+        for (Field field : fields) {
+            map.put(field.getName(), field);
+        }
+        return map;
     }
 
     // --------------------------------------------------------------------------------------------------------- Method - Public
@@ -309,6 +371,170 @@ public final class ReflectUtil {
         return getMethod(obj.getClass(), methodName, ClassUtil.getClasses(args));
     }
 
+    /**
+     * 忽略大小写查找指定方法，如果找不到对应的方法则返回 {@code null}.
+     *
+     * @param clazz      类
+     * @param methodName 方法名
+     * @param paramTypes 参数类型
+     * @return 方法
+     * @throws SecurityException 无权访问抛出异常
+     */
+    public static Method getMethodIgnoreCase(final Class<?> clazz, final String methodName, final Class<?>... paramTypes) throws SecurityException {
+        return getMethod(clazz, true, methodName, paramTypes);
+    }
+
+    /**
+     * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法.
+     * 此方法只检查方法名是否一致，并不检查参数的一致性。
+     *
+     * @param clazz      类
+     * @param methodName 方法名
+     * @return 方法
+     * @throws SecurityException 无权访问抛出异常
+     */
+    public static Method getMethodByName(final Class<?> clazz, final String methodName) throws SecurityException {
+        return getMethodByName(clazz, false, methodName);
+    }
+
+    /**
+     * 按照方法名查找指定方法名的方法（忽略大小写），只返回匹配到的第一个方法.
+     *
+     * @param clazz      类
+     * @param methodName 方法名
+     * @return 方法
+     * @throws SecurityException 无权访问抛出异常
+     */
+    public static Method getMethodByNameIgnoreCase(final Class<?> clazz, final String methodName) throws SecurityException {
+        return getMethodByName(clazz, true, methodName);
+    }
+
+    /**
+     * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法.
+     *
+     * @param clazz      类
+     * @param ignoreCase 是否忽略大小写
+     * @param methodName 方法名
+     * @return 方法
+     * @throws SecurityException 无权访问抛出异常
+     */
+    public static Method getMethodByName(final Class<?> clazz, final boolean ignoreCase, final String methodName) throws SecurityException {
+        if (null == clazz || StrUtil.isBlank(methodName)) {
+            return null;
+        }
+        Method res = null;
+        final Method[] methods = getMethods(clazz);
+        if (ArrayUtil.isNotEmpty(methods)) {
+            for (Method method : methods) {
+                if (StrUtil.equals(methodName, method.getName(), ignoreCase)
+                        && (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+                    res = method;
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 获得指定类过滤后的方法列表.
+     *
+     * @param clazz  查找方法的类
+     * @param filter 过滤器
+     * @return 过滤后的方法列表
+     * @throws SecurityException 安全异常
+     */
+    public static Method[] getMethods(final Class<?> clazz, final Filter<Method> filter) throws SecurityException {
+        if (null == clazz) {
+            return null;
+        }
+        return ArrayUtil.filter(getMethods(clazz), filter);
+    }
+
+    /**
+     * 是否为 equals 方法.
+     *
+     * @param method 方法
+     * @return 是否为 equals 方法
+     */
+    public static boolean isEqualsMethod(final Method method) {
+        if (method == null || 1 != method.getParameterCount() || !"equals".equals(method.getName())) {
+            return false;
+        }
+        return method.getParameterTypes()[0] == Object.class;
+    }
+
+    /**
+     * 是否为 hashCode 方法.
+     *
+     * @param method 方法
+     * @return 是否为 hashCode 方法
+     */
+    public static boolean isHashCodeMethod(final Method method) {
+        return method != null && "hashCode".equals(method.getName()) && isEmptyParam(method);
+    }
+
+    /**
+     * 是否为 toString 方法.
+     *
+     * @param method 方法
+     * @return 是否为 toString 方法
+     */
+    public static boolean isToStringMethod(final Method method) {
+        return method != null && "toString".equals(method.getName()) && isEmptyParam(method);
+    }
+
+    /**
+     * 是否为无参数方法.
+     *
+     * @param method 方法
+     * @return 是否为无参数方法
+     */
+    public static boolean isEmptyParam(final Method method) {
+        return method.getParameterCount() == 0;
+    }
+
+    /**
+     * 检查给定方法是否为 Getter 或者 Setter 方法.
+     *
+     * @param method     方法
+     * @param ignoreCase 是否忽略方法名的大小写
+     * @return 是否为 Getter 或者 Setter 方法
+     */
+    public static boolean isGetterOrSetter(final Method method, final boolean ignoreCase) {
+        if (null == method) {
+            return false;
+        }
+        final int parameterCount = method.getParameterCount();
+        if (parameterCount > 1) {
+            return false;
+        }
+        String name = method.getName();
+        if ("getClass".equals(name)) {
+            return false;
+        }
+        if (ignoreCase) {
+            name = name.toLowerCase();
+        }
+        switch (parameterCount) {
+            case 0:
+                return name.startsWith("get") || name.startsWith("is");
+            case 1:
+                return name.startsWith("set");
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * 检查给定方法是否为 Getter 或者 Setter 方法（忽略大小写）.
+     *
+     * @param method 方法
+     * @return 是否为 Getter 或者 Setter 方法
+     */
+    public static boolean isGetterOrSetterIgnoreCase(final Method method) {
+        return isGetterOrSetter(method, true);
+    }
+
     // --------------------------------------------------------------------------------------------------------- newInstance
 
     /**
@@ -362,7 +588,70 @@ public final class ReflectUtil {
         }
     }
 
-    // --------------------------------------------------------------------------------------------------------- invoke
+    /**
+     * 尝试遍历并调用此类的所有构造方法，直到构造成功并返回.
+     * 对于某些特殊的接口，按照其默认实现实例化.
+     *
+     * @param <T>  对象类型
+     * @param type 被构造的类
+     * @return 构造后的对象，构造失败返回 {@code null}
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T newInstanceIfPossible(Class<T> type) {
+        Assert.notNull(type);
+
+        // 原始类型
+        if (type.isPrimitive()) {
+            return (T) ClassUtil.getPrimitiveDefaultValue(type);
+        }
+
+        Class<?> actualType = type;
+        if (Object.class != actualType) {
+            if (actualType.isAssignableFrom(AbstractMap.class)) {
+                actualType = HashMap.class;
+            } else if (actualType.isAssignableFrom(List.class)) {
+                actualType = ArrayList.class;
+            } else if (actualType.isAssignableFrom(Set.class)) {
+                actualType = HashSet.class;
+            } else if (actualType.isAssignableFrom(Queue.class)) {
+                actualType = java.util.LinkedList.class;
+            } else if (actualType.isAssignableFrom(Deque.class)) {
+                actualType = ArrayDeque.class;
+            }
+        }
+
+        try {
+            return (T) newInstance(actualType);
+        } catch (Exception e) {
+            // ignore，默认构造不存在的情况下查找其它构造
+        }
+
+        // 枚举
+        if (actualType.isEnum()) {
+            return (T) actualType.getEnumConstants()[0];
+        }
+
+        // 数组
+        if (actualType.isArray()) {
+            return (T) java.lang.reflect.Array.newInstance(actualType.getComponentType(), 0);
+        }
+
+        final Constructor<?>[] constructors = getConstructors(actualType);
+        Class<?>[] parameterTypes;
+        for (Constructor<?> constructor : constructors) {
+            parameterTypes = constructor.getParameterTypes();
+            if (0 == parameterTypes.length) {
+                continue;
+            }
+            setAccessible(constructor);
+            try {
+                return (T) constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
+            } catch (Exception ignore) {
+                // 构造出错时继续尝试下一种构造方式
+            }
+        }
+        return null;
+    }
 
     /**
      * 执行静态方法.
@@ -375,6 +664,70 @@ public final class ReflectUtil {
      */
     public static <T> T invokeStatic(final Method method, final Object... args) throws UtilException {
         return invoke(null, method, args);
+    }
+
+    /**
+     * 执行方法，执行前要检查给定参数.
+     *
+     * @param <T>    返回对象类型
+     * @param obj    对象，如果执行静态方法，此值为 {@code null}
+     * @param method 方法
+     * @param args   参数对象
+     * @return 结果
+     * @throws UtilException 一些列异常的包装
+     */
+    public static <T> T invokeWithCheck(final Object obj, final Method method, final Object... args) throws UtilException {
+        final Class<?>[] types = method.getParameterTypes();
+        if (null != args) {
+            Assert.isTrue(args.length == types.length, "Params length [{}] is not fit for param length [{}] of method !", args.length, types.length);
+            Class<?> type;
+            for (int i = 0; i < args.length; i++) {
+                type = types[i];
+                if (type.isPrimitive() && null == args[i]) {
+                    args[i] = ClassUtil.getDefaultValue(type);
+                }
+            }
+        }
+        return invoke(obj, method, args);
+    }
+
+    /**
+     * 执行方法，原始方法，不包装异常.
+     *
+     * @param <T>    返回对象类型
+     * @param obj    对象
+     * @param method 方法
+     * @param args   参数
+     * @return 结果
+     * @throws InvocationTargetException 目标方法执行异常
+     * @throws IllegalAccessException    访问异常
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T invokeRaw(final Object obj, final Method method, final Object... args) throws InvocationTargetException, IllegalAccessException {
+        setAccessible(method);
+
+        final Class<?>[] parameterTypes = method.getParameterTypes();
+        final Object[] actualArgs = new Object[parameterTypes.length];
+        if (null != args) {
+            for (int i = 0; i < actualArgs.length; i++) {
+                if (i >= args.length || null == args[i]) {
+                    actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
+                } else if (args[i] instanceof NullWrapperBean) {
+                    actualArgs[i] = null;
+                } else if (!parameterTypes[i].isAssignableFrom(args[i].getClass())) {
+                    try {
+                        final Object targetValue = Convert.convert(parameterTypes[i], args[i]);
+                        actualArgs[i] = (null != targetValue) ? targetValue : args[i];
+                    } catch (Exception e) {
+                        actualArgs[i] = parseBasicType(parameterTypes[i], args[i]);
+                    }
+                } else {
+                    actualArgs[i] = args[i];
+                }
+            }
+        }
+
+        return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, actualArgs);
     }
 
     /**
@@ -526,7 +879,7 @@ public final class ReflectUtil {
      */
     public static Field getField(final Class<?> beanClass, final String name) throws SecurityException {
         final Field[] fields = getFields(beanClass);
-        return ArrayUtil.firstMatch((field) -> name.equals(field.getName()), fields);
+        return ArrayUtil.firstMatch((field) -> name.equals(getFieldName(field)), fields);
     }
 
     /**
@@ -572,6 +925,117 @@ public final class ReflectUtil {
         return result;
     }
 
+    /**
+     * 获取静态字段值.
+     *
+     * @param field 字段
+     * @return 字段值
+     * @throws UtilException 包装 IllegalAccessException 异常
+     */
+    public static Object getStaticFieldValue(final Field field) throws UtilException {
+        return getFieldValue(null, field);
+    }
+
+    /**
+     * 获取所有字段的值.
+     *
+     * @param obj bean 对象，如果是 static 字段，此处为类 class
+     * @return 字段值数组
+     */
+    public static Object[] getFieldsValue(final Object obj) {
+        return getFieldsValue(obj, null);
+    }
+
+    /**
+     * 获取所有字段的值.
+     *
+     * @param obj    bean 对象，如果是 static 字段，此处为类 class
+     * @param filter 字段过滤器，{@code null} 返回原集合
+     * @return 字段值数组
+     */
+    public static Object[] getFieldsValue(final Object obj, final Filter<Field> filter) {
+        if (null != obj) {
+            final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass(), filter);
+            if (null != fields) {
+                final Object[] result = new Object[fields.length];
+                for (int i = 0; i < fields.length; i++) {
+                    result[i] = getFieldValue(obj, fields[i]);
+                }
+                return result;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 设置字段值.
+     * 若值类型与字段类型不一致，则会尝试通过 {@link Convert} 进行转换.
+     * 若字段类型是原始类型而传入的值是 null，则会将字段设置为对应原始类型的默认值.
+     *
+     * @param obj       对象，static 字段则此处传 Class
+     * @param fieldName 字段名
+     * @param value     值
+     * @throws UtilException 包装 IllegalAccessException 异常
+     */
+    public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws UtilException {
+        Assert.notNull(obj);
+        Assert.notBlank(fieldName);
+
+        final Field field = getField((obj instanceof Class) ? (Class<?>) obj : obj.getClass(), fieldName);
+        Assert.notNull(field, "Field [{}] is not exist in [{}]", fieldName, obj.getClass().getName());
+        setFieldValue(obj, field, value);
+    }
+
+    /**
+     * 设置字段值.
+     * 若值类型与字段类型不一致，则会尝试通过 {@link Convert} 进行转换.
+     * 若字段类型是原始类型而传入的值是 null，则会将字段设置为对应原始类型的默认值.
+     *
+     * @param obj   对象，如果是 static 字段，此参数为 null
+     * @param field 字段
+     * @param value 值
+     * @throws UtilException 包装 IllegalAccessException 异常
+     */
+    public static void setFieldValue(final Object obj, final Field field, final Object value) throws UtilException {
+        Assert.notNull(field, "Field in [{}] not exist !", obj);
+
+        final Class<?> fieldType = field.getType();
+        Object actualValue = value;
+        if (null != actualValue) {
+            if (!fieldType.isAssignableFrom(actualValue.getClass())) {
+                try {
+                    final Object targetValue = Convert.convert(fieldType, actualValue);
+                    if (null != targetValue) {
+                        actualValue = targetValue;
+                    }
+                } catch (Exception ignored) {
+                    // Convert 不支持的转换（如 String→Number），尝试基本解析
+                    actualValue = parseBasicType(fieldType, actualValue);
+                }
+            }
+        } else {
+            actualValue = ClassUtil.getDefaultValue(fieldType);
+        }
+
+        setAccessible(field);
+        try {
+            field.set(obj instanceof Class ? null : obj, actualValue);
+        } catch (IllegalAccessException e) {
+            throw new UtilException(e, "IllegalAccess for {}.{}", obj, field.getName());
+        }
+    }
+
+    /**
+     * 是否为父类引用字段.
+     * 当字段所在类是对象子类时，会自动生成一个以 "this$0" 为名称的字段，指向父类对象.
+     *
+     * @param field 字段
+     * @return 是否为父类引用字段
+     */
+    public static boolean isOuterClassField(final Field field) {
+        return "this$0".equals(field.getName());
+    }
+
     // --------------------------------------------------------------------------------------------------------- Private
 
     /**
@@ -593,5 +1057,39 @@ public final class ReflectUtil {
             sb.append(parameters[i].getName());
         }
         return sb.toString();
+    }
+
+    /**
+     * 基本类型解析，用于 Convert.convert 不支持的转换场景（如 String→Number）.
+     *
+     * @param targetType 目标类型
+     * @param value      值
+     * @return 解析后的值，解析失败返回原值
+     */
+    private static Object parseBasicType(final Class<?> targetType, final Object value) {
+        if (!(value instanceof String)) {
+            return value;
+        }
+        final String str = (String) value;
+        try {
+            if (targetType == int.class || targetType == Integer.class) {
+                return Integer.parseInt(str);
+            } else if (targetType == long.class || targetType == Long.class) {
+                return Long.parseLong(str);
+            } else if (targetType == double.class || targetType == Double.class) {
+                return Double.parseDouble(str);
+            } else if (targetType == float.class || targetType == Float.class) {
+                return Float.parseFloat(str);
+            } else if (targetType == boolean.class || targetType == Boolean.class) {
+                return Boolean.parseBoolean(str);
+            } else if (targetType == short.class || targetType == Short.class) {
+                return Short.parseShort(str);
+            } else if (targetType == byte.class || targetType == Byte.class) {
+                return Byte.parseByte(str);
+            }
+        } catch (NumberFormatException ignored) {
+            // 解析失败返回原值
+        }
+        return value;
     }
 }

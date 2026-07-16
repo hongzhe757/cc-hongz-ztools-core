@@ -13,6 +13,16 @@ public final class MapUtil {
     }
 
     /**
+     * Map 是否为空.
+     *
+     * @param map map
+     * @return 是否为空
+     */
+    public static boolean isEmpty(final Map<?, ?> map) {
+        return map == null || map.isEmpty();
+    }
+
+    /**
      * Map 是否非空.
      *
      * @param map map

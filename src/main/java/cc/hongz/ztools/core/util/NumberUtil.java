@@ -2,6 +2,8 @@ package cc.hongz.ztools.core.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.Objects;
 
 /**
  * 数字计算工具类（captcha 最小子集 + 阶段 1 Segment 依赖）.
@@ -179,6 +181,110 @@ public final class NumberUtil {
      */
     public static boolean equals(final float num1, final float num2) {
         return Float.floatToIntBits(num1) == Float.floatToIntBits(num2);
+    }
+
+    /**
+     * 比较大小，值相等 返回true.
+     * <p>
+     * 此方法修复传入long型数据由于没有本类型重载方法,导致数据精度丢失
+     *
+     * @param num1 数字1
+     * @param num2 数字2
+     * @return 是否相等
+     */
+    public static boolean equals(final long num1, final long num2) {
+        return num1 == num2;
+    }
+
+    /**
+     * 比较数字值是否相等，相等返回{@code true}.
+     * <p>
+     * 需要注意的是{@link BigDecimal}需要特殊处理，
+     * BigDecimal使用compareTo方式判断，因为使用equals方法也判断小数位数，如2.0和2.00就不相等，
+     * 此方法判断值相等时忽略精度的，即0.00 == 0
+     *
+     * @param number1 数字1
+     * @param number2 数字2
+     * @return 是否相等
+     */
+    public static boolean equals(final Number number1, final Number number2) {
+        if (number1 instanceof BigDecimal && number2 instanceof BigDecimal) {
+            return equals((BigDecimal) number1, (BigDecimal) number2);
+        }
+        if (number1 == null || number2 == null) {
+            return number1 == number2;
+        }
+        return toBigDecimal(number1).compareTo(toBigDecimal(number2)) == 0;
+    }
+
+    /**
+     * 比较大小，值相等 返回true.
+     * <p>
+     * 此方法通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等，
+     * 此方法判断值相等时忽略精度的，即0.00 == 0
+     *
+     * @param bigNum1 数字1
+     * @param bigNum2 数字2
+     * @return 是否相等
+     */
+    public static boolean equals(final BigDecimal bigNum1, final BigDecimal bigNum2) {
+        if (bigNum1 == bigNum2) {
+            return true;
+        }
+        if (bigNum1 == null || bigNum2 == null) {
+            return false;
+        }
+        return 0 == bigNum1.compareTo(bigNum2);
+    }
+
+    /**
+     * 检查是否为有效的数字.
+     * <p>
+     * 检查Double和Float是否为无限大，或者Not a Number，非数字类型和Null将返回true
+     *
+     * @param number 被检查类型
+     * @return 检查结果，非数字类型和Null将返回true
+     */
+    /**
+     * 四舍五入.
+     *
+     * @param number       数字
+     * @param scale        保留小数位数
+     * @param roundingMode 舍入模式
+     * @return BigDecimal
+     */
+    public static BigDecimal round(final BigDecimal number, final int scale, final RoundingMode roundingMode) {
+        if (null == number) {
+            return BigDecimal.ZERO;
+        }
+        if (scale < 0) {
+            return number.setScale(0, roundingMode == null ? RoundingMode.HALF_UP : roundingMode);
+        }
+        return number.setScale(scale, roundingMode == null ? RoundingMode.HALF_UP : roundingMode);
+    }
+
+    /**
+     * 四舍五入.
+     *
+     * @param v            数值
+     * @param scale        保留小数位数
+     * @param roundingMode 舍入模式
+     * @return BigDecimal
+     */
+    public static BigDecimal round(final double v, final int scale, final RoundingMode roundingMode) {
+        return round(toBigDecimal(v), scale, roundingMode);
+    }
+
+    public static boolean isValidNumber(final Number number) {
+        if (null == number) {
+            return false;
+        }
+        if (number instanceof Double) {
+            return (!(((Double) number).isInfinite())) && (!(((Double) number).isNaN()));
+        } else if (number instanceof Float) {
+            return (!(((Float) number).isInfinite())) && (!(((Float) number).isNaN()));
+        }
+        return true;
     }
 
     // --------------------------------------- Static method end

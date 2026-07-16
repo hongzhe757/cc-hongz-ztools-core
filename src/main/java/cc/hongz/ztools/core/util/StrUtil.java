@@ -736,5 +736,30 @@ public final class StrUtil {
         return new StringBuilder();
     }
 
+    /**
+     * 移除字符串中所有指定字符.
+     *
+     * @param str   原字符串
+     * @param chars 要移除的字符
+     * @return 移除后的字符串
+     */
+    public static String removeAll(final CharSequence str, final char... chars) {
+        if (str == null || chars == null || chars.length == 0) {
+            return str == null ? null : str.toString();
+        }
+        final int len = str.length();
+        if (len == 0) {
+            return str.toString();
+        }
+        final StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            final char c = str.charAt(i);
+            if (!ArrayUtil.contains(chars, c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
     // --------------------------------------- Static method end
 }
