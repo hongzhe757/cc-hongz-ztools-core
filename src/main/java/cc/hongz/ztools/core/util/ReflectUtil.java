@@ -8,6 +8,7 @@ import cc.hongz.ztools.core.lang.NullWrapperBean;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -456,6 +457,119 @@ public final class ReflectUtil {
             accessibleObject.setAccessible(true);
         }
         return accessibleObject;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- Field
+
+    /**
+     * 获得一个类中所有字段列表，包括其父类中的字段.
+     * <br>
+     * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
+     *
+     * @param beanClass 类
+     * @return 字段列表
+     * @throws SecurityException 安全检查异常
+     */
+    public static Field[] getFields(final Class<?> beanClass) throws SecurityException {
+        Assert.notNull(beanClass);
+        return getFieldsDirectly(beanClass, true);
+    }
+
+    /**
+     * 获得一个类中所有满足条件的字段列表，包括其父类中的字段.
+     *
+     * @param beanClass   类
+     * @param fieldFilter field 过滤器，过滤掉不需要的 field，{@code null} 返回原集合
+     * @return 字段列表
+     * @throws SecurityException 安全检查异常
+     */
+    public static Field[] getFields(final Class<?> beanClass, final Filter<Field> fieldFilter) throws SecurityException {
+        return ArrayUtil.filter(getFields(beanClass), fieldFilter);
+    }
+
+    /**
+     * 获得一个类中所有字段列表，直接反射获取，无缓存.
+     * <br>
+     * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
+     *
+     * @param beanClass            类
+     * @param withSuperClassFields 是否包括父类的字段列表
+     * @return 字段列表
+     * @throws SecurityException 安全检查异常
+     */
+    public static Field[] getFieldsDirectly(final Class<?> beanClass, final boolean withSuperClassFields) throws SecurityException {
+        Assert.notNull(beanClass);
+
+        Field[] allFields = null;
+        Class<?> searchType = beanClass;
+        Field[] declaredFields;
+        while (searchType != null) {
+            declaredFields = searchType.getDeclaredFields();
+            if (null == allFields) {
+                allFields = declaredFields;
+            } else {
+                allFields = ArrayUtil.append(allFields, declaredFields);
+            }
+            searchType = withSuperClassFields ? searchType.getSuperclass() : null;
+        }
+
+        return allFields;
+    }
+
+    /**
+     * 查找指定类中的指定 name 的字段（包括非 public 字段），也包括父类和 Object 类的字段，字段不存在则返回 {@code null}.
+     *
+     * @param beanClass 被查找字段的类，不能为 null
+     * @param name      字段名
+     * @return 字段
+     * @throws SecurityException 安全异常
+     */
+    public static Field getField(final Class<?> beanClass, final String name) throws SecurityException {
+        final Field[] fields = getFields(beanClass);
+        return ArrayUtil.firstMatch((field) -> name.equals(field.getName()), fields);
+    }
+
+    /**
+     * 获取字段值.
+     *
+     * @param obj       对象，如果 static 字段，此处为类
+     * @param fieldName 字段名
+     * @return 字段值
+     * @throws UtilException 包装 IllegalAccessException 异常
+     */
+    public static Object getFieldValue(final Object obj, final String fieldName) throws UtilException {
+        if (null == obj || StrUtil.isBlank(fieldName)) {
+            return null;
+        }
+        return getFieldValue(obj, getField(obj instanceof Class ? (Class<?>) obj : obj.getClass(), fieldName));
+    }
+
+    /**
+     * 获取字段值.
+     *
+     * @param obj   对象，static 字段则此字段为 null
+     * @param field 字段
+     * @return 字段值
+     * @throws UtilException 包装 IllegalAccessException 异常
+     */
+    public static Object getFieldValue(final Object obj, final Field field) throws UtilException {
+        if (null == field) {
+            return null;
+        }
+        Object target = obj;
+        if (obj instanceof Class) {
+            // 静态字段获取时对象为 null
+            target = null;
+        }
+
+        setAccessible(field);
+        Object result;
+        try {
+            result = field.get(target);
+        } catch (IllegalAccessException e) {
+            throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
+        }
+        return result;
     }
 
     // --------------------------------------------------------------------------------------------------------- Private

@@ -1,20 +1,20 @@
 package cc.hongz.ztools.core.lang;
 
 /**
- * 过滤器函数式接口（Hutool 阶段 1 迁入）.
+ * 过滤器接口.
  * <p>
- * 用于集合、IO 等场景的谓词式过滤.
+ * 迁移自 hutool {@code cn.hutool.core.lang.Filter}.
  *
- * @author Looly
+ * @param <T> 被过滤的类型
+ * @author looly
  */
 @FunctionalInterface
 public interface Filter<T> {
-
-	/**
-	 * 是否接受给定对象.
-	 *
-	 * @param t 待检查对象
-	 * @return 接受返回 true，否则 false
-	 */
-	boolean accept(T t);
+    /**
+     * 是否接受对象.
+     *
+     * @param t 检查的对象
+     * @return 是否接受对象
+     */
+    boolean accept(T t);
 }

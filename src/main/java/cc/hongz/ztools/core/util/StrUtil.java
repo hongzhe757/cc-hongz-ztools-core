@@ -626,6 +626,25 @@ public final class StrUtil {
     }
 
     /**
+     * 字符串是否包含指定字符.
+     *
+     * @param str       字符串
+     * @param searchChar 查找字符
+     * @return 是否包含
+     */
+    public static boolean contains(final CharSequence str, final char searchChar) {
+        if (str == null) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == searchChar) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 是否与任一字符串相等（忽略大小写）.
      *
      * @param str  字符串
