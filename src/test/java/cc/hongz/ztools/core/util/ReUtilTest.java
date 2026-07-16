@@ -36,9 +36,9 @@ class ReUtilTest {
 
     @Test
     void getWithPatternTest() {
-        Pattern pattern = Pattern.compile("\\w{2}");
+        Pattern pattern = Pattern.compile("(\\w)(\\w)");
         assertEquals("ZZ", ReUtil.getGroup0(pattern, content));
-        assertEquals("Za", ReUtil.getGroup1(pattern, content));
+        assertEquals("Z", ReUtil.getGroup1(pattern, content));
     }
 
     @Test
@@ -53,7 +53,7 @@ class ReUtilTest {
     @Test
     void getNullTest() {
         assertNull(ReUtil.get("\\d+", null, 0));
-        assertNull(ReUtil.get(null, "abc", 0));
+        assertNull(ReUtil.get((String) null, "abc", 0));
         assertNull(ReUtil.get((Pattern) null, "abc", 0));
         assertNull(ReUtil.get(Pattern.compile("\\d+"), null, 0));
     }
@@ -89,9 +89,12 @@ class ReUtilTest {
     void getAllGroupsFindAllTest() {
         Pattern pattern = Pattern.compile("(\\d+)");
         List<String> allGroups = ReUtil.getAllGroups(pattern, "12-34", true, true);
-        assertEquals(2, allGroups.size());
+        // findAll=true: first match "12" (group0="12", group1="12"), second match "34" (group0="34", group1="34")
+        assertEquals(4, allGroups.size());
         assertEquals("12", allGroups.get(0));
-        assertEquals("34", allGroups.get(1));
+        assertEquals("12", allGroups.get(1));
+        assertEquals("34", allGroups.get(2));
+        assertEquals("34", allGroups.get(3));
     }
 
     @Test
@@ -265,7 +268,8 @@ class ReUtilTest {
 
     @Test
     void countTest() {
-        assertEquals(2, ReUtil.count("\\w{3}", content));
+        // "ZZZaaabbbccc中文1234" 中 \w{3} 匹配: ZZZ, aaa, bbb, ccc, 123 = 5次
+        assertEquals(5, ReUtil.count("\\w{3}", content));
     }
 
     @Test
@@ -275,7 +279,7 @@ class ReUtilTest {
 
     @Test
     void countNullTest() {
-        assertEquals(0, ReUtil.count(null, content));
+        assertEquals(0, ReUtil.count((String) null, content));
         assertEquals(0, ReUtil.count("\\d+", null));
         assertEquals(0, ReUtil.count((Pattern) null, null));
     }
@@ -296,7 +300,7 @@ class ReUtilTest {
 
     @Test
     void containsNullTest() {
-        assertFalse(ReUtil.contains(null, "abc"));
+        assertFalse(ReUtil.contains((String) null, "abc"));
         assertFalse(ReUtil.contains("\\d+", null));
     }
 
@@ -304,22 +308,23 @@ class ReUtilTest {
 
     @Test
     void indexOfTest() {
+        // "ZZZaaabbbccc中文1234" 中 \d+ 匹配 "1234" 在 index 14
         MatchResult result = ReUtil.indexOf("\\d+", content);
         assertNotNull(result);
-        assertEquals(12, result.start());
+        assertEquals(14, result.start());
     }
 
     @Test
     void indexOfWithPatternTest() {
         MatchResult result = ReUtil.indexOf(Pattern.compile("\\d+"), content);
         assertNotNull(result);
-        assertEquals(12, result.start());
+        assertEquals(14, result.start());
     }
 
     @Test
     void indexOfNoMatchTest() {
         assertNull(ReUtil.indexOf("\\d+", "abc"));
-        assertNull(ReUtil.indexOf(null, "abc"));
+        assertNull(ReUtil.indexOf((String) null, "abc"));
     }
 
     @Test
@@ -463,7 +468,8 @@ class ReUtilTest {
 
     @Test
     void replaceFirstTest() {
-        assertEquals("ZZZbbbccc中文1234",
+        // "ZZZaaabbbccc中文1234" 中 "aa" 第一次匹配在 index 3-4，替换后为 "ZZZabbbccc中文1234"
+        assertEquals("ZZZabbbccc中文1234",
                 ReUtil.replaceFirst(Pattern.compile("aa"), content, ""));
     }
 
