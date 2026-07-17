@@ -1,0 +1,132 @@
+package cc.hongz.ztools.core.util;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
+
+/**
+ * SPI 机制中的服务加载工具类，流程如下：
+ *
+ * <pre>
+ *     1、创建接口，并创建实现类
+ *     2、ClassPath/META-INF/services 下创建与接口全限定类名相同的文件
+ *     3、文件内容填写实现类的全限定类名
+ * </pre>
+ *
+ * <p>
+ * 设计模式：工具类（Utility Class），私有构造禁止实例化，静态方法聚合 SPI 服务加载能力.
+ *
+ * <p>
+ * 相关介绍见：https://www.jianshu.com/p/3a3edbcd8f24
+ *
+ * @author looly
+ */
+public class ServiceLoaderUtil {
+
+    /**
+     * 私有构造，禁止实例化.
+     */
+    private ServiceLoaderUtil() {
+    }
+
+    /**
+     * 加载第一个可用的 Service 实现.
+     *
+     * <p>
+     * 为兼容 JDK 24+ 中 {@link ServiceLoader} 在加载服务实现时可能抛出的 {@link NoClassDefFoundError}，
+     * 此方法在调用 {@code hasNext()} 和 {@code next()} 时安全忽略异常。
+     * 当遇到依赖缺失或配置错误的实现时会自动跳过，并返回第一个可用的非空实例。
+     * </p>
+     *
+     * @param <T>   服务实现类型
+     * @param clazz 服务接口类型
+     * @return 第一个可用的非空实现，若无可用实现则返回 {@code null}
+     */
+    public static <T> T loadFirstAvailable(final Class<T> clazz) {
+        final Iterator<T> iterator = load(clazz).iterator();
+        while (true) {
+            T instance;
+            try {
+                // 注意：JDK 24+ 下 hasNext() 和 next() 均可能触发 NoClassDefFoundError
+                if (!iterator.hasNext()) {
+                    break;
+                }
+                instance = iterator.next();
+            } catch (ServiceConfigurationError | NoClassDefFoundError e) {
+                // 安全忽略当前实现，尝试下一个
+                continue;
+            }
+            if (instance != null) {
+                return instance;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 加载第一个服务，如果用户定义了多个接口实现类，只获取第一个.
+     *
+     * @param <T>   接口类型
+     * @param clazz 服务接口
+     * @return 第一个服务接口实现对象，无实现返回 {@code null}
+     */
+    public static <T> T loadFirst(final Class<T> clazz) {
+        final Iterator<T> iterator = load(clazz).iterator();
+        if (iterator.hasNext()) {
+            return iterator.next();
+        }
+        return null;
+    }
+
+    /**
+     * 加载服务.
+     *
+     * @param <T>   接口类型
+     * @param clazz 服务接口
+     * @return 服务接口实现列表
+     */
+    public static <T> ServiceLoader<T> load(final Class<T> clazz) {
+        return load(clazz, null);
+    }
+
+    /**
+     * 加载服务.
+     *
+     * @param <T>    接口类型
+     * @param clazz  服务接口
+     * @param loader {@link ClassLoader}
+     * @return 服务接口实现列表
+     */
+    public static <T> ServiceLoader<T> load(final Class<T> clazz, ClassLoader loader) {
+        return ServiceLoader.load(clazz, ObjectUtil.defaultIfNull(loader, ClassLoaderUtil::getClassLoader));
+    }
+
+    /**
+     * 加载服务并以 List 列表返回.
+     *
+     * @param <T>   接口类型
+     * @param clazz 服务接口
+     * @return 服务接口实现列表
+     */
+    public static <T> List<T> loadList(final Class<T> clazz) {
+        return loadList(clazz, null);
+    }
+
+    /**
+     * 加载服务并以 List 列表返回.
+     *
+     * @param <T>    接口类型
+     * @param clazz  服务接口
+     * @param loader {@link ClassLoader}
+     * @return 服务接口实现列表
+     */
+    public static <T> List<T> loadList(final Class<T> clazz, ClassLoader loader) {
+        final List<T> list = new ArrayList<>();
+        for (final T t : load(clazz, loader)) {
+            list.add(t);
+        }
+        return list;
+    }
+}
