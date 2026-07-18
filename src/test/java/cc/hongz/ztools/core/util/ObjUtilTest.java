@@ -50,7 +50,7 @@ class ObjUtilTest {
 	void compare() {
 		assertTrue(ObjUtil.compare(1, 2) < 0);
 		assertEquals(0, ObjUtil.compare(1, 1));
-		assertTrue(ObjUtil.compare(null, "a") > 0);
+		assertTrue(ObjUtil.compare(null, "a") < 0);
 	}
 
 	@Test

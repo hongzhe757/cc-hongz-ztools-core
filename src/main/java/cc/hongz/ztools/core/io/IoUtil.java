@@ -10,11 +10,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Collection;
 
+import cc.hongz.ztools.core.exceptions.UtilException;
+import cc.hongz.ztools.core.util.ArrayUtil;
 import cc.hongz.ztools.core.util.HexUtil;
 
 /**
@@ -308,6 +312,125 @@ public final class IoUtil {
             throw new IORuntimeException(e);
         } finally {
             close(reader);
+        }
+    }
+
+    /**
+     * 将多部分内容写到流中.
+     *
+     * @param out        输出流
+     * @param isCloseOut 写入完毕是否关闭输出流
+     * @param contents   写入的可序列化对象
+     * @throws IORuntimeException IO异常
+     */
+    public static void writeObjects(OutputStream out, boolean isCloseOut, Serializable... contents) throws IORuntimeException {
+        ObjectOutputStream osw = null;
+        try {
+            if (ArrayUtil.isEmpty(contents)) {
+                return;
+            }
+            osw = out instanceof ObjectOutputStream ? (ObjectOutputStream) out : new ObjectOutputStream(out);
+            for (Object content : contents) {
+                if (content != null) {
+                    osw.writeObject(content);
+                }
+            }
+            osw.flush();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        } finally {
+            if (isCloseOut) {
+                close(osw);
+            }
+        }
+    }
+
+    /**
+     * 从流中读取对象，即对象的反序列化.
+     *
+     * @param <T> 读取对象的类型
+     * @param in  输入流
+     * @return 反序列化后的对象
+     * @throws IORuntimeException IO异常
+     * @throws UtilException      ClassNotFoundException包装
+     */
+    public static <T> T readObj(InputStream in) throws IORuntimeException, UtilException {
+        return readObj(in, null);
+    }
+
+    /**
+     * 从流中读取对象，即对象的反序列化，读取后不关闭流.
+     *
+     * <p>
+     * 此方法使用了{@link ValidateObjectInputStream}中的黑白名单方式过滤类，用于避免反序列化漏洞
+     * </p>
+     *
+     * @param <T>   读取对象的类型
+     * @param in    输入流
+     * @param clazz 读取对象类型
+     * @return 反序列化后的对象
+     * @throws IORuntimeException IO异常
+     * @throws UtilException      ClassNotFoundException包装
+     */
+    public static <T> T readObj(InputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
+        try {
+            ValidateObjectInputStream validateIn;
+            if (in instanceof ValidateObjectInputStream) {
+                validateIn = (ValidateObjectInputStream) in;
+            } else {
+                validateIn = new ValidateObjectInputStream(in);
+            }
+            // 将类及其继承链全部加入白名单
+            if (clazz != null) {
+                addClassHierarchy(validateIn, clazz);
+            }
+            return readObj(validateIn, null);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * 将类及其所有父类、接口加入白名单.
+     *
+     * @param stream ValidateObjectInputStream
+     * @param clazz  要加入的类
+     */
+    private static void addClassHierarchy(ValidateObjectInputStream stream, Class<?> clazz) {
+        if (clazz == null || clazz == Object.class) {
+            return;
+        }
+        stream.accept(clazz);
+        addClassHierarchy(stream, clazz.getSuperclass());
+        for (Class<?> iface : clazz.getInterfaces()) {
+            addClassHierarchy(stream, iface);
+        }
+    }
+
+    /**
+     * 从流中读取对象，即对象的反序列化.
+     *
+     * @param <T>   读取对象的类型
+     * @param in    输入流，使用{@link ValidateObjectInputStream}中的黑白名单方式过滤类
+     * @param clazz 读取对象类型
+     * @return 反序列化后的对象
+     * @throws IORuntimeException IO异常
+     * @throws UtilException      ClassNotFoundException包装
+     */
+    public static <T> T readObj(ValidateObjectInputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
+        if (in == null) {
+            throw new IllegalArgumentException("The InputStream must not be null");
+        }
+        if (null != clazz) {
+            addClassHierarchy(in, clazz);
+        }
+        try {
+            //noinspection unchecked
+            return (T) in.readObject();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new UtilException(e);
         }
     }
 

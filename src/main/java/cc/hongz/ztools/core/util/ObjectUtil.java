@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.util;
 
+import cc.hongz.ztools.core.comparator.CompareUtil;
 import cc.hongz.ztools.core.exceptions.UtilException;
 
 import java.io.ByteArrayInputStream;

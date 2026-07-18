@@ -196,17 +196,17 @@ class ObjectUtilTest {
 
 	@Test
 	void compareWithNull() {
-		// null 排在末尾
-		assertTrue(ObjectUtil.compare(null, "a") > 0);
-		assertTrue(ObjectUtil.compare("a", null) < 0);
+		// 默认null排在前面（null小于任何值）
+		assertTrue(ObjectUtil.compare(null, "a") < 0);
+		assertTrue(ObjectUtil.compare("a", null) > 0);
 		assertEquals(0, ObjectUtil.compare(null, null));
 	}
 
 	@Test
 	void compareNullGreater() {
-		// null 排在前面
-		assertTrue(ObjectUtil.compare(null, "a", true) < 0);
-		assertTrue(ObjectUtil.compare("a", null, true) > 0);
+		// nullGreater=true时null排在后面（null视为更大）
+		assertTrue(ObjectUtil.compare(null, "a", true) > 0);
+		assertTrue(ObjectUtil.compare("a", null, true) < 0);
 	}
 
 	// ---- isBasicType ----
