@@ -7,29 +7,18 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 /**
- * SPI 机制中的服务加载工具类，流程如下：
+ * SPI机制中的服务加载工具类，流程如下.
  *
  * <pre>
  *     1、创建接口，并创建实现类
- *     2、ClassPath/META-INF/services 下创建与接口全限定类名相同的文件
+ *     2、ClassPath/META-INF/services下创建与接口全限定类名相同的文件
  *     3、文件内容填写实现类的全限定类名
  * </pre>
  *
- * <p>
- * 设计模式：工具类（Utility Class），私有构造禁止实例化，静态方法聚合 SPI 服务加载能力.
- *
- * <p>
- * 相关介绍见：https://www.jianshu.com/p/3a3edbcd8f24
- *
  * @author looly
+ * @since 5.1.6
  */
 public class ServiceLoaderUtil {
-
-    /**
-     * 私有构造，禁止实例化.
-     */
-    private ServiceLoaderUtil() {
-    }
 
     /**
      * 加载第一个可用的 Service 实现.
@@ -40,11 +29,12 @@ public class ServiceLoaderUtil {
      * 当遇到依赖缺失或配置错误的实现时会自动跳过，并返回第一个可用的非空实例。
      * </p>
      *
-     * @param <T>   服务实现类型
      * @param clazz 服务接口类型
+     * @param <T>   服务实现类型
      * @return 第一个可用的非空实现，若无可用实现则返回 {@code null}
+     * @see <a href="https://bugs.openjdk.org/browse/JDK-8350481">JDK-8350481</a>
      */
-    public static <T> T loadFirstAvailable(final Class<T> clazz) {
+    public static <T> T loadFirstAvailable(Class<T> clazz) {
         final Iterator<T> iterator = load(clazz).iterator();
         while (true) {
             T instance;
@@ -70,9 +60,9 @@ public class ServiceLoaderUtil {
      *
      * @param <T>   接口类型
      * @param clazz 服务接口
-     * @return 第一个服务接口实现对象，无实现返回 {@code null}
+     * @return 第一个服务接口实现对象，无实现返回{@code null}
      */
-    public static <T> T loadFirst(final Class<T> clazz) {
+    public static <T> T loadFirst(Class<T> clazz) {
         final Iterator<T> iterator = load(clazz).iterator();
         if (iterator.hasNext()) {
             return iterator.next();
@@ -87,7 +77,7 @@ public class ServiceLoaderUtil {
      * @param clazz 服务接口
      * @return 服务接口实现列表
      */
-    public static <T> ServiceLoader<T> load(final Class<T> clazz) {
+    public static <T> ServiceLoader<T> load(Class<T> clazz) {
         return load(clazz, null);
     }
 
@@ -99,34 +89,34 @@ public class ServiceLoaderUtil {
      * @param loader {@link ClassLoader}
      * @return 服务接口实现列表
      */
-    public static <T> ServiceLoader<T> load(final Class<T> clazz, ClassLoader loader) {
+    public static <T> ServiceLoader<T> load(Class<T> clazz, ClassLoader loader) {
         return ServiceLoader.load(clazz, ObjectUtil.defaultIfNull(loader, ClassLoaderUtil::getClassLoader));
     }
 
     /**
-     * 加载服务并以 List 列表返回.
+     * 加载服务并已list列表返回.
      *
      * @param <T>   接口类型
      * @param clazz 服务接口
      * @return 服务接口实现列表
      */
-    public static <T> List<T> loadList(final Class<T> clazz) {
+    public static <T> List<T> loadList(Class<T> clazz) {
         return loadList(clazz, null);
     }
 
     /**
-     * 加载服务并以 List 列表返回.
+     * 加载服务 并已list列表返回.
      *
      * @param <T>    接口类型
      * @param clazz  服务接口
      * @param loader {@link ClassLoader}
      * @return 服务接口实现列表
      */
-    public static <T> List<T> loadList(final Class<T> clazz, ClassLoader loader) {
-        final List<T> list = new ArrayList<>();
-        for (final T t : load(clazz, loader)) {
-            list.add(t);
+    public static <T> List<T> loadList(Class<T> clazz, ClassLoader loader) {
+        final List<T> result = new ArrayList<>();
+        for (T t : load(clazz, loader)) {
+            result.add(t);
         }
-        return list;
+        return result;
     }
 }

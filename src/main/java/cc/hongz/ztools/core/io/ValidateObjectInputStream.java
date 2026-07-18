@@ -11,35 +11,22 @@ import java.util.Set;
 /**
  * 带有类验证的对象流，用于避免反序列化漏洞.
  *
- * <p>
- * 通过黑白名单机制过滤反序列化类，防止反序列化远程代码执行漏洞.
- * 详细见：https://xz.aliyun.com/t/41/
- *
- * <p>
- * 设计模式：装饰器（Decorator），装饰 {@link ObjectInputStream}，增加类验证能力.
- *
  * @author looly
+ * @since 5.2.6
  */
 public class ValidateObjectInputStream extends ObjectInputStream {
 
-    /**
-     * 白名单类集合.
-     */
     private Set<String> whiteClassSet;
-
-    /**
-     * 黑名单类集合.
-     */
     private Set<String> blackClassSet;
 
     /**
      * 构造.
      *
-     * @param inputStream   输入流
+     * @param inputStream   流
      * @param acceptClasses 白名单的类
-     * @throws IOException IO 异常
+     * @throws IOException IO异常
      */
-    public ValidateObjectInputStream(final InputStream inputStream, final Class<?>... acceptClasses) throws IOException {
+    public ValidateObjectInputStream(InputStream inputStream, Class<?>... acceptClasses) throws IOException {
         super(inputStream);
         accept(acceptClasses);
     }
@@ -49,12 +36,12 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      *
      * @param refuseClasses 禁止反序列化的类
      */
-    public void refuse(final Class<?>... refuseClasses) {
+    public void refuse(Class<?>... refuseClasses) {
         if (null == this.blackClassSet) {
             this.blackClassSet = new HashSet<>();
         }
-        for (final Class<?> refuseClass : refuseClasses) {
-            this.blackClassSet.add(refuseClass.getName());
+        for (Class<?> acceptClass : refuseClasses) {
+            this.blackClassSet.add(acceptClass.getName());
         }
     }
 
@@ -63,20 +50,20 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      *
      * @param acceptClasses 接受反序列化的类
      */
-    public void accept(final Class<?>... acceptClasses) {
+    public void accept(Class<?>... acceptClasses) {
         if (null == this.whiteClassSet) {
             this.whiteClassSet = new HashSet<>();
         }
-        for (final Class<?> acceptClass : acceptClasses) {
+        for (Class<?> acceptClass : acceptClasses) {
             this.whiteClassSet.add(acceptClass.getName());
         }
     }
 
     /**
-     * 只允许反序列化白名单中的类.
+     * 只允许反序列化SerialObject class.
      */
     @Override
-    protected Class<?> resolveClass(final ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
         validateClassName(desc.getName());
         return super.resolveClass(desc);
     }
@@ -87,15 +74,14 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      * @param className 类名
      * @throws InvalidClassException 非法类
      */
-    private void validateClassName(final String className) throws InvalidClassException {
-        // 黑名单检查
+    private void validateClassName(String className) throws InvalidClassException {
+        // 黑名单
         if (this.blackClassSet != null && !this.blackClassSet.isEmpty()) {
             if (this.blackClassSet.contains(className)) {
                 throw new InvalidClassException("Unauthorized deserialization attempt by black list", className);
             }
         }
 
-        // 白名单为空时放行，否则必须在白名单中
         if (this.whiteClassSet == null || this.whiteClassSet.isEmpty() || this.whiteClassSet.contains(className)) {
             return;
         }

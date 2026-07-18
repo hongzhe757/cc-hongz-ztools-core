@@ -1,15 +1,20 @@
 package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.lang.Assert;
+import cc.hongz.ztools.core.lang.ParameterizedTypeImpl;
+import cc.hongz.ztools.core.lang.reflect.ActualTypeMapperPool;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 针对 {@link Type} 的工具类.
@@ -171,5 +176,263 @@ public final class TypeUtil {
      */
     public static boolean isUnknown(final Type type) {
         return null == type || type instanceof TypeVariable;
+    }
+
+    /**
+     * 指定泛型数组中是否含有泛型变量.
+     *
+     * @param types 泛型数组
+     * @return 是否含有泛型变量
+     * @since 4.5.7
+     */
+    public static boolean hasTypeVariable(final Type... types) {
+        for (final Type type : types) {
+            if (type instanceof TypeVariable) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取泛型变量和泛型实际类型的对应关系Map.
+     *
+     * @param clazz 被解析的包含泛型参数的类
+     * @return 泛型对应关系Map
+     */
+    public static Map<Type, Type> getTypeMap(final Class<?> clazz) {
+        return ActualTypeMapperPool.get(clazz);
+    }
+
+    // ----------------------------------------------------------------------------------- Field Type
+
+    /**
+     * 获取字段对应的Type类型.
+     * <p>方法优先获取GenericType，获取不到则获取Type
+     *
+     * @param field 字段
+     * @return {@link Type}，可能为 {@code null}
+     */
+    public static Type getType(final Field field) {
+        if (null == field) {
+            return null;
+        }
+        return field.getGenericType();
+    }
+
+    /**
+     * 获得字段的泛型类型.
+     *
+     * @param clazz     Bean类
+     * @param fieldName 字段名
+     * @return 字段的泛型类型
+     * @since 5.4.2
+     */
+    public static Type getFieldType(final Class<?> clazz, final String fieldName) {
+        return getType(ReflectUtil.getField(clazz, fieldName));
+    }
+
+    /**
+     * 获得Field对应的原始类.
+     *
+     * @param field {@link Field}
+     * @return 原始类，如果无法获取原始类，返回 {@code null}
+     * @since 3.1.2
+     */
+    public static Class<?> getClass(final Field field) {
+        return null == field ? null : field.getType();
+    }
+
+    // ----------------------------------------------------------------------------------- Param Type
+
+    /**
+     * 获取方法的第一个参数类型.
+     * <p>优先获取方法的GenericParameterTypes，如果获取不到，则获取ParameterTypes
+     *
+     * @param method 方法
+     * @return {@link Type}，可能为 {@code null}
+     * @since 3.1.2
+     */
+    public static Type getFirstParamType(final Method method) {
+        return getParamType(method, 0);
+    }
+
+    /**
+     * 获取方法的第一个参数类.
+     *
+     * @param method 方法
+     * @return 第一个参数类型，可能为 {@code null}
+     * @since 3.1.2
+     */
+    public static Class<?> getFirstParamClass(final Method method) {
+        return getParamClass(method, 0);
+    }
+
+    /**
+     * 获取方法的参数类型.
+     * <p>优先获取方法的GenericParameterTypes，如果获取不到，则获取ParameterTypes
+     *
+     * @param method 方法
+     * @param index  第几个参数的索引，从0开始计数
+     * @return {@link Type}，可能为 {@code null}
+     */
+    public static Type getParamType(final Method method, final int index) {
+        final Type[] types = getParamTypes(method);
+        if (null != types && types.length > index) {
+            return types[index];
+        }
+        return null;
+    }
+
+    /**
+     * 获取方法的参数类.
+     *
+     * @param method 方法
+     * @param index  第几个参数的索引，从0开始计数
+     * @return 参数类，可能为 {@code null}
+     * @since 3.1.2
+     */
+    public static Class<?> getParamClass(final Method method, final int index) {
+        final Class<?>[] classes = getParamClasses(method);
+        if (null != classes && classes.length > index) {
+            return classes[index];
+        }
+        return null;
+    }
+
+    /**
+     * 获取方法的参数类型列表.
+     * <p>优先获取方法的GenericParameterTypes，如果获取不到，则获取ParameterTypes
+     *
+     * @param method 方法
+     * @return {@link Type}列表，可能为 {@code null}
+     * @see Method#getGenericParameterTypes()
+     * @see Method#getParameterTypes()
+     */
+    public static Type[] getParamTypes(final Method method) {
+        return null == method ? null : method.getGenericParameterTypes();
+    }
+
+    /**
+     * 解析方法的参数类型列表.
+     *
+     * @param method 方法
+     * @return 参数类型类列表
+     * @see Method#getGenericParameterTypes()
+     * @see Method#getParameterTypes()
+     * @since 3.1.2
+     */
+    public static Class<?>[] getParamClasses(final Method method) {
+        return null == method ? null : method.getParameterTypes();
+    }
+
+    // ----------------------------------------------------------------------------------- Return Type
+
+    /**
+     * 获取方法的返回值类型.
+     * <p>获取方法的GenericReturnType
+     *
+     * @param method 方法
+     * @return {@link Type}，可能为 {@code null}
+     * @see Method#getGenericReturnType()
+     * @see Method#getReturnType()
+     */
+    public static Type getReturnType(final Method method) {
+        return null == method ? null : method.getGenericReturnType();
+    }
+
+    /**
+     * 解析方法的返回类型类列表.
+     *
+     * @param method 方法
+     * @return 返回值类型的类
+     * @see Method#getGenericReturnType()
+     * @see Method#getReturnType()
+     * @since 3.1.2
+     */
+    public static Class<?> getReturnClass(final Method method) {
+        return null == method ? null : method.getReturnType();
+    }
+
+    // ----------------------------------------------------------------------------------- Actual Type
+
+    /**
+     * 获得泛型字段对应的泛型实际类型，如果此变量没有对应的实际类型，返回null.
+     *
+     * @param type  实际类型明确的类
+     * @param field 字段
+     * @return 实际类型，可能为Class等
+     */
+    public static Type getActualType(final Type type, final Field field) {
+        if (null == field) {
+            return null;
+        }
+        return getActualType(ObjectUtil.defaultIfNull(type, field::getDeclaringClass), field.getGenericType());
+    }
+
+    /**
+     * 获得泛型变量对应的泛型实际类型，如果此变量没有对应的实际类型，返回null.
+     * <p>此方法可以处理：
+     * <pre>
+     *     1. 泛型化对象，类似于 Map&lt;User, Key&lt;Long&gt;&gt;
+     *     2. 泛型变量，类似于 T
+     * </pre>
+     *
+     * @param type         类
+     * @param typeVariable 泛型变量，例如T等
+     * @return 实际类型，可能为Class等
+     */
+    public static Type getActualType(final Type type, final Type typeVariable) {
+        if (typeVariable instanceof ParameterizedType) {
+            return getActualType(type, (ParameterizedType) typeVariable);
+        }
+
+        if (typeVariable instanceof TypeVariable) {
+            return ActualTypeMapperPool.getActualType(type, (TypeVariable<?>) typeVariable);
+        }
+        if (typeVariable instanceof GenericArrayType) {
+            final Type actualType = ActualTypeMapperPool.getActualType(type, (GenericArrayType) typeVariable);
+            if (null != actualType) {
+                return actualType;
+            }
+        }
+
+        // 没有需要替换的泛型变量，原样输出
+        return typeVariable;
+    }
+
+    /**
+     * 获得泛型变量对应的泛型实际类型，如果此变量没有对应的实际类型，返回null.
+     * <p>此方法可以处理复杂的泛型化对象，类似于 Map&lt;User, Key&lt;Long&gt;&gt;
+     *
+     * @param type              类
+     * @param parameterizedType 泛型变量，例如List&lt;T&gt;等
+     * @return 实际类型，可能为Class等
+     */
+    public static Type getActualType(final Type type, ParameterizedType parameterizedType) {
+        // 字段类型为泛型参数类型，解析对应泛型类型为真实类型，类似于 List<T> a
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+
+        // 泛型对象中含有未被转换的泛型变量
+        if (hasTypeVariable(actualTypeArguments)) {
+            actualTypeArguments = getActualTypes(type, parameterizedType.getActualTypeArguments());
+            if (ArrayUtil.isNotEmpty(actualTypeArguments)) {
+                // 替换泛型变量为实际类型，例如 List<T> 变为 List<String>
+                parameterizedType = new ParameterizedTypeImpl(actualTypeArguments, parameterizedType.getOwnerType(), parameterizedType.getRawType());
+            }
+        }
+
+        return parameterizedType;
+    }
+
+    /**
+     * 获得泛型变量对应的泛型实际类型，如果此变量没有对应的实际类型，返回null.
+     *
+     * @param type          类
+     * @param typeVariables 泛型变量数组，例如T等
+     * @return 实际类型数组，可能为Class等
+     */
+    public static Type[] getActualTypes(final Type type, final Type... typeVariables) {
+        return ActualTypeMapperPool.getActualTypes(type, typeVariables);
     }
 }

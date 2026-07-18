@@ -1,11 +1,15 @@
 package cc.hongz.ztools.core.util;
 
+import cc.hongz.ztools.core.comparator.VersionComparator;
+import cc.hongz.ztools.core.comparator.VersionComparator;
 import cc.hongz.ztools.core.text.StrBuilder;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.StringTokenizer;
 
 /**
  * 字符串工具类（captcha 最小子集）.
@@ -40,6 +44,11 @@ public final class StrUtil {
      * 斜杠字符 {@code '/'}.
      */
     public static final char C_SLASH = '/';
+
+    /**
+     * 空格字符串 {@code " "}.
+     */
+    public static final String SPACE = " ";
 
     /**
      * 表示 null 的字符串字面量.
@@ -538,6 +547,17 @@ public final class StrUtil {
     }
 
     /**
+     * 如果字符串为 {@code null}，则返回默认字符串，否则返回字符串本身.
+     *
+     * @param str        要转换的字符串
+     * @param defaultStr 默认字符串
+     * @return 字符串本身或指定的默认字符串
+     */
+    public static String nullToDefault(final CharSequence str, final String defaultStr) {
+        return (str == null) ? defaultStr : str.toString();
+    }
+
+    /**
      * 去掉字符串前缀.
      *
      * @param str    字符串
@@ -642,6 +662,20 @@ public final class StrUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 指定字符串是否在字符串中出现过.
+     *
+     * @param str       字符串
+     * @param searchStr 被查找的字符串
+     * @return 是否包含
+     */
+    public static boolean contains(final CharSequence str, final CharSequence searchStr) {
+        if (null == str || null == searchStr) {
+            return false;
+        }
+        return str.toString().contains(searchStr);
     }
 
     /**
@@ -759,6 +793,107 @@ public final class StrUtil {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 重复字符串并用分隔符连接.
+     *
+     * <pre>
+     * StrUtil.repeatAndJoin("?", 5, ",")  = "?,?,?,?,?"
+     * StrUtil.repeatAndJoin("?", 1, ",")  = "?"
+     * StrUtil.repeatAndJoin("?", 0, ",")  = ""
+     * StrUtil.repeatAndJoin("?", 5, null) = "?????"
+     * </pre>
+     *
+     * @param str       被重复的字符串
+     * @param count     数量
+     * @param delimiter 分界符
+     * @return 连接后的字符串
+     */
+    public static String repeatAndJoin(final CharSequence str, final int count, final CharSequence delimiter) {
+        if (count <= 0) {
+            return EMPTY;
+        }
+        final StringBuilder builder = new StringBuilder(str.length() * count);
+        builder.append(str);
+        int remaining = count - 1;
+
+        final boolean isAppendDelimiter = isNotEmpty(delimiter);
+        while (remaining-- > 0) {
+            if (isAppendDelimiter) {
+                builder.append(delimiter);
+            }
+            builder.append(str);
+        }
+        return builder.toString();
+    }
+
+    /**
+     * 如果字符串为空白，则返回默认字符串，否则返回字符串本身.
+     *
+     * @param str        要转换的字符串
+     * @param defaultStr 默认字符串
+     * @return 字符串本身或指定的默认字符串
+     */
+    public static String blankToDefault(final CharSequence str, final String defaultStr) {
+        return isBlank(str) ? defaultStr : str.toString();
+    }
+
+    /**
+     * 使用字符串分隔符分割字符串.
+     *
+     * @param str            被分割的字符串
+     * @param separator      分隔符
+     * @param isTrim         是否去除每个元素的空白
+     * @param ignoreEmpty    是否忽略空元素
+     * @return 分割后的列表
+     */
+    public static List<String> split(final CharSequence str, final String separator,
+                                     final boolean isTrim, final boolean ignoreEmpty) {
+        if (str == null) {
+            return null;
+        }
+        final String s = str.toString();
+        if (separator == null || separator.isEmpty()) {
+            final List<String> list = new ArrayList<>(1);
+            list.add(s);
+            return list;
+        }
+        final List<String> result = new ArrayList<>();
+        final StringTokenizer tokenizer = new StringTokenizer(s, separator, false);
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            if (isTrim) {
+                token = token.trim();
+            }
+            if (ignoreEmpty && token.isEmpty()) {
+                continue;
+            }
+            result.add(token);
+        }
+        return result;
+    }
+
+    /**
+     * 比较两个版本号的大小.
+     *
+     * @param version1 版本1
+     * @param version2 版本2
+     * @return 版本1大于版本2返回正数，等于返回0，小于返回负数
+     */
+    public static int compareVersion(final String version1, final String version2) {
+        return VersionComparator.INSTANCE.compare(version1, version2);
+    }
+
+    /**
+     * 将对象转为字符串.
+     *
+     * @param obj 对象
+     * @return 字符串，null 返回 {@code "null"}
+     * @see String#valueOf(Object)
+     */
+    public static String toString(final Object obj) {
+        return String.valueOf(obj);
     }
 
     // --------------------------------------- Static method end
