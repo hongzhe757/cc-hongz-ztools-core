@@ -434,5 +434,87 @@ public final class IoUtil {
         }
     }
 
+    /**
+     * 将字符串转为输入流.
+     *
+     * @param str     字符串
+     * @param charset 字符集
+     * @return 输入流
+     */
+    public static InputStream toStream(final String str, final Charset charset) {
+        if (str == null) {
+            return null;
+        }
+        final Charset cs = charset == null ? Charset.defaultCharset() : charset;
+        return new ByteArrayInputStream(str.getBytes(cs));
+    }
+
+    /**
+     * 拷贝流.
+     *
+     * @param in  输入流
+     * @param out 输出流
+     * @throws IORuntimeException IO异常
+     */
+    public static long copy(final InputStream in, final OutputStream out) throws IORuntimeException {
+        if (in == null || out == null) {
+            return 0;
+        }
+        try {
+            final byte[] buffer = new byte[DEFAULT_LARGE_BUFFER_SIZE];
+            long count = 0;
+            int n;
+            while (-1 != (n = in.read(buffer))) {
+                out.write(buffer, 0, n);
+                count += n;
+            }
+            return count;
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * 刷缓冲.
+     *
+     * @param out 输出流
+     * @throws IORuntimeException IO异常
+     */
+    public static void flush(final OutputStream out) throws IORuntimeException {
+        if (out != null) {
+            try {
+                out.flush();
+            } catch (IOException e) {
+                throw new IORuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * 从Reader读取全部内容.
+     *
+     * @param reader Reader
+     * @return 字符串
+     * @throws IORuntimeException IO异常
+     */
+    public static String read(final BufferedReader reader) throws IORuntimeException {
+        if (reader == null) {
+            return null;
+        }
+        try {
+            final StringBuilder sb = new StringBuilder();
+            char[] buf = new char[DEFAULT_LARGE_BUFFER_SIZE];
+            int n;
+            while (-1 != (n = reader.read(buf))) {
+                sb.append(buf, 0, n);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        } finally {
+            close(reader);
+        }
+    }
+
     // --------------------------------------- Static method end
 }

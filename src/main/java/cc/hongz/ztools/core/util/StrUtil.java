@@ -347,6 +347,43 @@ public final class StrUtil {
     }
 
     /**
+     * 按分隔符切分字符串.
+     *
+     * @param str           字符串
+     * @param separator     分隔符
+     * @param isTrim        是否去除每个元素两边的空白
+     * @param ignoreEmpty   是否忽略空元素
+     * @return 切分结果
+     */
+    public static List<String> split(final CharSequence str, final char separator,
+                                     final boolean isTrim, final boolean ignoreEmpty) {
+        if (str == null) {
+            return null;
+        }
+        final List<String> list = new ArrayList<>();
+        int start = 0;
+        final int len = str.length();
+        for (int i = 0; i < len; i++) {
+            if (str.charAt(i) == separator) {
+                final String part = str.subSequence(start, i).toString();
+                addSplitPart(list, part, isTrim, ignoreEmpty);
+                start = i + 1;
+            }
+        }
+        final String part = str.subSequence(start, len).toString();
+        addSplitPart(list, part, isTrim, ignoreEmpty);
+        return list;
+    }
+
+    private static void addSplitPart(final List<String> list, final String part,
+                                     final boolean isTrim, final boolean ignoreEmpty) {
+        final String trimmed = isTrim ? part.trim() : part;
+        if (!ignoreEmpty || !trimmed.isEmpty()) {
+            list.add(trimmed);
+        }
+    }
+
+    /**
      * 是否以指定前缀开头且两者不完全相等（忽略大小写比较相等性）.
      *
      * @param str    字符串
