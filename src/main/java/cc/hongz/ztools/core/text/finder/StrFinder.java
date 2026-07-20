@@ -22,7 +22,10 @@ public class StrFinder extends TextFinder {
 	 * @param caseInsensitive 是否忽略大小写
 	 */
 	public StrFinder(CharSequence strToFind, boolean caseInsensitive) {
-		Assert.notEmpty(strToFind);
+		Assert.notNull(strToFind, "String to find must be not null!");
+		if (strToFind.length() == 0) {
+			throw new IllegalArgumentException("String to find must not be empty");
+		}
 		this.strToFind = strToFind;
 		this.caseInsensitive = caseInsensitive;
 	}

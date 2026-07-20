@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.text.csv;
 import cc.hongz.ztools.core.io.IORuntimeException;
 import cc.hongz.ztools.core.io.IoUtil;
 
+import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
@@ -15,13 +16,13 @@ import java.io.Reader;
  */
 public class CsvTokener implements Closeable {
 
-	private final Reader raw;
+	private final BufferedReader raw;
 	private long index;
 	private int prev;
 	private boolean usePrev;
 
 	public CsvTokener(final Reader reader) {
-		this.raw = IoUtil.toBuffered(reader);
+		this.raw = (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
 	}
 
 	public int next() {

@@ -1,13 +1,11 @@
 package cc.hongz.ztools.core.text.csv;
 
 import cc.hongz.ztools.core.collection.ArrayIter;
-import cc.hongz.ztools.core.collection.CollUtil;
 import cc.hongz.ztools.core.io.FileUtil;
 import cc.hongz.ztools.core.io.IORuntimeException;
 import cc.hongz.ztools.core.io.IoUtil;
 import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.map.MapUtil;
-import cc.hongz.ztools.core.text.Convert;
 import cc.hongz.ztools.core.util.ArrayUtil;
 import cc.hongz.ztools.core.util.CharUtil;
 import cc.hongz.ztools.core.util.CharsetUtil;
@@ -21,6 +19,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -198,9 +197,21 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @throws IORuntimeException IO异常
 	 */
 	public CsvWriter write(Iterable<?> lines) throws IORuntimeException {
-		if (CollUtil.isNotEmpty(lines)) {
+		if (lines != null) {
 			for (Object values : lines) {
-				appendLine(Convert.toStrArray(values));
+				if (values instanceof String[]) {
+					appendLine((String[]) values);
+				} else if (values instanceof Collection) {
+					Collection<?> coll = (Collection<?>) values;
+					String[] arr = new String[coll.size()];
+					int i = 0;
+					for (Object item : coll) {
+						arr[i++] = String.valueOf(item);
+					}
+					appendLine(arr);
+				} else {
+					appendLine(new String[]{String.valueOf(values)});
+				}
 			}
 			flush();
 		}
@@ -218,7 +229,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		if (csvData != null) {
 			// 1、写header
 			final List<String> header = csvData.getHeader();
-			if (CollUtil.isNotEmpty(header)) {
+			if (header != null && !header.isEmpty()) {
 				this.writeHeaderLine(header.toArray(new String[0]));
 			}
 			// 2、写内容
