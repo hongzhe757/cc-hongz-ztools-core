@@ -366,7 +366,6 @@ public class MapUtil {
 			List<V> vList;
 			int vListSize;
 			for (Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
-				vList = CollUtil.newArrayList(entry.getValue().iterator().hasNext() ? null : null);
 				// 简化实现：直接遍历Iterable
 				Iterable<V> iterable = entry.getValue();
 				vList = new ArrayList<>();

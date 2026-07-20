@@ -77,6 +77,24 @@ public final class CollUtil {
     }
 
     /**
+     * 新建一个ArrayList<br>
+     * 提供的参数为null时返回空{@link ArrayList}
+     *
+     * @param <T>      集合元素类型
+     * @param iterable {@link Iterable}
+     * @return ArrayList对象
+     */
+    public static <T> ArrayList<T> newArrayList(Iterable<T> iterable) {
+        ArrayList<T> list = new ArrayList<>();
+        if (iterable != null) {
+            for (T item : iterable) {
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
+    /**
      * 将集合中的元素拼接为字符串.
      *
      * @param collection  集合

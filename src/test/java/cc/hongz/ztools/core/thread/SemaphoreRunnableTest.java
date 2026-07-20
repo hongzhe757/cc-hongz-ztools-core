@@ -1,0 +1,65 @@
+package cc.hongz.ztools.core.thread;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@DisplayName("SemaphoreRunnable 信号量Runnable")
+class SemaphoreRunnableTest {
+
+	@Test
+	@DisplayName("run - 正常执行并释放信号量")
+	void run() throws InterruptedException {
+		Semaphore semaphore = new Semaphore(1);
+		AtomicInteger counter = new AtomicInteger(0);
+		SemaphoreRunnable sr = new SemaphoreRunnable(counter::incrementAndGet, semaphore);
+		sr.run();
+		assertEquals(1, counter.get());
+		assertEquals(1, semaphore.availablePermits());
+	}
+
+	@Test
+	@DisplayName("getSemaphore - 获取信号量")
+	void getSemaphore() {
+		Semaphore semaphore = new Semaphore(2);
+		SemaphoreRunnable sr = new SemaphoreRunnable(() -> {}, semaphore);
+		assertSame(semaphore, sr.getSemaphore());
+	}
+
+	@Test
+	@DisplayName("run - 信号量为null时不执行")
+	void runWithNullSemaphore() {
+		AtomicInteger counter = new AtomicInteger(0);
+		SemaphoreRunnable sr = new SemaphoreRunnable(counter::incrementAndGet, null);
+		sr.run();
+		assertEquals(0, counter.get());
+	}
+
+	@Test
+	@DisplayName("run - 限制并发数")
+	void runLimitsConcurrency() throws InterruptedException {
+		Semaphore semaphore = new Semaphore(1);
+		AtomicInteger maxConcurrent = new AtomicInteger(0);
+		AtomicInteger currentConcurrent = new AtomicInteger(0);
+
+		Runnable task = () -> {
+			int c = currentConcurrent.incrementAndGet();
+			maxConcurrent.updateAndGet(v -> Math.max(v, c));
+			try { Thread.sleep(50); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+			currentConcurrent.decrementAndGet();
+		};
+
+		Thread t1 = new Thread(new SemaphoreRunnable(task, semaphore));
+		Thread t2 = new Thread(new SemaphoreRunnable(task, semaphore));
+		t1.start();
+		t2.start();
+		t1.join();
+		t2.join();
+
+		assertEquals(1, maxConcurrent.get());
+	}
+}
