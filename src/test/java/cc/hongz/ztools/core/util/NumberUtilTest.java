@@ -52,7 +52,7 @@ class NumberUtilTest {
     @Test
     void mulVarargs() {
         assertEquals(new BigDecimal("24"), NumberUtil.mul("2", "3", "4"));
-        assertEquals(BigDecimal.ZERO, NumberUtil.mul());
+        assertEquals(BigDecimal.ZERO, NumberUtil.mul(new String[0]));
         assertEquals(new BigDecimal("5"), NumberUtil.mul("5"));
     }
 

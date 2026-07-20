@@ -2,7 +2,9 @@ package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.lang.Assert;
+import cc.hongz.ztools.core.lang.JarClassLoader;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -15,8 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@link ClassLoader} 工具类.
  * <p>
  * 迁移自 hutool {@code cn.hutool.core.util.ClassLoaderUtil}。
- * <br>
- * 跳过了 {@code JarClassLoader} 相关方法（依赖未迁移）。
  *
  * @author Looly
  * @author hongzhe.qin (migrated &amp; enhanced)
@@ -240,6 +240,33 @@ public final class ClassLoaderUtil {
             result = PRIMITIVE_TYPE_NAME_MAP.get(name.trim());
         }
         return result;
+    }
+
+    /**
+     * 创建新的 {@link JarClassLoader}，并使用此 Classloader 加载目录下的 class 文件和 jar 文件.
+     *
+     * @param jarOrDir jar文件或者包含jar和class文件的目录
+     * @return {@link JarClassLoader}
+     * @since 4.4.2
+     */
+    public static JarClassLoader getJarClassLoader(final File jarOrDir) {
+        return JarClassLoader.load(jarOrDir);
+    }
+
+    /**
+     * 加载外部类.
+     *
+     * @param jarOrDir jar文件或者包含jar和class文件的目录
+     * @param name     类名
+     * @return 类
+     * @since 4.4.2
+     */
+    public static Class<?> loadClass(final File jarOrDir, final String name) {
+        try {
+            return getJarClassLoader(jarOrDir).loadClass(name);
+        } catch (ClassNotFoundException e) {
+            throw new UtilException(e);
+        }
     }
 
     // ----------------------------------------------------------------------------------- isPresent

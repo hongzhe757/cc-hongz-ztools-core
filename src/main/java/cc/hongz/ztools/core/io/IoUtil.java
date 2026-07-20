@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.io;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -16,9 +17,16 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.zip.Adler32;
+import java.util.zip.CheckedInputStream;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import cc.hongz.ztools.core.exceptions.UtilException;
+import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.util.ArrayUtil;
+import cc.hongz.ztools.core.util.CharsetUtil;
 import cc.hongz.ztools.core.util.HexUtil;
 
 /**
@@ -51,6 +59,18 @@ public final class IoUtil {
      */
     public static ByteArrayInputStream toStream(final byte[] content) {
         return content == null ? null : new ByteArrayInputStream(content);
+    }
+
+    /**
+     * 转换为 {@link BufferedInputStream}.
+     *
+     * @param in 原始输入流
+     * @return 缓冲输入流
+     */
+    public static BufferedInputStream toBuffered(final InputStream in) {
+        return in instanceof BufferedInputStream
+                ? (BufferedInputStream) in
+                : new BufferedInputStream(in);
     }
 
     /**
@@ -236,6 +256,40 @@ public final class IoUtil {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    /**
+     * 获取 {@link BufferedReader}，使用UTF-8编码.
+     *
+     * @param in 输入流
+     * @return {@link BufferedReader}
+     */
+    public static BufferedReader getReader(final InputStream in) {
+        return getReader(in, CharsetUtil.CHARSET_UTF_8);
+    }
+
+    /**
+     * 从{@link BOMInputStream}中获取Reader.
+     *
+     * @param in {@link BOMInputStream}
+     * @return {@link BufferedReader}
+     */
+    public static BufferedReader getReader(final BOMInputStream in) {
+        return getReader((InputStream) in, CharsetUtil.charset(in.getCharset()));
+    }
+
+    /**
+     * 获取 {@link BufferedReader}.<br>
+     * 如果是 {@link BufferedReader} 强转返回，否则新建。如果提供的Reader为null返回null
+     *
+     * @param reader 普通Reader，如果为null返回null
+     * @return {@link BufferedReader} or null
+     */
+    public static BufferedReader getReader(final Reader reader) {
+        if (null == reader) {
+            return null;
+        }
+        return (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
     }
 
     /**
@@ -514,6 +568,107 @@ public final class IoUtil {
         } finally {
             close(reader);
         }
+    }
+
+    /**
+     * 按行读取，每行处理.
+     *
+     * @param reader      {@link BufferedReader}
+     * @param lineHandler 行处理器
+     * @throws IORuntimeException IO异常
+     */
+    public static void readLines(final BufferedReader reader, final LineHandler lineHandler) throws IORuntimeException {
+        if (reader == null || lineHandler == null) {
+            return;
+        }
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lineHandler.handle(line);
+            }
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * EOF标记.
+     */
+    private static final int EOF = -1;
+
+    // --------------------------------------- Static method start
+
+    /**
+     * 对比两个流内容是否相同.
+     *
+     * @param input1 输入流1
+     * @param input2 输入流2
+     * @return 内容是否相同
+     * @throws IORuntimeException IO异常
+     */
+    public static boolean contentEquals(final InputStream input1, final InputStream input2) throws IORuntimeException {
+        final BufferedInputStream bis1 = toBuffered(input1);
+        final BufferedInputStream bis2 = toBuffered(input2);
+        try {
+            int ch = bis1.read();
+            while (EOF != ch) {
+                final int ch2 = bis2.read();
+                if (ch != ch2) {
+                    return false;
+                }
+                ch = bis1.read();
+            }
+            return bis2.read() == EOF;
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * 对比两个Reader内容是否相同，忽略EOL.
+     *
+     * @param input1 Reader1
+     * @param input2 Reader2
+     * @return 内容是否相同
+     * @throws IORuntimeException IO异常
+     */
+    public static boolean contentEqualsIgnoreEOL(final Reader input1, final Reader input2) throws IORuntimeException {
+        final BufferedReader br1 = getReader(input1);
+        final BufferedReader br2 = getReader(input2);
+        try {
+            String line1 = br1.readLine();
+            String line2 = br2.readLine();
+            while (line1 != null && line1.equals(line2)) {
+                line1 = br1.readLine();
+                line2 = br2.readLine();
+            }
+            return Objects.equals(line1, line2);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * 计算流的校验码.
+     *
+     * @param in       流
+     * @param checksum {@link Checksum}
+     * @return Checksum
+     * @throws IORuntimeException IO异常
+     */
+    public static Checksum checksum(final InputStream in, final Checksum checksum) throws IORuntimeException {
+        Assert.notNull(in, "InputStream is null !");
+        Checksum ck = checksum;
+        if (null == ck) {
+            ck = new CRC32();
+        }
+        try {
+            final CheckedInputStream cis = new CheckedInputStream(in, ck);
+            copy(cis, new NullOutputStream());
+        } finally {
+            close(in);
+        }
+        return ck;
     }
 
     // --------------------------------------- Static method end

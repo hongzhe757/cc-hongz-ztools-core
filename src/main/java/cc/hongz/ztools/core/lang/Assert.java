@@ -158,4 +158,67 @@ public final class Assert {
     public static void isTrue(final boolean expression) throws IllegalArgumentException {
         isTrue(expression, "[Assertion failed] - this expression must be true");
     }
+
+    /**
+     * 断言表达式为 false.
+     *
+     * @param expression       表达式
+     * @param errorMsgTemplate 错误消息模板
+     * @param params           模板参数
+     * @throws IllegalArgumentException 表达式为 true 时
+     */
+    public static void isFalse(final boolean expression,
+                               final String errorMsgTemplate,
+                               final Object... params) throws IllegalArgumentException {
+        if (expression) {
+            throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
+        }
+    }
+
+    /**
+     * 断言表达式为 false.
+     *
+     * @param expression 表达式
+     * @throws IllegalArgumentException 表达式为 true 时
+     */
+    public static void isFalse(final boolean expression) throws IllegalArgumentException {
+        isFalse(expression, "[Assertion failed] - this expression must be false");
+    }
+
+    /**
+     * 断言表达式为 true.
+     *
+     * @param expression       表达式
+     * @param errorMsgTemplate 错误消息模板
+     * @param params           模板参数
+     * @throws IllegalStateException 表达式为 false 时
+     */
+    public static void state(final boolean expression, final String errorMsgTemplate, final Object... params) throws IllegalStateException {
+        if (!expression) {
+            throw new IllegalStateException(StrUtil.format(errorMsgTemplate, params));
+        }
+    }
+
+    /**
+     * 断言表达式为 true.
+     *
+     * @param expression 表达式
+     * @throws IllegalStateException 表达式为 false 时
+     */
+    public static void state(final boolean expression) throws IllegalStateException {
+        state(expression, "[Assertion failed] - this state must be true");
+    }
+
+    /**
+     * 断言表达式为 true.
+     *
+     * @param expression       表达式
+     * @param errorMsgSupplier 错误消息供应器
+     * @throws IllegalStateException 表达式为 false 时
+     */
+    public static void state(final boolean expression, final Supplier<String> errorMsgSupplier) throws IllegalStateException {
+        if (!expression) {
+            throw new IllegalStateException(errorMsgSupplier.get());
+        }
+    }
 }

@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.util;
 import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.lang.func.Func1;
+import cc.hongz.ztools.core.lang.mutable.Mutable;
 import cc.hongz.ztools.core.text.Convert;
 
 import java.util.ArrayList;
@@ -231,6 +232,36 @@ public final class ReUtil {
         return result;
     }
 
+    /**
+     * 根据给定正则查找字符串中的匹配项，返回所有匹配的分组名对应分组值.
+     * <pre>
+     * pattern: (?&lt;year&gt;\d+)-(?&lt;month&gt;\d+)-(?&lt;day&gt;\d+)
+     * content: 2021-10-11
+     * result : year: 2021, month: 10, day: 11
+     * </pre>
+     *
+     * @param pattern 匹配的正则
+     * @param content 被匹配的内容
+     * @return 命名捕获组，key为分组名，value为对应值
+     * @since 5.7.15
+     */
+    public static Map<String, String> getAllGroupNames(final Pattern pattern, final CharSequence content) {
+        if (null == content || null == pattern) {
+            return null;
+        }
+        final Matcher m = pattern.matcher(content);
+        final Map<String, String> result = new HashMap<>(m.groupCount());
+        if (m.find()) {
+            // 通过反射获取 namedGroups 方法
+            @SuppressWarnings("unchecked")
+            final Map<String, Integer> map = ReflectUtil.invoke(pattern, "namedGroups");
+            if (map != null) {
+                map.forEach((key, value) -> result.put(key, m.group(value)));
+            }
+        }
+        return result;
+    }
+
     // --------------------------------------------------------------------------------------------------------- extractMulti
 
     /**
@@ -276,6 +307,53 @@ public final class ReUtil {
         }
         final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
         return extractMulti(pattern, content, template);
+    }
+
+    /**
+     * 从content中匹配出多个值并根据template生成新的字符串.
+     * 匹配结束后会删除匹配内容之前的内容（包括匹配内容）.
+     *
+     * @param pattern       匹配正则
+     * @param contentHolder 被匹配的内容的Holder，value为内容正文，经过这个方法的原文将被去掉匹配之前的内容
+     * @param template      生成内容模板，变量 $1 表示group1的内容，以此类推
+     * @return 新字符串
+     * @since 5.8.0
+     */
+    public static String extractMultiAndDelPre(final Pattern pattern, final Mutable<CharSequence> contentHolder, final String template) {
+        if (null == contentHolder || null == pattern || null == template) {
+            return null;
+        }
+
+        final HashSet<String> varNums = findAll(GROUP_VAR.pattern(), template, 1, new HashSet<>());
+
+        final CharSequence content = contentHolder.get();
+        final Matcher matcher = pattern.matcher(content);
+        if (matcher.find()) {
+            String result = template;
+            for (final String var : varNums) {
+                final int group = Integer.parseInt(var);
+                result = result.replace("$" + var, matcher.group(group));
+            }
+            contentHolder.set(content.subSequence(matcher.end(), content.length()));
+            return result;
+        }
+        return null;
+    }
+
+    /**
+     * 从content中匹配出多个值并根据template生成新的字符串.
+     *
+     * @param regex         匹配正则字符串
+     * @param contentHolder 被匹配的内容的Holder，value为内容正文，经过这个方法的原文将被去掉匹配之前的内容
+     * @param template      生成内容模板，变量 $1 表示group1的内容，以此类推
+     * @return 按照template拼接后的字符串
+     */
+    public static String extractMultiAndDelPre(final String regex, final Mutable<CharSequence> contentHolder, final String template) {
+        if (null == contentHolder || null == regex || null == template) {
+            return null;
+        }
+        final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+        return extractMultiAndDelPre(pattern, contentHolder, template);
     }
 
     // --------------------------------------------------------------------------------------------------------- del / replace

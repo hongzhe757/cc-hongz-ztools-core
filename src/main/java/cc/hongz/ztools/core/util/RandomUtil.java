@@ -7,7 +7,11 @@ import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+import cc.hongz.ztools.core.date.DateField;
+import cc.hongz.ztools.core.date.DateTime;
 import cc.hongz.ztools.core.exceptions.UtilException;
+import cc.hongz.ztools.core.lang.WeightRandom;
+import cc.hongz.ztools.core.lang.WeightRandom.WeightObj;
 
 /**
  * 随机工具类（captcha 最小子集 + 阶段 1 UUID/ByteUtil 测试依赖）.
@@ -629,6 +633,64 @@ public final class RandomUtil {
      */
     public static char randomChar() {
         return randomChar(BASE_CHAR_NUMBER);
+    }
+
+    // --------------------------------------- weightRandom
+
+    /**
+     * 带有权重的随机生成器.
+     *
+     * @param <T>        随机对象类型
+     * @param weightObjs 带有权重的对象列表
+     * @return {@link WeightRandom}
+     * @since 4.0.3
+     */
+    public static <T> WeightRandom<T> weightRandom(final WeightObj<T>[] weightObjs) {
+        return new WeightRandom<>(weightObjs);
+    }
+
+    /**
+     * 带有权重的随机生成器.
+     *
+     * @param <T>        随机对象类型
+     * @param weightObjs 带有权重的对象列表
+     * @return {@link WeightRandom}
+     * @since 4.0.3
+     */
+    public static <T> WeightRandom<T> weightRandom(final Iterable<WeightObj<T>> weightObjs) {
+        return new WeightRandom<>(weightObjs);
+    }
+
+    // --------------------------------------- randomDate
+
+    /**
+     * 以当天为基准，随机产生一个日期.
+     *
+     * @param min 偏移最小天，可以为负数表示过去的时间（包含）
+     * @param max 偏移最大天，可以为负数表示过去的时间（不包含）
+     * @return 随机日期（随机天，其它时间不变）
+     * @since 4.0.8
+     */
+    public static DateTime randomDay(final int min, final int max) {
+        return randomDate(new DateTime(), DateField.DAY_OF_YEAR, min, max);
+    }
+
+    /**
+     * 以给定日期为基准，随机产生一个日期.
+     *
+     * @param baseDate  基准日期
+     * @param dateField 偏移的时间字段，例如时、分、秒等
+     * @param min       偏移最小量，可以为负数表示过去的时间（包含）
+     * @param max       偏移最大量，可以为负数表示过去的时间（不包含）
+     * @return 随机日期
+     * @since 4.5.8
+     */
+    public static DateTime randomDate(final Date baseDate, final DateField dateField, final int min, final int max) {
+        Date date = (baseDate != null) ? baseDate : new DateTime();
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(dateField.getValue(), randomInt(min, max));
+        return new DateTime(calendar.getTime());
     }
 
     // --------------------------------------- Static method end

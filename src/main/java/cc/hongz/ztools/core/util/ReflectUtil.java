@@ -1036,6 +1036,34 @@ public final class ReflectUtil {
         return "this$0".equals(field.getName());
     }
 
+    /**
+     * 去除字段的 final 修饰符.
+     *
+     * <p>移除后可以通过反射修改 final 字段的值。
+     * 注意：此方法仅对非 JVM 内部管理的 final 字段有效。
+     *
+     * @param field 被修改的 field，不可以为空
+     * @throws UtilException IllegalAccessException 等异常包装
+     * @since 5.8.8
+     */
+    public static void removeFinalModify(final Field field) {
+        if (field == null) {
+            return;
+        }
+        if ((field.getModifiers() & Modifier.FINAL) != 0) {
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            try {
+                final Field modifiersField = Field.class.getDeclaredField("modifiers");
+                modifiersField.setAccessible(true);
+                modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            } catch (final NoSuchFieldException | IllegalAccessException e) {
+                throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
+            }
+        }
+    }
+
     // --------------------------------------------------------------------------------------------------------- Private
 
     /**

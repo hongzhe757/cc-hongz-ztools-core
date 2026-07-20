@@ -1,5 +1,7 @@
 package cc.hongz.ztools.core.io;
 
+import cc.hongz.ztools.core.util.StrUtil;
+
 /**
  * IO 运行时异常.
  * <p>
@@ -37,10 +39,42 @@ public class IORuntimeException extends RuntimeException {
     /**
      * 构造.
      *
+     * @param messageTemplate 异常消息模板（支持{}占位符）
+     * @param params 参数
+     */
+    public IORuntimeException(final String messageTemplate, final Object... params) {
+        super(StrUtil.format(messageTemplate, params));
+    }
+
+    /**
+     * 构造.
+     *
      * @param message   异常消息
      * @param throwable 原始异常
      */
     public IORuntimeException(final String message, final Throwable throwable) {
         super(message, throwable);
+    }
+
+    /**
+     * 构造.
+     *
+     * @param throwable     原始异常
+     * @param messageTemplate 异常消息模板（支持{}占位符）
+     * @param params 参数
+     */
+    public IORuntimeException(final Throwable throwable, final String messageTemplate, final Object... params) {
+        super(StrUtil.format(messageTemplate, params), throwable);
+    }
+
+    /**
+     * 导致这个异常的异常是否是指定类型的异常
+     *
+     * @param clazz 异常类
+     * @return 是否为指定类型异常
+     */
+    public boolean causeInstanceOf(Class<? extends Throwable> clazz) {
+        final Throwable cause = this.getCause();
+        return null != clazz && clazz.isInstance(cause);
     }
 }

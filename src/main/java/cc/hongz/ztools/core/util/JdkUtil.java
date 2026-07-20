@@ -24,7 +24,8 @@ public class JdkUtil {
 	 */
 	public static final int JVM_VERSION;
 	/**
-	 * 是否JDK8
+	 * 是否JDK8<br>
+	 * 由于Hutool基于JDK8编译，当使用JDK版本低于8时，不支持。
 	 */
 	public static final boolean IS_JDK8;
 	/**
@@ -71,7 +72,7 @@ public class JdkUtil {
 	private static int _getJvmVersion() {
 		int jvmVersion = -1;
 
-		try {
+		try{
 			String javaSpecVer = System.getProperty("java.specification.version");
 			if (StrUtil.isNotBlank(javaSpecVer)) {
 				if (javaSpecVer.startsWith("1.")) {
@@ -81,7 +82,7 @@ public class JdkUtil {
 					jvmVersion = Integer.parseInt(javaSpecVer);
 				}
 			}
-		} catch (Throwable ignore) {
+		} catch (Throwable ignore){
 			// 默认JDK8
 			jvmVersion = 8;
 		}
