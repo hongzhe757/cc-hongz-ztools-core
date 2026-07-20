@@ -4,11 +4,12 @@ import cc.hongz.ztools.core.comparator.VersionComparator;
 import cc.hongz.ztools.core.comparator.VersionComparator;
 import cc.hongz.ztools.core.text.StrBuilder;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.StringTokenizer;
 
 /**
@@ -894,6 +895,28 @@ public final class StrUtil {
      */
     public static String toString(final Object obj) {
         return String.valueOf(obj);
+    }
+
+    /**
+     * 获得StringReader.
+     *
+     * @param str 字符串
+     * @return StringReader
+     */
+    public static StringReader getReader(CharSequence str) {
+        if (null == str) {
+            return null;
+        }
+        return new StringReader(str.toString());
+    }
+
+    /**
+     * 获得StringWriter.
+     *
+     * @return StringWriter
+     */
+    public static StringWriter getWriter() {
+        return new StringWriter();
     }
 
     // --------------------------------------- Static method end

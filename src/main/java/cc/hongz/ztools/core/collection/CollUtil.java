@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.collection;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -24,6 +25,55 @@ public final class CollUtil {
      */
     public static boolean isEmpty(final Collection<?> collection) {
         return collection == null || collection.isEmpty();
+    }
+
+    /**
+     * 获取集合的第一个元素.
+     *
+     * @param <T>      集合元素类型
+     * @param iterable {@link Iterable}
+     * @return 第一个元素，集合为空返回null
+     */
+    public static <T> T getFirst(Iterable<T> iterable) {
+        if (iterable == null) {
+            return null;
+        }
+        if (iterable instanceof Collection) {
+            Collection<T> collection = (Collection<T>) iterable;
+            if (collection.isEmpty()) {
+                return null;
+            }
+            return collection.iterator().next();
+        }
+        Iterator<T> iterator = iterable.iterator();
+        return iterator.hasNext() ? iterator.next() : null;
+    }
+
+    /**
+     * 获取集合的第一个元素.
+     *
+     * @param <T>      集合元素类型
+     * @param iterator {@link Iterator}
+     * @return 第一个元素，迭代器为空返回null
+     */
+    public static <T> T getFirst(Iterator<T> iterator) {
+        return (iterator != null && iterator.hasNext()) ? iterator.next() : null;
+    }
+
+    /**
+     * 数组转为ArrayList.
+     *
+     * @param <T>    集合元素类型
+     * @param values 数组
+     * @return ArrayList对象
+     */
+    @SafeVarargs
+    public static <T> ArrayList<T> newArrayList(T... values) {
+        ArrayList<T> list = new ArrayList<>(values.length);
+        for (T value : values) {
+            list.add(value);
+        }
+        return list;
     }
 
     /**

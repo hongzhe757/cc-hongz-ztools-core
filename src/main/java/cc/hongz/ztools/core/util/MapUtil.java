@@ -47,4 +47,18 @@ public final class MapUtil {
         }
         return new HashMap<>(size);
     }
+
+    /**
+     * 反转Map中的键和值.
+     *
+     * @param <K> 键类型
+     * @param <V> 值类型
+     * @param map Map对象
+     * @return 互换后的Map
+     */
+    public static <K, V> Map<V, K> inverse(Map<K, V> map) {
+        final Map<V, K> result = new HashMap<>(map.size());
+        map.forEach((key, value) -> result.put(value, key));
+        return result;
+    }
 }
