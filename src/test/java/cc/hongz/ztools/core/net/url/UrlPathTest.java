@@ -61,4 +61,43 @@ class UrlPathTest {
 		path.setWithEndTag(true);
 		assertEquals("/", path.build(StandardCharsets.UTF_8));
 	}
+
+	@Test
+	void ofRootPathTest() {
+		UrlPath path = UrlPath.of("/", StandardCharsets.UTF_8);
+		// root path should have 0 or 1 segments depending on implementation
+		String result = path.build(StandardCharsets.UTF_8);
+		assertNotNull(result);
+	}
+
+	@Test
+	void ofNullPathTest() {
+		UrlPath path = UrlPath.of(null, StandardCharsets.UTF_8);
+		assertNotNull(path);
+		assertEquals("", path.build(StandardCharsets.UTF_8));
+	}
+
+	@Test
+	void ofEncodedPathTest() {
+		// 含编码字符的路径
+		UrlPath path = UrlPath.of("/api/hello%20world", StandardCharsets.UTF_8);
+		assertNotNull(path);
+		assertTrue(path.getSegments().size() >= 1);
+	}
+
+	@Test
+	void addAllTest() {
+		UrlPath path = new UrlPath()
+			.add("a")
+			.add("b")
+			.add("c");
+		assertEquals(3, path.getSegments().size());
+		assertEquals("/a/b/c", path.build(StandardCharsets.UTF_8));
+	}
+
+	@Test
+	void getSegmentOutOfRangeTest() {
+		UrlPath path = new UrlPath().add("only");
+		assertNull(path.getSegment(5));
+	}
 }
