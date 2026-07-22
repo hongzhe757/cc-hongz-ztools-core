@@ -226,25 +226,26 @@ public class ListUtil {
 
         int resultSize = list.size();
         if (resultSize <= pageSize) {
-            if (pageNo < (PageUtil.getFirstPageNo() + 1)) {
+            if (pageNo < 1) {
                 return unmodifiable(list);
             } else {
                 return new ArrayList<>(0);
             }
         }
-        if (((long) (pageNo - PageUtil.getFirstPageNo()) * pageSize) > resultSize) {
+        if (((long) (pageNo - 1) * pageSize) > resultSize) {
             return new ArrayList<>(0);
         }
 
-        final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
-        if (startEnd[1] > resultSize) {
-            startEnd[1] = resultSize;
-            if (startEnd[0] > startEnd[1]) {
-                return new ArrayList<>(0);
-            }
+        final int start = (pageNo - 1) * pageSize;
+        int end = start + pageSize;
+        if (end > resultSize) {
+            end = resultSize;
+        }
+        if (start > end) {
+            return new ArrayList<>(0);
         }
 
-        return sub(list, startEnd[0], startEnd[1]);
+        return sub(list, start, end);
     }
 
     /**

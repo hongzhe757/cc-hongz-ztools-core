@@ -2,6 +2,9 @@ package cc.hongz.ztools.core.map;
 
 import cc.hongz.ztools.core.collection.CollUtil;
 import cc.hongz.ztools.core.lang.Assert;
+import cc.hongz.ztools.core.lang.Editor;
+import cc.hongz.ztools.core.lang.Filter;
+import cc.hongz.ztools.core.lang.Pair;
 import cc.hongz.ztools.core.util.ArrayUtil;
 import cc.hongz.ztools.core.util.JdkUtil;
 import cc.hongz.ztools.core.util.ObjUtil;
@@ -201,6 +204,44 @@ public class MapUtil {
 	}
 
 	/**
+	 * 传入一个Map将其转化为ConcurrentHashMap类型
+	 *
+	 * @param map map
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @return ConcurrentHashMap
+	 */
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(Map<K, V> map) {
+		if (isEmpty(map)) {
+			return new ConcurrentHashMap<>(DEFAULT_INITIAL_CAPACITY);
+		}
+		return new ConcurrentHashMap<>(map);
+	}
+
+	/**
+	 * 创建Map<br>
+	 * 传入抽象Map{@link AbstractMap}和{@link Map}类将默认创建{@link HashMap}
+	 *
+	 * @param <K>     map键类型
+	 * @param <V>     map值类型
+	 * @param mapType map类型
+	 * @return {@link Map}实例
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> createMap(Class<?> mapType) {
+		if (null == mapType || mapType.isAssignableFrom(AbstractMap.class)) {
+			return new HashMap<>();
+		} else {
+			try {
+				return (Map<K, V>) mapType.getDeclaredConstructor().newInstance();
+			} catch (Exception e) {
+				// 不支持的地图类型，返回默认的HashMap
+				return new HashMap<>();
+			}
+		}
+	}
+
+	/**
 	 * 新建一个HashMap
 	 *
 	 * @param <K>     键类型
@@ -236,10 +277,31 @@ public class MapUtil {
 	/**
 	 * 根据给定的Pair数组创建Map对象
 	 *
+	 * @param <K>   键类型
+	 * @param <V>   值类型
+	 * @param pairs 键值对
+	 * @return Map
+	 * @since 5.4.1
+	 * @deprecated 方法容易歧义，请使用 {@code #ofEntries(Entry[])}
+	 */
+	@SafeVarargs
+	@Deprecated
+	public static <K, V> Map<K, V> of(Pair<K, V>... pairs) {
+		final Map<K, V> map = new HashMap<>();
+		for (Pair<K, V> pair : pairs) {
+			map.put(pair.getKey(), pair.getValue());
+		}
+		return map;
+	}
+
+	/**
+	 * 根据给定的Pair数组创建Map对象
+	 *
 	 * @param <K>     键类型
 	 * @param <V>     值类型
 	 * @param entries 键值对
 	 * @return Map
+	 * @see #entry(Object, Object)
 	 * @since 5.8.0
 	 */
 	@SafeVarargs
@@ -410,6 +472,20 @@ public class MapUtil {
 	}
 
 	/**
+	 * 将已知Map转换为key为驼峰风格的Map<br>
+	 * 如果KEY为非String类型，保留原值
+	 *
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @param map 原Map
+	 * @return 驼峰风格Map
+	 * @since 3.3.1
+	 */
+	public static <K, V> Map<K, V> toCamelCaseMap(Map<K, V> map) {
+		return (map instanceof LinkedHashMap) ? new CamelCaseLinkedMap<>(map) : new CamelCaseMap<>(map);
+	}
+
+	/**
 	 * 将键值对转换为二维数组，第一维是key，第二维是value
 	 *
 	 * @param map map
@@ -521,6 +597,59 @@ public class MapUtil {
 	}
 
 	// ----------------------------------------------------------------------------------------------- filter
+
+	/**
+	 * 编辑Map<br>
+	 * 编辑过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 *
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回{@code null}表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
+	 *
+	 * @param <K>    Key类型
+	 * @param <V>    Value类型
+	 * @param map    Map
+	 * @param editor 编辑器接口
+	 * @return 编辑后的Map
+	 */
+	public static <K, V> Map<K, V> edit(Map<K, V> map, Editor<Entry<K, V>> editor) {
+		if (null == map || null == editor) {
+			return map;
+		}
+
+		Map<K, V> map2 = new HashMap<>(map.size(), 1f);
+		if (isEmpty(map)) {
+			return map2;
+		}
+
+		Entry<K, V> modified;
+		for (Entry<K, V> entry : map.entrySet()) {
+			modified = editor.edit(entry);
+			if (null != modified) {
+				map2.put(modified.getKey(), modified.getValue());
+			}
+		}
+		return map2;
+	}
+
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Filter实现来返回需要的元素内容
+	 *
+	 * @param <K>    Key类型
+	 * @param <V>    Value类型
+	 * @param map    Map
+	 * @param filter 过滤器接口，{@code null}返回原Map
+	 * @return 过滤后的Map
+	 * @since 3.1.0
+	 */
+	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
+		if (null == map || null == filter) {
+			return map;
+		}
+		return edit(map, t -> filter.accept(t) ? t : null);
+	}
 
 	/**
 	 * 过滤<br>
@@ -694,6 +823,32 @@ public class MapUtil {
 	}
 
 	/**
+	 * 创建代理Map<br>
+	 * {@link MapProxy}对Map做一次包装，提供各种getXXX方法
+	 *
+	 * @param map 被代理的Map
+	 * @return {@link MapProxy}
+	 * @since 3.2.0
+	 */
+	public static MapProxy createProxy(Map<?, ?> map) {
+		return MapProxy.create(map);
+	}
+
+	/**
+	 * 创建Map包装类MapWrapper<br>
+	 * {@link MapWrapper}对Map做一次包装
+	 *
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @param map 被代理的Map
+	 * @return {@link MapWrapper}
+	 * @since 4.5.4
+	 */
+	public static <K, V> MapWrapper<K, V> wrap(Map<K, V> map) {
+		return new MapWrapper<>(map);
+	}
+
+	/**
 	 * 将对应Map转换为不可修改的Map
 	 *
 	 * @param map Map
@@ -756,7 +911,7 @@ public class MapUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> getAny(Map<K, V> map, final K... keys) {
-		return filter(map, entry -> ArrayUtil.contains(keys, entry.getKey()));
+		return filter(map, (Predicate<Entry<K, V>>) entry -> ArrayUtil.contains(keys, entry.getKey()));
 	}
 
 	/**
@@ -1055,6 +1210,34 @@ public class MapUtil {
 		}
 		return defaultValue;
 	}
+
+
+	/**
+	 * 获取Map指定key的值，并转换为指定类型，此方法在转换失败后不抛异常，返回默认值。
+	 *
+	 * @param <T>          目标值类型
+	 * @param map          Map
+	 * @param key          键
+	 * @param type         值类型
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.5.3
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getQuietly(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
+		if (null == map) {
+			return defaultValue;
+		}
+		Object value = map.get(key);
+		if (null == value) {
+			return defaultValue;
+		}
+		if (type.isInstance(value)) {
+			return (T) value;
+		}
+		return defaultValue;
+	}
+
 
 	/**
 	 * 重命名键<br>

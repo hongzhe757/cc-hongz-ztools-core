@@ -10,7 +10,7 @@ import java.util.function.Function;
  * 双向Map<br>
  * 互换键值对不检查值是否有重复，如果有则后加入的元素替换先加入的元素<br>
  *
- * <p>迁移自 hutool {@code cn.hutool.core.map.BiMap}.
+ * <p>迁移自 hutool {@code cc.hongz.ztools.core.map.BiMap}.
  *
  * @param <K> 键类型
  * @param <V> 值类型

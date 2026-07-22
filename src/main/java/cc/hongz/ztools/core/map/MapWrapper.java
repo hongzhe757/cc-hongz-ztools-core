@@ -13,11 +13,12 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Map包装类，通过包装一个已有Map实现特定功能。
  *
- * <p>迁移自 hutool {@code cn.hutool.core.map.MapWrapper}.
+ * <p>迁移自 hutool {@code cc.hongz.ztools.core.map.MapWrapper}.
  *
  * @param <K> 键类型
  * @param <V> 值类型
@@ -26,7 +27,27 @@ import java.util.function.Function;
 public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Serializable, Cloneable {
 	private static final long serialVersionUID = -7524578042008586382L;
 
+	/**
+	 * 默认增长因子
+	 */
+	protected static final float DEFAULT_LOAD_FACTOR = 0.75f;
+	/**
+	 * 默认初始大小
+	 */
+	protected static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
+
 	private Map<K, V> raw;
+
+	/**
+	 * 构造<br>
+	 * 通过传入一个Map从而确定Map的类型，子类需创建一个空的Map，而非传入一个已有Map，否则值可能会被修改
+	 *
+	 * @param mapFactory 空Map创建工厂
+	 * @since 5.8.0
+	 */
+	public MapWrapper(Supplier<Map<K, V>> mapFactory) {
+		this(mapFactory.get());
+	}
 
 	/**
 	 * 构造
