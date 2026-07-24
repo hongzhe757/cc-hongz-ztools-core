@@ -39,9 +39,19 @@ import cc.hongz.ztools.core.util.HexUtil;
 public final class IoUtil {
 
     /**
+     * 默认缓存大小 8192.
+     */
+    public static final int DEFAULT_BUFFER_SIZE = 2 << 12;
+
+    /**
+     * 默认中等缓存大小 16384.
+     */
+    public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 2 << 13;
+
+    /**
      * 默认大缓冲区大小（32KB）.
      */
-    public static final int DEFAULT_LARGE_BUFFER_SIZE = 32768;
+    public static final int DEFAULT_LARGE_BUFFER_SIZE = 2 << 14;
 
     /**
      * 私有构造，禁止实例化.
