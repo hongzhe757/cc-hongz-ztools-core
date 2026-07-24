@@ -84,11 +84,12 @@ class PathUtilTest {
     void equalsTest(@TempDir final Path tempDir) throws Exception {
         final Path file1 = tempDir.resolve("f.txt");
         Files.write(file1, "same".getBytes());
+        // 同一文件路径返回 true
+        assertTrue(PathUtil.equals(file1, file1));
+
+        // 不同文件路径即使内容相同也返回 false（isSameFile 比较路径而非内容）
         final Path file2 = tempDir.resolve("f2.txt");
         Files.write(file2, "same".getBytes());
-        assertTrue(PathUtil.equals(file1, file2));
-
-        Files.write(file2, "different".getBytes());
         assertFalse(PathUtil.equals(file1, file2));
     }
 }

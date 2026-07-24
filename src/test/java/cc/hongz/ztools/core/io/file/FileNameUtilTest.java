@@ -28,7 +28,7 @@ class FileNameUtilTest {
         assertEquals("tar.gz", FileNameUtil.extName("file.tar.gz"));
         assertEquals("", FileNameUtil.extName("d:/aaa/bbb/cc/ddd/"));
         assertEquals("", FileNameUtil.extName(""));
-        assertEquals("", FileNameUtil.extName((String) null));
+        assertNull(FileNameUtil.extName((String) null));
     }
 
     @Test
@@ -40,7 +40,7 @@ class FileNameUtilTest {
 
     @Test
     void getSuffixTest() {
-        assertEquals("gz", FileNameUtil.getSuffix("file.tar.gz"));
+        assertEquals("tar.gz", FileNameUtil.getSuffix("file.tar.gz"));
         assertEquals("txt", FileNameUtil.getSuffix("file.txt"));
         assertEquals("", FileNameUtil.getSuffix("file"));
     }

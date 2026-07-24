@@ -55,6 +55,7 @@ class FileCopierTest {
         final File destDir = new File(tempDir.toFile(), "destdir");
 
         final FileCopier copier = FileCopier.create(srcDir, destDir);
+        copier.setCopyContentIfDir(true);
         copier.copy();
 
         assertTrue(destDir.exists());
