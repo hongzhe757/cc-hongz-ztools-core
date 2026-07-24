@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.lang.ref;
 import java.util.Objects;
 
 /**
- * 弱引用对象，在GC时发现弱引用会回收其对象
+ * 强引用对象，不回收.
  *
  * @param <T> 键类型
  */
