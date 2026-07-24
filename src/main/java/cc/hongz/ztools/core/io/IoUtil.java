@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
+import java.io.Flushable;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -548,6 +549,22 @@ public final class IoUtil {
         if (out != null) {
             try {
                 out.flush();
+            } catch (IOException e) {
+                throw new IORuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * 刷缓冲.
+     *
+     * @param flushable 可刷缓冲的对象
+     * @throws IORuntimeException IO异常
+     */
+    public static void flush(final Flushable flushable) throws IORuntimeException {
+        if (flushable != null) {
+            try {
+                flushable.flush();
             } catch (IOException e) {
                 throw new IORuntimeException(e);
             }
