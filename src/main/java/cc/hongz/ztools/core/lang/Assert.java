@@ -161,6 +161,57 @@ public final class Assert {
         return value;
     }
 
+    /**
+     * 检查整数值是否在指定范围内（含边界），自定义错误消息.
+     *
+     * @param value    值
+     * @param min      最小值
+     * @param max      最大值
+     * @param errorMsg 错误消息
+     * @return 检查后的值
+     * @throws IllegalArgumentException 越界时
+     */
+    public static int checkBetween(final int value, final int min, final int max, final String errorMsg) {
+        if (value < min || value > max) {
+            throw new IllegalArgumentException(errorMsg);
+        }
+        return value;
+    }
+
+    /**
+     * 检查 long 值是否在指定范围内（含边界），自定义错误消息.
+     *
+     * @param value    值
+     * @param min      最小值
+     * @param max      最大值
+     * @param errorMsg 错误消息
+     * @return 检查后的值
+     * @throws IllegalArgumentException 越界时
+     */
+    public static long checkBetween(final long value, final long min, final long max, final String errorMsg) {
+        if (value < min || value > max) {
+            throw new IllegalArgumentException(errorMsg);
+        }
+        return value;
+    }
+
+    /**
+     * 检查 double 值是否在指定范围内（含边界），自定义错误消息.
+     *
+     * @param value    值
+     * @param min      最小值
+     * @param max      最大值
+     * @param errorMsg 错误消息
+     * @return 检查后的值
+     * @throws IllegalArgumentException 越界时
+     */
+    public static double checkBetween(final double value, final double min, final double max, final String errorMsg) {
+        if (value < min || value > max) {
+            throw new IllegalArgumentException(errorMsg);
+        }
+        return value;
+    }
+
     // --------------------------------------- Static method end
 
     /**
@@ -187,6 +238,21 @@ public final class Assert {
      */
     public static void isTrue(final boolean expression) throws IllegalArgumentException {
         isTrue(expression, "[Assertion failed] - this expression must be true");
+    }
+
+    /**
+     * 断言表达式为 true，使用 Supplier 提供异常.
+     *
+     * @param expression  表达式
+     * @param errorSupplier 异常供应器
+     * @param <X>         异常类型
+     * @throws X 表达式为 false 时
+     */
+    public static <X extends Throwable> void isTrue(final boolean expression,
+                                                     final Supplier<X> errorSupplier) throws X {
+        if (!expression) {
+            throw errorSupplier.get();
+        }
     }
 
     /**

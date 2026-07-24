@@ -163,36 +163,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
 	public String intervalPretty(String id) {
-		return formatBetween(intervalMs(id));
-	}
-
-	/**
-	 * 格式化日期间隔输出，精确到毫秒
-	 *
-	 * @param betweenMs 日期间隔毫秒数
-	 * @return XX天XX小时XX分XX秒XX毫秒
-	 */
-	private static String formatBetween(long betweenMs) {
-		final StringBuilder sb = new StringBuilder();
-		long days = betweenMs / (24 * 60 * 60 * 1000L);
-		long hours = (betweenMs % (24 * 60 * 60 * 1000L)) / (60 * 60 * 1000L);
-		long minutes = (betweenMs % (60 * 60 * 1000L)) / (60 * 1000L);
-		long seconds = (betweenMs % (60 * 1000L)) / 1000L;
-		long ms = betweenMs % 1000L;
-		if (days > 0) {
-			sb.append(days).append("天");
-		}
-		if (hours > 0 || sb.length() > 0) {
-			sb.append(hours).append("小时");
-		}
-		if (minutes > 0 || sb.length() > 0) {
-			sb.append(minutes).append("分");
-		}
-		if (seconds > 0 || sb.length() > 0) {
-			sb.append(seconds).append("秒");
-		}
-		sb.append(ms).append("毫秒");
-		return sb.toString();
+		return DateUtil.formatBetween(intervalMs(id));
 	}
 
 	/**
