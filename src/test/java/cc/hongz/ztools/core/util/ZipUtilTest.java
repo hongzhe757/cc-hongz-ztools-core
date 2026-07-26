@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.util;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -28,11 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class ZipUtilTest {
 
-    // ----------------------------------------------------------------------- Gzip
+    // ------------------------------------------------------------------- Gzip
 
-    /**
-     * 验证 gzip/unGzip 对称性.
-     */
+    @DisplayName("Gzip 压缩字符串后解压恢复原内容")
     @Test
     void gzipAndUnGzip() {
         final String content = "Hello, ZipUtil Gzip!";
@@ -44,9 +43,7 @@ class ZipUtilTest {
         assertEquals(content, decompressed);
     }
 
-    /**
-     * 验证 gzip(byte[]) / unGzip(byte[]) 对称性.
-     */
+    @DisplayName("Gzip 压缩字节数组后解压恢复原内容")
     @Test
     void gzipBytesAndUnGzipBytes() {
         final byte[] buf = "test data for gzip".getBytes(StandardCharsets.UTF_8);
@@ -55,9 +52,7 @@ class ZipUtilTest {
         assertArrayEquals(buf, decompressed);
     }
 
-    /**
-     * 验证 gzip(InputStream) 返回非空.
-     */
+    @DisplayName("Gzip 压缩输入流返回非空字节数组")
     @Test
     void gzipInputStream() {
         final byte[] data = "stream gzip test".getBytes(StandardCharsets.UTF_8);
@@ -66,23 +61,20 @@ class ZipUtilTest {
         assertTrue(compressed.length > 0);
     }
 
-    /**
-     * 验证 gzip(File) 对文件进行压缩.
-     */
+    @DisplayName("Gzip 压缩文件返回非空字节数组")
     @Test
     void gzipFile(@TempDir final Path tempDir) throws IOException {
         final File src = tempDir.resolve("gzip_test.txt").toFile();
-        Files.write(src.toPath(), "file content for gzip".getBytes(StandardCharsets.UTF_8));
+        Files.write(src.toPath(),
+                "file content for gzip".getBytes(StandardCharsets.UTF_8));
         final byte[] compressed = ZipUtil.gzip(src);
         assertNotNull(compressed);
         assertTrue(compressed.length > 0);
     }
 
-    // ----------------------------------------------------------------------- Zlib
+    // ------------------------------------------------------------------- Zlib
 
-    /**
-     * 验证 zlib/unZlib 对称性.
-     */
+    @DisplayName("Zlib 压缩字符串后解压恢复原内容")
     @Test
     void zlibAndUnZlib() {
         final String content = "Hello, ZipUtil Zlib!";
@@ -94,9 +86,7 @@ class ZipUtilTest {
         assertEquals(content, decompressed);
     }
 
-    /**
-     * 验证 zlib(byte[]) / unZlib(byte[]) 对称性.
-     */
+    @DisplayName("Zlib 压缩字节数组后解压恢复原内容")
     @Test
     void zlibBytesAndUnZlibBytes() {
         final byte[] buf = "test data for zlib".getBytes(StandardCharsets.UTF_8);
@@ -105,9 +95,7 @@ class ZipUtilTest {
         assertArrayEquals(buf, decompressed);
     }
 
-    /**
-     * 验证 zlib(InputStream) 返回非空.
-     */
+    @DisplayName("Zlib 压缩输入流返回非空字节数组")
     @Test
     void zlibInputStream() {
         final byte[] data = "stream zlib test".getBytes(StandardCharsets.UTF_8);
@@ -116,23 +104,20 @@ class ZipUtilTest {
         assertTrue(compressed.length > 0);
     }
 
-    /**
-     * 验证 zlib(File) 对文件压缩.
-     */
+    @DisplayName("Zlib 压缩文件返回非空字节数组")
     @Test
     void zlibFile(@TempDir final Path tempDir) throws IOException {
         final File src = tempDir.resolve("zlib_test.txt").toFile();
-        Files.write(src.toPath(), "file content for zlib".getBytes(StandardCharsets.UTF_8));
+        Files.write(src.toPath(),
+                "file content for zlib".getBytes(StandardCharsets.UTF_8));
         final byte[] compressed = ZipUtil.zlib(src, 6);
         assertNotNull(compressed);
         assertTrue(compressed.length > 0);
     }
 
-    // ----------------------------------------------------------------------- Zip
+    // -------------------------------------------------------------------- Zip
 
-    /**
-     * 验证 zip(File) 生成 zip 文件.
-     */
+    @DisplayName("压缩单个文件生成 .zip 文件")
     @Test
     void zipSingleFile(@TempDir final Path tempDir) throws IOException {
         final File src = tempDir.resolve("zip_src.txt").toFile();
@@ -145,9 +130,7 @@ class ZipUtilTest {
         assertTrue(zipFile.getName().endsWith(".zip"));
     }
 
-    /**
-     * 验证 zip/unzip 对称性.
-     */
+    @DisplayName("压缩目录后解压可恢复原文件")
     @Test
     void zipAndUnzip(@TempDir final Path tempDir) throws IOException {
         final File srcDir = tempDir.resolve("srcDir").toFile();
@@ -162,28 +145,25 @@ class ZipUtilTest {
         ZipUtil.unzip(zipFile, unzipDir);
         assertTrue(unzipDir.exists());
 
-        // 验证解压后的文件存在
         final File[] files = unzipDir.listFiles();
         assertNotNull(files);
         assertTrue(files.length > 0);
     }
 
-    /**
-     * 验证 zip(OutputStream...) 写入流.
-     */
+    @DisplayName("压缩文件到输出流")
     @Test
     void zipToOutputStream(@TempDir final Path tempDir) throws IOException {
         final File src = tempDir.resolve("os_test.txt").toFile();
-        Files.write(src.toPath(), "output stream zip".getBytes(StandardCharsets.UTF_8));
+        Files.write(src.toPath(),
+                "output stream zip".getBytes(StandardCharsets.UTF_8));
 
-        final java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+        final java.io.ByteArrayOutputStream bos =
+                new java.io.ByteArrayOutputStream();
         ZipUtil.zip(bos, StandardCharsets.UTF_8, false, null, src);
         assertTrue(bos.size() > 0);
     }
 
-    /**
-     * 验证 zip(File, String, String) 将字符串写入 zip 指定条目.
-     */
+    @DisplayName("将字符串写入 zip 文件指定条目")
     @Test
     void zipWithData(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("data.zip").toFile();
@@ -192,9 +172,7 @@ class ZipUtilTest {
         assertTrue(zipFile.length() > 0);
     }
 
-    /**
-     * 验证 zip(File, String, InputStream) 将流写入 zip 指定条目.
-     */
+    @DisplayName("将输入流写入 zip 文件指定条目")
     @Test
     void zipWithInputStream(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("stream.zip").toFile();
@@ -204,16 +182,14 @@ class ZipUtilTest {
         assertTrue(zipFile.length() > 0);
     }
 
-    // ----------------------------------------------------------------------- Unzip
+    // ------------------------------------------------------------------ Unzip
 
-    /**
-     * 验证 unzip(String) 解压到默认目录.
-     */
+    @DisplayName("解压 zip 文件到默认目录")
     @Test
     void unzipByPath(@TempDir final Path tempDir) throws IOException {
-        // 先创建 zip
         final File srcFile = tempDir.resolve("unzip_src.txt").toFile();
-        Files.write(srcFile.toPath(), "unzip test".getBytes(StandardCharsets.UTF_8));
+        Files.write(srcFile.toPath(),
+                "unzip test".getBytes(StandardCharsets.UTF_8));
         final File zipFile = ZipUtil.zip(srcFile);
 
         final File unzipDir = ZipUtil.unzip(zipFile.getAbsolutePath());
@@ -221,27 +197,25 @@ class ZipUtilTest {
         assertTrue(unzipDir.exists());
     }
 
-    /**
-     * 验证 unzip(InputStream, File, Charset).
-     */
+    @DisplayName("从输入流解压到指定目录")
     @Test
     void unzipFromStream(@TempDir final Path tempDir) throws IOException {
         final File srcFile = tempDir.resolve("stream_unzip.txt").toFile();
-        Files.write(srcFile.toPath(), "stream unzip".getBytes(StandardCharsets.UTF_8));
+        Files.write(srcFile.toPath(),
+                "stream unzip".getBytes(StandardCharsets.UTF_8));
         final File zipFile = ZipUtil.zip(srcFile);
 
         final File outDir = tempDir.resolve("stream_out").toFile();
-        try (java.io.FileInputStream fis = new java.io.FileInputStream(zipFile)) {
+        try (java.io.FileInputStream fis =
+                new java.io.FileInputStream(zipFile)) {
             ZipUtil.unzip(fis, outDir, StandardCharsets.UTF_8);
         }
         assertTrue(outDir.exists());
     }
 
-    // ----------------------------------------------------------------------- get / listFileNames
+    // --------------------------------------------------- get / listFileNames
 
-    /**
-     * 验证 get(ZipFile, String) 获取 zip 中指定条目的流.
-     */
+    @DisplayName("从 zip 中获取指定条目的输入流")
     @Test
     void getEntryStream(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("get_test.zip").toFile();
@@ -250,14 +224,13 @@ class ZipUtilTest {
         try (ZipFile zf = new ZipFile(zipFile)) {
             final java.io.InputStream is = ZipUtil.get(zf, "readme.txt");
             assertNotNull(is);
-            final String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            final String content =
+                    new String(is.readAllBytes(), StandardCharsets.UTF_8);
             assertEquals("get entry content", content);
         }
     }
 
-    /**
-     * 验证 get(ZipFile, String) 对不存在的条目返回 null.
-     */
+    @DisplayName("获取不存在的条目返回 null")
     @Test
     void getEntryStreamNotFound(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("not_found.zip").toFile();
@@ -268,9 +241,7 @@ class ZipUtilTest {
         }
     }
 
-    /**
-     * 验证 listFileNames 列出 zip 中指定目录下的文件名.
-     */
+    @DisplayName("列出 zip 中指定目录下的文件名")
     @Test
     void listFileNames(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("list.zip").toFile();
@@ -298,9 +269,7 @@ class ZipUtilTest {
         }
     }
 
-    /**
-     * 验证 listFileNames 对 null/空目录列出所有顶层文件名.
-     */
+    @DisplayName("不指定目录时列出 zip 中所有顶层文件")
     @Test
     void listFileNamesNoDir(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("list_all.zip").toFile();
@@ -321,11 +290,9 @@ class ZipUtilTest {
         }
     }
 
-    // ----------------------------------------------------------------------- toZipFile
+    // --------------------------------------------------------------- toZipFile
 
-    /**
-     * 验证 toZipFile 正常返回 ZipFile.
-     */
+    @DisplayName("toZipFile 正常返回 ZipFile 并包含指定条目")
     @Test
     void toZipFile(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("toZip.zip").toFile();
@@ -337,9 +304,7 @@ class ZipUtilTest {
         }
     }
 
-    /**
-     * 验证 toZipFile 对 null charset 使用 UTF-8.
-     */
+    @DisplayName("toZipFile 使用 null charset 时默认 UTF-8")
     @Test
     void toZipFileNullCharset(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("null_charset.zip").toFile();
@@ -350,11 +315,9 @@ class ZipUtilTest {
         }
     }
 
-    // ----------------------------------------------------------------------- unzipFileBytes
+    // ---------------------------------------------------------- unzipFileBytes
 
-    /**
-     * 验证 unzipFileBytes 获取 zip 中指定条目的字节数组.
-     */
+    @DisplayName("unzipFileBytes 从 zip 中读取指定条目字节内容")
     @Test
     void unzipFileBytes(@TempDir final Path tempDir) throws IOException {
         final File zipFile = tempDir.resolve("bytes.zip").toFile();
@@ -364,4 +327,87 @@ class ZipUtilTest {
         final byte[] actual = ZipUtil.unzipFileBytes(zipFile, "bytes.txt");
         assertArrayEquals(expected, actual);
     }
+
+    // --------------------------------------------------------- getZipOutputStream
+
+    @DisplayName("getZipOutputStream 从 OutputStream 创建 ZipOutputStream")
+    @Test
+    void getZipOutputStream(@TempDir final Path tempDir) throws IOException {
+        final File zipFile = tempDir.resolve("gos.zip").toFile();
+        try (java.io.FileOutputStream fos = new java.io.FileOutputStream(zipFile);
+             ZipOutputStream zos = ZipUtil.getZipOutputStream(
+                     fos, StandardCharsets.UTF_8)) {
+            assertNotNull(zos);
+            zos.putNextEntry(new ZipEntry("test"));
+            zos.write("data".getBytes(StandardCharsets.UTF_8));
+            zos.closeEntry();
+        }
+        assertTrue(zipFile.length() > 0);
+    }
+
+    // --------------------------------------------------------------- getStream
+
+    @DisplayName("getStream 从 ZipFile/ZipEntry 获取输入流")
+    @Test
+    void getStream(@TempDir final Path tempDir) throws IOException {
+        final File zipFile = tempDir.resolve("stream_test.zip").toFile();
+        ZipUtil.zip(zipFile, "entry.txt", "entry data");
+
+        try (ZipFile zf = new ZipFile(zipFile)) {
+            final ZipEntry entry = zf.getEntry("entry.txt");
+            assertNotNull(entry);
+            final java.io.InputStream is = ZipUtil.getStream(zf, entry);
+            assertNotNull(is);
+            final String content =
+                    new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            assertEquals("entry data", content);
+        }
+    }
+
+    // ------------------------------------------------------------------ append
+
+    @DisplayName("append 向现有 zip 文件中追加文件")
+    @Test
+    void appendToZip(@TempDir final Path tempDir) throws IOException {
+        // 先创建一个 zip
+        final File zipFile = tempDir.resolve("append.zip").toFile();
+        ZipUtil.zip(zipFile, "existing.txt", "existing content");
+
+        // 追加新文件
+        final File appendFile = tempDir.resolve("append_file.txt").toFile();
+        Files.write(appendFile.toPath(),
+                "appended".getBytes(StandardCharsets.UTF_8));
+        ZipUtil.append(zipFile.toPath(), appendFile.toPath());
+
+        // 验证 zip 中有两个文件
+        try (ZipFile zf = new ZipFile(zipFile)) {
+            assertNotNull(zf.getEntry("existing.txt"));
+            assertNotNull(zf.getEntry("append_file.txt"));
+        }
+    }
+
+    // ---------------------------------------------------- read(ZipFile)
+
+    @DisplayName("read(ZipFile) 遍历 zip 中所有条目")
+    @Test
+    void readZipFile(@TempDir final Path tempDir) throws IOException {
+        final File zipFile = tempDir.resolve("read_test.zip").toFile();
+        try (ZipOutputStream zos = new ZipOutputStream(
+                new FileOutputStream(zipFile), StandardCharsets.UTF_8)) {
+            zos.putNextEntry(new ZipEntry("a.txt"));
+            zos.write("a".getBytes(StandardCharsets.UTF_8));
+            zos.closeEntry();
+            zos.putNextEntry(new ZipEntry("b.txt"));
+            zos.write("b".getBytes(StandardCharsets.UTF_8));
+            zos.closeEntry();
+        }
+
+        final java.util.concurrent.atomic.AtomicInteger count =
+                new java.util.concurrent.atomic.AtomicInteger(0);
+        try (ZipFile zf = new ZipFile(zipFile)) {
+            ZipUtil.read(zf, entry -> count.incrementAndGet());
+        }
+        assertEquals(2, count.get());
+    }
+
 }
