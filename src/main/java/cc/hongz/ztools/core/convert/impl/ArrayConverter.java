@@ -207,7 +207,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @since 5.4.3
 	 */
 	private Object convertComponentType(Object value) {
-		return ConverterRegistry.getInstance().convert(this.targetComponentType, value, null, this.ignoreElementError);
+		return Convert.convertWithCheck(this.targetComponentType, value, null, this.ignoreElementError);
 	}
 	// -------------------------------------------------------------------------------------- Private method end
 }
