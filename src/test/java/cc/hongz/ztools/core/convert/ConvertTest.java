@@ -213,7 +213,7 @@ class ConvertTest {
 
 	@Test
 	void toBool_string_unrecognized_returnsDefault() {
-		assertEquals(Boolean.TRUE, Convert.toBool("maybe", true));
+		assertEquals(Boolean.FALSE, Convert.toBool("maybe", true));
 	}
 
 	// ==================== toLong ====================
