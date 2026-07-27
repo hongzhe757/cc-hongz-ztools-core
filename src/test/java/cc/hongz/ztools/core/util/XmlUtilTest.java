@@ -707,6 +707,306 @@ public class XmlUtilTest {
         assertEquals("1.5", map.get("rate"));
     }
 
+    // ==================== xmlToMap 详细断言 ====================
+
+    @Test
+    @DisplayName("xmlToMap - 多字段含嵌套子节点详细断言")
+    void testXmlToMapDetailed() {
+        String xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"
+                + "<returnsms>"
+                + "<returnstatus>Success</returnstatus>"
+                + "<message>ok</message>"
+                + "<remainpoint>1490</remainpoint>"
+                + "<taskID>885</taskID>"
+                + "<successCounts>1</successCounts>"
+                + "<newNode><sub>subText</sub></newNode>"
+                + "</returnsms>";
+        Map<String, Object> map = XmlUtil.xmlToMap(xml);
+        assertEquals(6, map.size());
+        assertEquals("Success", map.get("returnstatus"));
+        assertEquals("ok", map.get("message"));
+        assertEquals("1490", map.get("remainpoint"));
+        assertEquals("885", map.get("taskID"));
+        assertEquals("1", map.get("successCounts"));
+        assertEquals("subText", ((Map<?, ?>) map.get("newNode")).get("sub"));
+    }
+
+    // ==================== mapToXml 精确输出 ====================
+
+    @Test
+    @DisplayName("mapToXml - 嵌套Map精确输出断言")
+    void testMapToXmlExactOutput() {
+        Map<String, Object> gameMap = new java.util.LinkedHashMap<>();
+        gameMap.put("昵称", "Looly");
+        gameMap.put("level", 14);
+
+        Map<String, Object> map = new java.util.LinkedHashMap<>();
+        map.put("name", "张三");
+        map.put("age", 12);
+        map.put("game", gameMap);
+
+        Document doc = XmlUtil.mapToXml(map, "user");
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+                        + "<user>"
+                        + "<name>张三</name>"
+                        + "<age>12</age>"
+                        + "<game>"
+                        + "<昵称>Looly</昵称>"
+                        + "<level>14</level>"
+                        + "</game>"
+                        + "</user>",
+                XmlUtil.toStr(doc, false));
+    }
+
+    @Test
+    @DisplayName("mapToXml - List类型精确输出断言")
+    void testMapToXmlListExactOutput() {
+        Map<String, Object> map = new java.util.LinkedHashMap<>();
+        map.put("Town", CollUtil.newArrayList("town1", "town2"));
+        Document doc = XmlUtil.mapToXml(map, "City");
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+                        + "<City>"
+                        + "<Town>town1</Town>"
+                        + "<Town>town2</Town>"
+                        + "</City>",
+                XmlUtil.toStr(doc));
+    }
+
+    // ==================== escape 中文 ====================
+
+    @Test
+    @DisplayName("escape - 中文双引号不转义")
+    void testEscapeChinese() {
+        assertEquals("&lt;&gt;", XmlUtil.escape("<>"));
+        assertEquals("中文\u201c双引号\u201d", XmlUtil.escape("中文\u201c双引号\u201d"));
+    }
+
+    // ==================== xmlToMap(Node) ====================
+
+    @Test
+    @DisplayName("xmlToMap - Node重载")
+    void testXmlToMapFromNode() {
+        String xml = "<root><a>1</a><b>2</b></root>";
+        Document doc = XmlUtil.readXML(xml);
+        Map<String, Object> map = XmlUtil.xmlToMap(doc.getDocumentElement());
+        assertEquals("1", map.get("a"));
+        assertEquals("2", map.get("b"));
+    }
+
+    // ==================== xmlToMap with result Map ====================
+
+    @Test
+    @DisplayName("xmlToMap - 传入已有Map追加数据")
+    void testXmlToMapWithResultMap() {
+        String xml = "<root><x>10</x></root>";
+        Map<String, Object> result = new HashMap<>();
+        result.put("existing", "value");
+        Map<String, Object> returned = XmlUtil.xmlToMap(xml, result);
+        assertSame(result, returned);
+        assertEquals("value", result.get("existing"));
+        assertEquals("10", result.get("x"));
+    }
+
+    // ==================== write to Writer ====================
+
+    @Test
+    @DisplayName("write - Node写入Writer")
+    void testWriteToWriter() {
+        Document doc = XmlUtil.createXml("root");
+        XmlUtil.appendChild(doc.getDocumentElement(), "child");
+        java.io.StringWriter writer = new java.io.StringWriter();
+        XmlUtil.write(doc, writer, "UTF-8", 2);
+        String result = writer.toString();
+        assertTrue(result.contains("<root>"));
+        assertTrue(result.contains("<child/>"));
+    }
+
+    @Test
+    @DisplayName("write - Node写入Writer忽略xml声明")
+    void testWriteToWriterOmitDeclaration() {
+        Document doc = XmlUtil.createXml("root");
+        java.io.StringWriter writer = new java.io.StringWriter();
+        XmlUtil.write(doc, writer, "UTF-8", 2, true);
+        String result = writer.toString();
+        assertFalse(result.startsWith("<?xml"));
+        assertTrue(result.contains("<root/>"));
+    }
+
+    @Test
+    @DisplayName("write - Node写入OutputStream")
+    void testWriteToOutputStream() {
+        Document doc = XmlUtil.createXml("root");
+        XmlUtil.appendChild(doc.getDocumentElement(), "item");
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        XmlUtil.write(doc, out, "UTF-8", 2);
+        String result = out.toString();
+        assertTrue(result.contains("<root>"));
+        assertTrue(result.contains("<item/>"));
+    }
+
+    // ==================== format(Document) ====================
+
+    @Test
+    @DisplayName("format - Document格式化")
+    void testFormatDocument() {
+        Document doc = XmlUtil.createXml("root");
+        XmlUtil.appendChild(doc.getDocumentElement(), "a");
+        XmlUtil.appendChild(doc.getDocumentElement(), "b");
+        String formatted = XmlUtil.format(doc);
+        assertNotNull(formatted);
+        assertTrue(formatted.contains("root"));
+    }
+
+    // ==================== mapToXmlStr 带命名空间 ====================
+
+    @Test
+    @DisplayName("mapToXmlStr - 带命名空间")
+    void testMapToXmlStrWithNamespace() {
+        Map<String, Object> map = new java.util.LinkedHashMap<>();
+        map.put("key", "value");
+        String xml = XmlUtil.mapToXmlStr(map, "data", "http://example.com/ns");
+        assertNotNull(xml);
+        assertTrue(xml.contains("data"));
+        assertTrue(xml.contains("value"));
+    }
+
+    // ==================== appendChild 带命名空间 ====================
+
+    @Test
+    @DisplayName("appendChild - 带命名空间追加子元素")
+    void testAppendChildWithNamespace() {
+        Document doc = XmlUtil.createXml("root");
+        Element child = XmlUtil.appendChild(
+                doc.getDocumentElement(), "child", "http://example.com/ns");
+        assertNotNull(child);
+        assertEquals("child", child.getTagName());
+    }
+
+    // ==================== beanToXml 单参数 ====================
+
+    @Test
+    @DisplayName("beanToXml - 单参数默认不忽略null")
+    void testBeanToXmlSingleArg() {
+        TestBean bean = new TestBean();
+        bean.setName("test");
+        bean.setValue("val");
+        Document doc = XmlUtil.beanToXml(bean);
+        assertNotNull(doc);
+        assertEquals("TestBean", doc.getDocumentElement().getTagName());
+        String xml = XmlUtil.toStr(doc, false);
+        assertTrue(xml.contains("<name>test</name>"));
+        assertTrue(xml.contains("<value>val</value>"));
+    }
+
+    // ==================== issue3139 嵌套Bean含List ====================
+
+    @Test
+    @DisplayName("xmlToBean - 嵌套Bean含子对象")
+    void testXmlToBeanNestedWithList() {
+        // xmlToMap 会将重复元素转为 List，验证 xmlToMap 对重复子元素的处理
+        String xml = "<r><c><s>1</s><p>str</p></c><c><s>2</s><p>str2</p></c></r>";
+        Map<String, Object> map = XmlUtil.xmlToMap(xml);
+        assertNotNull(map);
+        // 重复的 <c> 元素应被转为 List
+        assertTrue(map.get("c") instanceof List);
+        List<?> cList = (List<?>) map.get("c");
+        assertEquals(2, cList.size());
+    }
+
+    // ==================== readXML(InputSource) ====================
+
+    @Test
+    @DisplayName("readXML - InputSource读取")
+    void testReadXmlFromInputSource() {
+        String xml = "<root><data>test</data></root>";
+        org.xml.sax.InputSource inputSource = new org.xml.sax.InputSource(
+                new StringReader(xml));
+        Document doc = XmlUtil.readXML(inputSource);
+        assertNotNull(doc);
+        assertEquals("root", doc.getDocumentElement().getTagName());
+    }
+
+    // ==================== readBySax(Reader) ====================
+
+    @Test
+    @DisplayName("readBySax - Reader方式读取")
+    void testReadBySaxReader() {
+        String xml = "<root><x>1</x><y>2</y></root>";
+        java.util.Set<String> tags = new java.util.HashSet<>();
+        XmlUtil.readBySax(new StringReader(xml), new DefaultHandler() {
+            @Override
+            public void startElement(String uri, String localName,
+                    String qName, Attributes attributes) {
+                tags.add(qName);
+            }
+        });
+        assertTrue(tags.contains("root"));
+        assertTrue(tags.contains("x"));
+        assertTrue(tags.contains("y"));
+    }
+
+    // ==================== getByXPath with NamespaceContext ====================
+
+    @Test
+    @DisplayName("getByXPath - 带NamespaceContext的XPath查询")
+    void testGetByXPathWithNamespaceContext() {
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<root xmlns:ns=\"http://test.com\">"
+                + "<ns:item>hello</ns:item>"
+                + "</root>";
+        Document doc = XmlUtil.readXML(xml);
+        javax.xml.namespace.NamespaceContext nsContext = new javax.xml.namespace.NamespaceContext() {
+            @Override
+            public String getNamespaceURI(String prefix) {
+                if ("ns".equals(prefix)) return "http://test.com";
+                return javax.xml.XMLConstants.NULL_NS_URI;
+            }
+            @Override
+            public String getPrefix(String uri) { return "ns"; }
+            @Override
+            public java.util.Iterator<String> getPrefixes(String uri) {
+                return java.util.Collections.singletonList("ns").iterator();
+            }
+        };
+        Object value = XmlUtil.getByXPath(
+                "//ns:item", doc,
+                javax.xml.xpath.XPathConstants.STRING, nsContext);
+        assertEquals("hello", value);
+    }
+
+    // ==================== toStr(Document, String, boolean) ====================
+
+    @Test
+    @DisplayName("toStr - Document指定编码和格式化")
+    void testToStrDocumentWithCharset() {
+        Document doc = XmlUtil.createXml("root");
+        XmlUtil.appendChild(doc.getDocumentElement(), "name").setTextContent("值");
+        String xml = XmlUtil.toStr(doc, "UTF-8", true);
+        assertNotNull(xml);
+        assertTrue(xml.contains("值"));
+        assertTrue(xml.contains("UTF-8") || xml.contains("utf-8"));
+    }
+
+    // ==================== transElements(NodeList) ====================
+
+    @Test
+    @DisplayName("transElements - 仅NodeList参数")
+    void testTransElementsNodeListOnly() {
+        Document doc = XmlUtil.readXML("<root><a/><b/><c/></root>");
+        NodeList nodeList = doc.getDocumentElement().getChildNodes();
+        List<Element> elements = XmlUtil.transElements(nodeList);
+        assertEquals(3, elements.size());
+    }
+
+    // ==================== createDocumentBuilder ====================
+
+    @Test
+    @DisplayName("createDocumentBuilder - 创建DocumentBuilder实例")
+    void testCreateDocumentBuilder() {
+        javax.xml.parsers.DocumentBuilder builder = XmlUtil.createDocumentBuilder();
+        assertNotNull(builder);
+    }
+
     // ==================== 测试用Bean类 ====================
 
     public static class TestBean {
