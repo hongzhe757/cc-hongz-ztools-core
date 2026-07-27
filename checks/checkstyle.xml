@@ -9,12 +9,10 @@
     <property name="fileExtensions" value="java"/>
     <property name="tabWidth" value="4"/>
 
-    <!-- 禁止 Tab 字符（已关闭，适配格式化工具） -->
-    <!--
+    <!-- 禁止 Tab 字符 -->
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
     </module>
-    -->
 
     <!-- 行长度限制：120 字符 -->
     <module name="LineLength">
@@ -62,9 +60,7 @@
 
         <!-- ============ Blocks ============ -->
         <module name="LeftCurly"/>
-        <module name="RightCurly">
-            <property name="option" value="alone_or_singleline"/>
-        </module>
+        <module name="RightCurly"/>
         <module name="NeedBraces"/>
 
         <!-- ============ Coding ============ -->

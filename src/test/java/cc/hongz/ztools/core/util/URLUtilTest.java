@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.io.IORuntimeException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -44,6 +45,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getDataUriBase64(String, String)} 标准 MIME 类型拼接.
      */
     @Test
+    @DisplayName("验证  标准 MIME 类型拼接.")
     void getDataUriBase64() {
         assertEquals("data:image/png;base64,abc", URLUtil.getDataUriBase64("image/png", "abc"));
     }
@@ -52,6 +54,7 @@ class URLUtilTest {
      * 验证空 MIME 类型时仍生成合法 Data URI 前缀.
      */
     @Test
+    @DisplayName("验证空 MIME 类型时仍生成合法 Data URI 前缀.")
     void getDataUriBase64BlankMime() {
         assertEquals("data:;base64,abc", URLUtil.getDataUriBase64("", "abc"));
     }
@@ -60,6 +63,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getDataUri(String, String, String)} 不带 charset 的 Data URI.
      */
     @Test
+    @DisplayName("验证  不带 charset 的 Data URI.")
     void getDataUri() {
         assertEquals("data:text/plain;base64,SGVsbG8=",
                 URLUtil.getDataUri("text/plain", "base64", "SGVsbG8="));
@@ -69,6 +73,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getDataUri(String, java.nio.charset.Charset, String, String)} 带 charset 的 Data URI.
      */
     @Test
+    @DisplayName("验证  带 charset 的 Data URI.")
     void getDataUriWithCharset() {
         assertEquals("data:text/plain;charset=UTF-8;base64,SGVsbG8=",
                 URLUtil.getDataUri("text/plain", StandardCharsets.UTF_8, "base64", "SGVsbG8="));
@@ -78,6 +83,7 @@ class URLUtilTest {
      * 验证 null mimeType 和 null encoding 时仅输出 data:,data.
      */
     @Test
+    @DisplayName("验证 null mimeType 和 null encoding 时仅输出 data:,da")
     void getDataUriWithNulls() {
         assertEquals("data:,hello", URLUtil.getDataUri(null, null, null, "hello"));
     }
@@ -88,6 +94,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#encode(String)} 对中文编码.
      */
     @Test
+    @DisplayName("验证  对中文编码.")
     void encode() {
         final String encoded = URLUtil.encode("测试");
         assertEquals("%E6%B5%8B%E8%AF%95", encoded);
@@ -97,6 +104,7 @@ class URLUtilTest {
      * 验证 encode 保留 URL path 合法字符（/ : @ 等）.
      */
     @Test
+    @DisplayName("验证 encode 保留 URL path 合法字符（/ : @ 等）.")
     void encodePreservesPathChars() {
         final String encoded = URLUtil.encode("http://example.com/path");
         assertEquals("http://example.com/path", encoded);
@@ -106,6 +114,7 @@ class URLUtilTest {
      * 验证 encode 空字符串和 null.
      */
     @Test
+    @DisplayName("验证 encode 空字符串和 null.")
     void encodeEmpty() {
         assertNull(URLUtil.encode(null));
         assertEquals("", URLUtil.encode(""));
@@ -115,6 +124,7 @@ class URLUtilTest {
      * 验证 encode 将空格编码为 %20.
      */
     @Test
+    @DisplayName("验证 encode 将空格编码为 %20.")
     void encodeSpace() {
         assertEquals("hello%20world", URLUtil.encode("hello world"));
     }
@@ -123,6 +133,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#decode(String)} 解码.
      */
     @Test
+    @DisplayName("验证  解码.")
     void decode() {
         assertEquals("测试", URLUtil.decode("%E6%B5%8B%E8%AF%95"));
     }
@@ -131,6 +142,7 @@ class URLUtilTest {
      * 验证 decode null 返回 null.
      */
     @Test
+    @DisplayName("验证 decode null 返回 null.")
     void decodeNull() {
         assertNull(URLUtil.decode(null));
     }
@@ -139,6 +151,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#decode(String, java.nio.charset.Charset)} 指定字符集解码.
      */
     @Test
+    @DisplayName("验证  指定字符集解码.")
     void decodeWithCharset() {
         assertEquals("hello world", URLUtil.decode("hello+world", StandardCharsets.UTF_8));
     }
@@ -147,6 +160,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#decode(String, java.nio.charset.Charset, boolean)} isPlusToSpace=false 时 + 保留.
      */
     @Test
+    @DisplayName("验证  isPlusToSpace=false 时 + 保留.")
     void decodeWithoutPlusToSpace() {
         final String result = URLUtil.decode("a+b", StandardCharsets.UTF_8, false);
         assertEquals("a+b", result);
@@ -156,6 +170,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#decode(String, String)} 指定字符集名称解码.
      */
     @Test
+    @DisplayName("验证  指定字符集名称解码.")
     void decodeWithCharsetName() {
         assertEquals("测试", URLUtil.decode("%E6%B5%8B%E8%AF%95", "UTF-8"));
     }
@@ -164,6 +179,7 @@ class URLUtilTest {
      * 验证 encode 后 decode 可还原.
      */
     @Test
+    @DisplayName("验证 encode 后 decode 可还原.")
     void encodeDecodeRoundTrip() {
         final String original = "Hello 世界! @test/path";
         final String encoded = URLUtil.encode(original);
@@ -177,6 +193,7 @@ class URLUtilTest {
      * 验证 encode 对文件名（空格 + 中文）编码.
      */
     @Test
+    @DisplayName("验证 encode 对文件名（空格 + 中文）编码.")
     void encodeFilename() {
         final String body = "366466 - 副本.jpg";
         final String encode = URLUtil.encode(body);
@@ -188,6 +205,7 @@ class URLUtilTest {
      * 验证 encodeQuery 对 + 不编码.
      */
     @Test
+    @DisplayName("验证 encodeQuery 对 + 不编码.")
     void encodeQueryPlus() {
         final String body = "+";
         final String encode = URLUtil.encodeQuery(body);
@@ -198,6 +216,7 @@ class URLUtilTest {
      * 验证 encodeQuery 对文件名编码，结果与 encode 一致.
      */
     @Test
+    @DisplayName("验证 encodeQuery 对文件名编码，结果与 encode 一")
     void encodeQueryFilename() {
         final String body = "366466 - 副本.jpg";
         final String encode = URLUtil.encodeQuery(body);
@@ -208,6 +227,7 @@ class URLUtilTest {
      * 验证 encodeQuery null/空字符串.
      */
     @Test
+    @DisplayName("验证 encodeQuery null/空字符串.")
     void encodeQueryEmpty() {
         assertNull(URLUtil.encodeQuery(null));
         assertEquals("", URLUtil.encodeQuery(""));
@@ -217,6 +237,7 @@ class URLUtilTest {
      * 验证 encodeAll 仅保留 UNRESERVED 字符，编码 / 和 :.
      */
     @Test
+    @DisplayName("验证 encodeAll 仅保留 UNRESERVED 字符，编码 / 和 ")
     void encodeAll() {
         final String encoded = URLUtil.encodeAll("http://example.com/path");
         assertEquals("http%3A%2F%2Fexample.com%2Fpath", encoded);
@@ -226,6 +247,7 @@ class URLUtilTest {
      * 验证 encodeAll 保留 - . _ ~.
      */
     @Test
+    @DisplayName("验证 encodeAll 保留 - . _ ~.")
     void encodeAllUnreserved() {
         final String encoded = URLUtil.encodeAll("a-b.c_d~e");
         assertEquals("a-b.c_d~e", encoded);
@@ -235,6 +257,7 @@ class URLUtilTest {
      * 验证 encodeAll 编码 *.
      */
     @Test
+    @DisplayName("验证 encodeAll 编码 *.")
     void encodeAllStar() {
         assertEquals("%2A", URLUtil.encodeAll("*"));
     }
@@ -243,6 +266,7 @@ class URLUtilTest {
      * 验证 encodeAll null/空字符串.
      */
     @Test
+    @DisplayName("验证 encodeAll null/空字符串.")
     void encodeAllEmpty() {
         assertNull(URLUtil.encodeAll(null));
         assertEquals("", URLUtil.encodeAll(""));
@@ -254,6 +278,7 @@ class URLUtilTest {
      * 验证 encode(PATH) 保留 + 号（sub-delim）.
      */
     @Test
+    @DisplayName("验证 encode(PATH) 保留 + 号（sub-delim）.")
     void encodePlus() {
         assertEquals("+", URLUtil.encode("+"));
     }
@@ -262,6 +287,7 @@ class URLUtilTest {
      * 验证 encode(PATH) 保留 / 号.
      */
     @Test
+    @DisplayName("验证 encode(PATH) 保留 / 号.")
     void encodeSlash() {
         assertEquals("a/b", URLUtil.encode("a/b"));
     }
@@ -270,6 +296,7 @@ class URLUtilTest {
      * 验证 encodePathSegment(SEGMENT) 编码 / 号.
      */
     @Test
+    @DisplayName("验证 encodePathSegment(SEGMENT) 编码 / 号.")
     void encodePathSegmentSlash() {
         assertEquals("a%2Fb", URLUtil.encodePathSegment("a/b"));
     }
@@ -278,6 +305,7 @@ class URLUtilTest {
      * 验证 encodePathSegment(SEGMENT) 保留 + 号和 : 号.
      */
     @Test
+    @DisplayName("验证 encodePathSegment(SEGMENT) 保留 + 号和 : 号.")
     void encodePathSegmentPlusAndColon() {
         assertEquals("a+b:c", URLUtil.encodePathSegment("a+b:c"));
     }
@@ -286,6 +314,7 @@ class URLUtilTest {
      * 验证 encodePathSegment 对中文编码.
      */
     @Test
+    @DisplayName("验证 encodePathSegment 对中文编码.")
     void encodePathSegmentChinese() {
         assertEquals("%E6%B5%8B%E8%AF%95", URLUtil.encodePathSegment("测试"));
     }
@@ -294,6 +323,7 @@ class URLUtilTest {
      * 验证 encodePathSegment null/空字符串.
      */
     @Test
+    @DisplayName("验证 encodePathSegment null/空字符串.")
     void encodePathSegmentEmpty() {
         assertNull(URLUtil.encodePathSegment(null));
         assertEquals("", URLUtil.encodePathSegment(""));
@@ -303,6 +333,7 @@ class URLUtilTest {
      * 验证 encodeFragment(FRAGMENT) 保留 ? 和 / 号.
      */
     @Test
+    @DisplayName("验证 encodeFragment(FRAGMENT) 保留 ? 和 / 号.")
     void encodeFragmentQueryAndSlash() {
         assertEquals("a/b?c", URLUtil.encodeFragment("a/b?c"));
     }
@@ -311,6 +342,7 @@ class URLUtilTest {
      * 验证 encodeFragment(FRAGMENT) 保留 + 号.
      */
     @Test
+    @DisplayName("验证 encodeFragment(FRAGMENT) 保留 + 号.")
     void encodeFragmentPlus() {
         assertEquals("+", URLUtil.encodeFragment("+"));
     }
@@ -319,6 +351,7 @@ class URLUtilTest {
      * 验证 encodeFragment 对中文编码.
      */
     @Test
+    @DisplayName("验证 encodeFragment 对中文编码.")
     void encodeFragmentChinese() {
         assertEquals("%E6%B5%8B%E8%AF%95", URLUtil.encodeFragment("测试"));
     }
@@ -327,6 +360,7 @@ class URLUtilTest {
      * 验证 encodeFragment null/空字符串.
      */
     @Test
+    @DisplayName("验证 encodeFragment null/空字符串.")
     void encodeFragmentEmpty() {
         assertNull(URLUtil.encodeFragment(null));
         assertEquals("", URLUtil.encodeFragment(""));
@@ -336,6 +370,7 @@ class URLUtilTest {
      * 验证 encode 与 encodePathSegment 对 / 的处理差异.
      */
     @Test
+    @DisplayName("验证 encode 与 encodePathSegment 对 / 的处理差异.")
     void encodeVsPathSegmentSlash() {
         // PATH 保留 /
         assertEquals("path/to", URLUtil.encode("path/to"));
@@ -347,6 +382,7 @@ class URLUtilTest {
      * 验证 encodeQuery 与 encodeFragment 结果一致（RFC3986 QUERY == FRAGMENT）.
      */
     @Test
+    @DisplayName("验证 encodeQuery 与 encodeFragment 结果一致（RFC3986")
     void encodeQueryEqualsFragment() {
         final String input = "a/b?c+d=e&f";
         assertEquals(URLUtil.encodeQuery(input), URLUtil.encodeFragment(input));
@@ -356,6 +392,7 @@ class URLUtilTest {
      * 验证 decode(+) 转为空格.
      */
     @Test
+    @DisplayName("验证 decode(+) 转为空格.")
     void decodePlusToSpace() {
         assertEquals(" ", URLUtil.decode("+"));
     }
@@ -364,6 +401,7 @@ class URLUtilTest {
      * 验证 decode(+, isPlusToSpace=false) 保留 +.
      */
     @Test
+    @DisplayName("验证 decode(+, isPlusToSpace=false) 保留 +.")
     void decodePlusForPath() {
         assertEquals("+", URLUtil.decode("+", StandardCharsets.UTF_8, false));
     }
@@ -372,6 +410,7 @@ class URLUtilTest {
      * 验证 encode/decode UTF-16 编码.
      */
     @Test
+    @DisplayName("验证 encode/decode UTF-16 编码.")
     void encodeDecodeUtf16() {
         final String s = "测试";
         final String encoded = URLUtil.encode(s, StandardCharsets.UTF_16);
@@ -383,6 +422,7 @@ class URLUtilTest {
      * 验证 decode 混合编码与非编码字符串.
      */
     @Test
+    @DisplayName("验证 decode 混合编码与非编码字符串.")
     void decodeMixedEncoded() {
         final String mixed = "%E6%B5%8B%E8%AF%95你好";
         assertEquals("测试你好", URLUtil.decode(mixed));
@@ -394,6 +434,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#encodeBlank(CharSequence)} 将空格编码为 %20.
      */
     @Test
+    @DisplayName("验证  将空格编码为 %20.")
     void encodeBlank() {
         assertEquals("hello%20world", URLUtil.encodeBlank("hello world"));
     }
@@ -402,6 +443,7 @@ class URLUtilTest {
      * 验证 encodeBlank 对 null 返回 null.
      */
     @Test
+    @DisplayName("验证 encodeBlank 对 null 返回 null.")
     void encodeBlankNull() {
         assertNull(URLUtil.encodeBlank(null));
     }
@@ -410,6 +452,7 @@ class URLUtilTest {
      * 验证 encodeBlank 不改变无空格的字符串.
      */
     @Test
+    @DisplayName("验证 encodeBlank 不改变无空格的字符串.")
     void encodeBlankNoChange() {
         assertEquals("hello", URLUtil.encodeBlank("hello"));
     }
@@ -420,6 +463,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#normalize(String)} 自动补齐 http://.
      */
     @Test
+    @DisplayName("验证  自动补齐 http://.")
     void normalizeAutoProtocol() {
         assertEquals("http://example.com/path", URLUtil.normalize("example.com/path"));
     }
@@ -428,6 +472,7 @@ class URLUtilTest {
      * 验证 normalize 保留已有协议.
      */
     @Test
+    @DisplayName("验证 normalize 保留已有协议.")
     void normalizeKeepProtocol() {
         assertEquals("https://example.com/path", URLUtil.normalize("https://example.com/path"));
     }
@@ -436,6 +481,7 @@ class URLUtilTest {
      * 验证 normalize 替换反斜杠为正斜杠.
      */
     @Test
+    @DisplayName("验证 normalize 替换反斜杠为正斜杠.")
     void normalizeReplaceBackslash() {
         assertEquals("http://example.com/path/to", URLUtil.normalize("example.com\\path\\to"));
     }
@@ -444,6 +490,7 @@ class URLUtilTest {
      * 验证 normalize 去除开头的 / 或 \.
      */
     @Test
+    @DisplayName("验证 normalize 去除开头的 / 或反斜杠")
     void normalizeRemoveLeadingSlash() {
         assertEquals("http://example.com/path", URLUtil.normalize("/example.com/path"));
         assertEquals("http://example.com/path", URLUtil.normalize("\\example.com/path"));
@@ -453,6 +500,7 @@ class URLUtilTest {
      * 验证 normalize 保留查询参数.
      */
     @Test
+    @DisplayName("验证 normalize 保留查询参数.")
     void normalizeKeepParams() {
         assertEquals("http://example.com/path?key=value", URLUtil.normalize("example.com/path?key=value"));
     }
@@ -461,6 +509,7 @@ class URLUtilTest {
      * 验证 normalize with replaceSlash 替换多个斜杠.
      */
     @Test
+    @DisplayName("验证 normalize with replaceSlash 替换多个斜杠.")
     void normalizeReplaceSlash() {
         assertEquals("http://example.com/path/to",
                 URLUtil.normalize("example.com//path///to", false, true));
@@ -470,6 +519,7 @@ class URLUtilTest {
      * 验证 normalize 默认不替换多个斜杠.
      */
     @Test
+    @DisplayName("验证 normalize 默认不替换多个斜杠.")
     void normalizeKeepDoubleSlash() {
         assertEquals("http://example.com//path", URLUtil.normalize("example.com//path"));
     }
@@ -478,6 +528,7 @@ class URLUtilTest {
      * 验证 normalize 空字符串返回空.
      */
     @Test
+    @DisplayName("验证 normalize 空字符串返回空.")
     void normalizeBlank() {
         assertEquals("", URLUtil.normalize(""));
         assertNull(URLUtil.normalize(null));
@@ -487,6 +538,7 @@ class URLUtilTest {
      * 验证 normalize with isEncodePath 对路径编码.
      */
     @Test
+    @DisplayName("验证 normalize with isEncodePath 对路径编码.")
     void normalizeWithEncodePath() {
         final String result = URLUtil.normalize("example.com/测试", true);
         assertEquals("http://example.com/%E6%B5%8B%E8%AF%95", result);
@@ -498,6 +550,7 @@ class URLUtilTest {
      * issue#I25MZL，多个 / 被允许.
      */
     @Test
+    @DisplayName("issue#I25MZL，多个 / 被允许.")
     void normalizeMultiSlashInPath() {
         String url = "http://www.hutool.cn//aaa/bbb";
         String normalize = URLUtil.normalize(url);
@@ -512,6 +565,7 @@ class URLUtilTest {
      * normalize 反斜杠 + 查询参数.
      */
     @Test
+    @DisplayName("normalize 反斜杠 + 查询参数.")
     void normalizeBackslashWithQuery() {
         String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
         String normalize = URLUtil.normalize(url);
@@ -526,6 +580,7 @@ class URLUtilTest {
      * normalize with isEncodePath=true + 反斜杠前缀 \\.
      */
     @Test
+    @DisplayName("normalize with isEncodePath=true + 反斜杠前缀 \\.")
     void normalizeBackslashPrefix() {
         String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
         String normalize = URLUtil.normalize(url, true);
@@ -544,6 +599,7 @@ class URLUtilTest {
      * normalize IPv6 URL.
      */
     @Test
+    @DisplayName("normalize IPv6 URL.")
     void normalizeIpv6() {
         final String url = "http://[fe80::8f8:2022:a603:d180]:9439";
         final String normalize = URLUtil.normalize(url, true);
@@ -554,6 +610,7 @@ class URLUtilTest {
      * normalize 以 // 开头（无协议）.
      */
     @Test
+    @DisplayName("normalize 以 // 开头（无协议）.")
     void normalizeDoubleSlashPrefix() {
         final String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
         final String normalize = URLUtil.normalize(url);
@@ -566,6 +623,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#toURI(String)} 字符串转 URI.
      */
     @Test
+    @DisplayName("验证  字符串转 URI.")
     void toURIFromString() {
         final URI uri = URLUtil.toURI("http://example.com/path");
         assertNotNull(uri);
@@ -576,6 +634,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#toURI(String)} 去除首尾空白.
      */
     @Test
+    @DisplayName("验证  去除首尾空白.")
     void toURITrim() {
         final URI uri = URLUtil.toURI("  http://example.com  ");
         assertEquals("http://example.com", uri.toString());
@@ -585,6 +644,7 @@ class URLUtilTest {
      * 验证 toURI null 返回 null.
      */
     @Test
+    @DisplayName("验证 toURI null 返回 null.")
     void toURINull() {
         assertNull(URLUtil.toURI((String) null));
     }
@@ -593,6 +653,7 @@ class URLUtilTest {
      * 验证 toURI 非法 URI 抛出 UtilException.
      */
     @Test
+    @DisplayName("验证 toURI 非法 URI 抛出 UtilException.")
     void toURISyntaxError() {
         assertThrows(UtilException.class, () -> URLUtil.toURI("http://exa mple.com"));
     }
@@ -601,6 +662,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#toURI(URL)} URL 转 URI.
      */
     @Test
+    @DisplayName("验证  URL 转 URI.")
     void toURIFromURL() throws Exception {
         final URL url = new URL("http://example.com/path");
         final URI uri = URLUtil.toURI(url);
@@ -609,9 +671,10 @@ class URLUtilTest {
     }
 
     /**
-     * 验证 toURI 简单路径后 resolve(".").
+     * 验证 toURI 简单路径后 resolve.
      */
     @Test
+    @DisplayName("验证 toURI 简单路径后 resolve.")
     void toURIAndResolve() {
         final String fileFullName = "/Uploads/20240601/aaaa.txt";
         final URI uri = URLUtil.toURI(fileFullName);
@@ -625,6 +688,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getPath(String)} 获取路径部分.
      */
     @Test
+    @DisplayName("验证  获取路径部分.")
     void getPath() {
         assertEquals("/path/to/resource", URLUtil.getPath("http://example.com/path/to/resource"));
     }
@@ -633,6 +697,7 @@ class URLUtilTest {
      * 验证 getPath 带前导空格和查询参数.
      */
     @Test
+    @DisplayName("验证 getPath 带前导空格和查询参数.")
     void getPathWithLeadingSpaceAndQuery() {
         final String url = " http://www.aaa.bbb/search?scope=ccc&q=ddd";
         assertEquals("/search", URLUtil.getPath(url));
@@ -642,6 +707,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getDecodedPath(URL)} 解码路径.
      */
     @Test
+    @DisplayName("验证  解码路径.")
     void getDecodedPath() throws Exception {
         final URL url = new URL("http://example.com/path%20with%20space");
         final String path = URLUtil.getDecodedPath(url);
@@ -653,6 +719,7 @@ class URLUtilTest {
      * 验证 getDecodedPath null 返回 null.
      */
     @Test
+    @DisplayName("验证 getDecodedPath null 返回 null.")
     void getDecodedPathNull() {
         assertNull(URLUtil.getDecodedPath(null));
     }
@@ -663,6 +730,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getHost(URL)} 提取域名部分.
      */
     @Test
+    @DisplayName("验证  提取域名部分.")
     void getHost() throws Exception {
         final URL url = new URL("http://example.com:8080/path?key=value");
         final URI host = URLUtil.getHost(url);
@@ -675,6 +743,7 @@ class URLUtilTest {
      * 验证 getHost null 返回 null.
      */
     @Test
+    @DisplayName("验证 getHost null 返回 null.")
     void getHostNull() {
         assertNull(URLUtil.getHost(null));
     }
@@ -683,6 +752,7 @@ class URLUtilTest {
      * 验证 normalize 后 getHost 提取域名.
      */
     @Test
+    @DisplayName("验证 normalize 后 getHost 提取域名.")
     void getHostAfterNormalize() throws Exception {
         final String url = "https://www.hutool.cn//aaa/\\bbb?a=1&b=2";
         final String normalize = URLUtil.normalize(url);
@@ -696,6 +766,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#completeUrl(String, String)} 补全相对路径.
      */
     @Test
+    @DisplayName("验证  补全相对路径.")
     void completeUrl() {
         final String result = URLUtil.completeUrl("http://example.com/base/", "../path");
         assertEquals("http://example.com/path", result);
@@ -705,6 +776,7 @@ class URLUtilTest {
      * 验证 completeUrl 空基准 URL 返回 null.
      */
     @Test
+    @DisplayName("验证 completeUrl 空基准 URL 返回 null.")
     void completeUrlBlankBase() {
         assertNull(URLUtil.completeUrl("", "path"));
     }
@@ -715,6 +787,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#isFileURL(URL)} 判断 file 协议.
      */
     @Test
+    @DisplayName("验证  判断 file 协议.")
     void isFileURL() throws Exception {
         final URL fileUrl = new File("/tmp/test.txt").toURI().toURL();
         assertTrue(URLUtil.isFileURL(fileUrl));
@@ -724,6 +797,7 @@ class URLUtilTest {
      * 验证 isFileURL 对 http 协议返回 false.
      */
     @Test
+    @DisplayName("验证 isFileURL 对 http 协议返回 false.")
     void isFileURLNotFile() throws Exception {
         final URL httpUrl = new URL("http://example.com/path");
         assertFalse(URLUtil.isFileURL(httpUrl));
@@ -733,6 +807,7 @@ class URLUtilTest {
      * 验证 isFileURL null 抛出异常.
      */
     @Test
+    @DisplayName("验证 isFileURL null 抛出异常.")
     void isFileURLNull() {
         assertThrows(IllegalArgumentException.class, () -> URLUtil.isFileURL(null));
     }
@@ -741,6 +816,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#isJarURL(URL)} 判断 jar 协议.
      */
     @Test
+    @DisplayName("验证  判断 jar 协议.")
     void isJarURL() throws Exception {
         final URL jarUrl = new URL("jar:file:/test.jar!/com/test.class");
         assertTrue(URLUtil.isJarURL(jarUrl));
@@ -750,6 +826,7 @@ class URLUtilTest {
      * 验证 isJarURL 对 file 协议返回 false.
      */
     @Test
+    @DisplayName("验证 isJarURL 对 file 协议返回 false.")
     void isJarURLNotJar() throws Exception {
         final URL fileUrl = new URL("file:/test.txt");
         assertFalse(URLUtil.isJarURL(fileUrl));
@@ -759,6 +836,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#isJarFileURL(URL)} 判断 jar 文件 URL.
      */
     @Test
+    @DisplayName("验证  判断 jar 文件 URL.")
     void isJarFileURL() throws Exception {
         final URL jarFileUrl = new URL("file:/test/test.jar");
         assertTrue(URLUtil.isJarFileURL(jarFileUrl));
@@ -768,6 +846,7 @@ class URLUtilTest {
      * 验证 isJarFileURL 对非 .jar 文件返回 false.
      */
     @Test
+    @DisplayName("验证 isJarFileURL 对非 .jar 文件返回 false.")
     void isJarFileURLNotJar() throws Exception {
         final URL txtUrl = new URL("file:/test/test.txt");
         assertFalse(URLUtil.isJarFileURL(txtUrl));
@@ -779,6 +858,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#url(URI)} URI 转 URL.
      */
     @Test
+    @DisplayName("验证  URI 转 URL.")
     void urlFromURI() throws Exception {
         final URI uri = new URI("http://example.com/path");
         final URL url = URLUtil.url(uri);
@@ -790,6 +870,7 @@ class URLUtilTest {
      * 验证 url(URI) null 返回 null.
      */
     @Test
+    @DisplayName("验证 url(URI) null 返回 null.")
     void urlFromURINull() {
         assertNull(URLUtil.url((URI) null));
     }
@@ -798,6 +879,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#url(String)} 字符串创建 URL.
      */
     @Test
+    @DisplayName("验证  字符串创建 URL.")
     void urlFromString() {
         final URL url = URLUtil.url("http://example.com/path");
         assertNotNull(url);
@@ -808,6 +890,7 @@ class URLUtilTest {
      * 验证 url(null) 返回 null.
      */
     @Test
+    @DisplayName("验证 url(null) 返回 null.")
     void urlFromStringNull() {
         assertNull(URLUtil.url((String) null));
     }
@@ -816,6 +899,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#url(String)} classpath 协议.
      */
     @Test
+    @DisplayName("验证  classpath 协议.")
     void urlClasspath() {
         final URL url = URLUtil.url("classpath:cc/hongz/ztools/core/util/URLUtil.class");
         assertNotNull(url);
@@ -826,6 +910,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#url(String)} 文件路径自动转 file URL.
      */
     @Test
+    @DisplayName("验证  文件路径自动转 file URL.")
     void urlFilePath() {
         final URL url = URLUtil.url("/tmp/nonexistent-file-test");
         assertNotNull(url);
@@ -838,6 +923,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getStringURI(CharSequence)} 创建 string 协议 URI.
      */
     @Test
+    @DisplayName("验证  创建 string 协议 URI.")
     void getStringURI() {
         final URI uri = URLUtil.getStringURI("hello_world");
         assertNotNull(uri);
@@ -848,6 +934,7 @@ class URLUtilTest {
      * 验证 getStringURI 已有前缀时不重复添加.
      */
     @Test
+    @DisplayName("验证 getStringURI 已有前缀时不重复添加.")
     void getStringURIWithPrefix() {
         final URI uri = URLUtil.getStringURI("string:///test");
         assertEquals("string:///test", uri.toString());
@@ -857,6 +944,7 @@ class URLUtilTest {
      * 验证 getStringURI null 返回 null.
      */
     @Test
+    @DisplayName("验证 getStringURI null 返回 null.")
     void getStringURINull() {
         assertNull(URLUtil.getStringURI(null));
     }
@@ -867,6 +955,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#toUrlForHttp(String)} 创建 HTTP URL.
      */
     @Test
+    @DisplayName("验证  创建 HTTP URL.")
     void toUrlForHttp() {
         final URL url = URLUtil.toUrlForHttp("http://example.com/path");
         assertNotNull(url);
@@ -877,6 +966,7 @@ class URLUtilTest {
      * 验证 toUrlForHttp 编码空格.
      */
     @Test
+    @DisplayName("验证 toUrlForHttp 编码空格.")
     void toUrlForHttpEncodeBlank() {
         final URL url = URLUtil.toUrlForHttp("http://example.com/path with space");
         assertNotNull(url);
@@ -888,6 +978,7 @@ class URLUtilTest {
      * 验证 toUrlForHttp 空字符串抛出异常.
      */
     @Test
+    @DisplayName("验证 toUrlForHttp 空字符串抛出异常.")
     void toUrlForHttpBlank() {
         assertThrows(IllegalArgumentException.class, () -> URLUtil.toUrlForHttp(""));
     }
@@ -898,6 +989,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getURL(File)} 从文件获取 URL.
      */
     @Test
+    @DisplayName("验证  从文件获取 URL.")
     void getURLFromFile() throws IOException {
         final File file = tempDir.resolve("test.txt").toFile();
         Files.write(file.toPath(), "hello".getBytes());
@@ -910,6 +1002,7 @@ class URLUtilTest {
      * 验证 getURL(null) 抛出异常.
      */
     @Test
+    @DisplayName("验证 getURL(null) 抛出异常.")
     void getURLFromFileNull() {
         assertThrows(IllegalArgumentException.class, () -> URLUtil.getURL((File) null));
     }
@@ -918,6 +1011,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getURLs(File...)} 批量获取 URL.
      */
     @Test
+    @DisplayName("验证  批量获取 URL.")
     void getURLs() throws IOException {
         final File file1 = tempDir.resolve("a.txt").toFile();
         final File file2 = tempDir.resolve("b.txt").toFile();
@@ -935,6 +1029,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getStream(URL)} 从文件 URL 获取流.
      */
     @Test
+    @DisplayName("验证  从文件 URL 获取流.")
     void getStream() throws IOException {
         final File file = tempDir.resolve("stream.txt").toFile();
         Files.write(file.toPath(), "hello".getBytes());
@@ -949,6 +1044,7 @@ class URLUtilTest {
      * 验证 getStream(null) 抛出异常.
      */
     @Test
+    @DisplayName("验证 getStream(null) 抛出异常.")
     void getStreamNull() {
         assertThrows(IllegalArgumentException.class, () -> URLUtil.getStream(null));
     }
@@ -957,6 +1053,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getReader(URL, java.nio.charset.Charset)} 获取 Reader.
      */
     @Test
+    @DisplayName("验证  获取 Reader.")
     void getReader() throws IOException {
         final File file = tempDir.resolve("reader.txt").toFile();
         Files.write(file.toPath(), "hello world".getBytes());
@@ -973,6 +1070,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#buildQuery(Map, java.nio.charset.Charset)} 构建 URL 查询参数.
      */
     @Test
+    @DisplayName("验证  构建 URL 查询参数.")
     void buildQuery() {
         final Map<String, Object> params = new LinkedHashMap<>();
         params.put("key1", "value1");
@@ -985,6 +1083,7 @@ class URLUtilTest {
      * 验证 buildQuery 跳过空 key.
      */
     @Test
+    @DisplayName("验证 buildQuery 跳过空 key.")
     void buildQuerySkipEmptyKey() {
         final Map<String, Object> params = new LinkedHashMap<>();
         params.put("", "value1");
@@ -996,6 +1095,7 @@ class URLUtilTest {
      * 验证 buildQuery 对中文编码.
      */
     @Test
+    @DisplayName("验证 buildQuery 对中文编码.")
     void buildQueryEncode() {
         final Map<String, Object> params = new LinkedHashMap<>();
         params.put("name", "测试");
@@ -1006,6 +1106,7 @@ class URLUtilTest {
      * 验证 buildQuery 空参数返回空字符串.
      */
     @Test
+    @DisplayName("验证 buildQuery 空参数返回空字符串.")
     void buildQueryEmpty() {
         assertEquals("", URLUtil.buildQuery(null, StandardCharsets.UTF_8));
     }
@@ -1016,6 +1117,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#getContentLength(URL)} 获取文件长度.
      */
     @Test
+    @DisplayName("验证  获取文件长度.")
     void getContentLength() throws Exception {
         // 使用模块根目录下的 pom.xml，避免 classpath 和 TempDir 文件锁问题
         final File pomFile = new File("pom.xml");
@@ -1029,6 +1131,7 @@ class URLUtilTest {
      * 验证 getContentLength(null) 返回 -1.
      */
     @Test
+    @DisplayName("验证 getContentLength(null) 返回 -1.")
     void getContentLengthNull() {
         assertEquals(-1, URLUtil.getContentLength(null));
     }
@@ -1037,6 +1140,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#size(URL)} 获取文件大小.
      */
     @Test
+    @DisplayName("验证  获取文件大小.")
     void size() throws IOException {
         final File file = tempDir.resolve("size.txt").toFile();
         Files.write(file.toPath(), "hello".getBytes());
@@ -1050,6 +1154,7 @@ class URLUtilTest {
      * 验证 {@link URLUtil#useCachesIfNecessary(java.net.URLConnection)} 非 JNLP 连接设置 useCache=false.
      */
     @Test
+    @DisplayName("验证  非 JNLP 连接设置 useCache=false.")
     void useCachesIfNecessary() throws IOException {
         final File file = tempDir.resolve("cache.txt").toFile();
         Files.write(file.toPath(), "hello".getBytes());
@@ -1066,6 +1171,7 @@ class URLUtilTest {
      * 验证 URL 常量值.
      */
     @Test
+    @DisplayName("验证 URL 常量值.")
     void constants() {
         assertEquals("classpath:", URLUtil.CLASSPATH_URL_PREFIX);
         assertEquals("file:", URLUtil.FILE_URL_PREFIX);

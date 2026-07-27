@@ -47,55 +47,55 @@ import java.util.jar.JarFile;
 public final class URLUtil {
 
     /**
-     * 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:"
+     * 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:".
      */
     public static final String CLASSPATH_URL_PREFIX = "classpath:";
     /**
-     * URL 前缀表示文件: "file:"
+     * URL 前缀表示文件: "file:".
      */
     public static final String FILE_URL_PREFIX = "file:";
     /**
-     * URL 前缀表示jar: "jar:"
+     * URL 前缀表示jar: "jar:".
      */
     public static final String JAR_URL_PREFIX = "jar:";
     /**
-     * URL 前缀表示war: "war:"
+     * URL 前缀表示war: "war:".
      */
     public static final String WAR_URL_PREFIX = "war:";
     /**
-     * URL 协议表示文件: "file"
+     * URL 协议表示文件: "file".
      */
     public static final String URL_PROTOCOL_FILE = "file";
     /**
-     * URL 协议表示Jar文件: "jar"
+     * URL 协议表示Jar文件: "jar".
      */
     public static final String URL_PROTOCOL_JAR = "jar";
     /**
-     * URL 协议表示zip文件: "zip"
+     * URL 协议表示zip文件: "zip".
      */
     public static final String URL_PROTOCOL_ZIP = "zip";
     /**
-     * URL 协议表示WebSphere文件: "wsjar"
+     * URL 协议表示WebSphere文件: "wsjar".
      */
     public static final String URL_PROTOCOL_WSJAR = "wsjar";
     /**
-     * URL 协议表示JBoss zip文件: "vfszip"
+     * URL 协议表示JBoss zip文件: "vfszip".
      */
     public static final String URL_PROTOCOL_VFSZIP = "vfszip";
     /**
-     * URL 协议表示JBoss文件: "vfsfile"
+     * URL 协议表示JBoss文件: "vfsfile".
      */
     public static final String URL_PROTOCOL_VFSFILE = "vfsfile";
     /**
-     * URL 协议表示JBoss VFS资源: "vfs"
+     * URL 协议表示JBoss VFS资源: "vfs".
      */
     public static final String URL_PROTOCOL_VFS = "vfs";
     /**
-     * Jar路径以及内部文件路径的分界符: "!/"
+     * Jar路径以及内部文件路径的分界符: "!/".
      */
     public static final String JAR_URL_SEPARATOR = "!/";
     /**
-     * WAR路径及内部文件路径分界符
+     * WAR路径及内部文件路径分界符.
      */
     public static final String WAR_URL_SEPARATOR = "*/";
 
@@ -108,7 +108,7 @@ public final class URLUtil {
     // --------------------------------------- URL 创建
 
     /**
-     * 将{@link URI}转换为{@link URL}
+     * 将{@link URI}转换为{@link URL}.
      *
      * @param uri {@link URI}
      * @return URL对象
@@ -126,7 +126,7 @@ public final class URLUtil {
     }
 
     /**
-     * 通过一个字符串形式的URL地址创建URL对象
+     * 通过一个字符串形式的URL地址创建URL对象.
      *
      * @param url URL
      * @return URL对象
@@ -136,7 +136,7 @@ public final class URLUtil {
     }
 
     /**
-     * 通过一个字符串形式的URL地址创建URL对象
+     * 通过一个字符串形式的URL地址创建URL对象.
      *
      * @param url     URL
      * @param handler {@link URLStreamHandler}
@@ -174,7 +174,7 @@ public final class URLUtil {
     }
 
     /**
-     * 获取string协议的URL，类似于string:///xxxxx
+     * 获取string协议的URL，类似于string:///xxxxx.
      *
      * @param content 正文
      * @return URL
@@ -188,7 +188,7 @@ public final class URLUtil {
     }
 
     /**
-     * 将URL字符串转换为URL对象，并做必要验证
+     * 将URL字符串转换为URL对象，并做必要验证.
      *
      * @param urlStr URL字符串
      * @return URL
@@ -198,7 +198,7 @@ public final class URLUtil {
     }
 
     /**
-     * 将URL字符串转换为URL对象，并做必要验证
+     * 将URL字符串转换为URL对象，并做必要验证.
      *
      * @param urlStr  URL字符串
      * @param handler {@link URLStreamHandler}
@@ -216,7 +216,7 @@ public final class URLUtil {
     }
 
     /**
-     * 单独编码URL中的空白符，空白符编码为%20
+     * 单独编码URL中的空白符，空白符编码为%20.
      *
      * @param urlStr URL字符串
      * @return 编码后的字符串
@@ -243,7 +243,7 @@ public final class URLUtil {
     // --------------------------------------- 资源URL获取
 
     /**
-     * 获得URL
+     * 获得URL.
      *
      * @param pathBaseClassLoader 相对路径（相对于classes）
      * @return URL
@@ -256,7 +256,7 @@ public final class URLUtil {
     }
 
     /**
-     * 获得URL
+     * 获得URL.
      *
      * @param path  相对给定 class所在的路径
      * @param clazz 指定class
@@ -270,7 +270,7 @@ public final class URLUtil {
     }
 
     /**
-     * 获得URL，常用于使用绝对路径时的情况
+     * 获得URL，常用于使用绝对路径时的情况.
      *
      * @param file URL对应的文件对象
      * @return URL
@@ -286,7 +286,7 @@ public final class URLUtil {
     }
 
     /**
-     * 获得URL，常用于使用绝对路径时的情况
+     * 获得URL，常用于使用绝对路径时的情况.
      *
      * @param files URL对应的文件对象
      * @return URL
@@ -308,7 +308,7 @@ public final class URLUtil {
     // --------------------------------------- URL 信息提取
 
     /**
-     * 获取URL中域名部分，只保留URL中的协议（Protocol）、Host，其它为null。
+     * 获取URL中域名部分，只保留URL中的协议（Protocol）、Host，其它为null。.
      *
      * @param url URL
      * @return 域名的URI
@@ -326,7 +326,7 @@ public final class URLUtil {
     }
 
     /**
-     * 补全相对路径
+     * 补全相对路径.
      *
      * @param baseUrl      基准URL
      * @param relativePath 相对URL
@@ -351,7 +351,7 @@ public final class URLUtil {
     // --------------------------------------- decode
 
     /**
-     * 解码URL<br>
+     * 解码URL<br>.
      * 将%开头的16进制表示的内容解码。
      *
      * @param url URL
@@ -363,7 +363,7 @@ public final class URLUtil {
     }
 
     /**
-     * 解码application/x-www-form-urlencoded字符<br>
+     * 解码application/x-www-form-urlencoded字符<br>.
      * 将%开头的16进制表示的内容解码。<br>
      * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
      *
@@ -376,7 +376,7 @@ public final class URLUtil {
     }
 
     /**
-     * 解码application/x-www-form-urlencoded字符<br>
+     * 解码application/x-www-form-urlencoded字符<br>.
      * 将%开头的16进制表示的内容解码。
      *
      * @param content       被解码内容
@@ -389,7 +389,7 @@ public final class URLUtil {
     }
 
     /**
-     * 解码application/x-www-form-urlencoded字符<br>
+     * 解码application/x-www-form-urlencoded字符<br>.
      * 将%开头的16进制表示的内容解码。
      *
      * @param content URL
@@ -404,7 +404,7 @@ public final class URLUtil {
     // --------------------------------------- path / URI
 
     /**
-     * 获得path部分<br>
+     * 获得path部分<br>.
      *
      * @param uriStr URI路径
      * @return path
@@ -415,7 +415,7 @@ public final class URLUtil {
     }
 
     /**
-     * 从URL对象中获取不被编码的路径Path<br>
+     * 从URL对象中获取不被编码的路径Path<br>.
      * 对于本地路径，URL对象的getPath方法对于包含中文或空格时会被编码，导致本读路径读取错误。<br>
      * 此方法将URL转为URI后获取路径用于解决路径被编码的问题
      *
@@ -438,7 +438,7 @@ public final class URLUtil {
     }
 
     /**
-     * 转URL为URI
+     * 转URL为URI.
      *
      * @param url URL
      * @return URI
@@ -449,7 +449,7 @@ public final class URLUtil {
     }
 
     /**
-     * 转URL为URI
+     * 转URL为URI.
      *
      * @param url      URL
      * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
@@ -465,7 +465,7 @@ public final class URLUtil {
     }
 
     /**
-     * 转字符串为URI
+     * 转字符串为URI.
      *
      * @param location 字符串路径
      * @return URI
@@ -476,7 +476,7 @@ public final class URLUtil {
     }
 
     /**
-     * 转字符串为URI
+     * 转字符串为URI.
      *
      * @param location 字符串路径
      * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
@@ -501,7 +501,7 @@ public final class URLUtil {
     // --------------------------------------- URL 类型判断
 
     /**
-     * 提供的URL是否为文件<br>
+     * 提供的URL是否为文件<br>.
      * 文件协议包括"file", "vfsfile" 或 "vfs".
      *
      * @param url {@link URL}
@@ -531,7 +531,7 @@ public final class URLUtil {
     }
 
     /**
-     * 提供的URL是否为Jar文件URL 判断依据为file协议且扩展名为.jar
+     * 提供的URL是否为Jar文件URL 判断依据为file协议且扩展名为.jar.
      *
      * @param url the URL to check
      * @return whether the URL has been identified as a JAR file URL
@@ -545,7 +545,7 @@ public final class URLUtil {
     // --------------------------------------- URL 流操作
 
     /**
-     * 从URL中获取流
+     * 从URL中获取流.
      *
      * @param url {@link URL}
      * @return InputStream流
@@ -560,7 +560,7 @@ public final class URLUtil {
     }
 
     /**
-     * 获得Reader
+     * 获得Reader.
      *
      * @param url     {@link URL}
      * @param charset 编码
@@ -571,7 +571,7 @@ public final class URLUtil {
     }
 
     /**
-     * 从URL中获取JarFile
+     * 从URL中获取JarFile.
      *
      * @param url URL
      * @return JarFile
@@ -588,7 +588,7 @@ public final class URLUtil {
     // --------------------------------------- normalize
 
     /**
-     * 标准化URL字符串，包括：
+     * 标准化URL字符串，包括：.
      *
      * <ol>
      *     <li>自动补齐"http://"头</li>
@@ -604,7 +604,7 @@ public final class URLUtil {
     }
 
     /**
-     * 标准化URL字符串，包括：
+     * 标准化URL字符串，包括：.
      *
      * <ol>
      *     <li>自动补齐"http://"头</li>
@@ -621,7 +621,7 @@ public final class URLUtil {
     }
 
     /**
-     * 标准化URL字符串，包括：
+     * 标准化URL字符串，包括：.
      *
      * <ol>
      *     <li>自动补齐"http://"头</li>
@@ -684,7 +684,7 @@ public final class URLUtil {
     // --------------------------------------- buildQuery
 
     /**
-     * 将Map形式的Form表单数据转换为Url参数形式<br>
+     * 将Map形式的Form表单数据转换为Url参数形式<br>.
      * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
      * 会自动url编码键和值
      *
@@ -721,7 +721,7 @@ public final class URLUtil {
     // --------------------------------------- content length / size
 
     /**
-     * 获取指定URL对应资源的内容长度，对于Http，其长度使用Content-Length头决定。
+     * 获取指定URL对应资源的内容长度，对于Http，其长度使用Content-Length头决定。.
      *
      * @param url URL
      * @return 内容长度，未知返回-1
@@ -746,7 +746,7 @@ public final class URLUtil {
     }
 
     /**
-     * 获取URL对应数据长度
+     * 获取URL对应数据长度.
      * <ul>
      *     <li>如果URL为文件，转换为文件获取文件长度。</li>
      *     <li>其它情况获取{@link URLConnection#getContentLengthLong()}</li>
@@ -787,7 +787,7 @@ public final class URLUtil {
     }
 
     /**
-     * 如果连接为JNLP方式，则打开缓存
+     * 如果连接为JNLP方式，则打开缓存.
      *
      * @param con {@link URLConnection}
      */
@@ -798,7 +798,7 @@ public final class URLUtil {
     // --------------------------------------- Data URI
 
     /**
-     * Data URI Scheme封装，数据格式为Base64。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>
+     * Data URI Scheme封装，数据格式为Base64。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>.
      * 目的是将一些小的数据，直接嵌入到网页中，从而不用再从外部文件载入。常用于将图片嵌入网页。
      *
      * <p>
@@ -816,7 +816,7 @@ public final class URLUtil {
     }
 
     /**
-     * Data URI Scheme封装。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>
+     * Data URI Scheme封装。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>.
      * 目的是将一些小的数据，直接嵌入到网页中，从而不用再从外部文件载入。常用于将图片嵌入网页。
      *
      * <p>
@@ -835,7 +835,7 @@ public final class URLUtil {
     }
 
     /**
-     * Data URI Scheme封装。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>
+     * Data URI Scheme封装。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>.
      * 目的是将一些小的数据，直接嵌入到网页中，从而不用再从外部文件载入。常用于将图片嵌入网页。
      *
      * <p>
@@ -884,7 +884,7 @@ public final class URLUtil {
     // 实现委托给 URLEncodeUtil，基于 RFC3986 + PercentCodec（BitSet）逐字符判断
 
     /**
-     * 编码URL，默认使用UTF-8编码<br>
+     * 编码URL，默认使用UTF-8编码<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于"/"的字符不再编码<br>
      * 遵循 RFC3986 PATH 规范，保留 pchar + "/" 字符。
@@ -898,7 +898,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码URL<br>
+     * 编码URL<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于"/"的字符不再编码<br>
      * 遵循 RFC3986 PATH 规范，保留 pchar + "/" 字符。
@@ -912,7 +912,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码URL中查询语句，默认使用UTF-8编码<br>
+     * 编码URL中查询语句，默认使用UTF-8编码<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 此方法用于URL查询参数编码，转义大部分特殊字符，但保留 RFC3986 QUERY 允许的字符。<br>
      * 与 {@link #encode(String)} 的区别：此方法不编码 {@code +}（sub-delim）和 {@code ?}
@@ -926,7 +926,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码字符为URL中查询语句<br>
+     * 编码字符为URL中查询语句<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 此方法用于URL查询参数编码，转义大部分特殊字符，但保留 RFC3986 QUERY 允许的字符。
      *
@@ -939,7 +939,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码URL的Segment，默认使用UTF-8编码<br>
+     * 编码URL的Segment，默认使用UTF-8编码<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 遵循 RFC3986 SEGMENT 规范，保留 pchar 字符，但 {@code /} 会被编码。<br>
      * 与 {@link #encode(String)} 的区别：此方法编码 {@code /}（路径分隔符）
@@ -953,7 +953,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码URL的Segment<br>
+     * 编码URL的Segment<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 遵循 RFC3986 SEGMENT 规范，保留 pchar 字符，但 {@code /} 会被编码。
      *
@@ -966,7 +966,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码URL的Fragment，默认使用UTF-8编码<br>
+     * 编码URL的Fragment，默认使用UTF-8编码<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 遵循 RFC3986 FRAGMENT 规范，保留 pchar + "/" + "?" 字符。<br>
      * FRAGMENT 与 QUERY 允许的字符集相同。
@@ -980,7 +980,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码URL的Fragment<br>
+     * 编码URL的Fragment<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 遵循 RFC3986 FRAGMENT 规范，保留 pchar + "/" + "?" 字符。
      *
@@ -993,7 +993,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码全部URL，默认使用UTF-8编码<br>
+     * 编码全部URL，默认使用UTF-8编码<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 此方法仅保留 RFC3986 UNRESERVED 字符（ALPHA / DIGIT / "-" / "." / "_" / "~"），其余全部编码。
      *
@@ -1006,7 +1006,7 @@ public final class URLUtil {
     }
 
     /**
-     * 编码全部URL<br>
+     * 编码全部URL<br>.
      * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
      * 此方法仅保留 RFC3986 UNRESERVED 字符（ALPHA / DIGIT / "-" / "." / "_" / "~"），其余全部编码。
      *
