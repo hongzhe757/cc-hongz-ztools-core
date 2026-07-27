@@ -24,13 +24,15 @@ import java.util.regex.Pattern;
  */
 public final class VersionUtil {
 
-    /** 版本比较运算符正则. */
-    private static final Pattern COMPARE_REG =
-            Pattern.compile("^[<>≥≤]=?");
+    /**
+     * 版本比较运算符正则.
+     */
+    private static final Pattern COMPARE_REG = Pattern.compile("^[<>≥≤]=?");
 
-    /** 默认多版本分隔符. */
-    private static final String DEFAULT_VERSIONS_DELIMITER =
-            ";";
+    /**
+     * 默认多版本分隔符.
+     */
+    private static final String DEFAULT_VERSIONS_DELIMITER = ";";
 
     private VersionUtil() {
     }
@@ -42,11 +44,8 @@ public final class VersionUtil {
      * @param compareVersions 待匹配的版本列表
      * @return true 包含待匹配的版本
      */
-    public static boolean anyMatch(final String currentVersion,
-            final Collection<String> compareVersions) {
-        return matchEl(currentVersion,
-                CollUtil.join(compareVersions,
-                        DEFAULT_VERSIONS_DELIMITER));
+    public static boolean anyMatch(final String currentVersion, final Collection<String> compareVersions) {
+        return matchEl(currentVersion, CollUtil.join(compareVersions, DEFAULT_VERSIONS_DELIMITER));
     }
 
     /**
@@ -56,11 +55,8 @@ public final class VersionUtil {
      * @param compareVersions 待匹配的版本列表
      * @return true 包含待匹配的版本
      */
-    public static boolean anyMatch(final String currentVersion,
-            final String... compareVersions) {
-        return matchEl(currentVersion,
-                ArrayUtil.join(compareVersions,
-                        DEFAULT_VERSIONS_DELIMITER));
+    public static boolean anyMatch(final String currentVersion, final String... compareVersions) {
+        return matchEl(currentVersion, ArrayUtil.join(compareVersions, DEFAULT_VERSIONS_DELIMITER));
     }
 
     /**
@@ -70,11 +66,8 @@ public final class VersionUtil {
      * @param compareVersion 待比较版本
      * @return true  当前版本大于待比较版本
      */
-    public static boolean isGreaterThan(
-            final String currentVersion,
-            final String compareVersion) {
-        return matchEl(currentVersion,
-                ">" + compareVersion);
+    public static boolean isGreaterThan(final String currentVersion, final String compareVersion) {
+        return matchEl(currentVersion, ">" + compareVersion);
     }
 
     /**
@@ -84,11 +77,8 @@ public final class VersionUtil {
      * @param compareVersion 待比较版本
      * @return true  当前版本大于等于待比较版本
      */
-    public static boolean isGreaterThanOrEqual(
-            final String currentVersion,
-            final String compareVersion) {
-        return matchEl(currentVersion,
-                ">=" + compareVersion);
+    public static boolean isGreaterThanOrEqual(final String currentVersion, final String compareVersion) {
+        return matchEl(currentVersion, ">=" + compareVersion);
     }
 
     /**
@@ -98,11 +88,8 @@ public final class VersionUtil {
      * @param compareVersion 待比较版本
      * @return true  当前版本小于待比较版本
      */
-    public static boolean isLessThan(
-            final String currentVersion,
-            final String compareVersion) {
-        return matchEl(currentVersion,
-                "<" + compareVersion);
+    public static boolean isLessThan(final String currentVersion, final String compareVersion) {
+        return matchEl(currentVersion, "<" + compareVersion);
     }
 
     /**
@@ -112,11 +99,8 @@ public final class VersionUtil {
      * @param compareVersion 待比较版本
      * @return true  当前版本小于等于待比较版本
      */
-    public static boolean isLessThanOrEqual(
-            final String currentVersion,
-            final String compareVersion) {
-        return matchEl(currentVersion,
-                "<=" + compareVersion);
+    public static boolean isLessThanOrEqual(final String currentVersion, final String compareVersion) {
+        return matchEl(currentVersion, "<=" + compareVersion);
     }
 
     /**
@@ -132,10 +116,8 @@ public final class VersionUtil {
      * @param versionEl      版本表达式
      * @return true  当前版本是否满足版本表达式
      */
-    public static boolean matchEl(final String currentVersion,
-            final String versionEl) {
-        return matchEl(currentVersion, versionEl,
-                DEFAULT_VERSIONS_DELIMITER);
+    public static boolean matchEl(final String currentVersion, final String versionEl) {
+        return matchEl(currentVersion, versionEl, DEFAULT_VERSIONS_DELIMITER);
     }
 
     /**
@@ -153,33 +135,24 @@ public final class VersionUtil {
      * @param versionsDelimiter 多表达式分隔符
      * @return true  当前版本是否满足版本表达式
      */
-    public static boolean matchEl(final String currentVersion,
-            final String versionEl,
-            final String versionsDelimiter) {
-        if (StrUtil.isBlank(versionsDelimiter)
-                || StrUtil.equals("-", versionsDelimiter, false)
-                || ReUtil.isMatch(COMPARE_REG,
-                        versionsDelimiter)) {
-            throw new UtilException(
-                    "非法的版本分隔符：" + versionsDelimiter);
+    public static boolean matchEl(final String currentVersion, final String versionEl, final String versionsDelimiter) {
+        if (StrUtil.isBlank(versionsDelimiter) || StrUtil.equals("-", versionsDelimiter, false) || ReUtil.isMatch(COMPARE_REG, versionsDelimiter)) {
+            throw new UtilException("非法的版本分隔符：" + versionsDelimiter);
         }
 
         if (StrUtil.isBlank(versionEl)) {
             return false;
         }
-        final String trimmedVersion =
-                StrUtil.trim(currentVersion);
+        final String trimmedVersion = StrUtil.trim(currentVersion);
 
-        final List<String> els = StrUtil.split(versionEl,
-                versionsDelimiter, true, true);
+        final List<String> els = StrUtil.split(versionEl, versionsDelimiter, true, true);
         if (CollUtil.isEmpty(els)) {
             return false;
         }
 
         for (final String element : els) {
             final String el = element.trim();
-            final Matcher matcher =
-                    COMPARE_REG.matcher(el);
+            final Matcher matcher = COMPARE_REG.matcher(el);
             if (matcher.find()) {
                 final String op = matcher.group();
                 String ver = StrUtil.removePrefix(el, op);
@@ -189,27 +162,23 @@ public final class VersionUtil {
                 switch (op) {
                     case ">=":
                     case "≥":
-                        if (StrUtil.compareVersion(
-                                trimmedVersion, ver) >= 0) {
+                        if (StrUtil.compareVersion(trimmedVersion, ver) >= 0) {
                             return true;
                         }
                         break;
                     case "<=":
                     case "≤":
-                        if (StrUtil.compareVersion(
-                                trimmedVersion, ver) <= 0) {
+                        if (StrUtil.compareVersion(trimmedVersion, ver) <= 0) {
                             return true;
                         }
                         break;
                     case "<":
-                        if (StrUtil.compareVersion(
-                                trimmedVersion, ver) < 0) {
+                        if (StrUtil.compareVersion(trimmedVersion, ver) < 0) {
                             return true;
                         }
                         break;
                     case ">":
-                        if (StrUtil.compareVersion(
-                                trimmedVersion, ver) > 0) {
+                        if (StrUtil.compareVersion(trimmedVersion, ver) > 0) {
                             return true;
                         }
                         break;
@@ -218,24 +187,10 @@ public final class VersionUtil {
                 }
             } else if (StrUtil.contains(el, "-")) {
                 final int index = el.indexOf('-');
-                final String left =
-                        StrUtil.blankToDefault(
-                                StrUtil.trim(
-                                        el.substring(0, index)),
-                                "");
-                final String right =
-                        StrUtil.blankToDefault(
-                                StrUtil.trim(
-                                        el.substring(index + 1)),
-                                "");
-                final boolean leftMatch =
-                        StrUtil.isBlank(left)
-                        || StrUtil.compareVersion(
-                                left, trimmedVersion) <= 0;
-                final boolean rightMatch =
-                        StrUtil.isBlank(right)
-                        || StrUtil.compareVersion(
-                                right, trimmedVersion) >= 0;
+                final String left = StrUtil.blankToDefault(StrUtil.trim(el.substring(0, index)), "");
+                final String right = StrUtil.blankToDefault(StrUtil.trim(el.substring(index + 1)), "");
+                final boolean leftMatch = StrUtil.isBlank(left) || StrUtil.compareVersion(left, trimmedVersion) <= 0;
+                final boolean rightMatch = StrUtil.isBlank(right) || StrUtil.compareVersion(right, trimmedVersion) >= 0;
                 if (leftMatch && rightMatch) {
                     return true;
                 }
