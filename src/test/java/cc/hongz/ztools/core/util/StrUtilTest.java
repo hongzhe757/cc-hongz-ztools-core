@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link StrUtil} 单元测试.
  * <p>
- * 覆盖全部 public 方法与常量；含阶段 1 补充的 {@link StrUtil#NULL}、{@link StrUtil#stringBuilder(int)}.
+ * 覆盖全部 public 方法与常量。
  *
  * @author hongzhe.qin
  */
@@ -135,12 +135,12 @@ class StrUtilTest {
     }
 
     /**
-     * 验证 {@link StrUtil#stringBuilder(int)} 创建指定容量的 {@link StringBuilder}.
+     * 验证 {@link StrUtil#builder(int)} 创建指定容量的 {@link StringBuilder}.
      */
     @Test
     @DisplayName("stringBuilder 指定容量")
     void stringBuilderCapacity() {
-        final StringBuilder sb = StrUtil.stringBuilder(32);
+        final StringBuilder sb = StrUtil.builder(32);
         assertEquals(32, sb.capacity());
     }
 
@@ -637,7 +637,7 @@ class StrUtilTest {
     @Test
     @DisplayName("stringBuilder 无参创建")
     void stringBuilderNoArg() {
-        final StringBuilder sb = StrUtil.stringBuilder();
+        final StringBuilder sb = StrUtil.builder();
         assertNotNull(sb);
         assertEquals("", sb.toString());
     }

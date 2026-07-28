@@ -142,7 +142,7 @@ public class IdcardUtil {
 				// 2000年之后不存在15位身份证号，此处用于修复此问题的判断
 				sYear -= 100;
 			}
-			idCard18 = StrUtil.stringBuilder().append(idCard, 0, 6).append(sYear).append(idCard.substring(8));
+			idCard18 = StrUtil.builder().append(idCard, 0, 6).append(sYear).append(idCard.substring(8));
 			// 获取校验位
 			char sVal = getCheckCode18(idCard18.toString());
 			idCard18.append(sVal);

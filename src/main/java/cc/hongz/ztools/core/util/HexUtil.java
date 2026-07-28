@@ -430,7 +430,7 @@ public class HexUtil {
 		}
 
 		final int length = hexStr.length();
-		final StringBuilder builder = StrUtil.stringBuilder(length + length / 2 + (length / 2 * prefix.length()));
+		final StringBuilder builder = StrUtil.builder(length + length / 2 + (length / 2 * prefix.length()));
 
 		for (int i = 0; i < length; i++) {
 			if (i % 2 == 0) {

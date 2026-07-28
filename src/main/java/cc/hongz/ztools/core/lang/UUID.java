@@ -345,7 +345,7 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 此{@code UUID} 的字符串表现形式
 	 */
 	public String toString(boolean isSimple) {
-		final StringBuilder builder = StrUtil.stringBuilder(isSimple ? 32 : 36);
+		final StringBuilder builder = StrUtil.builder(isSimple ? 32 : 36);
 		// time_low
 		builder.append(digits(mostSigBits >> 32, 8));
 		if (false == isSimple) {
