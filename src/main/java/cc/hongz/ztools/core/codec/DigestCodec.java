@@ -107,7 +107,7 @@ public final class DigestCodec {
         }
         try {
             final MessageDigest digest = MessageDigest.getInstance(algorithm);
-            return StrUtil.str(Base16Codec.CODEC_LOWER.encode(digest.digest(data)));
+            return StrUtil.str(new String(Base16Codec.CODEC_LOWER.encode(digest.digest(data))));
         } catch (NoSuchAlgorithmException e) {
             throw new UtilException(e);
         }

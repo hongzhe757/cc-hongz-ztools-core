@@ -2,12 +2,26 @@ package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.collection.CollUtil;
 import cc.hongz.ztools.core.comparator.VersionComparator;
-import cc.hongz.ztools.core.text.Convert;
+import cc.hongz.ztools.core.convert.Convert;
 import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.lang.Filter;
 import cc.hongz.ztools.core.lang.Matcher;
 import cc.hongz.ztools.core.lang.func.Func1;
+import cc.hongz.ztools.core.text.CharPool;
+import cc.hongz.ztools.core.text.NamingCase;
 import cc.hongz.ztools.core.text.StrBuilder;
+import cc.hongz.ztools.core.text.StrFormatter;
+import cc.hongz.ztools.core.text.StrSplitter;
+import cc.hongz.ztools.core.text.TextSimilarity;
+import cc.hongz.ztools.core.text.finder.CharFinder;
+import cc.hongz.ztools.core.text.finder.Finder;
+import cc.hongz.ztools.core.text.finder.StrFinder;
+import cc.hongz.ztools.core.util.ArrayUtil;
+import cc.hongz.ztools.core.util.CharUtil;
+import cc.hongz.ztools.core.util.CharsetUtil;
+import cc.hongz.ztools.core.util.IdUtil;
+import cc.hongz.ztools.core.util.NumberUtil;
+import cc.hongz.ztools.core.util.XmlUtil;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -19,5820 +33,5697 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * 瀛楃涓插伐鍏风被.
+ * 字符串工具类.
  *
- * <p>杩佺Щ鑷?hutool {@code cn.hutool.core.text.CharSequenceUtil} + {@code cn.hutool.core.util.StrUtil}锛? * 鍚堝苟浜?StrPool 甯搁噺銆?/p>
+ * <p>迁移自 hutool {@code cn.hutool.core.text.CharSequenceUtil}
+ * + {@code cn.hutool.core.util.StrUtil}，合并 StrPool 常量.</p>
  *
  * @author looly, xiaoleilu
  */
-public class StrUtil {
-
-	/**
-	 * 绱㈠紩鍊硷細{@code -1}
-	 */
-	public static final int INDEX_NOT_FOUND = -1;
-
-	// ==================== StrPool constants (from hutool StrPool) ====================
-	public static final char C_SPACE = ' ';
-	public static final char C_TAB = '\t';
-	public static final char C_DOT = '.';
-	public static final char C_SLASH = '/';
-	public static final char C_BACKSLASH = '\\';
-	public static final char C_CR = '\r';
-	public static final char C_LF = '\n';
-	public static final char C_UNDERLINE = '_';
-	public static final char C_COMMA = ',';
-	public static final char C_DELIM_START = '{';
-	public static final char C_DELIM_END = '}';
-	public static final char C_BRACKET_START = '[';
-	public static final char C_BRACKET_END = ']';
-	public static final char C_COLON = ':';
-	public static final char C_AT = '@';
-
-	public static final String TAB = "	";
-	public static final String DOT = ".";
-	public static final String DOUBLE_DOT = "..";
-	public static final String SLASH = "/";
-	public static final String BACKSLASH = "\\";
-	public static final String CR = "\r";
-	public static final String LF = "\n";
-	public static final String CRLF = "\r\n";
-	public static final String UNDERLINE = "_";
-	public static final String DASHED = "-";
-	public static final String COMMA = ",";
-	public static final String DELIM_START = "{";
-	public static final String DELIM_END = "}";
-	public static final String BRACKET_START = "[";
-	public static final String BRACKET_END = "]";
-	public static final String COLON = ":";
-	public static final String AT = "@";
-
-	public static final String HTML_NBSP = "&nbsp;";
-	public static final String HTML_AMP = "&amp;";
-	public static final String HTML_QUOTE = "&quot;";
-	public static final String HTML_APOS = "&apos;";
-	public static final String HTML_LT = "&lt;";
-	public static final String HTML_GT = "&gt;";
-
-	public static final String EMPTY_JSON = "{}";
-
-	// ==================== CharSequenceUtil methods ====================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * {@link CharSequence} 鐩稿叧宸ュ叿绫诲皝瑁?
- *
- * @author looly
- * @since 5.5.3
- */
-
-
-	/**
-	 * 瀛楃涓插父閲忥細{@code "null"} <br>
-	 * 娉ㄦ剰锛歿@code "null" != null}
-	 */
-	public static final String NULL = "null";
-
-	/**
-	 * 瀛楃涓插父閲忥細绌哄瓧绗︿覆 {@code ""}
-	 */
-	public static final String EMPTY = "";
-
-	/**
-	 * 瀛楃涓插父閲忥細绌烘牸绗?{@code " "}
-	 */
-	public static final String SPACE = " ";
-
-	/**
-	 * <p>瀛楃涓叉槸鍚︿负绌虹櫧锛岀┖鐧界殑瀹氫箟濡備笅锛?/p>
-	 * <ol>
-	 *     <li>{@code null}</li>
-	 *     <li>绌哄瓧绗︿覆锛歿@code ""}</li>
-	 *     <li>绌烘牸銆佸叏瑙掔┖鏍笺€佸埗琛ㄧ銆佹崲琛岀锛岀瓑涓嶅彲瑙佸瓧绗?/li>
-	 * </ol>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code isBlank(null)     // true}</li>
-	 *     <li>{@code isBlank("")       // true}</li>
-	 *     <li>{@code isBlank(" \t\n")  // true}</li>
-	 *     <li>{@code isBlank("abc")    // false}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isEmpty(CharSequence)} 鐨勫尯鍒槸锛?
-	 * 璇ユ柟娉曚細鏍￠獙绌虹櫧瀛楃锛屼笖鎬ц兘鐩稿浜?{@link #isEmpty(CharSequence)} 鐣ユ參銆?/p>
-	 * <br>
-	 *
-	 * <p>寤鸿锛?/p>
-	 * <ul>
-	 *     <li>璇ユ柟娉曞缓璁粎瀵逛簬瀹㈡埛绔紙鎴栫涓夋柟鎺ュ彛锛変紶鍏ョ殑鍙傛暟浣跨敤璇ユ柟娉曘€?/li>
-	 *     <li>闇€瑕佸悓鏃舵牎楠屽涓瓧绗︿覆鏃讹紝寤鸿閲囩敤 {@link #hasBlank(CharSequence...)} 鎴?{@link #isAllBlank(CharSequence...)}</li>
-	 * </ul>
-	 *
-	 * @param str 琚娴嬬殑瀛楃涓?
-	 * @return 鑻ヤ负绌虹櫧锛屽垯杩斿洖 true
-	 * @see #isEmpty(CharSequence)
-	 */
-	public static boolean isBlank(CharSequence str) {
-		final int length;
-		if ((str == null) || ((length = str.length()) == 0)) {
-			return true;
-		}
-
-		for (int i = 0; i < length; i++) {
-			// 鍙鏈変竴涓潪绌哄瓧绗﹀嵆涓洪潪绌哄瓧绗︿覆
-			if (false == CharUtil.isBlankChar(str.charAt(i))) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * <p>瀛楃涓叉槸鍚︿负闈炵┖鐧斤紝闈炵┖鐧界殑瀹氫箟濡備笅锛?</p>
-	 * <ol>
-	 *     <li>涓嶄负 {@code null}</li>
-	 *     <li>涓嶄负绌哄瓧绗︿覆锛歿@code ""}</li>
-	 *     <li>涓嶄负绌烘牸銆佸叏瑙掔┖鏍笺€佸埗琛ㄧ銆佹崲琛岀锛岀瓑涓嶅彲瑙佸瓧绗?/li>
-	 * </ol>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code isNotBlank(null)     // false}</li>
-	 *     <li>{@code isNotBlank("")       // false}</li>
-	 *     <li>{@code isNotBlank(" \t\n")  // false}</li>
-	 *     <li>{@code isNotBlank("abc")    // true}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isNotEmpty(CharSequence)} 鐨勫尯鍒槸锛?
-	 * 璇ユ柟娉曚細鏍￠獙绌虹櫧瀛楃锛屼笖鎬ц兘鐩稿浜?{@link #isNotEmpty(CharSequence)} 鐣ユ參銆?/p>
-	 * <p>寤鸿锛氫粎瀵逛簬瀹㈡埛绔紙鎴栫涓夋柟鎺ュ彛锛変紶鍏ョ殑鍙傛暟浣跨敤璇ユ柟娉曘€?/p>
-	 *
-	 * @param str 琚娴嬬殑瀛楃涓?
-	 * @return 鏄惁涓洪潪绌?
-	 * @see #isBlank(CharSequence)
-	 */
-	public static boolean isNotBlank(CharSequence str) {
-		return !isBlank(str);
-	}
-
-	/**
-	 * <p>鎸囧畾瀛楃涓叉暟缁勪腑锛屾槸鍚﹀寘鍚┖瀛楃涓层€?/p>
-	 * <p>濡傛灉鎸囧畾鐨勫瓧绗︿覆鏁扮粍鐨勯暱搴︿负 0锛屾垨鑰呭叾涓殑浠绘剰涓€涓厓绱犳槸绌哄瓧绗︿覆锛屽垯杩斿洖 true銆?/p>
-	 * <br>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code hasBlank()                  // true}</li>
-	 *     <li>{@code hasBlank("", null, " ")     // true}</li>
-	 *     <li>{@code hasBlank("123", " ")        // true}</li>
-	 *     <li>{@code hasBlank("123", "abc")      // false}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isAllBlank(CharSequence...)} 鐨勫尯鍒湪浜庯細</p>
-	 * <ul>
-	 *     <li>hasBlank(CharSequence...)            绛変环浜?{@code isBlank(...) || isBlank(...) || ...}</li>
-	 *     <li>{@link #isAllBlank(CharSequence...)} 绛変环浜?{@code isBlank(...) && isBlank(...) && ...}</li>
-	 * </ul>
-	 *
-	 * @param strs 瀛楃涓插垪琛?
-	 * @return 鏄惁鍖呭惈绌哄瓧绗︿覆
-	 */
-	public static boolean hasBlank(CharSequence... strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return true;
-		}
-
-		for (CharSequence str : strs) {
-			if (isBlank(str)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * <p>鎸囧畾瀛楃涓叉暟缁勪腑鐨勫厓绱狅紝鏄惁鍏ㄩ儴涓虹┖瀛楃涓层€?/p>
-	 * <p>濡傛灉鎸囧畾鐨勫瓧绗︿覆鏁扮粍鐨勯暱搴︿负 0锛屾垨鑰呮墍鏈夊厓绱犻兘鏄┖瀛楃涓诧紝鍒欒繑鍥?true銆?/p>
-	 * <br>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code isAllBlank()                  // true}</li>
-	 *     <li>{@code isAllBlank("", null, " ")     // true}</li>
-	 *     <li>{@code isAllBlank("123", " ")        // false}</li>
-	 *     <li>{@code isAllBlank("123", "abc")      // false}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #hasBlank(CharSequence...)} 鐨勫尯鍒湪浜庯細</p>
-	 * <ul>
-	 *     <li>{@link #hasBlank(CharSequence...)}   绛変环浜?{@code isBlank(...) || isBlank(...) || ...}</li>
-	 *     <li>isAllBlank(CharSequence...)          绛変环浜?{@code isBlank(...) && isBlank(...) && ...}</li>
-	 * </ul>
-	 *
-	 * @param strs 瀛楃涓插垪琛?
-	 * @return 鎵€鏈夊瓧绗︿覆鏄惁涓虹┖鐧?
-	 */
-	public static boolean isAllBlank(CharSequence... strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return true;
-		}
-
-		for (CharSequence str : strs) {
-			if (isNotBlank(str)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * <p>瀛楃涓叉槸鍚︿负绌猴紝绌虹殑瀹氫箟濡備笅锛?/p>
-	 * <ol>
-	 *     <li>{@code null}</li>
-	 *     <li>绌哄瓧绗︿覆锛歿@code ""}</li>
-	 * </ol>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code isEmpty(null)     // true}</li>
-	 *     <li>{@code isEmpty("")       // true}</li>
-	 *     <li>{@code isEmpty(" \t\n")  // false}</li>
-	 *     <li>{@code isEmpty("abc")    // false}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isBlank(CharSequence)} 鐨勫尯鍒槸锛氳鏂规硶涓嶆牎楠岀┖鐧藉瓧绗︺€?/p>
-	 * <p>寤鸿锛?/p>
-	 * <ul>
-	 *     <li>璇ユ柟娉曞缓璁敤浜庡伐鍏风被鎴栦换浣曞彲浠ラ鏈熺殑鏂规硶鍙傛暟鐨勬牎楠屼腑銆?/li>
-	 *     <li>闇€瑕佸悓鏃舵牎楠屽涓瓧绗︿覆鏃讹紝寤鸿閲囩敤 {@link #hasEmpty(CharSequence...)} 鎴?{@link #isAllEmpty(CharSequence...)}</li>
-	 * </ul>
-	 *
-	 * @param str 琚娴嬬殑瀛楃涓?
-	 * @return 鏄惁涓虹┖
-	 * @see #isBlank(CharSequence)
-	 */
-	public static boolean isEmpty(CharSequence str) {
-		return str == null || str.length() == 0;
-	}
-
-	/**
-	 * <p>瀛楃涓叉槸鍚︿负闈炵┖鐧斤紝闈炵┖鐧界殑瀹氫箟濡備笅锛?</p>
-	 * <ol>
-	 *     <li>涓嶄负 {@code null}</li>
-	 *     <li>涓嶄负绌哄瓧绗︿覆锛歿@code ""}</li>
-	 * </ol>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code isNotEmpty(null)     // false}</li>
-	 *     <li>{@code isNotEmpty("")       // false}</li>
-	 *     <li>{@code isNotEmpty(" \t\n")  // true}</li>
-	 *     <li>{@code isNotEmpty("abc")    // true}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isNotBlank(CharSequence)} 鐨勫尯鍒槸锛氳鏂规硶涓嶆牎楠岀┖鐧藉瓧绗︺€?/p>
-	 * <p>寤鸿锛氳鏂规硶寤鸿鐢ㄤ簬宸ュ叿绫绘垨浠讳綍鍙互棰勬湡鐨勬柟娉曞弬鏁扮殑鏍￠獙涓€?/p>
-	 *
-	 * @param str 琚娴嬬殑瀛楃涓?
-	 * @return 鏄惁涓洪潪绌?
-	 * @see #isEmpty(CharSequence)
-	 */
-	public static boolean isNotEmpty(CharSequence str) {
-		return !isEmpty(str);
-	}
-
-	/**
-	 * 褰撶粰瀹氬瓧绗︿覆涓簄ull鏃讹紝杞崲涓篍mpty
-	 *
-	 * @param str 琚鏌ョ殑瀛楃涓?
-	 * @return 鍘熷瓧绗︿覆鎴栬€呯┖涓?
-	 * @see #nullToEmpty(CharSequence)
-	 * @since 4.6.3
-	 */
-	public static String emptyIfNull(CharSequence str) {
-		return nullToEmpty(str);
-	}
-
-	/**
-	 * 褰撶粰瀹氬瓧绗︿覆涓簄ull鏃讹紝杞崲涓篍mpty
-	 *
-	 * @param str 琚浆鎹㈢殑瀛楃涓?
-	 * @return 杞崲鍚庣殑瀛楃涓?
-	 */
-	public static String nullToEmpty(CharSequence str) {
-		return nullToDefault(str, EMPTY);
-	}
-
-	/**
-	 * 濡傛灉瀛楃涓叉槸 {@code null}锛屽垯杩斿洖鎸囧畾榛樿瀛楃涓诧紝鍚﹀垯杩斿洖瀛楃涓叉湰韬€?
-	 *
-	 * <pre>
-	 * nullToDefault(null, &quot;default&quot;)  = &quot;default&quot;
-	 * nullToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;&quot;
-	 * nullToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;  &quot;
-	 * nullToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
-	 * </pre>
-	 *
-	 * @param str        瑕佽浆鎹㈢殑瀛楃涓?
-	 * @param defaultStr 榛樿瀛楃涓?
-	 * @return 瀛楃涓叉湰韬垨鎸囧畾鐨勯粯璁ゅ瓧绗︿覆
-	 */
-	public static String nullToDefault(CharSequence str, String defaultStr) {
-		return (str == null) ? defaultStr : str.toString();
-	}
-
-	/**
-	 * 濡傛灉瀛楃涓叉槸{@code null}鎴栬€?quot;&quot;锛屽垯杩斿洖鎸囧畾榛樿瀛楃涓诧紝鍚﹀垯杩斿洖瀛楃涓叉湰韬€?
-	 *
-	 * <pre>
-	 * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
-	 * emptyToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
-	 * emptyToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;  &quot;
-	 * emptyToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
-	 * </pre>
-	 *
-	 * @param str        瑕佽浆鎹㈢殑瀛楃涓?
-	 * @param defaultStr 榛樿瀛楃涓?
-	 * @return 瀛楃涓叉湰韬垨鎸囧畾鐨勯粯璁ゅ瓧绗︿覆
-	 * @since 4.1.0
-	 */
-	public static String emptyToDefault(CharSequence str, String defaultStr) {
-		return isEmpty(str) ? defaultStr : str.toString();
-	}
-
-	/**
-	 * 濡傛灉瀛楃涓叉槸{@code null}鎴栬€?quot;&quot;鎴栬€呯┖鐧斤紝鍒欒繑鍥炴寚瀹氶粯璁ゅ瓧绗︿覆锛屽惁鍒欒繑鍥炲瓧绗︿覆鏈韩銆?
-	 *
-	 * <pre>
-	 * blankToDefault(null, &quot;default&quot;)  = &quot;default&quot;
-	 * blankToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
-	 * blankToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;default&quot;
-	 * blankToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
-	 * </pre>
-	 *
-	 * @param str        瑕佽浆鎹㈢殑瀛楃涓?
-	 * @param defaultStr 榛樿瀛楃涓?
-	 * @return 瀛楃涓叉湰韬垨鎸囧畾鐨勯粯璁ゅ瓧绗︿覆
-	 * @since 4.1.0
-	 */
-	public static String blankToDefault(CharSequence str, String defaultStr) {
-		return isBlank(str) ? defaultStr : str.toString();
-	}
-
-	/**
-	 * 褰撶粰瀹氬瓧绗︿覆涓虹┖瀛楃涓叉椂锛岃浆鎹负{@code null}
-	 *
-	 * @param str 琚浆鎹㈢殑瀛楃涓?
-	 * @return 杞崲鍚庣殑瀛楃涓?
-	 */
-	public static String emptyToNull(CharSequence str) {
-		return isEmpty(str) ? null : str.toString();
-	}
-
-	/**
-	 * <p>鏄惁鍖呭惈绌哄瓧绗︿覆銆?/p>
-	 * <p>濡傛灉鎸囧畾鐨勫瓧绗︿覆鏁扮粍鐨勯暱搴︿负 0锛屾垨鑰呭叾涓殑浠绘剰涓€涓厓绱犳槸绌哄瓧绗︿覆锛屽垯杩斿洖 true銆?/p>
-	 * <br>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code hasEmpty()                  // true}</li>
-	 *     <li>{@code hasEmpty("", null)          // true}</li>
-	 *     <li>{@code hasEmpty("123", "")         // true}</li>
-	 *     <li>{@code hasEmpty("123", "abc")      // false}</li>
-	 *     <li>{@code hasEmpty(" ", "\t", "\n")   // false}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isAllEmpty(CharSequence...)} 鐨勫尯鍒湪浜庯細</p>
-	 * <ul>
-	 *     <li>hasEmpty(CharSequence...)            绛変环浜?{@code isEmpty(...) || isEmpty(...) || ...}</li>
-	 *     <li>{@link #isAllEmpty(CharSequence...)} 绛変环浜?{@code isEmpty(...) && isEmpty(...) && ...}</li>
-	 * </ul>
-	 *
-	 * @param strs 瀛楃涓插垪琛?
-	 * @return 鏄惁鍖呭惈绌哄瓧绗︿覆
-	 */
-	public static boolean hasEmpty(CharSequence... strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return true;
-		}
-
-		for (CharSequence str : strs) {
-			if (isEmpty(str)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * <p>鎸囧畾瀛楃涓叉暟缁勪腑鐨勫厓绱狅紝鏄惁鍏ㄩ儴涓虹┖瀛楃涓层€?/p>
-	 * <p>濡傛灉鎸囧畾鐨勫瓧绗︿覆鏁扮粍鐨勯暱搴︿负 0锛屾垨鑰呮墍鏈夊厓绱犻兘鏄┖瀛楃涓诧紝鍒欒繑鍥?true銆?/p>
-	 * <br>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code isAllEmpty()                  // true}</li>
-	 *     <li>{@code isAllEmpty("", null)          // true}</li>
-	 *     <li>{@code isAllEmpty("123", "")         // false}</li>
-	 *     <li>{@code isAllEmpty("123", "abc")      // false}</li>
-	 *     <li>{@code isAllEmpty(" ", "\t", "\n")   // false}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #hasEmpty(CharSequence...)} 鐨勫尯鍒湪浜庯細</p>
-	 * <ul>
-	 *     <li>{@link #hasEmpty(CharSequence...)}   绛変环浜?{@code isEmpty(...) || isEmpty(...) || ...}</li>
-	 *     <li>isAllEmpty(CharSequence...)          绛変环浜?{@code isEmpty(...) && isEmpty(...) && ...}</li>
-	 * </ul>
-	 *
-	 * @param strs 瀛楃涓插垪琛?
-	 * @return 鎵€鏈夊瓧绗︿覆鏄惁涓虹┖鐧?
-	 */
-	public static boolean isAllEmpty(CharSequence... strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return true;
-		}
-
-		for (CharSequence str : strs) {
-			if (isNotEmpty(str)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * <p>鎸囧畾瀛楃涓叉暟缁勪腑鐨勫厓绱狅紝鏄惁閮戒笉涓虹┖瀛楃涓层€?/p>
-	 * <p>濡傛灉鎸囧畾鐨勫瓧绗︿覆鏁扮粍鐨勯暱搴︿笉涓?0锛屾垨鑰呮墍鏈夊厓绱犻兘涓嶆槸绌哄瓧绗︿覆锛屽垯杩斿洖 true銆?/p>
-	 * <br>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code isAllNotEmpty()                  // false}</li>
-	 *     <li>{@code isAllNotEmpty("", null)          // false}</li>
-	 *     <li>{@code isAllNotEmpty("123", "")         // false}</li>
-	 *     <li>{@code isAllNotEmpty("123", "abc")      // true}</li>
-	 *     <li>{@code isAllNotEmpty(" ", "\t", "\n")   // true}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isAllEmpty(CharSequence...)} 鐨勫尯鍒湪浜庯細</p>
-	 * <ul>
-	 *     <li>{@link #isAllEmpty(CharSequence...)}    绛変环浜?{@code isEmpty(...) && isEmpty(...) && ...}</li>
-	 *     <li>isAllNotEmpty(CharSequence...)          绛変环浜?{@code !isEmpty(...) && !isEmpty(...) && ...}</li>
-	 * </ul>
-	 *
-	 * @param args 瀛楃涓叉暟缁?
-	 * @return 鎵€鏈夊瓧绗︿覆鏄惁閮戒笉涓轰负绌虹櫧
-	 * @since 5.3.6
-	 */
-	public static boolean isAllNotEmpty(CharSequence... args) {
-		return false == hasEmpty(args);
-	}
-
-	/**
-	 * 鏄惁鍏ㄩ兘涓嶄负{@code null}鎴栫┖瀵硅薄鎴栫┖鐧界鐨勫璞★紝閫氳繃{@link #hasBlank(CharSequence...)} 鍒ゆ柇鍏冪礌
-	 *
-	 * @param args 琚鏌ョ殑瀵硅薄,涓€涓垨鑰呭涓?
-	 * @return 鏄惁閮戒笉涓虹┖
-	 * @since 5.3.6
-	 */
-	public static boolean isAllNotBlank(CharSequence... args) {
-		return false == hasBlank(args);
-	}
-
-	/**
-	 * 妫€鏌ュ瓧绗︿覆鏄惁涓簄ull銆佲€渘ull鈥濄€佲€渦ndefined鈥?
-	 *
-	 * @param str 琚鏌ョ殑瀛楃涓?
-	 * @return 鏄惁涓簄ull銆佲€渘ull鈥濄€佲€渦ndefined鈥?
-	 * @since 4.0.10
-	 */
-	public static boolean isNullOrUndefined(CharSequence str) {
-		if (null == str) {
-			return true;
-		}
-		return isNullOrUndefinedStr(str);
-	}
-
-	/**
-	 * 妫€鏌ュ瓧绗︿覆鏄惁涓簄ull銆佲€溾€濄€佲€渘ull鈥濄€佲€渦ndefined鈥?
-	 *
-	 * @param str 琚鏌ョ殑瀛楃涓?
-	 * @return 鏄惁涓簄ull銆佲€溾€濄€佲€渘ull鈥濄€佲€渦ndefined鈥?
-	 * @since 4.0.10
-	 */
-	public static boolean isEmptyOrUndefined(CharSequence str) {
-		if (isEmpty(str)) {
-			return true;
-		}
-		return isNullOrUndefinedStr(str);
-	}
-
-	/**
-	 * 妫€鏌ュ瓧绗︿覆鏄惁涓簄ull銆佺┖鐧戒覆銆佲€渘ull鈥濄€佲€渦ndefined鈥?
-	 *
-	 * @param str 琚鏌ョ殑瀛楃涓?
-	 * @return 鏄惁涓簄ull銆佺┖鐧戒覆銆佲€渘ull鈥濄€佲€渦ndefined鈥?
-	 * @since 4.0.10
-	 */
-	public static boolean isBlankOrUndefined(CharSequence str) {
-		if (isBlank(str)) {
-			return true;
-		}
-		return isNullOrUndefinedStr(str);
-	}
-
-	/**
-	 * 鏄惁涓衡€渘ull鈥濄€佲€渦ndefined鈥濓紝涓嶅仛绌烘寚閽堟鏌?
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 鏄惁涓衡€渘ull鈥濄€佲€渦ndefined鈥?
-	 */
-	private static boolean isNullOrUndefinedStr(CharSequence str) {
-		String strString = str.toString().trim();
-		return NULL.equals(strString) || "undefined".equals(strString);
-	}
-
-	// ------------------------------------------------------------------------ Trim
-
-	/**
-	 * 闄ゅ幓瀛楃涓插ご灏鹃儴鐨勭┖鐧斤紝濡傛灉瀛楃涓叉槸{@code null}锛屼緷鐒惰繑鍥瀧@code null}銆?
-	 *
-	 * <p>
-	 * 娉ㄦ剰锛屽拰{@link String#trim()}涓嶅悓锛屾鏂规硶浣跨敤{@link CharUtil#isBlankChar(char)} 鏉ュ垽瀹氱┖鐧斤紝 鍥犺€屽彲浠ラ櫎鍘昏嫳鏂囧瓧绗﹂泦涔嬪鐨勫叾瀹冪┖鐧斤紝濡備腑鏂囩┖鏍笺€?
-	 *
-	 * <pre>
-	 * trim(null)          = null
-	 * trim(&quot;&quot;)            = &quot;&quot;
-	 * trim(&quot;     &quot;)       = &quot;&quot;
-	 * trim(&quot;abc&quot;)         = &quot;abc&quot;
-	 * trim(&quot;    abc    &quot;) = &quot;abc&quot;
-	 * </pre>
-	 *
-	 * @param str 瑕佸鐞嗙殑瀛楃涓?
-	 * @return 闄ゅ幓澶村熬绌虹櫧鐨勫瓧绗︿覆锛屽鏋滃師瀛椾覆涓簕@code null}锛屽垯杩斿洖{@code null}
-	 */
-	public static String trim(CharSequence str) {
-		return (null == str) ? null : trim(str, 0);
-	}
-
-	/**
-	 * 闄ゅ幓瀛楃涓插ご灏鹃儴鐨勭┖鐧斤紝濡傛灉瀛楃涓叉槸{@code null}锛岃繑鍥瀧@code ""}銆?
-	 *
-	 * <pre>
-	 * trimToEmpty(null)          = ""
-	 * trimToEmpty("")            = ""
-	 * trimToEmpty("     ")       = ""
-	 * trimToEmpty("abc")         = "abc"
-	 * trimToEmpty("    abc    ") = "abc"
-	 * </pre>
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 鍘婚櫎涓よ竟绌虹櫧绗﹀悗鐨勫瓧绗︿覆, 濡傛灉涓簄ull杩斿洖""
-	 * @since 3.1.1
-	 */
-	public static String trimToEmpty(CharSequence str) {
-		return str == null ? EMPTY : trim(str);
-	}
-
-	/**
-	 * 闄ゅ幓瀛楃涓插ご灏鹃儴鐨勭┖鐧斤紝濡傛灉瀛楃涓叉槸{@code null}鎴栬€?"锛岃繑鍥瀧@code null}銆?
-	 *
-	 * <pre>
-	 * trimToNull(null)          = null
-	 * trimToNull("")            = null
-	 * trimToNull("     ")       = null
-	 * trimToNull("abc")         = "abc"
-	 * trimToEmpty("    abc    ") = "abc"
-	 * </pre>
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 鍘婚櫎涓よ竟绌虹櫧绗﹀悗鐨勫瓧绗︿覆, 濡傛灉涓虹┖杩斿洖null
-	 * @since 3.2.1
-	 */
-	public static String trimToNull(CharSequence str) {
-		final String trimStr = trim(str);
-		return EMPTY.equals(trimStr) ? null : trimStr;
-	}
-
-	/**
-	 * 闄ゅ幓瀛楃涓插ご閮ㄧ殑绌虹櫧锛屽鏋滃瓧绗︿覆鏄瘂@code null}锛屽垯杩斿洖{@code null}銆?
-	 *
-	 * <p>
-	 * 娉ㄦ剰锛屽拰{@link String#trim()}涓嶅悓锛屾鏂规硶浣跨敤{@link CharUtil#isBlankChar(char)} 鏉ュ垽瀹氱┖鐧斤紝 鍥犺€屽彲浠ラ櫎鍘昏嫳鏂囧瓧绗﹂泦涔嬪鐨勫叾瀹冪┖鐧斤紝濡備腑鏂囩┖鏍笺€?
-	 *
-	 * <pre>
-	 * trimStart(null)         = null
-	 * trimStart(&quot;&quot;)           = &quot;&quot;
-	 * trimStart(&quot;abc&quot;)        = &quot;abc&quot;
-	 * trimStart(&quot;  abc&quot;)      = &quot;abc&quot;
-	 * trimStart(&quot;abc  &quot;)      = &quot;abc  &quot;
-	 * trimStart(&quot; abc &quot;)      = &quot;abc &quot;
-	 * </pre>
-	 *
-	 * @param str 瑕佸鐞嗙殑瀛楃涓?
-	 * @return 闄ゅ幓绌虹櫧鐨勫瓧绗︿覆锛屽鏋滃師瀛椾覆涓簕@code null}鎴栫粨鏋滃瓧绗︿覆涓簕@code ""}锛屽垯杩斿洖 {@code null}
-	 */
-	public static String trimStart(CharSequence str) {
-		return trim(str, -1);
-	}
-
-	/**
-	 * 闄ゅ幓瀛楃涓插熬閮ㄧ殑绌虹櫧锛屽鏋滃瓧绗︿覆鏄瘂@code null}锛屽垯杩斿洖{@code null}銆?
-	 *
-	 * <p>
-	 * 娉ㄦ剰锛屽拰{@link String#trim()}涓嶅悓锛屾鏂规硶浣跨敤{@link CharUtil#isBlankChar(char)} 鏉ュ垽瀹氱┖鐧斤紝 鍥犺€屽彲浠ラ櫎鍘昏嫳鏂囧瓧绗﹂泦涔嬪鐨勫叾瀹冪┖鐧斤紝濡備腑鏂囩┖鏍笺€?
-	 *
-	 * <pre>
-	 * trimEnd(null)       = null
-	 * trimEnd(&quot;&quot;)         = &quot;&quot;
-	 * trimEnd(&quot;abc&quot;)      = &quot;abc&quot;
-	 * trimEnd(&quot;  abc&quot;)    = &quot;  abc&quot;
-	 * trimEnd(&quot;abc  &quot;)    = &quot;abc&quot;
-	 * trimEnd(&quot; abc &quot;)    = &quot; abc&quot;
-	 * </pre>
-	 *
-	 * @param str 瑕佸鐞嗙殑瀛楃涓?
-	 * @return 闄ゅ幓绌虹櫧鐨勫瓧绗︿覆锛屽鏋滃師瀛椾覆涓簕@code null}鎴栫粨鏋滃瓧绗︿覆涓簕@code ""}锛屽垯杩斿洖 {@code null}
-	 */
-	public static String trimEnd(CharSequence str) {
-		return trim(str, 1);
-	}
-
-	/**
-	 * 闄ゅ幓瀛楃涓插ご灏鹃儴鐨勭┖鐧界锛屽鏋滃瓧绗︿覆鏄瘂@code null}锛屼緷鐒惰繑鍥瀧@code null}銆?
-	 *
-	 * @param str  瑕佸鐞嗙殑瀛楃涓?
-	 * @param mode {@code -1}琛ㄧずtrimStart锛寋@code 0}琛ㄧずtrim鍏ㄩ儴锛?{@code 1}琛ㄧずtrimEnd
-	 * @return 闄ゅ幓鎸囧畾瀛楃鍚庣殑鐨勫瓧绗︿覆锛屽鏋滃師瀛椾覆涓簕@code null}锛屽垯杩斿洖{@code null}
-	 */
-	public static String trim(CharSequence str, int mode) {
-		return trim(str, mode, CharUtil::isBlankChar);
-	}
-
-	/**
-	 * 鎸夌収鏂█锛岄櫎鍘诲瓧绗︿覆澶村熬閮ㄧ殑鏂█涓虹湡鐨勫瓧绗︼紝濡傛灉瀛楃涓叉槸{@code null}锛屼緷鐒惰繑鍥瀧@code null}銆?
-	 *
-	 * @param str       瑕佸鐞嗙殑瀛楃涓?
-	 * @param mode      {@code -1}琛ㄧずtrimStart锛寋@code 0}琛ㄧずtrim鍏ㄩ儴锛?{@code 1}琛ㄧずtrimEnd
-	 * @param predicate 鏂█鏄惁杩囨帀瀛楃锛岃繑鍥瀧@code true}琛ㄨ堪杩囨护鎺夛紝{@code false}琛ㄧず涓嶈繃婊?
-	 * @return 闄ゅ幓鎸囧畾瀛楃鍚庣殑鐨勫瓧绗︿覆锛屽鏋滃師瀛椾覆涓簕@code null}锛屽垯杩斿洖{@code null}
-	 * @since 5.7.4
-	 */
-	public static String trim(CharSequence str, int mode, Predicate<Character> predicate) {
-		String result;
-		if (str == null) {
-			result = null;
-		} else {
-			int length = str.length();
-			int start = 0;
-			int end = length;// 鎵弿瀛楃涓插ご閮?
-			if (mode <= 0) {
-				while ((start < end) && (predicate.test(str.charAt(start)))) {
-					start++;
-				}
-			}// 鎵弿瀛楃涓插熬閮?
-			if (mode >= 0) {
-				while ((start < end) && (predicate.test(str.charAt(end - 1)))) {
-					end--;
-				}
-			}
-			if ((start > 0) || (end < length)) {
-				result = str.toString().substring(start, end);
-			} else {
-				result = str.toString();
-			}
-		}
-
-		return result;
-	}
-
-	// ------------------------------------------------------------------------ startWith
-
-	/**
-	 * 瀛楃涓叉槸鍚︿互缁欏畾瀛楃寮€濮?
-	 *
-	 * @param str 瀛楃涓?
-	 * @param c   瀛楃
-	 * @return 鏄惁寮€濮?
-	 */
-	public static boolean startWith(CharSequence str, char c) {
-		if (isEmpty(str)) {
-			return false;
-		}
-		return c == str.charAt(0);
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶?br>
-	 * 濡傛灉缁欏畾鐨勫瓧绗︿覆鍜屽紑澶村瓧绗︿覆閮戒负null鍒欒繑鍥瀟rue锛屽惁鍒欎换鎰忎竴涓€间负null杩斿洖false
-	 *
-	 * @param str        琚洃娴嬪瓧绗︿覆
-	 * @param prefix     寮€澶村瓧绗︿覆
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶?
-	 * @since 5.4.3
-	 */
-	public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase) {
-		return startWith(str, prefix, ignoreCase, false);
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶?br>
-	 * 濡傛灉缁欏畾鐨勫瓧绗︿覆鍜屽紑澶村瓧绗︿覆閮戒负null鍒欒繑鍥瀟rue锛屽惁鍒欎换鎰忎竴涓€间负null杩斿洖false<br>
-	 * <pre>
-	 *     startWith("123", "123", false, true);   -- false
-	 *     startWith("ABCDEF", "abc", true, true); -- true
-	 *     startWith("abc", "abc", true, true);    -- false
-	 * </pre>
-	 *
-	 * @param str          琚洃娴嬪瓧绗︿覆
-	 * @param prefix       寮€澶村瓧绗︿覆
-	 * @param ignoreCase   鏄惁蹇界暐澶у皬鍐?
-	 * @param ignoreEquals 鏄惁蹇界暐瀛楃涓茬浉绛夌殑鎯呭喌
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶?
-	 * @since 5.4.3
-	 */
-	public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase, boolean ignoreEquals) {
-		if (null == str || null == prefix) {
-			if (ignoreEquals) {
-				return false;
-			}
-			return null == str && null == prefix;
-		}
-
-		boolean isStartWith = str.toString()
-			.regionMatches(ignoreCase, 0, prefix.toString(), 0, prefix.length());
-
-		if (isStartWith) {
-			return (false == ignoreEquals) || (false == equals(str, prefix, ignoreCase));
-		}
-		return false;
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶?
-	 *
-	 * @param str    琚洃娴嬪瓧绗︿覆
-	 * @param prefix 寮€澶村瓧绗︿覆
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶?
-	 */
-	public static boolean startWith(CharSequence str, CharSequence prefix) {
-		return startWith(str, prefix, false);
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶达紝蹇界暐鐩哥瓑瀛楃涓茬殑鎯呭喌
-	 *
-	 * @param str    琚洃娴嬪瓧绗︿覆
-	 * @param prefix 寮€澶村瓧绗︿覆
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶村苟涓斾袱涓瓧绗︿覆涓嶇浉绛?
-	 */
-	public static boolean startWithIgnoreEquals(CharSequence str, CharSequence prefix) {
-		return startWith(str, prefix, false, true);
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶达紝蹇界暐澶у皬鍐?
-	 *
-	 * @param str    琚洃娴嬪瓧绗︿覆
-	 * @param prefix 寮€澶村瓧绗︿覆
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆寮€澶?
-	 */
-	public static boolean startWithIgnoreCase(CharSequence str, CharSequence prefix) {
-		return startWith(str, prefix, true);
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚︿互浠讳綍涓€涓瓧绗︿覆寮€濮?br>
-	 * 缁欏畾瀛楃涓插拰鏁扮粍涓虹┖閮借繑鍥瀎alse
-	 *
-	 * @param str      缁欏畾瀛楃涓?
-	 * @param prefixes 闇€瑕佹娴嬬殑寮€濮嬪瓧绗︿覆
-	 * @return 缁欏畾瀛楃涓叉槸鍚︿互浠讳綍涓€涓瓧绗︿覆寮€濮?
-	 * @since 3.0.6
-	 */
-	public static boolean startWithAny(CharSequence str, CharSequence... prefixes) {
-		if (isEmpty(str) || ArrayUtil.isEmpty(prefixes)) {
-			return false;
-		}
-
-		for (CharSequence prefix : prefixes) {
-			if (startWith(str, prefix, false)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚︿互浠讳綍涓€涓瓧绗︿覆寮€濮嬶紙蹇界暐澶у皬鍐欙級<br>
-	 * 缁欏畾瀛楃涓插拰鏁扮粍涓虹┖閮借繑鍥瀎alse
-	 *
-	 * @param str      缁欏畾瀛楃涓?
-	 * @param prefixes 闇€瑕佹娴嬬殑寮€濮嬪瓧绗︿覆
-	 * @return 缁欏畾瀛楃涓叉槸鍚︿互浠讳綍涓€涓瓧绗︿覆寮€濮?
-	 * @since 5.8.1
-	 */
-	public static boolean startWithAnyIgnoreCase(final CharSequence str, final CharSequence... prefixes) {
-		if (isEmpty(str) || ArrayUtil.isEmpty(prefixes)) {
-			return false;
-		}
-
-		for (final CharSequence prefix : prefixes) {
-			if (startWith(str, prefix, true)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// ------------------------------------------------------------------------ endWith
-
-	/**
-	 * 瀛楃涓叉槸鍚︿互缁欏畾瀛楃缁撳熬
-	 *
-	 * @param str 瀛楃涓?
-	 * @param c   瀛楃
-	 * @return 鏄惁缁撳熬
-	 */
-	public static boolean endWith(CharSequence str, char c) {
-		if (isEmpty(str)) {
-			return false;
-		}
-		return c == str.charAt(str.length() - 1);
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆缁撳熬<br>
-	 * 濡傛灉缁欏畾鐨勫瓧绗︿覆鍜屽紑澶村瓧绗︿覆閮戒负null鍒欒繑鍥瀟rue锛屽惁鍒欎换鎰忎竴涓€间负null杩斿洖false
-	 *
-	 * @param str        琚洃娴嬪瓧绗︿覆
-	 * @param suffix     缁撳熬瀛楃涓?
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆缁撳熬
-	 */
-	public static boolean endWith(CharSequence str, CharSequence suffix, boolean ignoreCase) {
-		return endWith(str, suffix, ignoreCase, false);
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆缁撳熬<br>
-	 * 濡傛灉缁欏畾鐨勫瓧绗︿覆鍜屽紑澶村瓧绗︿覆閮戒负null鍒欒繑鍥瀟rue锛屽惁鍒欎换鎰忎竴涓€间负null杩斿洖false
-	 *
-	 * @param str          琚洃娴嬪瓧绗︿覆
-	 * @param suffix       缁撳熬瀛楃涓?
-	 * @param ignoreCase   鏄惁蹇界暐澶у皬鍐?
-	 * @param ignoreEquals 鏄惁蹇界暐瀛楃涓茬浉绛夌殑鎯呭喌
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆缁撳熬
-	 * @since 5.8.0
-	 */
-	public static boolean endWith(CharSequence str, CharSequence suffix, boolean ignoreCase, boolean ignoreEquals) {
-		if (null == str || null == suffix) {
-			if (ignoreEquals) {
-				return false;
-			}
-			return null == str && null == suffix;
-		}
-
-		final int strOffset = str.length() - suffix.length();
-		boolean isEndWith = str.toString()
-			.regionMatches(ignoreCase, strOffset, suffix.toString(), 0, suffix.length());
-
-		if (isEndWith) {
-			return (false == ignoreEquals) || (false == equals(str, suffix, ignoreCase));
-		}
-		return false;
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆缁撳熬
-	 *
-	 * @param str    琚洃娴嬪瓧绗︿覆
-	 * @param suffix 缁撳熬瀛楃涓?
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆缁撳熬
-	 */
-	public static boolean endWith(CharSequence str, CharSequence suffix) {
-		return endWith(str, suffix, false);
-	}
-
-	/**
-	 * 鏄惁浠ユ寚瀹氬瓧绗︿覆缁撳熬锛屽拷鐣ュぇ灏忓啓
-	 *
-	 * @param str    琚洃娴嬪瓧绗︿覆
-	 * @param suffix 缁撳熬瀛楃涓?
-	 * @return 鏄惁浠ユ寚瀹氬瓧绗︿覆缁撳熬
-	 */
-	public static boolean endWithIgnoreCase(CharSequence str, CharSequence suffix) {
-		return endWith(str, suffix, true);
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚︿互浠讳綍涓€涓瓧绗︿覆缁撳熬<br>
-	 * 缁欏畾瀛楃涓插拰鏁扮粍涓虹┖閮借繑鍥瀎alse
-	 *
-	 * @param str      缁欏畾瀛楃涓?
-	 * @param suffixes 闇€瑕佹娴嬬殑缁撳熬瀛楃涓?
-	 * @return 缁欏畾瀛楃涓叉槸鍚︿互浠讳綍涓€涓瓧绗︿覆缁撳熬
-	 * @since 3.0.6
-	 */
-	public static boolean endWithAny(CharSequence str, CharSequence... suffixes) {
-		if (isEmpty(str) || ArrayUtil.isEmpty(suffixes)) {
-			return false;
-		}
-
-		for (CharSequence suffix : suffixes) {
-			if (endWith(str, suffix, false)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚︿互浠讳綍涓€涓瓧绗︿覆缁撳熬锛堝拷鐣ュぇ灏忓啓锛?br>
-	 * 缁欏畾瀛楃涓插拰鏁扮粍涓虹┖閮借繑鍥瀎alse
-	 *
-	 * @param str      缁欏畾瀛楃涓?
-	 * @param suffixes 闇€瑕佹娴嬬殑缁撳熬瀛楃涓?
-	 * @return 缁欏畾瀛楃涓叉槸鍚︿互浠讳綍涓€涓瓧绗︿覆缁撳熬
-	 * @since 5.5.9
-	 */
-	public static boolean endWithAnyIgnoreCase(CharSequence str, CharSequence... suffixes) {
-		if (isEmpty(str) || ArrayUtil.isEmpty(suffixes)) {
-			return false;
-		}
-
-		for (CharSequence suffix : suffixes) {
-			if (endWith(str, suffix, true)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// ------------------------------------------------------------------------ contains
-
-	/**
-	 * 鎸囧畾瀛楃鏄惁鍦ㄥ瓧绗︿覆涓嚭鐜拌繃
-	 *
-	 * @param str        瀛楃涓?
-	 * @param searchChar 琚煡鎵剧殑瀛楃
-	 * @return 鏄惁鍖呭惈
-	 * @since 3.1.2
-	 */
-	public static boolean contains(CharSequence str, char searchChar) {
-		return indexOf(str, searchChar) > -1;
-	}
-
-	/**
-	 * 鎸囧畾瀛楃涓叉槸鍚﹀湪瀛楃涓蹭腑鍑虹幇杩?
-	 *
-	 * @param str       瀛楃涓?
-	 * @param searchStr 琚煡鎵剧殑瀛楃涓?
-	 * @return 鏄惁鍖呭惈
-	 * @since 5.1.1
-	 */
-	public static boolean contains(CharSequence str, CharSequence searchStr) {
-		if (null == str || null == searchStr) {
-			return false;
-		}
-		return str.toString().contains(searchStr);
-	}
-
-	/**
-	 * 鏌ユ壘鎸囧畾瀛楃涓叉槸鍚﹀寘鍚寚瀹氬瓧绗︿覆鍒楄〃涓殑浠绘剰涓€涓瓧绗︿覆
-	 *
-	 * @param str      鎸囧畾瀛楃涓?
-	 * @param testStrs 闇€瑕佹鏌ョ殑瀛楃涓叉暟缁?
-	 * @return 鏄惁鍖呭惈浠绘剰涓€涓瓧绗︿覆
-	 * @since 3.2.0
-	 */
-	public static boolean containsAny(CharSequence str, CharSequence... testStrs) {
-		return null != getContainsStr(str, testStrs);
-	}
-
-	/**
-	 * 鏌ユ壘鎸囧畾瀛楃涓叉槸鍚﹀寘鍚寚瀹氬瓧绗﹀垪琛ㄤ腑鐨勪换鎰忎竴涓瓧绗?
-	 *
-	 * @param str       鎸囧畾瀛楃涓?
-	 * @param testChars 闇€瑕佹鏌ョ殑瀛楃鏁扮粍
-	 * @return 鏄惁鍖呭惈浠绘剰涓€涓瓧绗?
-	 * @since 4.1.11
-	 */
-	public static boolean containsAny(CharSequence str, char... testChars) {
-		if (false == isEmpty(str)) {
-			int len = str.length();
-			for (int i = 0; i < len; i++) {
-				if (ArrayUtil.contains(testChars, str.charAt(i))) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 妫€鏌ユ寚瀹氬瓧绗︿覆涓槸鍚﹀彧鍖呭惈缁欏畾鐨勫瓧绗?br>
-	 * 杩欓噷鐨刢ontainsOnly骞朵笉鏄繀椤诲叏閮ㄧ粰瀹氱殑testChars閮介渶瑕佹湁锛岃€屾槸涓€涓瓙闆嗐€倀estChars鏄釜闄愬畾闆嗗悎锛屾鏌ュ瓧绗︿覆涓殑瀛楃鏄惁鍦ㄨ繖涓檺瀹氶泦鍚堜腑銆?br>
-	 * <pre>{@code
-	 *   StrUtil.containsOnly("asdas", 'a', 'd', 's','l');   --> true
-	 * }</pre>
-	 *
-	 * @param str       瀛楃涓?
-	 * @param testChars 妫€鏌ョ殑瀛楃
-	 * @return 瀛楃涓插惈鏈夐潪妫€鏌ョ殑瀛楃锛岃繑鍥瀎alse
-	 * @since 4.4.1
-	 */
-	public static boolean containsOnly(CharSequence str, char... testChars) {
-		if (false == isEmpty(str)) {
-			int len = str.length();
-			for (int i = 0; i < len; i++) {
-				if (false == ArrayUtil.contains(testChars, str.charAt(i))) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 妫€鏌ユ寚瀹氬瓧绗︿覆涓槸鍚﹀惈缁欏畾鐨勬墍鏈夊瓧绗︿覆
-	 *
-	 * @param str       瀛楃涓?
-	 * @param testChars 妫€鏌ョ殑瀛楃
-	 * @return 瀛楃涓插惈鏈夐潪妫€鏌ョ殑瀛楃锛岃繑鍥瀎alse
-	 * @since 4.4.1
-	 */
-	public static boolean containsAll(CharSequence str, CharSequence... testChars) {
-		if (isBlank(str) || ArrayUtil.isEmpty(testChars)) {
-			return false;
-		}
-		for (CharSequence testChar : testChars) {
-			if (false == contains(str, testChar)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚﹀寘鍚┖鐧界锛堢┖鐧界鍖呮嫭绌烘牸銆佸埗琛ㄧ銆佸叏瑙掔┖鏍煎拰涓嶉棿鏂┖鏍硷級<br>
-	 * 濡傛灉缁欏畾瀛楃涓蹭负null鎴栬€?"锛屽垯杩斿洖false
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 鏄惁鍖呭惈绌虹櫧绗?
-	 * @since 4.0.8
-	 */
-	public static boolean containsBlank(CharSequence str) {
-		if (null == str) {
-			return false;
-		}
-		final int length = str.length();
-		if (0 == length) {
-			return false;
-		}
-
-		for (int i = 0; i < length; i += 1) {
-			if (CharUtil.isBlankChar(str.charAt(i))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 鏌ユ壘鎸囧畾瀛楃涓叉槸鍚﹀寘鍚寚瀹氬瓧绗︿覆鍒楄〃涓殑浠绘剰涓€涓瓧绗︿覆锛屽鏋滃寘鍚繑鍥炴壘鍒扮殑绗竴涓瓧绗︿覆
-	 *
-	 * @param str      鎸囧畾瀛楃涓?
-	 * @param testStrs 闇€瑕佹鏌ョ殑瀛楃涓叉暟缁?
-	 * @return 琚寘鍚殑绗竴涓瓧绗︿覆
-	 * @since 3.2.0
-	 */
-	public static String getContainsStr(CharSequence str, CharSequence... testStrs) {
-		if (isEmpty(str) || ArrayUtil.isEmpty(testStrs)) {
-			return null;
-		}
-		for (CharSequence checkStr : testStrs) {
-			if (null != checkStr && str.toString().contains(checkStr)) {
-				return checkStr.toString();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 鏄惁鍖呭惈鐗瑰畾瀛楃锛屽拷鐣ュぇ灏忓啓锛屽鏋滅粰瀹氫袱涓弬鏁伴兘涓簕@code null}锛岃繑鍥瀟rue
-	 *
-	 * @param str     琚娴嬪瓧绗︿覆
-	 * @param testStr 琚祴璇曟槸鍚﹀寘鍚殑瀛楃涓?
-	 * @return 鏄惁鍖呭惈
-	 */
-	public static boolean containsIgnoreCase(CharSequence str, CharSequence testStr) {
-		if (null == str) {
-			// 濡傛灉琚洃娴嬪瓧绗︿覆鍜?
-			return null == testStr;
-		}
-		return indexOfIgnoreCase(str, testStr) > -1;
-	}
-
-	/**
-	 * 鏌ユ壘鎸囧畾瀛楃涓叉槸鍚﹀寘鍚寚瀹氬瓧绗︿覆鍒楄〃涓殑浠绘剰涓€涓瓧绗︿覆<br>
-	 * 蹇界暐澶у皬鍐?
-	 *
-	 * @param str      鎸囧畾瀛楃涓?
-	 * @param testStrs 闇€瑕佹鏌ョ殑瀛楃涓叉暟缁?
-	 * @return 鏄惁鍖呭惈浠绘剰涓€涓瓧绗︿覆
-	 * @since 3.2.0
-	 */
-	public static boolean containsAnyIgnoreCase(CharSequence str, CharSequence... testStrs) {
-		return null != getContainsStrIgnoreCase(str, testStrs);
-	}
-
-	/**
-	 * 鏌ユ壘鎸囧畾瀛楃涓叉槸鍚﹀寘鍚寚瀹氬瓧绗︿覆鍒楄〃涓殑浠绘剰涓€涓瓧绗︿覆锛屽鏋滃寘鍚繑鍥炴壘鍒扮殑绗竴涓瓧绗︿覆<br>
-	 * 蹇界暐澶у皬鍐?
-	 *
-	 * @param str      鎸囧畾瀛楃涓?
-	 * @param testStrs 闇€瑕佹鏌ョ殑瀛楃涓叉暟缁?
-	 * @return 琚寘鍚殑绗竴涓瓧绗︿覆
-	 * @since 3.2.0
-	 */
-	public static String getContainsStrIgnoreCase(CharSequence str, CharSequence... testStrs) {
-		if (isEmpty(str) || ArrayUtil.isEmpty(testStrs)) {
-			return null;
-		}
-		for (CharSequence testStr : testStrs) {
-			if (containsIgnoreCase(str, testStr)) {
-				return testStr.toString();
-			}
-		}
-		return null;
-	}
-
-	// ------------------------------------------------------------------------ indexOf
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵炬寚瀹氬瓧绗?
-	 *
-	 * @param str        瀛楃涓?
-	 * @param searchChar 琚煡鎵剧殑瀛楃
-	 * @return 浣嶇疆
-	 */
-	public static int indexOf(CharSequence str, char searchChar) {
-		return indexOf(str, searchChar, 0);
-	}
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵炬寚瀹氬瓧绗?
-	 *
-	 * @param str        瀛楃涓?
-	 * @param searchChar 琚煡鎵剧殑瀛楃
-	 * @param start      璧峰浣嶇疆锛屽鏋滃皬浜?锛屼粠0寮€濮嬫煡鎵?
-	 * @return 浣嶇疆
-	 */
-	public static int indexOf(CharSequence str, char searchChar, int start) {
-		if (str instanceof String) {
-			return ((String) str).indexOf(searchChar, start);
-		} else {
-			return indexOf(str, searchChar, start, -1);
-		}
-	}
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵炬寚瀹氬瓧绗?
-	 *
-	 * @param text       瀛楃涓?
-	 * @param searchChar 琚煡鎵剧殑瀛楃
-	 * @param start      璧峰浣嶇疆锛屽鏋滃皬浜?锛屼粠0寮€濮嬫煡鎵?
-	 * @param end        缁堟浣嶇疆锛屽鏋滆秴杩噑tr.length()鍒欓粯璁ゆ煡鎵惧埌瀛楃涓叉湯灏?
-	 * @return 浣嶇疆
-	 */
-	public static int indexOf(CharSequence text, char searchChar, int start, int end) {
-		if (isEmpty(text)) {
-			return INDEX_NOT_FOUND;
-		}
-		if (text == null) return -1;
-		final int len = text.length();
-		final int validEnd = (end < 0 || end > len) ? len : end;
-		for (int i = start; i < validEnd; i++) {
-			if (text.charAt(i) == searchChar) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵惧瓧绗︿覆锛屽拷鐣ュぇ灏忓啓<br>
-	 *
-	 * <pre>
-	 * indexOfIgnoreCase(null, *, *)          = -1
-	 * indexOfIgnoreCase(*, null, *)          = -1
-	 * indexOfIgnoreCase("", "", 0)           = 0
-	 * indexOfIgnoreCase("aabaabaa", "A", 0)  = 0
-	 * indexOfIgnoreCase("aabaabaa", "B", 0)  = 2
-	 * indexOfIgnoreCase("aabaabaa", "AB", 0) = 1
-	 * indexOfIgnoreCase("aabaabaa", "B", 3)  = 5
-	 * indexOfIgnoreCase("aabaabaa", "B", 9)  = -1
-	 * indexOfIgnoreCase("aabaabaa", "B", -1) = 2
-	 * indexOfIgnoreCase("aabaabaa", "", 2)   = 2
-	 * indexOfIgnoreCase("abc", "", 9)        = -1
-	 * </pre>
-	 *
-	 * @param str       瀛楃涓?
-	 * @param searchStr 闇€瑕佹煡鎵句綅缃殑瀛楃涓?
-	 * @return 浣嶇疆
-	 * @since 3.2.1
-	 */
-	public static int indexOfIgnoreCase(final CharSequence str, final CharSequence searchStr) {
-		return indexOfIgnoreCase(str, searchStr, 0);
-	}
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵惧瓧绗︿覆
-	 *
-	 * <pre>
-	 * indexOfIgnoreCase(null, *, *)          = -1
-	 * indexOfIgnoreCase(*, null, *)          = -1
-	 * indexOfIgnoreCase("", "", 0)           = 0
-	 * indexOfIgnoreCase("aabaabaa", "A", 0)  = 0
-	 * indexOfIgnoreCase("aabaabaa", "B", 0)  = 2
-	 * indexOfIgnoreCase("aabaabaa", "AB", 0) = 1
-	 * indexOfIgnoreCase("aabaabaa", "B", 3)  = 5
-	 * indexOfIgnoreCase("aabaabaa", "B", 9)  = -1
-	 * indexOfIgnoreCase("aabaabaa", "B", -1) = 2
-	 * indexOfIgnoreCase("aabaabaa", "", 2)   = 2
-	 * indexOfIgnoreCase("abc", "", 9)        = -1
-	 * </pre>
-	 *
-	 * @param str       瀛楃涓?
-	 * @param searchStr 闇€瑕佹煡鎵句綅缃殑瀛楃涓?
-	 * @param fromIndex 璧峰浣嶇疆
-	 * @return 浣嶇疆
-	 * @since 3.2.1
-	 */
-	public static int indexOfIgnoreCase(final CharSequence str, final CharSequence searchStr, int fromIndex) {
-		return indexOf(str, searchStr, fromIndex, true);
-	}
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵惧瓧绗︿覆
-	 *
-	 * @param text       瀛楃涓诧紝绌哄垯杩斿洖-1
-	 * @param searchStr  闇€瑕佹煡鎵句綅缃殑瀛楃涓诧紝绌哄垯杩斿洖-1
-	 * @param from       璧峰浣嶇疆锛堝寘鍚級
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @return 浣嶇疆
-	 * @since 3.2.1
-	 */
-	public static int indexOf(CharSequence text, CharSequence searchStr, int from, boolean ignoreCase) {
-		if (isEmpty(text) || isEmpty(searchStr)) {
-			if (equals(text, searchStr)) {
-				return 0;
-			} else {
-				return INDEX_NOT_FOUND;
-			}
-		}
-		if (text == null || searchStr == null) return -1;
-		final String textStr = text.toString();
-		final String searchStr2 = searchStr.toString();
-		if (ignoreCase) {
-			return textStr.toLowerCase().indexOf(searchStr2.toLowerCase(), from);
-		}
-		return textStr.indexOf(searchStr2, from);
-	}
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵惧瓧绗︿覆锛屽拷鐣ュぇ灏忓啓
-	 *
-	 * @param str       瀛楃涓?
-	 * @param searchStr 闇€瑕佹煡鎵句綅缃殑瀛楃涓?
-	 * @return 浣嶇疆
-	 * @since 3.2.1
-	 */
-	public static int lastIndexOfIgnoreCase(CharSequence str, CharSequence searchStr) {
-		return lastIndexOfIgnoreCase(str, searchStr, str.length());
-	}
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵惧瓧绗︿覆锛屽拷鐣ュぇ灏忓啓<br>
-	 * fromIndex 涓烘悳绱㈣捣濮嬩綅缃紝浠庡悗寰€鍓嶈鏁?
-	 *
-	 * @param str       瀛楃涓?
-	 * @param searchStr 闇€瑕佹煡鎵句綅缃殑瀛楃涓?
-	 * @param fromIndex 璧峰浣嶇疆锛屼粠鍚庡線鍓嶈鏁?
-	 * @return 浣嶇疆
-	 * @since 3.2.1
-	 */
-	public static int lastIndexOfIgnoreCase(CharSequence str, CharSequence searchStr, int fromIndex) {
-		return lastIndexOf(str, searchStr, fromIndex, true);
-	}
-
-	/**
-	 * 鎸囧畾鑼冨洿鍐呮煡鎵惧瓧绗︿覆<br>
-	 * fromIndex 涓烘悳绱㈣捣濮嬩綅缃紝浠庡悗寰€鍓嶈鏁?
-	 *
-	 * @param text       瀛楃涓?
-	 * @param searchStr  闇€瑕佹煡鎵句綅缃殑瀛楃涓?
-	 * @param from       璧峰浣嶇疆锛屼粠鍚庡線鍓嶈鏁?
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @return 浣嶇疆
-	 * @since 3.2.1
-	 */
-	public static int lastIndexOf(CharSequence text, CharSequence searchStr, int from, boolean ignoreCase) {
-		if (isEmpty(text) || isEmpty(searchStr)) {
-			if (equals(text, searchStr)) {
-				return 0;
-			} else {
-				return INDEX_NOT_FOUND;
-			}
-		}
-		if (text == null || searchStr == null) return -1;
-		final String textStr = text.toString();
-		final String searchStr2 = searchStr.toString();
-		final int textLen = textStr.length();
-		final int searchLen = searchStr2.length();
-		if (searchLen == 0) return from;
-		int maxIndex = textLen - searchLen;
-		if (from > maxIndex) return -1;
-		if (ignoreCase) {
-			final String lowerText = textStr.toLowerCase();
-			final String lowerSearch = searchStr2.toLowerCase();
-			int idx = lowerText.lastIndexOf(lowerSearch, from);
-			return idx;
-		}
-		return textStr.lastIndexOf(searchStr2, from);
-	}
-
-	/**
-	 * 杩斿洖瀛楃涓?searchStr 鍦ㄥ瓧绗︿覆 str 涓 ordinal 娆″嚭鐜扮殑浣嶇疆銆?
-	 *
-	 * <p>
-	 * 濡傛灉 str=null 鎴?searchStr=null 鎴?ordinal&le;0 鍒欒繑鍥?1<br>
-	 * 姝ゆ柟娉曟潵鑷細Apache-Commons-Lang
-	 * <p>
-	 * 渚嬪瓙锛?浠ｈ〃浠绘剰瀛楃锛夛細
-	 *
-	 * <pre>
-	 * ordinalIndexOf(null, *, *)          = -1
-	 * ordinalIndexOf(*, null, *)          = -1
-	 * ordinalIndexOf("", "", *)           = 0
-	 * ordinalIndexOf("aabaabaa", "a", 1)  = 0
-	 * ordinalIndexOf("aabaabaa", "a", 2)  = 1
-	 * ordinalIndexOf("aabaabaa", "b", 1)  = 2
-	 * ordinalIndexOf("aabaabaa", "b", 2)  = 5
-	 * ordinalIndexOf("aabaabaa", "ab", 1) = 1
-	 * ordinalIndexOf("aabaabaa", "ab", 2) = 4
-	 * ordinalIndexOf("aabaabaa", "", 1)   = 0
-	 * ordinalIndexOf("aabaabaa", "", 2)   = 0
-	 * </pre>
-	 *
-	 * @param str       琚鏌ョ殑瀛楃涓诧紝鍙互涓簄ull
-	 * @param searchStr 琚煡鎵剧殑瀛楃涓诧紝鍙互涓簄ull
-	 * @param ordinal   绗嚑娆″嚭鐜扮殑浣嶇疆
-	 * @return 鏌ユ壘鍒扮殑浣嶇疆
-	 * @since 3.2.3
-	 */
-	public static int ordinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal) {
-		if (str == null || searchStr == null || ordinal <= 0) {
-			return INDEX_NOT_FOUND;
-		}
-		if (searchStr.length() == 0) {
-			return 0;
-		}
-		int found = 0;
-		int index = INDEX_NOT_FOUND;
-		do {
-			index = indexOf(str, searchStr, index + 1, false);
-			if (index < 0) {
-				return index;
-			}
-			found++;
-		} while (found < ordinal);
-		return index;
-	}
-
-	// ------------------------------------------------------------------------ remove
-
-	/**
-	 * 绉婚櫎瀛楃涓蹭腑鎵€鏈夌粰瀹氬瓧绗︿覆<br>
-	 * 渚嬶細removeAll("aa-bb-cc-dd", "-") =銆?aabbccdd
-	 *
-	 * @param str         瀛楃涓?
-	 * @param strToRemove 琚Щ闄ょ殑瀛楃涓?
-	 * @return 绉婚櫎鍚庣殑瀛楃涓?
-	 */
-	public static String removeAll(CharSequence str, CharSequence strToRemove) {
-		// strToRemove濡傛灉涓虹┖锛?涔熶笉鐢ㄧ户缁悗闈㈢殑閫昏緫
-		if (isEmpty(str) || isEmpty(strToRemove)) {
-			return str(str);
-		}
-		return str.toString().replace(strToRemove, EMPTY);
-	}
-
-	/**
-	 * 绉婚櫎瀛楃涓蹭腑鎵€鏈夌粰瀹氬瓧绗︿覆锛屽綋鏌愪釜瀛楃涓插嚭鐜板娆★紝鍒欏叏閮ㄧЩ闄?br>
-	 * 渚嬶細removeAny("aa-bb-cc-dd", "a", "b") =銆?--cc-dd
-	 *
-	 * @param str          瀛楃涓?
-	 * @param strsToRemove 琚Щ闄ょ殑瀛楃涓?
-	 * @return 绉婚櫎鍚庣殑瀛楃涓?
-	 * @since 5.3.8
-	 */
-	public static String removeAny(CharSequence str, CharSequence... strsToRemove) {
-		String result = str(str);
-		if (isNotEmpty(str)) {
-			for (CharSequence strToRemove : strsToRemove) {
-				result = removeAll(result, strToRemove);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * 鍘婚櫎瀛楃涓蹭腑鎸囧畾鐨勫涓瓧绗︼紝濡傛湁澶氫釜鍒欏叏閮ㄥ幓闄?
-	 *
-	 * @param str   瀛楃涓?
-	 * @param chars 瀛楃鍒楄〃
-	 * @return 鍘婚櫎鍚庣殑瀛楃
-	 * @since 4.2.2
-	 */
-	public static String removeAll(CharSequence str, char... chars) {
-		if (null == str || ArrayUtil.isEmpty(chars)) {
-			return str(str);
-		}
-		final int len = str.length();
-		if (0 == len) {
-			return str(str);
-		}
-		final StringBuilder builder = new StringBuilder(len);
-		char c;
-		for (int i = 0; i < len; i++) {
-			c = str.charAt(i);
-			if (false == ArrayUtil.contains(chars, c)) {
-				builder.append(c);
-			}
-		}
-		return builder.toString();
-	}
-
-	/**
-	 * 鍘婚櫎鎵€鏈夋崲琛岀锛屽寘鎷細
-	 *
-	 * <pre>
-	 * 1. \r
-	 * 1. \n
-	 * </pre>
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 * @since 4.2.2
-	 */
-	public static String removeAllLineBreaks(CharSequence str) {
-		return removeAll(str, CharUtil.CR, CharUtil.LF);
-	}
-
-	/**
-	 * 鍘绘帀棣栭儴鎸囧畾闀垮害鐨勫瓧绗︿覆骞跺皢鍓╀綑瀛楃涓查瀛楁瘝灏忓啓<br>
-	 * 渚嬪锛歴tr=setName, preLength=3 =銆?return name
-	 *
-	 * @param str       琚鐞嗙殑瀛楃涓?
-	 * @param preLength 鍘绘帀鐨勯暱搴?
-	 * @return 澶勭悊鍚庣殑瀛楃涓诧紝涓嶇鍚堣鑼冭繑鍥瀗ull
-	 */
-	public static String removePreAndLowerFirst(CharSequence str, int preLength) {
-		if (str == null) {
-			return null;
-		}
-		if (str.length() > preLength) {
-			char first = Character.toLowerCase(str.charAt(preLength));
-			if (str.length() > preLength + 1) {
-				return first + str.toString().substring(preLength + 1);
-			}
-			return String.valueOf(first);
-		} else {
-			return str.toString();
-		}
-	}
-
-	/**
-	 * 鍘绘帀棣栭儴鎸囧畾闀垮害鐨勫瓧绗︿覆骞跺皢鍓╀綑瀛楃涓查瀛楁瘝灏忓啓<br>
-	 * 渚嬪锛歴tr=setName, prefix=set =銆?return name
-	 *
-	 * @param str    琚鐞嗙殑瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @return 澶勭悊鍚庣殑瀛楃涓诧紝涓嶇鍚堣鑼冭繑鍥瀗ull
-	 */
-	public static String removePreAndLowerFirst(CharSequence str, CharSequence prefix) {
-		return lowerFirst(removePrefix(str, prefix));
-	}
-
-	/**
-	 * 鍘绘帀鎸囧畾鍓嶇紑
-	 *
-	 * @param str    瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @return 鍒囨帀鍚庣殑瀛楃涓诧紝鑻ュ墠缂€涓嶆槸 preffix锛?杩斿洖鍘熷瓧绗︿覆
-	 */
-	public static String removePrefix(CharSequence str, CharSequence prefix) {
-		if (isEmpty(str) || isEmpty(prefix)) {
-			return str(str);
-		}
-
-		final String str2 = str.toString();
-		if (str2.startsWith(prefix.toString())) {
-			return subSuf(str2, prefix.length());// 鎴彇鍚庡崐娈?
-		}
-		return str2;
-	}
-
-	/**
-	 * 鍘绘帀鎸囧畾鎵€鏈夊墠缂€锛屽锛?
-	 * <pre>{@code
-	 *     str=abcdef, prefix=ab => return cdef
-	 *     str=ababcdef, prefix=ab => return cdef
-	 *     str=ababcdef, prefix="" => return ababcdef
-	 *     str=ababcdef, prefix=null => return ababcdef
-	 * }</pre>
-	 *
-	 * @param str    瀛楃涓诧紝绌鸿繑鍥炲師瀛楃涓?
-	 * @param prefix 鍓嶇紑锛岀┖杩斿洖鍘熷瓧绗︿覆
-	 * @return 鍘绘帀鎵€鏈夊墠缂€鐨勫瓧绗︿覆锛岃嫢鍓嶇紑涓嶆槸 preffix锛?杩斿洖鍘熷瓧绗︿覆
-	 * @since 5.8.30
-	 */
-	public static String removeAllPrefix(CharSequence str, CharSequence prefix) {
-		if (isEmpty(str) || isEmpty(prefix)) {
-			return str(str);
-		}
-
-		final String prefixStr = prefix.toString();
-		final int prefixLength = prefixStr.length();
-
-		final String str2 = str.toString();
-		int toIndex = 0;
-		while (str2.startsWith(prefixStr, toIndex)) {
-			toIndex += prefixLength;
-		}
-		return subSuf(str2, toIndex);
-	}
-
-	/**
-	 * 蹇界暐澶у皬鍐欏幓鎺夋寚瀹氬墠缂€
-	 *
-	 * @param str    瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @return 鍒囨帀鍚庣殑瀛楃涓诧紝鑻ュ墠缂€涓嶆槸 prefix锛?杩斿洖鍘熷瓧绗︿覆
-	 */
-	public static String removePrefixIgnoreCase(CharSequence str, CharSequence prefix) {
-		if (isEmpty(str) || isEmpty(prefix)) {
-			return str(str);
-		}
-
-		final String str2 = str.toString();
-		if (startWithIgnoreCase(str, prefix)) {
-			return subSuf(str2, prefix.length());// 鎴彇鍚庡崐娈?
-		}
-		return str2;
-	}
-
-	/**
-	 * 鍘绘帀鎸囧畾鍚庣紑
-	 *
-	 * @param str    瀛楃涓?
-	 * @param suffix 鍚庣紑
-	 * @return 鍒囨帀鍚庣殑瀛楃涓诧紝鑻ュ悗缂€涓嶆槸 suffix锛?杩斿洖鍘熷瓧绗︿覆
-	 */
-	public static String removeSuffix(CharSequence str, CharSequence suffix) {
-		if (isEmpty(str) || isEmpty(suffix)) {
-			return str(str);
-		}
-
-		final String str2 = str.toString();
-		if (str2.endsWith(suffix.toString())) {
-			return subPre(str2, str2.length() - suffix.length());// 鎴彇鍓嶅崐娈?
-		}
-		return str2;
-	}
-
-	/**
-	 * 鍘绘帀鎸囧畾鎵€鏈夊悗缂€锛屽锛?
-	 * <pre>{@code
-	 *     str=11abab, suffix=ab => return 11
-	 *     str=11ab, suffix=ab => return 11
-	 *     str=11ab, suffix="" => return 11ab
-	 *     str=11ab, suffix=null => return 11ab
-	 * }</pre>
-	 *
-	 * @param str    瀛楃涓诧紝绌鸿繑鍥炲師瀛楃涓?
-	 * @param suffix 鍚庣紑瀛楃涓诧紝绌鸿繑鍥炲師瀛楃涓?
-	 * @return 鍘绘帀鎵€鏈夊悗缂€鐨勫瓧绗︿覆锛岃嫢鍚庣紑涓嶆槸 suffix锛?杩斿洖鍘熷瓧绗︿覆
-	 * @since 5.8.30
-	 */
-	public static String removeAllSuffix(CharSequence str, CharSequence suffix) {
-		if (isEmpty(str) || isEmpty(suffix)) {
-			return str(str);
-		}
-
-		final String suffixStr = suffix.toString();
-		final int suffixLength = suffixStr.length();
-
-		final String str2 = str.toString();
-		int toIndex = str2.length();
-		while (str2.startsWith(suffixStr, toIndex - suffixLength)) {
-			toIndex -= suffixLength;
-		}
-		return subPre(str2, toIndex);
-	}
-
-
-	/**
-	 * 鍘绘帀鎸囧畾鍚庣紑锛屽苟灏忓啓棣栧瓧姣?
-	 *
-	 * @param str    瀛楃涓?
-	 * @param suffix 鍚庣紑
-	 * @return 鍒囨帀鍚庣殑瀛楃涓诧紝鑻ュ悗缂€涓嶆槸 suffix锛?杩斿洖鍘熷瓧绗︿覆
-	 */
-	public static String removeSufAndLowerFirst(CharSequence str, CharSequence suffix) {
-		return lowerFirst(removeSuffix(str, suffix));
-	}
-
-	/**
-	 * 蹇界暐澶у皬鍐欏幓鎺夋寚瀹氬悗缂€
-	 *
-	 * @param str    瀛楃涓?
-	 * @param suffix 鍚庣紑
-	 * @return 鍒囨帀鍚庣殑瀛楃涓诧紝鑻ュ悗缂€涓嶆槸 suffix锛?杩斿洖鍘熷瓧绗︿覆
-	 */
-	public static String removeSuffixIgnoreCase(CharSequence str, CharSequence suffix) {
-		if (isEmpty(str) || isEmpty(suffix)) {
-			return str(str);
-		}
-
-		final String str2 = str.toString();
-		if (endWithIgnoreCase(str, suffix)) {
-			return subPre(str2, str2.length() - suffix.length());
-		}
-		return str2;
-	}
-
-	/**
-	 * 娓呯悊绌虹櫧瀛楃
-	 *
-	 * @param str 琚竻鐞嗙殑瀛楃涓?
-	 * @return 娓呯悊鍚庣殑瀛楃涓?
-	 */
-	public static String cleanBlank(CharSequence str) {
-		return filter(str, c -> false == CharUtil.isBlankChar(c));
-	}
-
-	// ------------------------------------------------------------------------ strip
-
-	/**
-	 * 鍘婚櫎涓よ竟鐨勬寚瀹氬瓧绗︿覆锛屽拷鐣ュぇ灏忓啓
-	 *
-	 * @param str            琚鐞嗙殑瀛楃涓?
-	 * @param prefixOrSuffix 鍓嶇紑鎴栧悗缂€
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 * @since 3.1.2
-	 */
-	public static String stripIgnoreCase(final CharSequence str, final CharSequence prefixOrSuffix) {
-		return stripIgnoreCase(str, prefixOrSuffix, prefixOrSuffix);
-	}
-
-	/**
-	 * 鍘婚櫎涓よ竟鐨勬寚瀹氬瓧绗︿覆锛屽拷鐣ュぇ灏忓啓
-	 *
-	 * @param str    琚鐞嗙殑瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 * @since 3.1.2
-	 */
-	public static String stripIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
-		return strip(str, prefix, suffix, true);
-	}
-
-	/**
-	 * 鍘婚櫎涓よ竟鐨勬寚瀹氬瓧绗︿覆
-	 *
-	 * @param str            琚鐞嗙殑瀛楃涓?
-	 * @param prefixOrSuffix 鍓嶇紑鎴栧悗缂€
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 * @since 3.1.2
-	 */
-	public static String strip(CharSequence str, CharSequence prefixOrSuffix) {
-		if (equals(str, prefixOrSuffix)) {
-			// 瀵逛簬鍘婚櫎鐩稿悓瀛楃鐨勬儏鍐靛崟鐙鐞?
-			return EMPTY;
-		}
-		return strip(str, prefixOrSuffix, prefixOrSuffix);
-	}
-
-	/**
-	 * 鍘婚櫎涓よ竟鐨勬寚瀹氬瓧绗︿覆<br>
-	 * 涓よ竟瀛楃濡傛灉瀛樺湪锛屽垯鍘婚櫎锛屼笉瀛樺湪涓嶅仛澶勭悊
-	 * <pre>{@code
-	 * "aaa_STRIPPED_bbb", "a", "b"  -> "aa_STRIPPED_bb"
-	 * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_bb"
-	 * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_bb"
-	 * "aaa_STRIPPED_bbb", "a", ""  -> "aa_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "a", null  -> "aa_STRIPPED_bbb"
-	 *
-	 * "a", "a", "a"  -> ""
-	 * }
-	 * </pre>
-	 *
-	 * @param str    琚鐞嗙殑瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 * @since 3.1.2
-	 */
-	public static String strip(CharSequence str, CharSequence prefix, CharSequence suffix) {
-		return strip(str, prefix, suffix, false);
-	}
-
-	/**
-	 * 鍘婚櫎涓よ竟鐨勬寚瀹氬瓧绗︿覆<br>
-	 * 涓よ竟瀛楃濡傛灉瀛樺湪锛屽垯鍘婚櫎锛屼笉瀛樺湪涓嶅仛澶勭悊
-	 * <pre>{@code
-	 * "aaa_STRIPPED_bbb", "a", "b"  -> "aa_STRIPPED_bb"
-	 * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_bb"
-	 * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_bb"
-	 * "aaa_STRIPPED_bbb", "a", ""  -> "aa_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "a", null  -> "aa_STRIPPED_bbb"
-	 *
-	 * "a", "a", "a"  -> ""
-	 * }
-	 * </pre>
-	 *
-	 * @param str        琚鐞嗙殑瀛楃涓?
-	 * @param prefix     鍓嶇紑
-	 * @param suffix     鍚庣紑
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 * @since 3.1.2
-	 */
-	public static String strip(CharSequence str, CharSequence prefix, CharSequence suffix, boolean ignoreCase) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-
-		final String str2 = str.toString();
-		int from = 0;
-		int to = str2.length();
-
-		if (startWith(str2, prefix, ignoreCase)) {
-			from = prefix.length();
-			if (from == to) {
-				// "a", "a", "a"  -> ""
-				return EMPTY;
-			}
-		}
-		if (endWith(str2, suffix, ignoreCase)) {
-			to -= suffix.length();
-			if (from == to) {
-				// "a", "a", "a"  -> ""
-				return EMPTY;
-			} else if (to < from) {
-				// pre鍘婚櫎鍚庡拰suffix鏈夐噸鍙狅紝濡?("aba", "ab", "ba") -> "a"
-				to += suffix.length();
-			}
-		}
-
-		return str2.substring(from, to);
-	}
-
-	/**
-	 * 鍘婚櫎涓よ竟<u><b>鎵€鏈?/b></u>鐨勬寚瀹氬瓧绗︿覆
-	 *
-	 * <pre>{@code
-	 * "aaa_STRIPPED_bbb", "a"  -> "_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "a", "b"  -> "_STRIPPED_"
-	 * "aaa_STRIPPED_bbb", ""  -> "aaa_STRIPPED_bbb"
-	 * }
-	 * </pre>
-	 *
-	 * @param str            琚鐞嗙殑瀛楃涓?
-	 * @param prefixOrSuffix 鍓嶇紑鎴栧悗缂€
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 * @since 5.8.30
-	 */
-	public static String stripAll(final CharSequence str, final CharSequence prefixOrSuffix) {
-		if (equals(str, prefixOrSuffix)) {
-			return EMPTY;
-		}
-		return stripAll(str, prefixOrSuffix, prefixOrSuffix);
-	}
-
-	/**
-	 * 鍘婚櫎涓よ竟<u><b>鎵€鏈?/b></u>鐨勬寚瀹氬瓧绗︿覆
-	 *
-	 * <pre>{@code
-	 * "aaa_STRIPPED_bbb", "a", "b"  -> "_STRIPPED_"
-	 * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_"
-	 * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_"
-	 * "aaa_STRIPPED_bbb", "a", ""  -> "_STRIPPED_bbb"
-	 * "aaa_STRIPPED_bbb", "a", null  -> "_STRIPPED_bbb"
-	 *
-	 * // special test
-	 * "aaaaaabbb", "aaa", null  -> "bbb"
-	 * "aaaaaaabbb", "aa", null  -> "abbb"
-	 *
-	 * "aaaaaaaaa", "aaa", "aa"  -> ""
-	 * "a", "a", "a"  -> ""
-	 * }
-	 * </pre>
-	 *
-	 * @param str    琚鐞嗙殑瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 * @since 5.8.30
-	 */
-	public static String stripAll(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-
-		final String prefixStr = emptyIfNull(prefix);
-		final String suffixStr = emptyIfNull(suffix);
-
-		final String str2 = str.toString();
-		int from = 0;
-		int to = str2.length();
-
-		if (!prefixStr.isEmpty()) {
-			while (str2.startsWith(prefixStr, from)) {
-				from += prefix.length();
-				if (from == to) {
-					// "a", "a", "a"  -> ""
-					return EMPTY;
-				}
-			}
-		}
-		if (!suffixStr.isEmpty()) {
-			while (str2.startsWith(suffixStr, to - suffixStr.length())) {
-				to -= suffixStr.length();
-				if (from == to) {
-					// "a", "a", "a"  -> ""
-					return EMPTY;
-				} else if (to < from) {
-					// pre鍘婚櫎鍚庡拰suffix鏈夐噸鍙狅紝濡?("aba", "ab", "ba") -> "a"
-					to += suffixStr.length();
-					break;
-				}
-			}
-		}
-
-		return str2.substring(from, to);
-	}
-
-	// ------------------------------------------------------------------------ add
-
-	/**
-	 * 濡傛灉缁欏畾瀛楃涓蹭笉鏄互prefix寮€澶寸殑锛屽湪寮€澶磋ˉ鍏?prefix
-	 *
-	 * @param str    瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 * @see #prependIfMissing(CharSequence, CharSequence, CharSequence...)
-	 */
-	public static String addPrefixIfNot(CharSequence str, CharSequence prefix) {
-		return prependIfMissing(str, prefix, prefix);
-	}
-
-	/**
-	 * 濡傛灉缁欏畾瀛楃涓蹭笉鏄互suffix缁撳熬鐨勶紝鍦ㄥ熬閮ㄨˉ鍏?suffix
-	 *
-	 * @param str    瀛楃涓?
-	 * @param suffix 鍚庣紑
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 * @see #appendIfMissing(CharSequence, CharSequence, CharSequence...)
-	 */
-	public static String addSuffixIfNot(CharSequence str, CharSequence suffix) {
-		return appendIfMissing(str, suffix, suffix);
-	}
-
-	// ------------------------------------------------------------------------ split
-
-	/**
-	 * 鍒囧垎瀛楃涓蹭负long鏁扮粍
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗?
-	 * @return 鍒囧垎鍚巐ong鏁扮粍
-	 * @since 4.0.6
-	 */
-	public static long[] splitToLong(CharSequence str, char separator) {
-		return Convert.convert(long[].class, splitTrim(str, separator));
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓蹭负long鏁扮粍
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗︿覆
-	 * @return 鍒囧垎鍚巐ong鏁扮粍
-	 * @since 4.0.6
-	 */
-	public static long[] splitToLong(CharSequence str, CharSequence separator) {
-		return Convert.convert(long[].class, splitTrim(str, separator));
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓蹭负int鏁扮粍
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗?
-	 * @return 鍒囧垎鍚巐ong鏁扮粍
-	 * @since 4.0.6
-	 */
-	public static int[] splitToInt(CharSequence str, char separator) {
-		return Convert.convert(int[].class, splitTrim(str, separator));
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓蹭负int鏁扮粍
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗︿覆
-	 * @return 鍒囧垎鍚巐ong鏁扮粍
-	 * @since 4.0.6
-	 */
-	public static int[] splitToInt(CharSequence str, CharSequence separator) {
-		return Convert.convert(int[].class, splitTrim(str, separator));
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓?br>
-	 * a#b#c =銆?[a,b,c] <br>
-	 * a##b#c =銆?[a,"",b,c]
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗?
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 */
-	public static List<String> split(CharSequence str, char separator) {
-		return split(str, separator, 0);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓诧紝濡傛灉鍒嗛殧绗︿笉瀛樺湪鍒欒繑鍥炲師瀛楃涓?
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗?
-	 * @return 瀛楃涓?
-	 * @since 5.6.7
-	 */
-	public static String[] splitToArray(CharSequence str, CharSequence separator) {
-		if (str == null) {
-			return new String[]{};
-		}
-
-		final String sepStr = str(separator);
-		if (sepStr == null || sepStr.isEmpty()) {
-			return new String[]{str.toString()};
-		}
-		final List<String> list = new java.util.ArrayList<>();
-		int start = 0;
-		int idx;
-		while ((idx = str.toString().indexOf(sepStr, start)) != -1) {
-			list.add(str.toString().substring(start, idx));
-			start = idx + sepStr.length();
-		}
-		list.add(str.toString().substring(start));
-		return list.toArray(new String[0]);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓?
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗?
-	 * @return 鍒囧垎鍚庣殑鏁扮粍
-	 */
-	public static String[] splitToArray(CharSequence str, char separator) {
-		return splitToArray(str, separator, 0);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓?
-	 *
-	 * @param text      琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗?
-	 * @param limit     闄愬埗鍒嗙墖鏁?
-	 * @return 鍒囧垎鍚庣殑鏁扮粍
-	 */
-	public static String[] splitToArray(CharSequence text, char separator, int limit) {
-		Assert.notNull(text, "Text must be not null!");
-		final String textStr = text.toString();
-		final String sepStr = String.valueOf(separator);
-		if (limit == 0) {
-			return textStr.split(java.util.regex.Pattern.quote(sepStr));
-		}
-		return textStr.split(java.util.regex.Pattern.quote(sepStr), limit);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓诧紝涓嶅幓闄ゅ垏鍒嗗悗姣忎釜鍏冪礌涓よ竟鐨勭┖鐧界锛屼笉鍘婚櫎绌虹櫧椤?
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗?
-	 * @param limit     闄愬埗鍒嗙墖鏁帮紝-1涓嶉檺鍒?
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 */
-	public static List<String> split(CharSequence str, char separator, int limit) {
-		return split(str, separator, limit, false, false);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓诧紝鍘婚櫎鍒囧垎鍚庢瘡涓厓绱犱袱杈圭殑绌虹櫧绗︼紝鍘婚櫎绌虹櫧椤?
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗?
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 * @since 3.1.2
-	 */
-	public static List<String> splitTrim(CharSequence str, char separator) {
-		return splitTrim(str, separator, -1);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓诧紝鍘婚櫎鍒囧垎鍚庢瘡涓厓绱犱袱杈圭殑绌虹櫧绗︼紝鍘婚櫎绌虹櫧椤?
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗?
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 * @since 3.2.0
-	 */
-	public static List<String> splitTrim(CharSequence str, CharSequence separator) {
-		return splitTrim(str, separator, -1);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓诧紝鍘婚櫎鍒囧垎鍚庢瘡涓厓绱犱袱杈圭殑绌虹櫧绗︼紝鍘婚櫎绌虹櫧椤?
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗?
-	 * @param limit     闄愬埗鍒嗙墖鏁帮紝-1涓嶉檺鍒?
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 * @since 3.1.0
-	 */
-	public static List<String> splitTrim(CharSequence str, char separator, int limit) {
-		return split(str, separator, limit, true, true);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓诧紝鍘婚櫎鍒囧垎鍚庢瘡涓厓绱犱袱杈圭殑绌虹櫧绗︼紝鍘婚櫎绌虹櫧椤?
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗﹀瓧绗?
-	 * @param limit     闄愬埗鍒嗙墖鏁帮紝-1涓嶉檺鍒?
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 * @since 3.2.0
-	 */
-	public static List<String> splitTrim(CharSequence str, CharSequence separator, int limit) {
-		return split(str, separator, limit, true, true);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓诧紝涓嶉檺鍒跺垎鐗囨暟閲?
-	 *
-	 * @param str         琚垏鍒嗙殑瀛楃涓?
-	 * @param separator   鍒嗛殧绗﹀瓧绗?
-	 * @param isTrim      鏄惁鍘婚櫎鍒囧垎瀛楃涓插悗姣忎釜鍏冪礌涓よ竟鐨勭┖鏍?
-	 * @param ignoreEmpty 鏄惁蹇界暐绌轰覆
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 * @since 3.0.8
-	 */
-	public static List<String> split(CharSequence str, char separator, boolean isTrim, boolean ignoreEmpty) {
-		return split(str, separator, 0, isTrim, ignoreEmpty);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓?
-	 *
-	 * @param str         琚垏鍒嗙殑瀛楃涓?
-	 * @param separator   鍒嗛殧绗﹀瓧绗?
-	 * @param limit       闄愬埗鍒嗙墖鏁帮紝-1涓嶉檺鍒?
-	 * @param isTrim      鏄惁鍘婚櫎鍒囧垎瀛楃涓插悗姣忎釜鍏冪礌涓よ竟鐨勭┖鏍?
-	 * @param ignoreEmpty 鏄惁蹇界暐绌轰覆
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 * @since 3.0.8
-	 */
-	public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
-		final String str2 = str.toString();
-		final String sepStr = String.valueOf(separator);
-		final java.util.List<String> result = new java.util.ArrayList<>();
-		if (str2.isEmpty()) {
-			if (!ignoreEmpty) result.add(str2);
-			return result;
-		}
-		int start = 0;
-		int idx;
-		while ((idx = str2.indexOf(sepStr, start)) != -1) {
-			String token = str2.substring(start, idx);
-			if (isTrim) token = token.trim();
-			if (!ignoreEmpty || !token.isEmpty()) result.add(token);
-			start = idx + sepStr.length();
-		}
-		String last = str2.substring(start);
-		if (isTrim) last = last.trim();
-		if (!ignoreEmpty || !last.isEmpty()) result.add(last);
-		if (limit > 0 && result.size() > limit) {
-			final java.util.List<String> limited = new java.util.ArrayList<>(result.subList(0, limit - 1));
-			final StringBuilder sb = new StringBuilder();
-			for (int i = limit - 1; i < result.size(); i++) {
-				if (sb.length() > 0) sb.append(sepStr);
-				sb.append(result.get(i));
-			}
-			limited.add(sb.toString());
-			return limited;
-		}
-		return result;
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓?
-	 *
-	 * @param <R>         鍒囧垎鍚庡厓绱犵被鍨?
-	 * @param str         琚垏鍒嗙殑瀛楃涓?
-	 * @param separator   鍒嗛殧绗﹀瓧绗?
-	 * @param limit       闄愬埗鍒嗙墖鏁帮紝-1涓嶉檺鍒?
-	 * @param ignoreEmpty 鏄惁蹇界暐绌轰覆
-	 * @param mapping     鍒囧垎鍚庣殑瀛楃涓插厓绱犵殑杞崲鏂规硶
-	 * @return 鍒囧垎鍚庣殑闆嗗悎锛屽厓绱犵被鍨嬫槸缁忚繃 mapping 杞崲鍚庣殑
-	 * @since 5.7.14
-	 */
-	public static <R> List<R> split(CharSequence str, char separator, int limit, boolean ignoreEmpty, Function<String, R> mapping) {
-		final java.util.List<String> rawSplit = split(str, separator, limit, false, ignoreEmpty);
-		final java.util.List<R> result = new java.util.ArrayList<>(rawSplit.size());
-		for (String s : rawSplit) {
-			result.add(mapping.apply(s));
-		}
-		return result;
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓诧紝濡傛灉鍒嗛殧绗︿笉瀛樺湪鍒欒繑鍥炲師瀛楃涓?
-	 *
-	 * @param str       琚垏鍒嗙殑瀛楃涓?
-	 * @param separator 鍒嗛殧绗?
-	 * @return 瀛楃涓?
-	 * @since 5.7.1
-	 */
-	public static List<String> split(CharSequence str, CharSequence separator) {
-		return split(str, separator, false, false);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓?
-	 *
-	 * @param str         琚垏鍒嗙殑瀛楃涓?
-	 * @param separator   鍒嗛殧绗﹀瓧绗?
-	 * @param isTrim      鏄惁鍘婚櫎鍒囧垎瀛楃涓插悗姣忎釜鍏冪礌涓よ竟鐨勭┖鏍?
-	 * @param ignoreEmpty 鏄惁蹇界暐绌轰覆
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 * @since 5.6.7
-	 */
-	public static List<String> split(CharSequence str, CharSequence separator, boolean isTrim, boolean ignoreEmpty) {
-		return split(str, separator, 0, isTrim, ignoreEmpty);
-	}
-
-	/**
-	 * 鍒囧垎瀛楃涓?
-	 *
-	 * @param str         琚垏鍒嗙殑瀛楃涓?
-	 * @param separator   鍒嗛殧绗﹀瓧绗?
-	 * @param limit       闄愬埗鍒嗙墖鏁帮紝-1涓嶉檺鍒?
-	 * @param isTrim      鏄惁鍘婚櫎鍒囧垎瀛楃涓插悗姣忎釜鍏冪礌涓よ竟鐨勭┖鏍?
-	 * @param ignoreEmpty 鏄惁蹇界暐绌轰覆
-	 * @return 鍒囧垎鍚庣殑闆嗗悎
-	 * @since 3.2.0
-	 */
-	public static List<String> split(CharSequence str, CharSequence separator, int limit, boolean isTrim, boolean ignoreEmpty) {
-		final String separatorStr = (null == separator) ? null : separator.toString();
-		final String str2 = str.toString();
-		final java.util.List<String> result = new java.util.ArrayList<>();
-		if (str2.isEmpty()) {
-			if (!ignoreEmpty) result.add(str2);
-			return result;
-		}
-		if (separatorStr == null || separatorStr.isEmpty()) {
-			if (!ignoreEmpty || !str2.isEmpty()) result.add(str2);
-			return result;
-		}
-		int start = 0;
-		int idx;
-		while ((idx = str2.indexOf(separatorStr, start)) != -1) {
-			String token = str2.substring(start, idx);
-			if (isTrim) token = token.trim();
-			if (!ignoreEmpty || !token.isEmpty()) result.add(token);
-			start = idx + separatorStr.length();
-		}
-		String last = str2.substring(start);
-		if (isTrim) last = last.trim();
-		if (!ignoreEmpty || !last.isEmpty()) result.add(last);
-		if (limit > 0 && result.size() > limit) {
-			final java.util.List<String> limited = new java.util.ArrayList<>(result.subList(0, limit - 1));
-			final StringBuilder sb = new StringBuilder();
-			for (int i = limit - 1; i < result.size(); i++) {
-				if (sb.length() > 0) sb.append(separatorStr);
-				sb.append(result.get(i));
-			}
-			limited.add(sb.toString());
-			return limited;
-		}
-		return result;
-	}
-
-	/**
-	 * 鏍规嵁缁欏畾闀垮害锛屽皢缁欏畾瀛楃涓叉埅鍙栦负澶氫釜閮ㄥ垎
-	 *
-	 * @param str 瀛楃涓?
-	 * @param len 姣忎竴涓皬鑺傜殑闀垮害
-	 * @return 鎴彇鍚庣殑瀛楃涓叉暟缁?
-	 * @see StrSplitter#splitByLength(CharSequence, int)
-	 */
-	public static String[] split(CharSequence str, int len) {
-		if (str == null) {
-			return new String[0];
-		}
-		final String s = str.toString();
-		final int len2 = s.length();
-		if (len2 <= len) {
-			return new String[]{s};
-		}
-		final int count = (len2 + len - 1) / len;
-		final String[] result = new String[count];
-		for (int i = 0; i < count; i++) {
-			int start2 = i * len;
-			int end2 = Math.min(start2 + len, len2);
-			result[i] = s.substring(start2, end2);
-		}
-		return result;
-	}
-
-	/**
-	 * 灏嗗瓧绗︿覆鍒囧垎涓篘绛変唤
-	 *
-	 * @param str        瀛楃涓?
-	 * @param partLength 姣忕瓑浠界殑闀垮害
-	 * @return 鍒囧垎鍚庣殑鏁扮粍
-	 * @since 3.0.6
-	 */
-	public static String[] cut(CharSequence str, int partLength) {
-		if (null == str) {
-			return null;
-		}
-		int len = str.length();
-		if (len < partLength) {
-			return new String[]{str.toString()};
-		}
-		int part = NumberUtil.count(len, partLength);
-		final String[] array = new String[part];
-
-		final String str2 = str.toString();
-		for (int i = 0; i < part; i++) {
-			array[i] = str2.substring(i * partLength, (i == part - 1) ? len : (partLength + i * partLength));
-		}
-		return array;
-	}
-
-	// ------------------------------------------------------------------------ sub
-
-	/**
-	 * 鏀硅繘JDK subString<br>
-	 * index浠?寮€濮嬭绠楋紝鏈€鍚庝竴涓瓧绗︿负-1<br>
-	 * 濡傛灉from鍜宼o浣嶇疆涓€鏍凤紝杩斿洖 "" <br>
-	 * 濡傛灉from鎴杢o涓鸿礋鏁帮紝鍒欐寜鐓ength浠庡悗鍚戝墠鏁颁綅缃紝濡傛灉缁濆鍊煎ぇ浜庡瓧绗︿覆闀垮害锛屽垯from褰掑埌0锛宼o褰掑埌length<br>
-	 * 濡傛灉缁忚繃淇鐨刬ndex涓璮rom澶т簬to锛屽垯浜掓崲from鍜宼o example: <br>
-	 * abcdefgh 2 3 =銆?c <br>
-	 * abcdefgh 2 -3 =銆?cde <br>
-	 *
-	 * @param str              String
-	 * @param fromIndexInclude 寮€濮嬬殑index锛堝寘鎷級
-	 * @param toIndexExclude   缁撴潫鐨刬ndex锛堜笉鍖呮嫭锛?
-	 * @return 瀛椾覆
-	 */
-	public static String sub(CharSequence str, int fromIndexInclude, int toIndexExclude) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		int len = str.length();
-
-		if (fromIndexInclude < 0) {
-			fromIndexInclude = len + fromIndexInclude;
-			if (fromIndexInclude < 0) {
-				fromIndexInclude = 0;
-			}
-		} else if (fromIndexInclude > len) {
-			fromIndexInclude = len;
-		}
-
-		if (toIndexExclude < 0) {
-			toIndexExclude = len + toIndexExclude;
-			if (toIndexExclude < 0) {
-				toIndexExclude = len;
-			}
-		} else if (toIndexExclude > len) {
-			toIndexExclude = len;
-		}
-
-		if (toIndexExclude < fromIndexInclude) {
-			int tmp = fromIndexInclude;
-			fromIndexInclude = toIndexExclude;
-			toIndexExclude = tmp;
-		}
-
-		if (fromIndexInclude == toIndexExclude) {
-			return EMPTY;
-		}
-
-		return str.toString().substring(fromIndexInclude, toIndexExclude);
-	}
-
-	/**
-	 * 閫氳繃CodePoint鎴彇瀛楃涓诧紝鍙互鎴柇Emoji
-	 *
-	 * @param str       String
-	 * @param fromIndex 寮€濮嬬殑index锛堝寘鎷級
-	 * @param toIndex   缁撴潫鐨刬ndex锛堜笉鍖呮嫭锛?
-	 * @return 瀛椾覆
-	 */
-	public static String subByCodePoint(CharSequence str, int fromIndex, int toIndex) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-
-		if (fromIndex < 0 || fromIndex > toIndex) {
-			throw new IllegalArgumentException();
-		}
-
-		if (fromIndex == toIndex) {
-			return EMPTY;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		final int subLen = toIndex - fromIndex;
-		str.toString().codePoints().skip(fromIndex).limit(subLen).forEach(v -> sb.append(Character.toChars(v)));
-		return sb.toString();
-	}
-
-	/**
-	 * 鎴彇閮ㄥ垎瀛楃涓诧紝杩欓噷涓€涓眽瀛楃殑闀垮害璁や负鏄?
-	 *
-	 * @param str    瀛楃涓?
-	 * @param len    bytes鍒囧壊鍒扮殑浣嶇疆锛堝寘鍚級
-	 * @param suffix 鍒囧壊鍚庡姞涓婂悗缂€
-	 * @return 鍒囧壊鍚庣殑瀛楃涓?
-	 * @since 3.1.1
-	 */
-	public static String subPreGbk(CharSequence str, int len, CharSequence suffix) {
-		return subPreGbk(str, len, true) + suffix;
-	}
-
-	/**
-	 * 鎴彇閮ㄥ垎瀛楃涓诧紝杩欓噷涓€涓眽瀛楃殑闀垮害璁や负鏄?<br>
-	 * 鍙互鑷畾涔塰alfUp锛屽len涓?0锛屽鏋滄埅鍙栧悗鏈€鍚庝竴涓瓧绗︽槸鍗婁釜瀛楃锛寋@code true}琛ㄧず淇濈暀锛屽垯闀垮害鏄?1锛屽惁鍒欓暱搴?
-	 *
-	 * @param str    瀛楃涓?
-	 * @param len    bytes鍒囧壊鍒扮殑浣嶇疆锛堝寘鍚級
-	 * @param halfUp 閬囧埌鎴彇涓€鍗婄殑GBK瀛楃锛屾槸鍚︿繚鐣欍€?
-	 * @return 鍒囧壊鍚庣殑瀛楃涓?
-	 * @since 5.7.17
-	 */
-	public static String subPreGbk(CharSequence str, int len, boolean halfUp) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-
-		int counterOfDoubleByte = 0;
-		final byte[] b = bytes(str, CharsetUtil.CHARSET_GBK);
-		if (b.length <= len) {
-			return str.toString();
-		}
-		for (int i = 0; i < len; i++) {
-			if (b[i] < 0) {
-				counterOfDoubleByte++;
-			}
-		}
-
-		if (counterOfDoubleByte % 2 != 0) {
-			if (halfUp) {
-				len += 1;
-			} else {
-				len -= 1;
-			}
-		}
-		return new String(b, 0, len, CharsetUtil.CHARSET_GBK);
-	}
-
-	/**
-	 * 鍒囧壊鎸囧畾浣嶇疆涔嬪墠閮ㄥ垎鐨勫瓧绗︿覆
-	 *
-	 * @param string         瀛楃涓?
-	 * @param toIndexExclude 鍒囧壊鍒扮殑浣嶇疆锛堜笉鍖呮嫭锛?
-	 * @return 鍒囧壊鍚庣殑鍓╀綑鐨勫墠鍗婇儴鍒嗗瓧绗︿覆
-	 */
-	public static String subPre(CharSequence string, int toIndexExclude) {
-		return sub(string, 0, toIndexExclude);
-	}
-
-	/**
-	 * 鍒囧壊鎸囧畾浣嶇疆涔嬪悗閮ㄥ垎鐨勫瓧绗︿覆
-	 *
-	 * @param string    瀛楃涓?
-	 * @param fromIndex 鍒囧壊寮€濮嬬殑浣嶇疆锛堝寘鎷級
-	 * @return 鍒囧壊鍚庡悗鍓╀綑鐨勫悗鍗婇儴鍒嗗瓧绗︿覆
-	 */
-	public static String subSuf(CharSequence string, int fromIndex) {
-		if (isEmpty(string)) {
-			return null;
-		}
-		return sub(string, fromIndex, string.length());
-	}
-
-	/**
-	 * 鍒囧壊鎸囧畾闀垮害鐨勫悗閮ㄥ垎鐨勫瓧绗︿覆
-	 *
-	 * <pre>
-	 * subSufByLength("abcde", 3)      =    "cde"
-	 * subSufByLength("abcde", 0)      =    ""
-	 * subSufByLength("abcde", -5)     =    ""
-	 * subSufByLength("abcde", -1)     =    ""
-	 * subSufByLength("abcde", 5)       =    "abcde"
-	 * subSufByLength("abcde", 10)     =    "abcde"
-	 * subSufByLength(null, 3)               =    null
-	 * </pre>
-	 *
-	 * @param string 瀛楃涓?
-	 * @param length 鍒囧壊闀垮害
-	 * @return 鍒囧壊鍚庡悗鍓╀綑鐨勫悗鍗婇儴鍒嗗瓧绗︿覆
-	 * @since 4.0.1
-	 */
-	public static String subSufByLength(CharSequence string, int length) {
-		if (isEmpty(string)) {
-			return null;
-		}
-		if (length <= 0) {
-			return EMPTY;
-		}
-		return sub(string, -length, string.length());
-	}
-
-	/**
-	 * 鎴彇瀛楃涓?浠庢寚瀹氫綅缃紑濮?鎴彇鎸囧畾闀垮害鐨勫瓧绗︿覆<br>
-	 * 濡傛灉fromIndex涓烘鏁帮紝鍒欏悜鍚庢埅鍙栨寚瀹歭ength闀垮害锛屽鏋滀负璐熸暟锛屽垯鍚戝墠鎴彇length闀垮害銆?
-	 *
-	 * @param input     鍘熷瀛楃涓?
-	 * @param fromIndex 寮€濮嬬殑index,鍖呮嫭
-	 * @param length    瑕佹埅鍙栫殑闀垮害
-	 * @return 鎴彇鍚庣殑瀛楃涓?
-	 * @author weibaohui
-	 */
-	public static String subWithLength(String input, int fromIndex, int length) {
-		final int toIndex;
-		if (fromIndex < 0) {
-			toIndex = fromIndex - length;
-		} else {
-			toIndex = fromIndex + length;
-		}
-		return sub(input, fromIndex, toIndex);
-	}
-
-	/**
-	 * 鎴彇鍒嗛殧瀛楃涓蹭箣鍓嶇殑瀛楃涓诧紝涓嶅寘鎷垎闅斿瓧绗︿覆<br>
-	 * 濡傛灉缁欏畾鐨勫瓧绗︿覆涓虹┖涓诧紙null鎴?"锛夋垨鑰呭垎闅斿瓧绗︿覆涓簄ull锛岃繑鍥炲師瀛楃涓?br>
-	 * 濡傛灉鍒嗛殧瀛楃涓蹭负绌轰覆""锛屽垯杩斿洖绌轰覆锛屽鏋滃垎闅斿瓧绗︿覆鏈壘鍒帮紝杩斿洖鍘熷瓧绗︿覆锛屼妇渚嬪涓嬶細
-	 *
-	 * <pre>
-	 * subBefore(null, *, false)      = null
-	 * subBefore("", *, false)        = ""
-	 * subBefore("abc", "a", false)   = ""
-	 * subBefore("abcba", "b", false) = "a"
-	 * subBefore("abc", "c", false)   = "ab"
-	 * subBefore("abc", "d", false)   = "abc"
-	 * subBefore("abc", "", false)    = ""
-	 * subBefore("abc", null, false)  = "abc"
-	 * </pre>
-	 *
-	 * @param string          琚煡鎵剧殑瀛楃涓?
-	 * @param separator       鍒嗛殧瀛楃涓诧紙涓嶅寘鎷級
-	 * @param isLastSeparator 鏄惁鏌ユ壘鏈€鍚庝竴涓垎闅斿瓧绗︿覆锛堝娆″嚭鐜板垎闅斿瓧绗︿覆鏃堕€夊彇鏈€鍚庝竴涓級锛宼rue涓洪€夊彇鏈€鍚庝竴涓?
-	 * @return 鍒囧壊鍚庣殑瀛楃涓?
-	 * @since 3.1.1
-	 */
-	public static String subBefore(CharSequence string, CharSequence separator, boolean isLastSeparator) {
-		if (isEmpty(string) || separator == null) {
-			return null == string ? null : string.toString();
-		}
-
-		final String str = string.toString();
-		final String sep = separator.toString();
-		if (sep.isEmpty()) {
-			return EMPTY;
-		}
-		final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
-		if (INDEX_NOT_FOUND == pos) {
-			return str;
-		}
-		if (0 == pos) {
-			return EMPTY;
-		}
-		return str.substring(0, pos);
-	}
-
-	/**
-	 * 鎴彇鍒嗛殧瀛楃涓蹭箣鍓嶇殑瀛楃涓诧紝涓嶅寘鎷垎闅斿瓧绗︿覆<br>
-	 * 濡傛灉缁欏畾鐨勫瓧绗︿覆涓虹┖涓诧紙null鎴?"锛夋垨鑰呭垎闅斿瓧绗︿覆涓簄ull锛岃繑鍥炲師瀛楃涓?br>
-	 * 濡傛灉鍒嗛殧瀛楃涓叉湭鎵惧埌锛岃繑鍥炲師瀛楃涓诧紝涓句緥濡備笅锛?
-	 *
-	 * <pre>
-	 * subBefore(null, *, false)      = null
-	 * subBefore("", *, false)        = ""
-	 * subBefore("abc", 'a', false)   = ""
-	 * subBefore("abcba", 'b', false) = "a"
-	 * subBefore("abc", 'c', false)   = "ab"
-	 * subBefore("abc", 'd', false)   = "abc"
-	 * </pre>
-	 *
-	 * @param string          琚煡鎵剧殑瀛楃涓?
-	 * @param separator       鍒嗛殧瀛楃涓诧紙涓嶅寘鎷級
-	 * @param isLastSeparator 鏄惁鏌ユ壘鏈€鍚庝竴涓垎闅斿瓧绗︿覆锛堝娆″嚭鐜板垎闅斿瓧绗︿覆鏃堕€夊彇鏈€鍚庝竴涓級锛宼rue涓洪€夊彇鏈€鍚庝竴涓?
-	 * @return 鍒囧壊鍚庣殑瀛楃涓?
-	 * @since 4.1.15
-	 */
-	public static String subBefore(CharSequence string, char separator, boolean isLastSeparator) {
-		if (isEmpty(string)) {
-			return null == string ? null : EMPTY;
-		}
-
-		final String str = string.toString();
-		final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
-		if (INDEX_NOT_FOUND == pos) {
-			return str;
-		}
-		if (0 == pos) {
-			return EMPTY;
-		}
-		return str.substring(0, pos);
-	}
-
-	/**
-	 * 鎴彇鍒嗛殧瀛楃涓蹭箣鍚庣殑瀛楃涓诧紝涓嶅寘鎷垎闅斿瓧绗︿覆<br>
-	 * 濡傛灉缁欏畾鐨勫瓧绗︿覆涓虹┖涓诧紙null鎴?"锛夛紝杩斿洖鍘熷瓧绗︿覆<br>
-	 * 濡傛灉鍒嗛殧瀛楃涓蹭负绌轰覆锛坣ull鎴?"锛夛紝鍒欒繑鍥炵┖涓诧紝濡傛灉鍒嗛殧瀛楃涓叉湭鎵惧埌锛岃繑鍥炵┖涓诧紝涓句緥濡備笅锛?
-	 *
-	 * <pre>
-	 * subAfter(null, *, false)      = null
-	 * subAfter("", *, false)        = ""
-	 * subAfter(*, null, false)      = ""
-	 * subAfter("abc", "a", false)   = "bc"
-	 * subAfter("abcba", "b", false) = "cba"
-	 * subAfter("abc", "c", false)   = ""
-	 * subAfter("abc", "d", false)   = ""
-	 * subAfter("abc", "", false)    = "abc"
-	 * </pre>
-	 *
-	 * @param string          琚煡鎵剧殑瀛楃涓?
-	 * @param separator       鍒嗛殧瀛楃涓诧紙涓嶅寘鎷級
-	 * @param isLastSeparator 鏄惁鏌ユ壘鏈€鍚庝竴涓垎闅斿瓧绗︿覆锛堝娆″嚭鐜板垎闅斿瓧绗︿覆鏃堕€夊彇鏈€鍚庝竴涓級锛宼rue涓洪€夊彇鏈€鍚庝竴涓?
-	 * @return 鍒囧壊鍚庣殑瀛楃涓?
-	 * @since 3.1.1
-	 */
-	public static String subAfter(CharSequence string, CharSequence separator, boolean isLastSeparator) {
-		if (isEmpty(string)) {
-			return null == string ? null : EMPTY;
-		}
-		if (separator == null) {
-			return EMPTY;
-		}
-		final String str = string.toString();
-		final String sep = separator.toString();
-		final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
-		if (INDEX_NOT_FOUND == pos || (string.length() - 1) == pos) {
-			return EMPTY;
-		}
-		return str.substring(pos + separator.length());
-	}
-
-	/**
-	 * 鎴彇鍒嗛殧瀛楃涓蹭箣鍚庣殑瀛楃涓诧紝涓嶅寘鎷垎闅斿瓧绗︿覆<br>
-	 * 濡傛灉缁欏畾鐨勫瓧绗︿覆涓虹┖涓诧紙null鎴?"锛夛紝杩斿洖鍘熷瓧绗︿覆<br>
-	 * 濡傛灉鍒嗛殧瀛楃涓蹭负绌轰覆锛坣ull鎴?"锛夛紝鍒欒繑鍥炵┖涓诧紝濡傛灉鍒嗛殧瀛楃涓叉湭鎵惧埌锛岃繑鍥炵┖涓诧紝涓句緥濡備笅锛?
-	 *
-	 * <pre>
-	 * subAfter(null, *, false)      = null
-	 * subAfter("", *, false)        = ""
-	 * subAfter("abc", 'a', false)   = "bc"
-	 * subAfter("abcba", 'b', false) = "cba"
-	 * subAfter("abc", 'c', false)   = ""
-	 * subAfter("abc", 'd', false)   = ""
-	 * </pre>
-	 *
-	 * @param string          琚煡鎵剧殑瀛楃涓?
-	 * @param separator       鍒嗛殧瀛楃涓诧紙涓嶅寘鎷級
-	 * @param isLastSeparator 鏄惁鏌ユ壘鏈€鍚庝竴涓垎闅斿瓧绗︿覆锛堝娆″嚭鐜板垎闅斿瓧绗︿覆鏃堕€夊彇鏈€鍚庝竴涓級锛宼rue涓洪€夊彇鏈€鍚庝竴涓?
-	 * @return 鍒囧壊鍚庣殑瀛楃涓?
-	 * @since 4.1.15
-	 */
-	public static String subAfter(CharSequence string, char separator, boolean isLastSeparator) {
-		if (isEmpty(string)) {
-			return null == string ? null : EMPTY;
-		}
-		final String str = string.toString();
-		final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
-		if (INDEX_NOT_FOUND == pos) {
-			return EMPTY;
-		}
-		return str.substring(pos + 1);
-	}
-
-	/**
-	 * 鎴彇鎸囧畾瀛楃涓蹭腑闂撮儴鍒嗭紝涓嶅寘鎷爣璇嗗瓧绗︿覆<br>
-	 * <p>
-	 * 鏍楀瓙锛?
-	 *
-	 * <pre>
-	 * subBetween("wx[b]yz", "[", "]") = "b"
-	 * subBetween(null, *, *)          = null
-	 * subBetween(*, null, *)          = null
-	 * subBetween(*, *, null)          = null
-	 * subBetween("", "", "")          = ""
-	 * subBetween("", "", "]")         = null
-	 * subBetween("", "[", "]")        = null
-	 * subBetween("yabcz", "", "")     = ""
-	 * subBetween("yabcz", "y", "z")   = "abc"
-	 * subBetween("yabczyabcz", "y", "z")   = "abc"
-	 * </pre>
-	 *
-	 * @param str    琚垏鍓茬殑瀛楃涓?
-	 * @param before 鎴彇寮€濮嬬殑瀛楃涓叉爣璇?
-	 * @param after  鎴彇鍒扮殑瀛楃涓叉爣璇?
-	 * @return 鎴彇鍚庣殑瀛楃涓?
-	 * @since 3.1.1
-	 */
-	public static String subBetween(CharSequence str, CharSequence before, CharSequence after) {
-		if (str == null || before == null || after == null) {
-			return null;
-		}
-
-		final String str2 = str.toString();
-		final String before2 = before.toString();
-		final String after2 = after.toString();
-
-		final int start = str2.indexOf(before2);
-		if (start != INDEX_NOT_FOUND) {
-			final int end = str2.indexOf(after2, start + before2.length());
-			if (end != INDEX_NOT_FOUND) {
-				return str2.substring(start + before2.length(), end);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 鎴彇鎸囧畾瀛楃涓蹭腑闂撮儴鍒嗭紝涓嶅寘鎷爣璇嗗瓧绗︿覆<br>
-	 * <p>
-	 * 鏍楀瓙锛?
-	 *
-	 * <pre>
-	 * subBetween(null, *)            = null
-	 * subBetween("", "")             = ""
-	 * subBetween("", "tag")          = null
-	 * subBetween("tagabctag", null)  = null
-	 * subBetween("tagabctag", "")    = ""
-	 * subBetween("tagabctag", "tag") = "abc"
-	 * </pre>
-	 *
-	 * @param str            琚垏鍓茬殑瀛楃涓?
-	 * @param beforeAndAfter 鎴彇寮€濮嬪拰缁撴潫鐨勫瓧绗︿覆鏍囪瘑
-	 * @return 鎴彇鍚庣殑瀛楃涓?
-	 * @since 3.1.1
-	 */
-	public static String subBetween(CharSequence str, CharSequence beforeAndAfter) {
-		return subBetween(str, beforeAndAfter, beforeAndAfter);
-	}
-
-	/**
-	 * 鎴彇鎸囧畾瀛楃涓插娈典腑闂撮儴鍒嗭紝涓嶅寘鎷爣璇嗗瓧绗︿覆<br>
-	 * <p>
-	 * 鏍楀瓙锛?
-	 *
-	 * <pre>
-	 * subBetweenAll("wx[b]y[z]", "[", "]") 		= ["b","z"]
-	 * subBetweenAll(null, *, *)          			= []
-	 * subBetweenAll(*, null, *)          			= []
-	 * subBetweenAll(*, *, null)          			= []
-	 * subBetweenAll("", "", "")          			= []
-	 * subBetweenAll("", "", "]")         			= []
-	 * subBetweenAll("", "[", "]")        			= []
-	 * subBetweenAll("yabcz", "", "")     			= []
-	 * subBetweenAll("yabcz", "y", "z")   			= ["abc"]
-	 * subBetweenAll("yabczyabcz", "y", "z")   		= ["abc","abc"]
-	 * subBetweenAll("[yabc[zy]abcz]", "[", "]");   = ["zy"]           閲嶅彔鏃跺彧鎴彇鍐呴儴锛?
-	 * </pre>
-	 *
-	 * @param str    琚垏鍓茬殑瀛楃涓?
-	 * @param prefix 鎴彇寮€濮嬬殑瀛楃涓叉爣璇?
-	 * @param suffix 鎴彇鍒扮殑瀛楃涓叉爣璇?
-	 * @return 鎴彇鍚庣殑瀛楃涓?
-	 * @author dahuoyzs
-	 * @since 5.2.5
-	 */
-	public static String[] subBetweenAll(CharSequence str, CharSequence prefix, CharSequence suffix) {
-		if (hasEmpty(str, prefix, suffix) ||
-			// 涓嶅寘鍚捣濮嬪瓧绗︿覆锛屽垯鑲畾娌℃湁瀛愪覆
-			false == contains(str, prefix)) {
-			return new String[0];
-		}
-
-		final List<String> result = new LinkedList<>();
-		final String[] split = splitToArray(str, prefix);
-		if (prefix.equals(suffix)) {
-			// 鍓嶅悗缂€瀛楃鐩稿悓锛屽崟鐙鐞?
-			for (int i = 1, length = split.length - 1; i < length; i += 2) {
-				result.add(split[i]);
-			}
-		} else {
-			int suffixIndex;
-			String fragment;
-			for (int i = 1; i < split.length; i++) {
-				fragment = split[i];
-				suffixIndex = fragment.indexOf(suffix.toString());
-				if (suffixIndex > 0) {
-					result.add(fragment.substring(0, suffixIndex));
-				}
-			}
-		}
-
-		return result.toArray(new String[0]);
-	}
-
-	/**
-	 * 鎴彇鎸囧畾瀛楃涓插娈典腑闂撮儴鍒嗭紝涓嶅寘鎷爣璇嗗瓧绗︿覆<br>
-	 * <p>
-	 * 鏍楀瓙锛?
-	 *
-	 * <pre>
-	 * subBetweenAll(null, *)          			= []
-	 * subBetweenAll(*, null)          			= []
-	 * subBetweenAll(*, *)          			= []
-	 * subBetweenAll("", "")          			= []
-	 * subBetweenAll("", "#")         			= []
-	 * subBetweenAll("gotanks", "")     		= []
-	 * subBetweenAll("#gotanks#", "#")   		= ["gotanks"]
-	 * subBetweenAll("#hello# #world#!", "#")   = ["hello", "world"]
-	 * subBetweenAll("#hello# world#!", "#");   = ["hello"]
-	 * </pre>
-	 *
-	 * @param str             琚垏鍓茬殑瀛楃涓?
-	 * @param prefixAndSuffix 鎴彇寮€濮嬪拰缁撴潫鐨勫瓧绗︿覆鏍囪瘑
-	 * @return 鎴彇鍚庣殑瀛楃涓?
-	 * @author gotanks
-	 * @since 5.5.0
-	 */
-	public static String[] subBetweenAll(CharSequence str, CharSequence prefixAndSuffix) {
-		return subBetweenAll(str, prefixAndSuffix, prefixAndSuffix);
-	}
-
-	// ------------------------------------------------------------------------ repeat
-
-	/**
-	 * 閲嶅鏌愪釜瀛楃
-	 *
-	 * <pre>
-	 * repeat('e', 0)  = ""
-	 * repeat('e', 3)  = "eee"
-	 * repeat('e', -2) = ""
-	 * </pre>
-	 *
-	 * @param c     琚噸澶嶇殑瀛楃
-	 * @param count 閲嶅鐨勬暟鐩紝濡傛灉灏忎簬绛変簬0鍒欒繑鍥?"
-	 * @return 閲嶅瀛楃瀛楃涓?
-	 */
-	public static String repeat(char c, int count) {
-		if (count <= 0) {
-			return EMPTY;
-		}
-
-		char[] result = new char[count];
-		Arrays.fill(result, c);
-		return new String(result);
-	}
-
-	/**
-	 * 閲嶅鏌愪釜瀛楃涓?
-	 *
-	 * @param str   琚噸澶嶇殑瀛楃
-	 * @param count 閲嶅鐨勬暟鐩?
-	 * @return 閲嶅瀛楃瀛楃涓?
-	 */
-	public static String repeat(CharSequence str, int count) {
-		if (null == str) {
-			return null;
-		}
-		if (count <= 0 || str.length() == 0) {
-			return EMPTY;
-		}
-		if (count == 1) {
-			return str.toString();
-		}
-
-		// 妫€鏌?
-		final int len = str.length();
-		final long longSize = (long) len * (long) count;
-		final int size = (int) longSize;
-		if (size != longSize) {
-			throw new ArrayIndexOutOfBoundsException("Required String length is too large: " + longSize);
-		}
-
-		final char[] array = new char[size];
-		str.toString().getChars(0, len, array, 0);
-		int n;
-		for (n = len; n < size - n; n <<= 1) {// n <<= 1鐩稿綋浜巒 *2
-			System.arraycopy(array, 0, array, n, n);
-		}
-		System.arraycopy(array, 0, array, n, size - n);
-		return new String(array);
-	}
-
-	/**
-	 * 閲嶅鏌愪釜瀛楃涓插埌鎸囧畾闀垮害
-	 *
-	 * @param str    琚噸澶嶇殑瀛楃
-	 * @param padLen 鎸囧畾闀垮害
-	 * @return 閲嶅瀛楃瀛楃涓?
-	 * @since 4.3.2
-	 */
-	public static String repeatByLength(CharSequence str, int padLen) {
-		if (null == str) {
-			return null;
-		}
-		if (padLen <= 0) {
-			return EMPTY;
-		}
-		final int strLen = str.length();
-		if (strLen == padLen) {
-			return str.toString();
-		} else if (strLen > padLen) {
-			return subPre(str, padLen);
-		}
-
-		// 閲嶅锛岀洿鍒拌揪鍒版寚瀹氶暱搴?
-		final char[] padding = new char[padLen];
-		for (int i = 0; i < padLen; i++) {
-			padding[i] = str.charAt(i % strLen);
-		}
-		return new String(padding);
-	}
-
-	/**
-	 * 閲嶅鏌愪釜瀛楃涓插苟閫氳繃鍒嗙晫绗﹁繛鎺?
-	 *
-	 * <pre>
-	 * repeatAndJoin("?", 5, ",")   = "?,?,?,?,?"
-	 * repeatAndJoin("?", 0, ",")   = ""
-	 * repeatAndJoin("?", 5, null) = "?????"
-	 * </pre>
-	 *
-	 * @param str       琚噸澶嶇殑瀛楃涓?
-	 * @param count     鏁伴噺
-	 * @param delimiter 鍒嗙晫绗?
-	 * @return 杩炴帴鍚庣殑瀛楃涓?
-	 * @since 4.0.1
-	 */
-	public static String repeatAndJoin(CharSequence str, int count, CharSequence delimiter) {
-		if (count <= 0) {
-			return EMPTY;
-		}
-		final StringBuilder builder = new StringBuilder(str.length() * count);
-		builder.append(str);
-		count--;
-
-		final boolean isAppendDelimiter = isNotEmpty(delimiter);
-		while (count-- > 0) {
-			if (isAppendDelimiter) {
-				builder.append(delimiter);
-			}
-			builder.append(str);
-		}
-		return builder.toString();
-	}
-
-	// ------------------------------------------------------------------------ equals
-
-	/**
-	 * 姣旇緝涓や釜瀛楃涓诧紙澶у皬鍐欐晱鎰燂級銆?
-	 *
-	 * <pre>
-	 * equals(null, null)   = true
-	 * equals(null, &quot;abc&quot;)  = false
-	 * equals(&quot;abc&quot;, null)  = false
-	 * equals(&quot;abc&quot;, &quot;abc&quot;) = true
-	 * equals(&quot;abc&quot;, &quot;ABC&quot;) = false
-	 * </pre>
-	 *
-	 * @param str1 瑕佹瘮杈冪殑瀛楃涓?
-	 * @param str2 瑕佹瘮杈冪殑瀛楃涓?
-	 * @return 濡傛灉涓や釜瀛楃涓茬浉鍚岋紝鎴栬€呴兘鏄瘂@code null}锛屽垯杩斿洖{@code true}
-	 */
-	public static boolean equals(CharSequence str1, CharSequence str2) {
-		return equals(str1, str2, false);
-	}
-
-	/**
-	 * 姣旇緝涓や釜瀛楃涓诧紙澶у皬鍐欎笉鏁忔劅锛夈€?
-	 *
-	 * <pre>
-	 * equalsIgnoreCase(null, null)   = true
-	 * equalsIgnoreCase(null, &quot;abc&quot;)  = false
-	 * equalsIgnoreCase(&quot;abc&quot;, null)  = false
-	 * equalsIgnoreCase(&quot;abc&quot;, &quot;abc&quot;) = true
-	 * equalsIgnoreCase(&quot;abc&quot;, &quot;ABC&quot;) = true
-	 * </pre>
-	 *
-	 * @param str1 瑕佹瘮杈冪殑瀛楃涓?
-	 * @param str2 瑕佹瘮杈冪殑瀛楃涓?
-	 * @return 濡傛灉涓や釜瀛楃涓茬浉鍚岋紝鎴栬€呴兘鏄瘂@code null}锛屽垯杩斿洖{@code true}
-	 */
-	public static boolean equalsIgnoreCase(CharSequence str1, CharSequence str2) {
-		return equals(str1, str2, true);
-	}
-
-	/**
-	 * 姣旇緝涓や釜瀛楃涓叉槸鍚︾浉绛夛紝瑙勫垯濡備笅
-	 * <ul>
-	 *     <li>str1鍜宻tr2閮戒负{@code null}</li>
-	 *     <li>蹇界暐澶у皬鍐欎娇鐢▄@link String#equalsIgnoreCase(String)}鍒ゆ柇鐩哥瓑</li>
-	 *     <li>涓嶅拷鐣ュぇ灏忓啓浣跨敤{@link String#contentEquals(CharSequence)}鍒ゆ柇鐩哥瓑</li>
-	 * </ul>
-	 *
-	 * @param str1       瑕佹瘮杈冪殑瀛楃涓?
-	 * @param str2       瑕佹瘮杈冪殑瀛楃涓?
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @return 濡傛灉涓や釜瀛楃涓茬浉鍚岋紝鎴栬€呴兘鏄瘂@code null}锛屽垯杩斿洖{@code true}
-	 * @since 3.2.0
-	 */
-	public static boolean equals(CharSequence str1, CharSequence str2, boolean ignoreCase) {
-		if (null == str1) {
-			// 鍙湁涓や釜閮戒负null鎵嶅垽鏂浉绛?
-			return str2 == null;
-		}
-		if (null == str2) {
-			// 瀛楃涓?绌猴紝瀛楃涓?闈炵┖锛岀洿鎺alse
-			return false;
-		}
-
-		if (ignoreCase) {
-			return str1.toString().equalsIgnoreCase(str2.toString());
-		} else {
-			return str1.toString().contentEquals(str2);
-		}
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚︿笌鎻愪緵鐨勪腑浠讳竴瀛楃涓茬浉鍚岋紙蹇界暐澶у皬鍐欙級锛岀浉鍚屽垯杩斿洖{@code true}锛屾病鏈夌浉鍚岀殑杩斿洖{@code false}<br>
-	 * 濡傛灉鍙備笌姣斿鐨勫瓧绗︿覆鍒楄〃涓虹┖锛岃繑鍥瀧@code false}
-	 *
-	 * @param str1 缁欏畾闇€瑕佹鏌ョ殑瀛楃涓?
-	 * @param strs 闇€瑕佸弬涓庢瘮瀵圭殑瀛楃涓插垪琛?
-	 * @return 鏄惁鐩稿悓
-	 * @since 4.3.2
-	 */
-	public static boolean equalsAnyIgnoreCase(CharSequence str1, CharSequence... strs) {
-		return equalsAny(str1, true, strs);
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚︿笌鎻愪緵鐨勪腑浠讳竴瀛楃涓茬浉鍚岋紝鐩稿悓鍒欒繑鍥瀧@code true}锛屾病鏈夌浉鍚岀殑杩斿洖{@code false}<br>
-	 * 濡傛灉鍙備笌姣斿鐨勫瓧绗︿覆鍒楄〃涓虹┖锛岃繑鍥瀧@code false}
-	 *
-	 * @param str1 缁欏畾闇€瑕佹鏌ョ殑瀛楃涓?
-	 * @param strs 闇€瑕佸弬涓庢瘮瀵圭殑瀛楃涓插垪琛?
-	 * @return 鏄惁鐩稿悓
-	 * @since 4.3.2
-	 */
-	public static boolean equalsAny(CharSequence str1, CharSequence... strs) {
-		return equalsAny(str1, false, strs);
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚︿笌鎻愪緵鐨勪腑浠讳竴瀛楃涓茬浉鍚岋紝鐩稿悓鍒欒繑鍥瀧@code true}锛屾病鏈夌浉鍚岀殑杩斿洖{@code false}<br>
-	 * 濡傛灉鍙備笌姣斿鐨勫瓧绗︿覆鍒楄〃涓虹┖锛岃繑鍥瀧@code false}
-	 *
-	 * @param str1       缁欏畾闇€瑕佹鏌ョ殑瀛楃涓?
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @param strs       闇€瑕佸弬涓庢瘮瀵圭殑瀛楃涓插垪琛?
-	 * @return 鏄惁鐩稿悓
-	 * @since 4.3.2
-	 */
-	public static boolean equalsAny(CharSequence str1, boolean ignoreCase, CharSequence... strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return false;
-		}
-
-		for (CharSequence str : strs) {
-			if (equals(str1, str, ignoreCase)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 瀛楃涓叉寚瀹氫綅缃殑瀛楃鏄惁涓庣粰瀹氬瓧绗︾浉鍚?br>
-	 * 濡傛灉瀛楃涓蹭负null锛岃繑鍥瀎alse<br>
-	 * 濡傛灉缁欏畾鐨勪綅缃ぇ浜庡瓧绗︿覆闀垮害锛岃繑鍥瀎alse<br>
-	 * 濡傛灉缁欏畾鐨勪綅缃皬浜?锛岃繑鍥瀎alse
-	 *
-	 * @param str      瀛楃涓?
-	 * @param position 浣嶇疆
-	 * @param c        闇€瑕佸姣旂殑瀛楃
-	 * @return 瀛楃涓叉寚瀹氫綅缃殑瀛楃鏄惁涓庣粰瀹氬瓧绗︾浉鍚?
-	 * @since 3.3.1
-	 */
-	public static boolean equalsCharAt(CharSequence str, int position, char c) {
-		if (null == str || position < 0) {
-			return false;
-		}
-		return str.length() > position && c == str.charAt(position);
-	}
-
-	/**
-	 * 鎴彇绗竴涓瓧涓茬殑閮ㄥ垎瀛楃锛屼笌绗簩涓瓧绗︿覆姣旇緝锛堥暱搴︿竴鑷达級锛屽垽鏂埅鍙栫殑瀛愪覆鏄惁鐩稿悓<br>
-	 * 浠绘剰涓€涓瓧绗︿覆涓簄ull杩斿洖false
-	 *
-	 * @param str1       绗竴涓瓧绗︿覆
-	 * @param start1     绗竴涓瓧绗︿覆寮€濮嬬殑浣嶇疆
-	 * @param str2       绗簩涓瓧绗︿覆
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @return 瀛愪覆鏄惁鐩稿悓
-	 * @since 3.2.1
-	 */
-	public static boolean isSubEquals(CharSequence str1, int start1, CharSequence str2, boolean ignoreCase) {
-		return isSubEquals(str1, start1, str2, 0, str2.length(), ignoreCase);
-	}
-
-	/**
-	 * 鎴彇涓や釜瀛楃涓茬殑涓嶅悓閮ㄥ垎锛堥暱搴︿竴鑷达級锛屽垽鏂埅鍙栫殑瀛愪覆鏄惁鐩稿悓<br>
-	 * 浠绘剰涓€涓瓧绗︿覆涓簄ull杩斿洖false
-	 *
-	 * @param str1       绗竴涓瓧绗︿覆
-	 * @param start1     绗竴涓瓧绗︿覆寮€濮嬬殑浣嶇疆
-	 * @param str2       绗簩涓瓧绗︿覆
-	 * @param start2     绗簩涓瓧绗︿覆寮€濮嬬殑浣嶇疆
-	 * @param length     鎴彇闀垮害
-	 * @param ignoreCase 鏄惁蹇界暐澶у皬鍐?
-	 * @return 瀛愪覆鏄惁鐩稿悓
-	 * @since 3.2.1
-	 */
-	public static boolean isSubEquals(CharSequence str1, int start1, CharSequence str2, int start2, int length, boolean ignoreCase) {
-		if (null == str1 || null == str2) {
-			return false;
-		}
-
-		return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
-	}
-
-	// ------------------------------------------------------------------------ format
-
-	/**
-	 * 鏍煎紡鍖栨枃鏈? {} 琛ㄧず鍗犱綅绗?br>
-	 * 姝ゆ柟娉曞彧鏄畝鍗曞皢鍗犱綅绗?{} 鎸夌収椤哄簭鏇挎崲涓哄弬鏁?br>
-	 * 濡傛灉鎯宠緭鍑?{} 浣跨敤 \\杞箟 { 鍗冲彲锛屽鏋滄兂杈撳嚭 {} 涔嬪墠鐨?\ 浣跨敤鍙岃浆涔夌 \\\\ 鍗冲彲<br>
-	 * 渚嬶細<br>
-	 * 閫氬父浣跨敤锛歠ormat("this is {} for {}", "a", "b") =銆?this is a for b<br>
-	 * 杞箟{}锛?format("this is \\{} for {}", "a", "b") =銆?this is {} for a<br>
-	 * 杞箟\锛?format("this is \\\\{} for {}", "a", "b") =銆?this is \a for b<br>
-	 *
-	 * @param template 鏂囨湰妯℃澘锛岃鏇挎崲鐨勯儴鍒嗙敤 {} 琛ㄧず锛屽鏋滄ā鏉夸负null锛岃繑鍥?null"
-	 * @param params   鍙傛暟鍊?
-	 * @return 鏍煎紡鍖栧悗鐨勬枃鏈紝濡傛灉妯℃澘涓簄ull锛岃繑鍥?null"
-	 */
-	public static String format(CharSequence template, Object... params) {
-		if (null == template) {
-			return NULL;
-		}
-		if (ArrayUtil.isEmpty(params) || isBlank(template)) {
-			return template.toString();
-		}
-		if (template == null) return null;
-		String result = template.toString();
-		if (params != null) {
-			for (Object param : params) {
-				int idx = result.indexOf("{}");
-				if (idx >= 0) {
-					result = result.substring(0, idx) + (param != null ? param.toString() : "null") + result.substring(idx + 2);
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * 鏈夊簭鐨勬牸寮忓寲鏂囨湰锛屼娇鐢▄number}鍋氫负鍗犱綅绗?br>
-	 * 閫氬父浣跨敤锛歠ormat("this is {0} for {1}", "a", "b") =銆?this is a for b<br>
-	 *
-	 * @param pattern   鏂囨湰鏍煎紡
-	 * @param arguments 鍙傛暟
-	 * @return 鏍煎紡鍖栧悗鐨勬枃鏈?
-	 */
-	public static String indexedFormat(CharSequence pattern, Object... arguments) {
-		return MessageFormat.format(pattern.toString(), arguments);
-	}
-	// ------------------------------------------------------------------------ bytes
-
-	/**
-	 * 缂栫爜瀛楃涓诧紝缂栫爜涓篣TF-8
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 缂栫爜鍚庣殑瀛楄妭鐮?
-	 */
-	public static byte[] utf8Bytes(CharSequence str) {
-		return bytes(str, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 缂栫爜瀛楃涓?br>
-	 * 浣跨敤绯荤粺榛樿缂栫爜
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 缂栫爜鍚庣殑瀛楄妭鐮?
-	 */
-	public static byte[] bytes(CharSequence str) {
-		return bytes(str, Charset.defaultCharset());
-	}
-
-	/**
-	 * 缂栫爜瀛楃涓?
-	 *
-	 * @param str     瀛楃涓?
-	 * @param charset 瀛楃闆嗭紝濡傛灉姝ゅ瓧娈典负绌猴紝鍒欒В鐮佺殑缁撴灉鍙栧喅浜庡钩鍙?
-	 * @return 缂栫爜鍚庣殑瀛楄妭鐮?
-	 */
-	public static byte[] bytes(CharSequence str, String charset) {
-		return bytes(str, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
-	}
-
-	/**
-	 * 缂栫爜瀛楃涓?
-	 *
-	 * @param str     瀛楃涓?
-	 * @param charset 瀛楃闆嗭紝濡傛灉姝ゅ瓧娈典负绌猴紝鍒欒В鐮佺殑缁撴灉鍙栧喅浜庡钩鍙?
-	 * @return 缂栫爜鍚庣殑瀛楄妭鐮?
-	 */
-	public static byte[] bytes(CharSequence str, Charset charset) {
-		if (str == null) {
-			return null;
-		}
-
-		if (null == charset) {
-			return str.toString().getBytes();
-		}
-		return str.toString().getBytes(charset);
-	}
-
-	/**
-	 * 瀛楃涓茶浆鎹负byteBuffer
-	 *
-	 * @param str     瀛楃涓?
-	 * @param charset 缂栫爜
-	 * @return byteBuffer
-	 */
-	public static ByteBuffer byteBuffer(CharSequence str, String charset) {
-		return ByteBuffer.wrap(bytes(str, charset));
-	}
-
-	// ------------------------------------------------------------------------ wrap
-
-	/**
-	 * 鍖呰鎸囧畾瀛楃涓?br>
-	 * 褰撳墠缂€鍜屽悗缂€涓€鑷存椂浣跨敤姝ゆ柟娉?
-	 *
-	 * @param str             琚寘瑁呯殑瀛楃涓?
-	 * @param prefixAndSuffix 鍓嶇紑鍜屽悗缂€
-	 * @return 鍖呰鍚庣殑瀛楃涓?
-	 * @since 3.1.0
-	 */
-	public static String wrap(CharSequence str, CharSequence prefixAndSuffix) {
-		return wrap(str, prefixAndSuffix, prefixAndSuffix);
-	}
-
-	/**
-	 * 鍖呰鎸囧畾瀛楃涓?
-	 *
-	 * @param str    琚寘瑁呯殑瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @return 鍖呰鍚庣殑瀛楃涓?
-	 */
-	public static String wrap(CharSequence str, CharSequence prefix, CharSequence suffix) {
-		return nullToEmpty(prefix).concat(nullToEmpty(str)).concat(nullToEmpty(suffix));
-	}
-
-	/**
-	 * 浣跨敤鍗曚釜瀛楃鍖呰澶氫釜瀛楃涓?
-	 *
-	 * @param prefixAndSuffix 鍓嶇紑鍜屽悗缂€
-	 * @param strs            澶氫釜瀛楃涓?
-	 * @return 鍖呰鐨勫瓧绗︿覆鏁扮粍
-	 * @since 5.4.1
-	 */
-	public static String[] wrapAllWithPair(CharSequence prefixAndSuffix, CharSequence... strs) {
-		return wrapAll(prefixAndSuffix, prefixAndSuffix, strs);
-	}
-
-	/**
-	 * 鍖呰澶氫釜瀛楃涓?
-	 *
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @param strs   澶氫釜瀛楃涓?
-	 * @return 鍖呰鐨勫瓧绗︿覆鏁扮粍
-	 * @since 4.0.7
-	 */
-	public static String[] wrapAll(CharSequence prefix, CharSequence suffix, CharSequence... strs) {
-		final String[] results = new String[strs.length];
-		for (int i = 0; i < strs.length; i++) {
-			results[i] = wrap(strs[i], prefix, suffix);
-		}
-		return results;
-	}
-
-	/**
-	 * 鍖呰鎸囧畾瀛楃涓诧紝濡傛灉鍓嶇紑鎴栧悗缂€宸茬粡鍖呭惈瀵瑰簲鐨勫瓧绗︿覆锛屽垯涓嶅啀鍖呰
-	 *
-	 * @param str    琚寘瑁呯殑瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @return 鍖呰鍚庣殑瀛楃涓?
-	 */
-	public static String wrapIfMissing(CharSequence str, CharSequence prefix, CharSequence suffix) {
-		int len = 0;
-		if (isNotEmpty(str)) {
-			len += str.length();
-		}
-		if (isNotEmpty(prefix)) {
-			len += prefix.length();
-		}
-		if (isNotEmpty(suffix)) {
-			len += suffix.length();
-		}
-		StringBuilder sb = new StringBuilder(len);
-		if (isNotEmpty(prefix) && false == startWith(str, prefix)) {
-			sb.append(prefix);
-		}
-		if (isNotEmpty(str)) {
-			sb.append(str);
-		}
-		if (isNotEmpty(suffix) && false == endWith(str, suffix)) {
-			sb.append(suffix);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 浣跨敤鎴愬鐨勫瓧绗﹀寘瑁呭涓瓧绗︿覆锛屽鏋滃凡缁忓寘瑁咃紝鍒欎笉鍐嶅寘瑁?
-	 *
-	 * @param prefixAndSuffix 鍓嶇紑鍜屽悗缂€
-	 * @param strs            澶氫釜瀛楃涓?
-	 * @return 鍖呰鐨勫瓧绗︿覆鏁扮粍
-	 * @since 5.4.1
-	 */
-	public static String[] wrapAllWithPairIfMissing(CharSequence prefixAndSuffix, CharSequence... strs) {
-		return wrapAllIfMissing(prefixAndSuffix, prefixAndSuffix, strs);
-	}
-
-	/**
-	 * 鍖呰澶氫釜瀛楃涓诧紝濡傛灉宸茬粡鍖呰锛屽垯涓嶅啀鍖呰
-	 *
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @param strs   澶氫釜瀛楃涓?
-	 * @return 鍖呰鐨勫瓧绗︿覆鏁扮粍
-	 * @since 4.0.7
-	 */
-	public static String[] wrapAllIfMissing(CharSequence prefix, CharSequence suffix, CharSequence... strs) {
-		final String[] results = new String[strs.length];
-		for (int i = 0; i < strs.length; i++) {
-			results[i] = wrapIfMissing(strs[i], prefix, suffix);
-		}
-		return results;
-	}
-
-	/**
-	 * 鍘绘帀瀛楃鍖呰锛屽鏋滄湭琚寘瑁呭垯杩斿洖鍘熷瓧绗︿覆
-	 *
-	 * @param str    瀛楃涓?
-	 * @param prefix 鍓嶇疆瀛楃涓?
-	 * @param suffix 鍚庣疆瀛楃涓?
-	 * @return 鍘绘帀鍖呰瀛楃鐨勫瓧绗︿覆
-	 * @since 4.0.1
-	 */
-	public static String unWrap(CharSequence str, String prefix, String suffix) {
-		if (isWrap(str, prefix, suffix)) {
-			return sub(str, prefix.length(), str.length() - suffix.length());
-		}
-		return str.toString();
-	}
-
-	/**
-	 * 鍘绘帀瀛楃鍖呰锛屽鏋滄湭琚寘瑁呭垯杩斿洖鍘熷瓧绗︿覆
-	 *
-	 * @param str    瀛楃涓?
-	 * @param prefix 鍓嶇疆瀛楃
-	 * @param suffix 鍚庣疆瀛楃
-	 * @return 鍘绘帀鍖呰瀛楃鐨勫瓧绗︿覆
-	 * @since 4.0.1
-	 */
-	public static String unWrap(CharSequence str, char prefix, char suffix) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		if (str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix) {
-			return sub(str, 1, str.length() - 1);
-		}
-		return str.toString();
-	}
-
-	/**
-	 * 鍘绘帀瀛楃鍖呰锛屽鏋滄湭琚寘瑁呭垯杩斿洖鍘熷瓧绗︿覆
-	 *
-	 * @param str             瀛楃涓?
-	 * @param prefixAndSuffix 鍓嶇疆鍜屽悗缃瓧绗?
-	 * @return 鍘绘帀鍖呰瀛楃鐨勫瓧绗︿覆
-	 * @since 4.0.1
-	 */
-	public static String unWrap(CharSequence str, char prefixAndSuffix) {
-		return unWrap(str, prefixAndSuffix, prefixAndSuffix);
-	}
-
-	/**
-	 * 鎸囧畾瀛楃涓叉槸鍚﹁鍖呰
-	 *
-	 * @param str    瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @return 鏄惁琚寘瑁?
-	 */
-	public static boolean isWrap(CharSequence str, String prefix, String suffix) {
-		if (ArrayUtil.hasNull(str, prefix, suffix)) {
-			return false;
-		}
-		final String str2 = str.toString();
-		return str2.startsWith(prefix) && str2.endsWith(suffix);
-	}
-
-	/**
-	 * 鎸囧畾瀛楃涓叉槸鍚﹁鍚屼竴瀛楃鍖呰锛堝墠鍚庨兘鏈夎繖浜涘瓧绗︿覆锛?
-	 *
-	 * @param str     瀛楃涓?
-	 * @param wrapper 鍖呰瀛楃涓?
-	 * @return 鏄惁琚寘瑁?
-	 */
-	public static boolean isWrap(CharSequence str, String wrapper) {
-		return isWrap(str, wrapper, wrapper);
-	}
-
-	/**
-	 * 鎸囧畾瀛楃涓叉槸鍚﹁鍚屼竴瀛楃鍖呰锛堝墠鍚庨兘鏈夎繖浜涘瓧绗︿覆锛?
-	 *
-	 * @param str     瀛楃涓?
-	 * @param wrapper 鍖呰瀛楃
-	 * @return 鏄惁琚寘瑁?
-	 */
-	public static boolean isWrap(CharSequence str, char wrapper) {
-		return isWrap(str, wrapper, wrapper);
-	}
-
-	/**
-	 * 鎸囧畾瀛楃涓叉槸鍚﹁鍖呰
-	 *
-	 * @param str        瀛楃涓?
-	 * @param prefixChar 鍓嶇紑
-	 * @param suffixChar 鍚庣紑
-	 * @return 鏄惁琚寘瑁?
-	 */
-	public static boolean isWrap(CharSequence str, char prefixChar, char suffixChar) {
-		if (null == str || str.length() < 2) {
-			return false;
-		}
-
-		return str.charAt(0) == prefixChar && str.charAt(str.length() - 1) == suffixChar;
-	}
-
-	// ------------------------------------------------------------------------ pad
-
-	/**
-	 * 琛ュ厖瀛楃涓蹭互婊¤冻鎸囧畾闀垮害锛屽鏋滄彁渚涚殑瀛楃涓插ぇ浜庢寚瀹氶暱搴︼紝鎴柇涔?
-	 * 鍚岋細leftPad (org.apache.commons.lang3.leftPad)
-	 *
-	 * <pre>
-	 * padPre(null, *, *);//null
-	 * padPre("1", 3, "ABC");//"AB1"
-	 * padPre("123", 2, "ABC");//"12"
-	 * padPre("1039", -1, "0");//"103"
-	 * </pre>
-	 *
-	 * @param str    瀛楃涓?
-	 * @param length 闀垮害
-	 * @param padStr 琛ュ厖鐨勫瓧绗?
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 */
-	public static String padPre(CharSequence str, int length, CharSequence padStr) {
-		if (null == str) {
-			return null;
-		}
-		final int strLen = str.length();
-		if (strLen == length) {
-			return str.toString();
-		} else if (strLen > length) {
-			//濡傛灉鎻愪緵鐨勫瓧绗︿覆澶т簬鎸囧畾闀垮害锛屾埅鏂箣
-			return subPre(str, length);
-		}
-
-		return repeatByLength(padStr, length - strLen).concat(str.toString());
-	}
-
-	/**
-	 * 琛ュ厖瀛楃涓蹭互婊¤冻鏈€灏忛暱搴︼紝濡傛灉鎻愪緵鐨勫瓧绗︿覆澶т簬鎸囧畾闀垮害锛屾埅鏂箣
-	 * 鍚岋細leftPad (org.apache.commons.lang3.leftPad)
-	 *
-	 * <pre>
-	 * padPre(null, *, *);//null
-	 * padPre("1", 3, '0');//"001"
-	 * padPre("123", 2, '0');//"12"
-	 * </pre>
-	 *
-	 * @param str     瀛楃涓?
-	 * @param length  闀垮害
-	 * @param padChar 琛ュ厖鐨勫瓧绗?
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 */
-	public static String padPre(CharSequence str, int length, char padChar) {
-		if (null == str) {
-			return null;
-		}
-		final int strLen = str.length();
-		if (strLen == length) {
-			return str.toString();
-		} else if (strLen > length) {
-			//濡傛灉鎻愪緵鐨勫瓧绗︿覆澶т簬鎸囧畾闀垮害锛屾埅鏂箣
-			return subPre(str, length);
-		}
-
-		return repeat(padChar, length - strLen).concat(str.toString());
-	}
-
-	/**
-	 * 琛ュ厖瀛楃涓蹭互婊¤冻鏈€灏忛暱搴︼紝濡傛灉鎻愪緵鐨勫瓧绗︿覆澶т簬鎸囧畾闀垮害锛屾埅鏂箣
-	 *
-	 * <pre>
-	 * padAfter(null, *, *);//null
-	 * padAfter("1", 3, '0');//"100"
-	 * padAfter("123", 2, '0');//"23"
-	 * padAfter("123", -1, '0')//"" 绌轰覆
-	 * </pre>
-	 *
-	 * @param str     瀛楃涓诧紝濡傛灉涓簕@code null}锛岀洿鎺ヨ繑鍥瀗ull
-	 * @param length  闀垮害
-	 * @param padChar 琛ュ厖鐨勫瓧绗?
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 */
-	public static String padAfter(CharSequence str, int length, char padChar) {
-		if (null == str) {
-			return null;
-		}
-		final int strLen = str.length();
-		if (strLen == length) {
-			return str.toString();
-		} else if (strLen > length) {
-			//濡傛灉鎻愪緵鐨勫瓧绗︿覆澶т簬鎸囧畾闀垮害锛屾埅鏂箣
-			return sub(str, strLen - length, strLen);
-		}
-
-		return str.toString().concat(repeat(padChar, length - strLen));
-	}
-
-	/**
-	 * 琛ュ厖瀛楃涓蹭互婊¤冻鏈€灏忛暱搴?
-	 *
-	 * <pre>
-	 * padAfter(null, *, *);//null
-	 * padAfter("1", 3, "ABC");//"1AB"
-	 * padAfter("123", 2, "ABC");//"23"
-	 * </pre>
-	 *
-	 * @param str    瀛楃涓诧紝濡傛灉涓簕@code null}锛岀洿鎺ヨ繑鍥瀗ull
-	 * @param length 闀垮害
-	 * @param padStr 琛ュ厖鐨勫瓧绗?
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 * @since 4.3.2
-	 */
-	public static String padAfter(CharSequence str, int length, CharSequence padStr) {
-		if (null == str) {
-			return null;
-		}
-		final int strLen = str.length();
-		if (strLen == length) {
-			return str.toString();
-		} else if (strLen > length) {
-			//濡傛灉鎻愪緵鐨勫瓧绗︿覆澶т簬鎸囧畾闀垮害锛屾埅鏂箣
-			return subSufByLength(str, length);
-		}
-
-		return str.toString().concat(repeatByLength(padStr, length - strLen));
-	}
-
-	// ------------------------------------------------------------------------ center
-
-	/**
-	 * 灞呬腑瀛楃涓诧紝涓よ竟琛ュ厖绌烘牸绗︼紝濡傛灉鎸囧畾闀垮害灏忎簬瀛楃涓诧紝鍒欒繑鍥炲師瀛楃涓?
-	 *
-	 * <pre>
-	 * center(null, *)   = null
-	 * center("", 4)     = "    "
-	 * center("ab", -1)  = "ab"
-	 * center("ab", 4)   = " ab "
-	 * center("abcd", 2) = "abcd"
-	 * center("a", 4)    = " a  "
-	 * </pre>
-	 *
-	 * @param str  瀛楃涓?
-	 * @param size 鎸囧畾闀垮害
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 * @since 4.3.2
-	 */
-	public static String center(CharSequence str, final int size) {
-		return center(str, size, CharUtil.SPACE);
-	}
-
-	/**
-	 * 灞呬腑瀛楃涓诧紝涓よ竟琛ュ厖鎸囧畾瀛楃锛屽鏋滄寚瀹氶暱搴﹀皬浜庡瓧绗︿覆锛屽垯杩斿洖鍘熷瓧绗︿覆
-	 *
-	 * <pre>
-	 * center(null, *, *)     = null
-	 * center("", 4, ' ')     = "    "
-	 * center("ab", -1, ' ')  = "ab"
-	 * center("ab", 4, ' ')   = " ab "
-	 * center("abcd", 2, ' ') = "abcd"
-	 * center("a", 4, ' ')    = " a  "
-	 * center("a", 4, 'y')   = "yayy"
-	 * center("abc", 7, ' ')   = "  abc  "
-	 * </pre>
-	 *
-	 * @param str     瀛楃涓?
-	 * @param size    鎸囧畾闀垮害
-	 * @param padChar 涓よ竟琛ュ厖鐨勫瓧绗?
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 * @since 4.3.2
-	 */
-	public static String center(CharSequence str, final int size, char padChar) {
-		if (str == null || size <= 0) {
-			return str(str);
-		}
-		final int strLen = str.length();
-		final int pads = size - strLen;
-		if (pads <= 0) {
-			return str.toString();
-		}
-		str = padPre(str, strLen + pads / 2, padChar);
-		str = padAfter(str, size, padChar);
-		return str.toString();
-	}
-
-	/**
-	 * 灞呬腑瀛楃涓诧紝涓よ竟琛ュ厖鎸囧畾瀛楃涓诧紝濡傛灉鎸囧畾闀垮害灏忎簬瀛楃涓诧紝鍒欒繑鍥炲師瀛楃涓?
-	 *
-	 * <pre>
-	 * center(null, *, *)     = null
-	 * center("", 4, " ")     = "    "
-	 * center("ab", -1, " ")  = "ab"
-	 * center("ab", 4, " ")   = " ab "
-	 * center("abcd", 2, " ") = "abcd"
-	 * center("a", 4, " ")    = " a  "
-	 * center("a", 4, "yz")   = "yayz"
-	 * center("abc", 7, null) = "  abc  "
-	 * center("abc", 7, "")   = "  abc  "
-	 * </pre>
-	 *
-	 * @param str    瀛楃涓?
-	 * @param size   鎸囧畾闀垮害
-	 * @param padStr 涓よ竟琛ュ厖鐨勫瓧绗︿覆
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 */
-	public static String center(CharSequence str, final int size, CharSequence padStr) {
-		if (str == null || size <= 0) {
-			return str(str);
-		}
-		if (isEmpty(padStr)) {
-			padStr = SPACE;
-		}
-		final int strLen = str.length();
-		final int pads = size - strLen;
-		if (pads <= 0) {
-			return str.toString();
-		}
-		str = padPre(str, strLen + pads / 2, padStr);
-		str = padAfter(str, size, padStr);
-		return str.toString();
-	}
-
-	// ------------------------------------------------------------------------ str
-
-	/**
-	 * {@link CharSequence} 杞负瀛楃涓诧紝null瀹夊叏
-	 *
-	 * @param cs {@link CharSequence}
-	 * @return 瀛楃涓?
-	 */
-	public static String str(CharSequence cs) {
-		return null == cs ? null : cs.toString();
-	}
-
-	// ------------------------------------------------------------------------ count
-
-	/**
-	 * 缁熻鎸囧畾鍐呭涓寘鍚寚瀹氬瓧绗︿覆鐨勬暟閲?br>
-	 * 鍙傛暟涓?{@code null} 鎴栬€?"" 杩斿洖 {@code 0}.
-	 *
-	 * <pre>
-	 * count(null, *)       = 0
-	 * count("", *)         = 0
-	 * count("abba", null)  = 0
-	 * count("abba", "")    = 0
-	 * count("abba", "a")   = 2
-	 * count("abba", "ab")  = 1
-	 * count("abba", "xxx") = 0
-	 * </pre>
-	 *
-	 * @param content      琚煡鎵剧殑瀛楃涓?
-	 * @param strForSearch 闇€瑕佹煡鎵剧殑瀛楃涓?
-	 * @return 鏌ユ壘鍒扮殑涓暟
-	 */
-	public static int count(CharSequence content, CharSequence strForSearch) {
-		if (hasEmpty(content, strForSearch) || strForSearch.length() > content.length()) {
-			return 0;
-		}
-
-		int count = 0;
-		int idx = 0;
-		final String content2 = content.toString();
-		final String strForSearch2 = strForSearch.toString();
-		while ((idx = content2.indexOf(strForSearch2, idx)) > -1) {
-			count++;
-			idx += strForSearch.length();
-		}
-		return count;
-	}
-
-	/**
-	 * 缁熻鎸囧畾鍐呭涓寘鍚寚瀹氬瓧绗︾殑鏁伴噺
-	 *
-	 * @param content       鍐呭
-	 * @param charForSearch 琚粺璁＄殑瀛楃
-	 * @return 鍖呭惈鏁伴噺
-	 */
-	public static int count(CharSequence content, char charForSearch) {
-		int count = 0;
-		if (isEmpty(content)) {
-			return 0;
-		}
-		int contentLength = content.length();
-		for (int i = 0; i < contentLength; i++) {
-			if (charForSearch == content.charAt(i)) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	// ------------------------------------------------------------------------ compare
-
-	/**
-	 * 姣旇緝涓や釜瀛楃涓诧紝鐢ㄤ簬鎺掑簭
-	 *
-	 * <pre>
-	 * compare(null, null, *)     = 0
-	 * compare(null , "a", true)  &lt; 0
-	 * compare(null , "a", false) &gt; 0
-	 * compare("a", null, true)   &gt; 0
-	 * compare("a", null, false)  &lt; 0
-	 * compare("abc", "abc", *)   = 0
-	 * compare("a", "b", *)       &lt; 0
-	 * compare("b", "a", *)       &gt; 0
-	 * compare("a", "B", *)       &gt; 0
-	 * compare("ab", "abc", *)    &lt; 0
-	 * </pre>
-	 *
-	 * @param str1       瀛楃涓?
-	 * @param str2       瀛楃涓?
-	 * @param nullIsLess {@code null} 鍊兼槸鍚︽帓鍦ㄥ墠锛坣ull鏄惁灏忎簬闈炵┖鍊硷級
-	 * @return 鎺掑簭鍊笺€傝礋鏁帮細str1 &lt; str2锛屾鏁帮細str1 &gt; str2, 0锛歴tr1 == str2
-	 */
-	public static int compare(final CharSequence str1, final CharSequence str2, final boolean nullIsLess) {
-		if (str1 == str2) {
-			return 0;
-		}
-		if (str1 == null) {
-			return nullIsLess ? -1 : 1;
-		}
-		if (str2 == null) {
-			return nullIsLess ? 1 : -1;
-		}
-		return str1.toString().compareTo(str2.toString());
-	}
-
-	/**
-	 * 姣旇緝涓や釜瀛楃涓诧紝鐢ㄤ簬鎺掑簭锛屽ぇ灏忓啓涓嶆晱鎰?
-	 *
-	 * <pre>
-	 * compareIgnoreCase(null, null, *)     = 0
-	 * compareIgnoreCase(null , "a", true)  &lt; 0
-	 * compareIgnoreCase(null , "a", false) &gt; 0
-	 * compareIgnoreCase("a", null, true)   &gt; 0
-	 * compareIgnoreCase("a", null, false)  &lt; 0
-	 * compareIgnoreCase("abc", "abc", *)   = 0
-	 * compareIgnoreCase("abc", "ABC", *)   = 0
-	 * compareIgnoreCase("a", "b", *)       &lt; 0
-	 * compareIgnoreCase("b", "a", *)       &gt; 0
-	 * compareIgnoreCase("a", "B", *)       &lt; 0
-	 * compareIgnoreCase("A", "b", *)       &lt; 0
-	 * compareIgnoreCase("ab", "abc", *)    &lt; 0
-	 * </pre>
-	 *
-	 * @param str1       瀛楃涓?
-	 * @param str2       瀛楃涓?
-	 * @param nullIsLess {@code null} 鍊兼槸鍚︽帓鍦ㄥ墠锛坣ull鏄惁灏忎簬闈炵┖鍊硷級
-	 * @return 鎺掑簭鍊笺€傝礋鏁帮細str1 &lt; str2锛屾鏁帮細str1 &gt; str2, 0锛歴tr1 == str2
-	 */
-	public static int compareIgnoreCase(CharSequence str1, CharSequence str2, boolean nullIsLess) {
-		if (str1 == str2) {
-			return 0;
-		}
-		if (str1 == null) {
-			return nullIsLess ? -1 : 1;
-		}
-		if (str2 == null) {
-			return nullIsLess ? 1 : -1;
-		}
-		return str1.toString().compareToIgnoreCase(str2.toString());
-	}
-
-	/**
-	 * 姣旇緝涓や釜鐗堟湰<br>
-	 * null鐗堟湰鎺掑湪鏈€灏忥細鍗筹細
-	 *
-	 * <pre>
-	 * compareVersion(null, "v1") &lt; 0
-	 * compareVersion("v1", "v1")  = 0
-	 * compareVersion(null, null)   = 0
-	 * compareVersion("v1", null) &gt; 0
-	 * compareVersion("1.0.0", "1.0.2") &lt; 0
-	 * compareVersion("1.0.2", "1.0.2a") &lt; 0
-	 * compareVersion("1.13.0", "1.12.1c") &gt; 0
-	 * compareVersion("V0.0.20170102", "V0.0.20170101") &gt; 0
-	 * </pre>
-	 *
-	 * @param version1 鐗堟湰1
-	 * @param version2 鐗堟湰2
-	 * @return 鎺掑簭鍊笺€傝礋鏁帮細version1 &lt; version2锛屾鏁帮細version1 &gt; version2, 0锛歷ersion1 == version2
-	 * @since 4.0.2
-	 */
-	public static int compareVersion(CharSequence version1, CharSequence version2) {
-		return VersionComparator.INSTANCE.compare(str(version1), str(version2));
-	}
-
-	// ------------------------------------------------------------------------ append and prepend
-
-	/**
-	 * 濡傛灉缁欏畾瀛楃涓蹭笉鏄互缁欏畾鐨勪竴涓垨澶氫釜瀛楃涓蹭负缁撳熬锛屽垯鍦ㄥ熬閮ㄦ坊鍔犵粨灏惧瓧绗︿覆<br>
-	 * 涓嶅拷鐣ュぇ灏忓啓
-	 *
-	 * @param str      琚鏌ョ殑瀛楃涓?
-	 * @param suffix   闇€瑕佹坊鍔犲埌缁撳熬鐨勫瓧绗︿覆
-	 * @param suffixes 闇€瑕侀澶栨鏌ョ殑缁撳熬瀛楃涓诧紝濡傛灉浠ヨ繖浜涗腑鐨勪竴涓负缁撳熬锛屽垯涓嶅啀娣诲姞
-	 * @return 濡傛灉宸茬粡缁撳熬锛岃繑鍥炲師瀛楃涓诧紝鍚﹀垯杩斿洖娣诲姞缁撳熬鐨勫瓧绗︿覆
-	 * @since 3.0.7
-	 */
-	public static String appendIfMissing(CharSequence str, CharSequence suffix, CharSequence... suffixes) {
-		return appendIfMissing(str, suffix, false, suffixes);
-	}
-
-	/**
-	 * 濡傛灉缁欏畾瀛楃涓蹭笉鏄互缁欏畾鐨勪竴涓垨澶氫釜瀛楃涓蹭负缁撳熬锛屽垯鍦ㄥ熬閮ㄦ坊鍔犵粨灏惧瓧绗︿覆<br>
-	 * 蹇界暐澶у皬鍐?
-	 *
-	 * @param str      琚鏌ョ殑瀛楃涓?
-	 * @param suffix   闇€瑕佹坊鍔犲埌缁撳熬鐨勫瓧绗︿覆
-	 * @param suffixes 闇€瑕侀澶栨鏌ョ殑缁撳熬瀛楃涓诧紝濡傛灉浠ヨ繖浜涗腑鐨勪竴涓负缁撳熬锛屽垯涓嶅啀娣诲姞
-	 * @return 濡傛灉宸茬粡缁撳熬锛岃繑鍥炲師瀛楃涓诧紝鍚﹀垯杩斿洖娣诲姞缁撳熬鐨勫瓧绗︿覆
-	 * @since 3.0.7
-	 */
-	public static String appendIfMissingIgnoreCase(CharSequence str, CharSequence suffix, CharSequence... suffixes) {
-		return appendIfMissing(str, suffix, true, suffixes);
-	}
-
-	/**
-	 * 濡傛灉缁欏畾瀛楃涓蹭笉鏄互缁欏畾鐨勪竴涓垨澶氫釜瀛楃涓蹭负缁撳熬锛屽垯鍦ㄥ熬閮ㄦ坊鍔犵粨灏惧瓧绗︿覆
-	 *
-	 * @param str          琚鏌ョ殑瀛楃涓?
-	 * @param suffix       闇€瑕佹坊鍔犲埌缁撳熬鐨勫瓧绗︿覆锛屼笉鍙備笌妫€鏌ュ尮閰?
-	 * @param ignoreCase   妫€鏌ョ粨灏炬椂鏄惁蹇界暐澶у皬鍐?
-	 * @param testSuffixes 闇€瑕侀澶栨鏌ョ殑缁撳熬瀛楃涓诧紝濡傛灉浠ヨ繖浜涗腑鐨勪竴涓负缁撳熬锛屽垯涓嶅啀娣诲姞
-	 * @return 濡傛灉宸茬粡缁撳熬锛岃繑鍥炲師瀛楃涓诧紝鍚﹀垯杩斿洖娣诲姞缁撳熬鐨勫瓧绗︿覆
-	 * @since 3.0.7
-	 */
-	public static String appendIfMissing(CharSequence str, CharSequence suffix, boolean ignoreCase, CharSequence... testSuffixes) {
-		if (str == null || isEmpty(suffix) || endWith(str, suffix, ignoreCase)) {
-			return str(str);
-		}
-		if (ArrayUtil.isNotEmpty(testSuffixes)) {
-			for (final CharSequence testSuffix : testSuffixes) {
-				if (endWith(str, testSuffix, ignoreCase)) {
-					return str.toString();
-				}
-			}
-		}
-		return str.toString().concat(suffix.toString());
-	}
-
-	/**
-	 * 濡傛灉缁欏畾瀛楃涓蹭笉鏄互缁欏畾鐨勪竴涓垨澶氫釜瀛楃涓蹭负寮€澶达紝鍒欏湪棣栭儴娣诲姞璧峰瀛楃涓?br>
-	 * 涓嶅拷鐣ュぇ灏忓啓
-	 *
-	 * @param str      琚鏌ョ殑瀛楃涓?
-	 * @param prefix   闇€瑕佹坊鍔犲埌棣栭儴鐨勫瓧绗︿覆
-	 * @param prefixes 闇€瑕侀澶栨鏌ョ殑棣栭儴瀛楃涓诧紝濡傛灉浠ヨ繖浜涗腑鐨勪竴涓负璧峰锛屽垯涓嶅啀娣诲姞
-	 * @return 濡傛灉宸茬粡缁撳熬锛岃繑鍥炲師瀛楃涓诧紝鍚﹀垯杩斿洖娣诲姞缁撳熬鐨勫瓧绗︿覆
-	 * @since 3.0.7
-	 */
-	public static String prependIfMissing(CharSequence str, CharSequence prefix, CharSequence... prefixes) {
-		return prependIfMissing(str, prefix, false, prefixes);
-	}
-
-	/**
-	 * 濡傛灉缁欏畾瀛楃涓蹭笉鏄互缁欏畾鐨勪竴涓垨澶氫釜瀛楃涓蹭负寮€澶达紝鍒欏湪棣栭儴娣诲姞璧峰瀛楃涓?br>
-	 * 蹇界暐澶у皬鍐?
-	 *
-	 * @param str      琚鏌ョ殑瀛楃涓?
-	 * @param prefix   闇€瑕佹坊鍔犲埌棣栭儴鐨勫瓧绗︿覆
-	 * @param prefixes 闇€瑕侀澶栨鏌ョ殑棣栭儴瀛楃涓诧紝濡傛灉浠ヨ繖浜涗腑鐨勪竴涓负璧峰锛屽垯涓嶅啀娣诲姞
-	 * @return 濡傛灉宸茬粡缁撳熬锛岃繑鍥炲師瀛楃涓诧紝鍚﹀垯杩斿洖娣诲姞缁撳熬鐨勫瓧绗︿覆
-	 * @since 3.0.7
-	 */
-	public static String prependIfMissingIgnoreCase(CharSequence str, CharSequence prefix, CharSequence... prefixes) {
-		return prependIfMissing(str, prefix, true, prefixes);
-	}
-
-	/**
-	 * 濡傛灉缁欏畾瀛楃涓蹭笉鏄互缁欏畾鐨勪竴涓垨澶氫釜瀛楃涓蹭负寮€澶达紝鍒欏湪棣栭儴娣诲姞璧峰瀛楃涓?
-	 *
-	 * @param str        琚鏌ョ殑瀛楃涓?
-	 * @param prefix     闇€瑕佹坊鍔犲埌棣栭儴鐨勫瓧绗︿覆
-	 * @param ignoreCase 妫€鏌ョ粨灏炬椂鏄惁蹇界暐澶у皬鍐?
-	 * @param prefixes   闇€瑕侀澶栨鏌ョ殑棣栭儴瀛楃涓诧紝濡傛灉浠ヨ繖浜涗腑鐨勪竴涓负璧峰锛屽垯涓嶅啀娣诲姞
-	 * @return 濡傛灉宸茬粡缁撳熬锛岃繑鍥炲師瀛楃涓诧紝鍚﹀垯杩斿洖娣诲姞缁撳熬鐨勫瓧绗︿覆
-	 * @since 3.0.7
-	 */
-	public static String prependIfMissing(CharSequence str, CharSequence prefix, boolean ignoreCase, CharSequence... prefixes) {
-		if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
-			return str(str);
-		}
-		if (prefixes != null) {
-			for (final CharSequence s : prefixes) {
-				if (startWith(str, s, ignoreCase)) {
-					return str.toString();
-				}
-			}
-		}
-		return prefix.toString().concat(str.toString());
-	}
-
-	// ------------------------------------------------------------------------ replace
-
-	/**
-	 * 鏇挎崲瀛楃涓蹭腑鐨勬寚瀹氬瓧绗︿覆锛屽拷鐣ュぇ灏忓啓
-	 *
-	 * @param str         瀛楃涓?
-	 * @param searchStr   琚煡鎵剧殑瀛楃涓?
-	 * @param replacement 琚浛鎹㈢殑瀛楃涓?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 4.0.3
-	 */
-	public static String replaceIgnoreCase(CharSequence str, CharSequence searchStr, CharSequence replacement) {
-		return replace(str, 0, searchStr, replacement, true);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃涓蹭腑鐨勬寚瀹氬瓧绗︿覆
-	 *
-	 * @param str         瀛楃涓?
-	 * @param searchStr   琚煡鎵剧殑瀛楃涓?
-	 * @param replacement 琚浛鎹㈢殑瀛楃涓?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 4.0.3
-	 */
-	public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement) {
-		return replace(str, 0, searchStr, replacement, false);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃涓蹭腑鐨勬寚瀹氬瓧绗︿覆
-	 *
-	 * @param str         瀛楃涓?
-	 * @param searchStr   琚煡鎵剧殑瀛楃涓?
-	 * @param replacement 琚浛鎹㈢殑瀛楃涓?
-	 * @param ignoreCase  鏄惁蹇界暐澶у皬鍐?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 4.0.3
-	 */
-	public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
-		return replace(str, 0, searchStr, replacement, ignoreCase);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃涓蹭腑鐨勬寚瀹氬瓧绗︿覆
-	 *
-	 * @param str         瀛楃涓?
-	 * @param fromIndex   寮€濮嬩綅缃紙鍖呮嫭锛?
-	 * @param searchStr   琚煡鎵剧殑瀛楃涓?
-	 * @param replacement 琚浛鎹㈢殑瀛楃涓?
-	 * @param ignoreCase  鏄惁蹇界暐澶у皬鍐?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 4.0.3
-	 */
-	public static String replace(CharSequence str, int fromIndex, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
-		if (isEmpty(str) || isEmpty(searchStr)) {
-			return str(str);
-		}
-		if (null == replacement) {
-			replacement = EMPTY;
-		}
-
-		final int strLength = str.length();
-		final int searchStrLength = searchStr.length();
-		if (strLength < searchStrLength) {
-			// issue#I4M16G@Gitee
-			return str(str);
-		}
-
-		if (fromIndex > strLength) {
-			return str(str);
-		} else if (fromIndex < 0) {
-			fromIndex = 0;
-		}
-
-		final StringBuilder result = new StringBuilder(strLength - searchStrLength + replacement.length());
-		if (0 != fromIndex) {
-			result.append(str.subSequence(0, fromIndex));
-		}
-
-		int preIndex = fromIndex;
-		int index;
-		while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > -1) {
-			result.append(str.subSequence(preIndex, index));
-			result.append(replacement);
-			preIndex = index + searchStrLength;
-		}
-
-		if (preIndex < strLength) {
-			// 缁撳熬閮ㄥ垎
-			result.append(str.subSequence(preIndex, strLength));
-		}
-		return result.toString();
-	}
-
-	/**
-	 * 鏇挎崲鎸囧畾瀛楃涓茬殑鎸囧畾鍖洪棿鍐呭瓧绗︿负鍥哄畾瀛楃<br>
-	 * 姝ゆ柟娉曚娇鐢▄@link String#codePoints()}瀹屾垚鎷嗗垎鏇挎崲
-	 *
-	 * @param str          瀛楃涓?
-	 * @param startInclude 寮€濮嬩綅缃紙鍖呭惈锛?
-	 * @param endExclude   缁撴潫浣嶇疆锛堜笉鍖呭惈锛?
-	 * @param replacedChar 琚浛鎹㈢殑瀛楃
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 3.2.1
-	 * @deprecated 姝т箟锛岃浣跨敤{@link #replaceByCodePoint(CharSequence, int, int, char)}
-	 */
-	@Deprecated
-	public static String replace(CharSequence str, int startInclude, int endExclude, char replacedChar) {
-		return replaceByCodePoint(str, startInclude, endExclude, replacedChar);
-	}
-
-	/**
-	 * 鏇挎崲鎸囧畾瀛楃涓茬殑鎸囧畾鍖洪棿鍐呭瓧绗︿负鍥哄畾瀛楃<br>
-	 * 姝ゆ柟娉曚娇鐢▄@link String#codePoints()}瀹屾垚鎷嗗垎鏇挎崲
-	 *
-	 * @param str          瀛楃涓?
-	 * @param startInclude 寮€濮嬩綅缃紙鍖呭惈锛?
-	 * @param endExclude   缁撴潫浣嶇疆锛堜笉鍖呭惈锛?
-	 * @param replacedChar 琚浛鎹㈢殑瀛楃
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 5.8.27
-	 */
-	public static String replaceByCodePoint(CharSequence str, int startInclude, int endExclude, char replacedChar) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		final String originalStr = str(str);
-		int[] strCodePoints = originalStr.codePoints().toArray();
-		final int strLength = strCodePoints.length;
-		if (startInclude > strLength) {
-			return originalStr;
-		}
-		if (endExclude > strLength) {
-			endExclude = strLength;
-		}
-		if (startInclude > endExclude) {
-			// 濡傛灉璧峰浣嶇疆澶т簬缁撴潫浣嶇疆锛屼笉鏇挎崲
-			return originalStr;
-		}
-
-		final StringBuilder stringBuilder = new StringBuilder();
-		for (int i = 0; i < strLength; i++) {
-			if (i >= startInclude && i < endExclude) {
-				stringBuilder.append(replacedChar);
-			} else {
-				stringBuilder.append(new String(strCodePoints, i, 1));
-			}
-		}
-		return stringBuilder.toString();
-	}
-
-	/**
-	 * 鏇挎崲鎸囧畾瀛楃涓茬殑鎸囧畾鍖洪棿鍐呭瓧绗︿负鎸囧畾瀛楃涓诧紝瀛楃涓插彧閲嶅涓€娆?br>
-	 * 姝ゆ柟娉曚娇鐢▄@link String#codePoints()}瀹屾垚鎷嗗垎鏇挎崲
-	 *
-	 * @param str          瀛楃涓?
-	 * @param startInclude 寮€濮嬩綅缃紙鍖呭惈锛?
-	 * @param endExclude   缁撴潫浣嶇疆锛堜笉鍖呭惈锛?
-	 * @param replacedStr  琚浛鎹㈢殑瀛楃涓?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 3.2.1
-	 * @deprecated 姝т箟锛岃浣跨敤{@link #replaceByCodePoint(CharSequence, int, int, CharSequence)}
-	 */
-	@Deprecated
-	public static String replace(CharSequence str, int startInclude, int endExclude, CharSequence replacedStr) {
-		return replaceByCodePoint(str, startInclude, endExclude, replacedStr);
-	}
-
-	/**
-	 * 鏇挎崲鎸囧畾瀛楃涓茬殑鎸囧畾鍖洪棿鍐呭瓧绗︿负鎸囧畾瀛楃涓诧紝瀛楃涓插彧閲嶅涓€娆?br>
-	 * 姝ゆ柟娉曚娇鐢▄@link String#codePoints()}瀹屾垚鎷嗗垎鏇挎崲
-	 *
-	 * @param str          瀛楃涓?
-	 * @param startInclude 寮€濮嬩綅缃紙鍖呭惈锛?
-	 * @param endExclude   缁撴潫浣嶇疆锛堜笉鍖呭惈锛?
-	 * @param replacedStr  琚浛鎹㈢殑瀛楃涓?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 5.8.27
-	 */
-	public static String replaceByCodePoint(CharSequence str, int startInclude, int endExclude, CharSequence replacedStr) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		final String originalStr = str(str);
-		int[] strCodePoints = originalStr.codePoints().toArray();
-		final int strLength = strCodePoints.length;
-		if (startInclude > strLength) {
-			return originalStr;
-		}
-		if (endExclude > strLength) {
-			endExclude = strLength;
-		}
-		if (startInclude > endExclude) {
-			// 濡傛灉璧峰浣嶇疆澶т簬缁撴潫浣嶇疆锛屼笉鏇挎崲
-			return originalStr;
-		}
-
-		final StringBuilder stringBuilder = new StringBuilder();
-		for (int i = 0; i < startInclude; i++) {
-			stringBuilder.append(new String(strCodePoints, i, 1));
-		}
-		stringBuilder.append(replacedStr);
-		for (int i = endExclude; i < strLength; i++) {
-			stringBuilder.append(new String(strCodePoints, i, 1));
-		}
-		return stringBuilder.toString();
-	}
-
-	/**
-	 * 鏇挎崲鎵€鏈夋鍒欏尮閰嶇殑鏂囨湰锛屽苟浣跨敤鑷畾涔夊嚱鏁板喅瀹氬浣曟浛鎹?br>
-	 * replaceFun鍙互閫氳繃{@link Matcher}鎻愬彇鍑哄尮閰嶅埌鐨勫唴瀹圭殑涓嶅悓閮ㄥ垎锛岀劧鍚庣粡杩囬噸鏂板鐞嗐€佺粍瑁呭彉鎴愭柊鐨勫唴瀹规斁鍥炲師浣嶃€?
-	 * <pre class="code">
-	 *     replace(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
-	 *     // 缁撴灉涓猴細"ZZZaaabbbccc涓枃-1234-"
-	 * </pre>
-	 *
-	 * @param str        瑕佹浛鎹㈢殑瀛楃涓?
-	 * @param pattern    鐢ㄤ簬鍖归厤鐨勬鍒欏紡
-	 * @param replaceFun 鍐冲畾濡備綍鏇挎崲鐨勫嚱鏁?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @see ReUtil#replaceAll(CharSequence, java.util.regex.Pattern, Func1)
-	 * @since 4.2.2
-	 */
-	public static String replace(CharSequence str, java.util.regex.Pattern pattern, Func1<java.util.regex.Matcher, String> replaceFun) {
-		return ReUtil.replaceAll(str, pattern, replaceFun);
-	}
-
-	/**
-	 * 鏇挎崲鎵€鏈夋鍒欏尮閰嶇殑鏂囨湰锛屽苟浣跨敤鑷畾涔夊嚱鏁板喅瀹氬浣曟浛鎹?
-	 *
-	 * @param str        瑕佹浛鎹㈢殑瀛楃涓?
-	 * @param regex      鐢ㄤ簬鍖归厤鐨勬鍒欏紡
-	 * @param replaceFun 鍐冲畾濡備綍鏇挎崲鐨勫嚱鏁?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @see ReUtil#replaceAll(CharSequence, String, Func1)
-	 * @since 4.2.2
-	 */
-	public static String replace(CharSequence str, String regex, Func1<java.util.regex.Matcher, String> replaceFun) {
-		return ReUtil.replaceAll(str, regex, replaceFun);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃涓蹭腑鏈€鍚庝竴涓寚瀹氬瓧绗︿覆
-	 *
-	 * @param str         瀛楃涓?
-	 * @param searchStr   琚煡鎵剧殑瀛楃涓?
-	 * @param replacedStr 琚浛鎹㈢殑瀛楃涓?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 */
-	public static String replaceLast(CharSequence str, CharSequence searchStr, CharSequence replacedStr) {
-		return replaceLast(str, searchStr, replacedStr, false);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃涓蹭腑鏈€鍚庝竴涓寚瀹氬瓧绗︿覆
-	 *
-	 * @param str         瀛楃涓?
-	 * @param searchStr   琚煡鎵剧殑瀛楃涓?
-	 * @param replacedStr 琚浛鎹㈢殑瀛楃涓?
-	 * @param ignoreCase  鏄惁蹇界暐澶у皬鍐?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 */
-	public static String replaceLast(CharSequence str, CharSequence searchStr, CharSequence replacedStr, boolean ignoreCase) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		int lastIndex = lastIndexOf(str, searchStr, str.length(), ignoreCase);
-		if (INDEX_NOT_FOUND == lastIndex) {
-			return str(str);
-		}
-		return replace(str, lastIndex, searchStr, replacedStr, ignoreCase);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃涓蹭腑绗竴涓寚瀹氬瓧绗︿覆
-	 *
-	 * @param str         瀛楃涓?
-	 * @param searchStr   琚煡鎵剧殑瀛楃涓?
-	 * @param replacedStr 琚浛鎹㈢殑瀛楃涓?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 */
-	public static String replaceFirst(CharSequence str, CharSequence searchStr, CharSequence replacedStr) {
-		return replaceFirst(str, searchStr, replacedStr, false);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃涓蹭腑绗竴涓寚瀹氬瓧绗︿覆
-	 *
-	 * @param str         瀛楃涓?
-	 * @param searchStr   琚煡鎵剧殑瀛楃涓?
-	 * @param replacedStr 琚浛鎹㈢殑瀛楃涓?
-	 * @param ignoreCase  鏄惁蹇界暐澶у皬鍐?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 */
-	public static String replaceFirst(CharSequence str, CharSequence searchStr, CharSequence replacedStr, boolean ignoreCase) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		int startInclude = indexOf(str, searchStr, 0, ignoreCase);
-		if (INDEX_NOT_FOUND == startInclude) {
-			return str(str);
-		}
-		return replaceByCodePoint(str, startInclude, startInclude + searchStr.length(), replacedStr);
-	}
-
-	/**
-	 * 鏇挎崲鎸囧畾瀛楃涓茬殑鎸囧畾鍖洪棿鍐呭瓧绗︿负"*"
-	 * 淇楃О锛氳劚鏁忓姛鑳斤紝鍚庨潰鍏朵粬鍔熻兘锛屽彲浠ヨ锛欴esensitizedUtil(鑴辨晱宸ュ叿绫?
-	 *
-	 * <pre>
-	 * hide(null,*,*)=null
-	 * hide("",0,*)=""
-	 * hide("jackduan@163.com",-1,4)   ****duan@163.com
-	 * hide("jackduan@163.com",2,3)    ja*kduan@163.com
-	 * hide("jackduan@163.com",3,2)    jackduan@163.com
-	 * hide("jackduan@163.com",16,16)  jackduan@163.com
-	 * hide("jackduan@163.com",16,17)  jackduan@163.com
-	 * </pre>
-	 *
-	 * @param str          瀛楃涓?
-	 * @param startInclude 寮€濮嬩綅缃紙鍖呭惈锛?
-	 * @param endExclude   缁撴潫浣嶇疆锛堜笉鍖呭惈锛?
-	 * @return 鏇挎崲鍚庣殑瀛楃涓?
-	 * @since 4.1.14
-	 */
-	public static String hide(CharSequence str, int startInclude, int endExclude) {
-		return replaceByCodePoint(str, startInclude, endExclude, '*');
-	}
-
-	/**
-	 * 鑴辨晱锛屼娇鐢ㄩ粯璁ょ殑鑴辨晱绛栫暐
-	 *
-	 * <pre>
-	 * desensitized("100", DesensitizedUtil.DesensitizedType.USER_ID)) =  "0"
-	 * desensitized("娈垫娣?, DesensitizedUtil.DesensitizedType.CHINESE_NAME)) = "娈?*"
-	 * desensitized("51343620000320711X", DesensitizedUtil.DesensitizedType.ID_CARD)) = "5***************1X"
-	 * desensitized("09157518479", DesensitizedUtil.DesensitizedType.FIXED_PHONE)) = "0915*****79"
-	 * desensitized("18049531999", DesensitizedUtil.DesensitizedType.MOBILE_PHONE)) = "180****1999"
-	 * desensitized("鍖椾含甯傛捣娣€鍖洪┈杩炴醇琛楅亾289鍙?, DesensitizedUtil.DesensitizedType.ADDRESS)) = "鍖椾含甯傛捣娣€鍖洪┈********"
-	 * desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtil.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
-	 * desensitized("1234567890", DesensitizedUtil.DesensitizedType.PASSWORD)) = "**********"
-	 * desensitized("鑻廌40000", DesensitizedUtil.DesensitizedType.CAR_LICENSE)) = "鑻廌4***0"
-	 * desensitized("11011111222233333256", DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
-	 * </pre>
-	 *
-	 * @param str              瀛楃涓?
-	 * @param desensitizedType 鑴辨晱绫诲瀷;鍙互鑴辨晱锛氱敤鎴穒d銆佷腑鏂囧悕銆佽韩浠借瘉鍙枫€佸骇鏈哄彿銆佹墜鏈哄彿銆佸湴鍧€銆佺數瀛愰偖浠躲€佸瘑鐮?
-	 * @return 鑴辨晱涔嬪悗鐨勫瓧绗︿覆
-	 * @author dazer and neusoft and qiaomu
-	 * @see DesensitizedUtil 濡傛灉闇€瑕佽嚜瀹氫箟锛岃劚鏁忚鍒欙紝璇蜂娇鐢ㄨ宸ュ叿绫伙紱
-	 * @since 5.6.2
-	 */
-	public static String desensitized(CharSequence str, DesensitizedUtil.DesensitizedType desensitizedType) {
-		return DesensitizedUtil.desensitized(str, desensitizedType);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃瀛楃鏁扮粍涓墍鏈夌殑瀛楃涓簉eplacedStr<br>
-	 * 鎻愪緵鐨刢hars涓烘墍鏈夐渶瑕佽鏇挎崲鐨勫瓧绗︼紝渚嬪锛?\r\n"锛屽垯"\r"鍜?\n"閮戒細琚浛鎹紝鍝€曚粬浠崟鐙瓨鍦?
-	 *
-	 * @param str         琚鏌ョ殑瀛楃涓?
-	 * @param chars       闇€瑕佹浛鎹㈢殑瀛楃鍒楄〃锛岀敤涓€涓瓧绗︿覆琛ㄧず杩欎釜瀛楃鍒楄〃
-	 * @param replacedStr 鏇挎崲鎴愮殑瀛楃涓?
-	 * @return 鏂板瓧绗︿覆
-	 * @since 3.2.2
-	 */
-	public static String replaceChars(CharSequence str, String chars, CharSequence replacedStr) {
-		if (isEmpty(str) || isEmpty(chars)) {
-			return str(str);
-		}
-		return replaceChars(str, chars.toCharArray(), replacedStr);
-	}
-
-	/**
-	 * 鏇挎崲瀛楃瀛楃鏁扮粍涓墍鏈夌殑瀛楃涓簉eplacedStr
-	 *
-	 * @param str         琚鏌ョ殑瀛楃涓?
-	 * @param chars       闇€瑕佹浛鎹㈢殑瀛楃鍒楄〃
-	 * @param replacedStr 鏇挎崲鎴愮殑瀛楃涓?
-	 * @return 鏂板瓧绗︿覆
-	 * @since 3.2.2
-	 */
-	public static String replaceChars(CharSequence str, char[] chars, CharSequence replacedStr) {
-		if (isEmpty(str) || ArrayUtil.isEmpty(chars)) {
-			return str(str);
-		}
-
-		final Set<Character> set = new HashSet<>(chars.length);
-		for (char c : chars) {
-			set.add(c);
-		}
-		int strLen = str.length();
-		final StringBuilder builder = new StringBuilder();
-		char c;
-		for (int i = 0; i < strLen; i++) {
-			c = str.charAt(i);
-			builder.append(set.contains(c) ? replacedStr : c);
-		}
-		return builder.toString();
-	}
-
-	// ------------------------------------------------------------------------ length
-
-	/**
-	 * 鑾峰彇瀛楃涓茬殑闀垮害锛屽鏋滀负null杩斿洖0
-	 *
-	 * @param cs a 瀛楃涓?
-	 * @return 瀛楃涓茬殑闀垮害锛屽鏋滀负null杩斿洖0
-	 * @since 4.3.2
-	 */
-	public static int length(CharSequence cs) {
-		return cs == null ? 0 : cs.length();
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓茶浆涓篵ytes鍚庣殑byte鏁帮紙byte闀垮害锛?
-	 *
-	 * @param cs      瀛楃涓?
-	 * @param charset 缂栫爜
-	 * @return byte闀垮害
-	 * @since 4.5.2
-	 */
-	public static int byteLength(CharSequence cs, Charset charset) {
-		return cs == null ? 0 : cs.toString().getBytes(charset).length;
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉暟缁勭殑鎬婚暱搴?br>
-	 * null瀛楃闀垮害瀹氫箟涓?
-	 *
-	 * @param strs 瀛楃涓叉暟缁?
-	 * @return 鎬婚暱搴?
-	 * @since 4.0.1
-	 */
-	public static int totalLength(CharSequence... strs) {
-		int totalLength = 0;
-		for (CharSequence str : strs) {
-			totalLength += (null == str ? 0 : str.length());
-		}
-		return totalLength;
-	}
-
-	/**
-	 * 闄愬埗瀛楃涓查暱搴︼紝濡傛灉瓒呰繃鎸囧畾闀垮害锛屾埅鍙栨寚瀹氶暱搴﹀苟鍦ㄦ湯灏惧姞"..."
-	 *
-	 * @param string 瀛楃涓?
-	 * @param length 鏈€澶ч暱搴?
-	 * @return 鍒囧壊鍚庣殑鍓╀綑鐨勫墠鍗婇儴鍒嗗瓧绗︿覆+"..."
-	 * @since 4.0.10
-	 */
-	public static String maxLength(CharSequence string, int length) {
-		Assert.isTrue(length > 0);
-		if (null == string) {
-			return null;
-		}
-		if (string.length() <= length) {
-			return string.toString();
-		}
-		return sub(string, 0, length) + "...";
-	}
-
-	// ------------------------------------------------------------------------ firstXXX
-
-	/**
-	 * 杩斿洖绗竴涓潪{@code null} 鍏冪礌
-	 *
-	 * @param strs 澶氫釜鍏冪礌
-	 * @param <T>  鍏冪礌绫诲瀷
-	 * @return 绗竴涓潪绌哄厓绱狅紝濡傛灉缁欏畾鐨勬暟缁勪负绌烘垨鑰呴兘涓虹┖锛岃繑鍥瀧@code null}
-	 * @since 5.4.1
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends CharSequence> T firstNonNull(T... strs) {
-		return ArrayUtil.firstNonNull(strs);
-	}
-
-	/**
-	 * 杩斿洖绗竴涓潪empty 鍏冪礌
-	 *
-	 * @param strs 澶氫釜鍏冪礌
-	 * @param <T>  鍏冪礌绫诲瀷
-	 * @return 绗竴涓潪绌哄厓绱狅紝濡傛灉缁欏畾鐨勬暟缁勪负绌烘垨鑰呴兘涓虹┖锛岃繑鍥瀧@code null}
-	 * @see #isNotEmpty(CharSequence)
-	 * @since 5.4.1
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends CharSequence> T firstNonEmpty(T... strs) {
-		return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
-	}
-
-	/**
-	 * 杩斿洖绗竴涓潪blank 鍏冪礌
-	 *
-	 * @param strs 澶氫釜鍏冪礌
-	 * @param <T>  鍏冪礌绫诲瀷
-	 * @return 绗竴涓潪绌哄厓绱狅紝濡傛灉缁欏畾鐨勬暟缁勪负绌烘垨鑰呴兘涓虹┖锛岃繑鍥瀧@code null}
-	 * @see #isNotBlank(CharSequence)
-	 * @since 5.4.1
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends CharSequence> T firstNonBlank(T... strs) {
-		return ArrayUtil.firstMatch(StrUtil::isNotBlank, strs);
-	}
-
-	// ------------------------------------------------------------------------ lower and upper
-
-	/**
-	 * 灏嗗瓧绗︿覆杞负灏忓啓
-	 *
-	 * @param str 琚浆鐨勫瓧绗︿覆
-	 * @return 杞崲鍚庣殑瀛楃涓?
-	 * @see String#toLowerCase()
-	 * @since 5.8.38
-	 * @deprecated 鎷煎啓閿欒锛岃浣跨敤 {@link #toLowerCase(CharSequence)}
-	 */
-	@Deprecated
-	public static String toLoweCase(final CharSequence str) {
-		return toLowerCase(str);
-	}
-
-	/**
-	 * 灏嗗瓧绗︿覆杞负灏忓啓
-	 *
-	 * @param str 琚浆鐨勫瓧绗︿覆
-	 * @return 杞崲鍚庣殑瀛楃涓?
-	 * @see String#toLowerCase()
-	 * @since 5.8.39
-	 */
-	public static String toLowerCase(final CharSequence str) {
-		if (null == str) {
-			return null;
-		}
-		if (0 == str.length()) {
-			return EMPTY;
-		}
-		return str.toString().toLowerCase();
-	}
-
-	/**
-	 * 灏嗗瓧绗︿覆杞负澶у啓
-	 *
-	 * @param str 琚浆鐨勫瓧绗︿覆
-	 * @return 杞崲鍚庣殑瀛楃涓?
-	 * @see String#toUpperCase()
-	 * @since 5.8.38
-	 */
-	public static String toUpperCase(final CharSequence str) {
-		if (null == str) {
-			return null;
-		}
-		if (0 == str.length()) {
-			return EMPTY;
-		}
-		return str.toString().toUpperCase();
-	}
-
-	/**
-	 * 鍘熷瓧绗︿覆棣栧瓧姣嶅ぇ鍐欏苟鍦ㄥ叾棣栭儴娣诲姞鎸囧畾瀛楃涓?渚嬪锛歴tr=name, preString=get =銆?return getName
-	 *
-	 * @param str       琚鐞嗙殑瀛楃涓?
-	 * @param preString 娣诲姞鐨勯閮?
-	 * @return 澶勭悊鍚庣殑瀛楃涓?
-	 */
-	public static String upperFirstAndAddPre(CharSequence str, String preString) {
-		if (str == null || preString == null) {
-			return null;
-		}
-		return preString + upperFirst(str);
-	}
-
-	/**
-	 * 澶у啓棣栧瓧姣?br>
-	 * 渚嬪锛歴tr = name, return Name
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 瀛楃涓?
-	 */
-	public static String upperFirst(CharSequence str) {
-		if (null == str) {
-			return null;
-		}
-		if (str.length() > 0) {
-			char firstChar = str.charAt(0);
-			if (Character.isLowerCase(firstChar)) {
-				return Character.toUpperCase(firstChar) + subSuf(str, 1);
-			}
-		}
-		return str.toString();
-	}
-
-	/**
-	 * 灏忓啓棣栧瓧姣?br>
-	 * 渚嬪锛歴tr = Name, return name
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 瀛楃涓?
-	 */
-	public static String lowerFirst(CharSequence str) {
-		if (null == str) {
-			return null;
-		}
-		if (str.length() > 0) {
-			char firstChar = str.charAt(0);
-			if (Character.isUpperCase(firstChar)) {
-				return Character.toLowerCase(firstChar) + subSuf(str, 1);
-			}
-		}
-		return str.toString();
-	}
-
-	// ------------------------------------------------------------------------ filter
-
-	/**
-	 * 杩囨护瀛楃涓?
-	 *
-	 * @param str    瀛楃涓?
-	 * @param filter 杩囨护鍣紝{@link Filter#accept(Object)}杩斿洖涓簕@code true}鐨勪繚鐣欏瓧绗?
-	 * @return 杩囨护鍚庣殑瀛楃涓?
-	 * @since 5.4.0
-	 */
-	public static String filter(CharSequence str, final Filter<Character> filter) {
-		if (str == null || filter == null) {
-			return str(str);
-		}
-
-		int len = str.length();
-		final StringBuilder sb = new StringBuilder(len);
-		char c;
-		for (int i = 0; i < len; i++) {
-			c = str.charAt(i);
-			if (filter.accept(c)) {
-				sb.append(c);
-			}
-		}
-		return sb.toString();
-	}
-
-	// ------------------------------------------------------------------------ case
-
-	/**
-	 * 缁欏畾瀛楃涓蹭腑鐨勫瓧姣嶆槸鍚﹀叏閮ㄤ负澶у啓锛屽垽鏂緷鎹涓嬶細
-	 *
-	 * <pre>
-	 * 1. 澶у啓瀛楁瘝鍖呮嫭A-Z
-	 * 2. 鍏跺畠闈炲瓧姣嶇殑Unicode绗﹂兘绠椾綔澶у啓
-	 * </pre>
-	 *
-	 * @param str 琚鏌ョ殑瀛楃涓?
-	 * @return 鏄惁鍏ㄩ儴涓哄ぇ鍐?
-	 * @since 4.2.2
-	 */
-	public static boolean isUpperCase(CharSequence str) {
-		if (null == str) {
-			return false;
-		}
-		final int len = str.length();
-		for (int i = 0; i < len; i++) {
-			if (Character.isLowerCase(str.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓蹭腑鐨勫瓧姣嶆槸鍚﹀叏閮ㄤ负灏忓啓锛屽垽鏂緷鎹涓嬶細
-	 *
-	 * <pre>
-	 * 1. 灏忓啓瀛楁瘝鍖呮嫭a-z
-	 * 2. 鍏跺畠闈炲瓧姣嶇殑Unicode绗﹂兘绠椾綔灏忓啓
-	 * </pre>
-	 *
-	 * @param str 琚鏌ョ殑瀛楃涓?
-	 * @return 鏄惁鍏ㄩ儴涓哄皬鍐?
-	 * @since 4.2.2
-	 */
-	public static boolean isLowerCase(CharSequence str) {
-		if (null == str) {
-			return false;
-		}
-		final int len = str.length();
-		for (int i = 0; i < len; i++) {
-			if (Character.isUpperCase(str.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 鍒囨崲缁欏畾瀛楃涓蹭腑鐨勫ぇ灏忓啓銆傚ぇ鍐欒浆灏忓啓锛屽皬鍐欒浆澶у啓銆?
-	 *
-	 * <pre>
-	 * swapCase(null)                 = null
-	 * swapCase("")                   = ""
-	 * swapCase("The dog has a BONE") = "tHE DOG HAS A bone"
-	 * </pre>
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 浜ゆ崲鍚庣殑瀛楃涓?
-	 * @since 4.3.2
-	 */
-	public static String swapCase(final String str) {
-		if (isEmpty(str)) {
-			return str;
-		}
-
-		final char[] buffer = str.toCharArray();
-
-		for (int i = 0; i < buffer.length; i++) {
-			final char ch = buffer[i];
-			if (Character.isUpperCase(ch)) {
-				buffer[i] = Character.toLowerCase(ch);
-			} else if (Character.isTitleCase(ch)) {
-				buffer[i] = Character.toLowerCase(ch);
-			} else if (Character.isLowerCase(ch)) {
-				buffer[i] = Character.toUpperCase(ch);
-			}
-		}
-		return new String(buffer);
-	}
-
-	/**
-	 * 灏嗛┘宄板紡鍛藉悕鐨勫瓧绗︿覆杞崲涓轰笅鍒掔嚎鏂瑰紡銆傚鏋滆浆鎹㈠墠鐨勯┘宄板紡鍛藉悕鐨勫瓧绗︿覆涓虹┖锛屽垯杩斿洖绌哄瓧绗︿覆銆?br>
-	 * 渚嬪锛?
-	 *
-	 * <pre>
-	 * HelloWorld=銆媓ello_world
-	 * Hello_World=銆媓ello_world
-	 * HelloWorld_test=銆媓ello_world_test
-	 * </pre>
-	 *
-	 * @param str 杞崲鍓嶇殑椹煎嘲寮忓懡鍚嶇殑瀛楃涓诧紝涔熷彲浠ヤ负涓嬪垝绾垮舰寮?
-	 * @return 杞崲鍚庝笅鍒掔嚎鏂瑰紡鍛藉悕鐨勫瓧绗︿覆
-	 * @see NamingCase#toUnderlineCase(CharSequence)
-	 */
-	public static String toUnderlineCase(CharSequence str) {
-		return toSymbolCase(str, '_');
-	}
-
-	/**
-	 * 灏嗛┘宄板紡鍛藉悕鐨勫瓧绗︿覆杞崲涓轰娇鐢ㄧ鍙疯繛鎺ユ柟寮忋€傚鏋滆浆鎹㈠墠鐨勯┘宄板紡鍛藉悕鐨勫瓧绗︿覆涓虹┖锛屽垯杩斿洖绌哄瓧绗︿覆銆?br>
-	 *
-	 * @param str    杞崲鍓嶇殑椹煎嘲寮忓懡鍚嶇殑瀛楃涓诧紝涔熷彲浠ヤ负绗﹀彿杩炴帴褰㈠紡
-	 * @param symbol 杩炴帴绗?
-	 * @return 杞崲鍚庣鍙疯繛鎺ユ柟寮忓懡鍚嶇殑瀛楃涓?
-	 * @see NamingCase#toSymbolCase(CharSequence, char)
-	 * @since 4.0.10
-	 */
-	public static String toSymbolCase(CharSequence str, char symbol) {
-		if (str == null) {
-			return null;
-		}
-		final int length = str.length();
-		final StringBuilder sb = new StringBuilder();
-		char c;
-		for (int i = 0; i < length; i++) {
-			c = str.charAt(i);
-			if (Character.isUpperCase(c)) {
-				final Character preChar = (i > 0) ? str.charAt(i - 1) : null;
-				final Character nextChar = (i < str.length() - 1) ? str.charAt(i + 1) : null;
-				if (null != preChar) {
-					if (symbol == preChar) {
-						if (null == nextChar || Character.isLowerCase(nextChar)) {
-							c = Character.toLowerCase(c);
-						}
-					} else if (Character.isLowerCase(preChar)) {
-						sb.append(symbol);
-						if (null == nextChar || Character.isLowerCase(nextChar) || Character.isDigit(nextChar)) {
-							c = Character.toLowerCase(c);
-						}
-					} else {
-						if (null != nextChar && Character.isLowerCase(nextChar)) {
-							sb.append(symbol);
-							c = Character.toLowerCase(c);
-						}
-					}
-				} else {
-					if (null == nextChar || Character.isLowerCase(nextChar)) {
-						c = Character.toLowerCase(c);
-					}
-				}
-			}
-			sb.append(c);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 灏嗕笅鍒掔嚎鏂瑰紡鍛藉悕鐨勫瓧绗︿覆杞崲涓洪┘宄板紡銆傚鏋滆浆鎹㈠墠鐨勪笅鍒掔嚎澶у啓鏂瑰紡鍛藉悕鐨勫瓧绗︿覆涓虹┖锛屽垯杩斿洖绌哄瓧绗︿覆銆?br>
-	 * 渚嬪锛歨ello_world=銆媓elloWorld
-	 *
-	 * @param name 杞崲鍓嶇殑涓嬪垝绾垮ぇ鍐欐柟寮忓懡鍚嶇殑瀛楃涓?
-	 * @return 杞崲鍚庣殑椹煎嘲寮忓懡鍚嶇殑瀛楃涓?
-	 * @see NamingCase#toCamelCase(CharSequence)
-	 */
-	public static String toCamelCase(CharSequence name) {
-		return toCamelCase(name, '_');
-	}
-
-	/**
-	 * 灏嗚繛鎺ョ鏂瑰紡鍛藉悕鐨勫瓧绗︿覆杞崲涓洪┘宄板紡銆傚鏋滆浆鎹㈠墠鐨勪笅鍒掔嚎澶у啓鏂瑰紡鍛藉悕鐨勫瓧绗︿覆涓虹┖锛屽垯杩斿洖绌哄瓧绗︿覆銆?br>
-	 * 渚嬪锛歨ello_world=銆媓elloWorld; hello-world=銆媓elloWorld
-	 *
-	 * @param name   杞崲鍓嶇殑涓嬪垝绾垮ぇ鍐欐柟寮忓懡鍚嶇殑瀛楃涓?
-	 * @param symbol 杩炴帴绗?
-	 * @return 杞崲鍚庣殑椹煎嘲寮忓懡鍚嶇殑瀛楃涓?
-	 * @see NamingCase#toCamelCase(CharSequence, char)
-	 */
-	public static String toCamelCase(CharSequence name, char symbol) {
-		return toCamelCaseInternal(name, symbol);
-	}
-
-	// ------------------------------------------------------------------------ isSurround
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚﹁瀛楃鍖呭洿
-	 *
-	 * @param str    瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @return 鏄惁鍖呭洿锛岀┖涓蹭笉鍖呭洿
-	 */
-	public static boolean isSurround(CharSequence str, CharSequence prefix, CharSequence suffix) {
-		if (isBlank(str)) {
-			return false;
-		}
-		if (str.length() < (prefix.length() + suffix.length())) {
-			return false;
-		}
-
-		final String str2 = str.toString();
-		return str2.startsWith(prefix.toString()) && str2.endsWith(suffix.toString());
-	}
-
-	/**
-	 * 缁欏畾瀛楃涓叉槸鍚﹁瀛楃鍖呭洿
-	 *
-	 * @param str    瀛楃涓?
-	 * @param prefix 鍓嶇紑
-	 * @param suffix 鍚庣紑
-	 * @return 鏄惁鍖呭洿锛岀┖涓蹭笉鍖呭洿
-	 */
-	public static boolean isSurround(CharSequence str, char prefix, char suffix) {
-		if (isBlank(str)) {
-			return false;
-		}
-		if (str.length() < 2) {
-			return false;
-		}
-
-		return str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix;
-	}
-
-	// ------------------------------------------------------------------------ builder
-
-	/**
-	 * 鍒涘缓StringBuilder瀵硅薄
-	 *
-	 * @param strs 鍒濆瀛楃涓插垪琛?
-	 * @return StringBuilder瀵硅薄
-	 */
-	public static StringBuilder builder(CharSequence... strs) {
-		return builder(Function.identity(), strs);
-	}
-
-	/**
-	 * 鍒涘缓StringBuilder瀵硅薄
-	 *
-	 * @param strEditor 缂栬緫鍣紝鐢ㄤ簬瀵规瘡涓瓧绗︿覆杩涜缂栬緫
-	 * @param strs      寰呭鐞嗙殑瀛楃涓插垪琛?
-	 * @return StringBuilder瀵硅薄
-	 * @since 5.8.42
-	 */
-	public static StringBuilder builder(Function<CharSequence, CharSequence> strEditor, final CharSequence... strs) {
-		final StringBuilder sb = new StringBuilder();
-		for (final CharSequence str : strs) {
-			sb.append(strEditor.apply(str));
-		}
-		return sb;
-	}
-
-	/**
-	 * 鍒涘缓StrBuilder瀵硅薄
-	 *
-	 * @param strs 鍒濆瀛楃涓插垪琛?
-	 * @return StrBuilder瀵硅薄
-	 */
-	public static StrBuilder strBuilder(CharSequence... strs) {
-		final StrBuilder sb = new StrBuilder();
-		for (CharSequence str2 : strs) {
-			sb.append(str2);
-		}
-		return sb;
-	}
-
-	// ------------------------------------------------------------------------ getter and setter
-
-	/**
-	 * 鑾峰緱set鎴杇et鎴杋s鏂规硶瀵瑰簲鐨勬爣鍑嗗睘鎬у悕<br>
-	 * 渚嬪锛歴etName 杩斿洖 name
-	 *
-	 * <pre>
-	 * getName =銆媙ame
-	 * setName =銆媙ame
-	 * isName  =銆媙ame
-	 * </pre>
-	 *
-	 * @param getOrSetMethodName Get鎴朣et鏂规硶鍚?
-	 * @return 濡傛灉鏄痵et鎴杇et鏂规硶鍚嶏紝杩斿洖field锛?鍚﹀垯null
-	 */
-	public static String getGeneralField(CharSequence getOrSetMethodName) {
-		final String getOrSetMethodNameStr = getOrSetMethodName.toString();
-		if (getOrSetMethodNameStr.startsWith("get") || getOrSetMethodNameStr.startsWith("set")) {
-			return removePreAndLowerFirst(getOrSetMethodName, 3);
-		} else if (getOrSetMethodNameStr.startsWith("is")) {
-			return removePreAndLowerFirst(getOrSetMethodName, 2);
-		}
-		return null;
-	}
-
-	/**
-	 * 鐢熸垚set鏂规硶鍚?br>
-	 * 渚嬪锛歯ame 杩斿洖 setName
-	 *
-	 * @param fieldName 灞炴€у悕
-	 * @return setXxx
-	 */
-	public static String genSetter(CharSequence fieldName) {
-		return upperFirstAndAddPre(fieldName, "set");
-	}
-
-	/**
-	 * 鐢熸垚get鏂规硶鍚?
-	 *
-	 * @param fieldName 灞炴€у悕
-	 * @return getXxx
-	 */
-	public static String genGetter(CharSequence fieldName) {
-		return upperFirstAndAddPre(fieldName, "get");
-	}
-
-	// ------------------------------------------------------------------------ other
-
-	/**
-	 * 杩炴帴澶氫釜瀛楃涓蹭负涓€涓?
-	 *
-	 * @param isNullToEmpty 鏄惁null杞负""
-	 * @param strs          瀛楃涓叉暟缁?
-	 * @return 杩炴帴鍚庣殑瀛楃涓?
-	 * @since 4.1.0
-	 */
-	public static String concat(boolean isNullToEmpty, CharSequence... strs) {
-		final StrBuilder sb = new StrBuilder();
-		for (CharSequence str : strs) {
-			sb.append(isNullToEmpty ? nullToEmpty(str) : str);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 灏嗙粰瀹氬瓧绗︿覆锛屽彉鎴?"xxx...xxx" 褰㈠紡鐨勫瓧绗︿覆
-	 *
-	 * <ul>
-	 *     <li>abcdefgh  9 -銆?abcdefgh</li>
-	 *     <li>abcdefgh  8 -銆?abcdefgh</li>
-	 *     <li>abcdefgh  7 -銆?ab...gh</li>
-	 *     <li>abcdefgh  6 -銆?ab...h</li>
-	 *     <li>abcdefgh  5 -銆?a...h</li>
-	 *     <li>abcdefgh  4 -銆?a..h</li>
-	 *     <li>abcdefgh  3 -銆?a.h</li>
-	 *     <li>abcdefgh  2 -銆?a.</li>
-	 *     <li>abcdefgh  1 -銆?a</li>
-	 *     <li>abcdefgh  0 -銆?abcdefgh</li>
-	 *     <li>abcdefgh -1 -銆?abcdefgh</li>
-	 * </ul>
-	 *
-	 * @param str       瀛楃涓?
-	 * @param maxLength 缁撴灉鐨勬渶澶ч暱搴?
-	 * @return 鎴彇鍚庣殑瀛楃涓?
-	 */
-	public static String brief(CharSequence str, int maxLength) {
-		if (null == str) {
-			return null;
-		}
-		final int strLength = str.length();
-		if (maxLength <= 0 || strLength <= maxLength) {
-			return str.toString();
-		}
-
-		// since 5.7.5锛岀壒娈婇暱搴?
-		switch (maxLength) {
-			case 1:
-				return String.valueOf(str.charAt(0));
-			case 2:
-				return str.charAt(0) + ".";
-			case 3:
-				return str.charAt(0) + "." + str.charAt(strLength - 1);
-			case 4:
-				return str.charAt(0) + ".." + str.charAt(strLength - 1);
-		}
-
-		final int suffixLength = (maxLength - 3) / 2;
-		final int preLength = suffixLength + (maxLength - 3) % 2; // suffixLength 鎴?suffixLength + 1
-		final String str2 = str.toString();
-		return format("{}...{}",
-			str2.substring(0, preLength),
-			str2.substring(strLength - suffixLength));
-	}
-
-	/**
-	 * 浠?conjunction 涓哄垎闅旂灏嗗涓璞¤浆鎹负瀛楃涓?
-	 *
-	 * @param conjunction 鍒嗛殧绗?{@link StrPool#COMMA}
-	 * @param objs        鏁扮粍
-	 * @return 杩炴帴鍚庣殑瀛楃涓?
-	 * @see ArrayUtil#join(Object, CharSequence)
-	 */
-	public static String join(CharSequence conjunction, Object... objs) {
-		return ArrayUtil.join(objs, conjunction);
-	}
-
-	/**
-	 * 浠?conjunction 涓哄垎闅旂灏嗗涓璞¤浆鎹负瀛楃涓?
-	 *
-	 * @param <T>         鍏冪礌绫诲瀷
-	 * @param conjunction 鍒嗛殧绗?{@link StrPool#COMMA}
-	 * @param iterable    闆嗗悎
-	 * @return 杩炴帴鍚庣殑瀛楃涓?
-	 * @see CollUtil#join(Iterable, CharSequence)
-	 * @since 5.6.6
-	 */
-	public static <T> String join(CharSequence conjunction, Iterable<T> iterable) {
-		final java.util.List<Object> list = new java.util.ArrayList<>();
-		for (T item : iterable) {
-			list.add(item);
-		}
-		return CollUtil.join(list, conjunction);
-	}
-
-	/**
-	 * 瀛楃涓茬殑姣忎竴涓瓧绗︽槸鍚﹂兘涓庡畾涔夌殑鍖归厤鍣ㄥ尮閰?
-	 *
-	 * @param value   瀛楃涓?
-	 * @param matcher 鍖归厤鍣?
-	 * @return 鏄惁鍏ㄩ儴鍖归厤
-	 * @since 3.2.3
-	 */
-	public static boolean isAllCharMatch(CharSequence value, Matcher<Character> matcher) {
-		if (isBlank(value)) {
-			return false;
-		}
-		for (int i = value.length(); --i >= 0; ) {
-			if (false == matcher.match(value.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 妫€鏌ュ瓧绗︿覆鏄惁閮戒负鏁板瓧缁勬垚
-	 *
-	 * @param str 瀛楃涓?
-	 * @return 鏄惁閮戒负鏁板瓧缁勬垚
-	 * @since 5.7.3
-	 */
-	public static boolean isNumeric(CharSequence str) {
-		return isAllCharMatch(str, Character::isDigit);
-	}
-
-	/**
-	 * 寰幆浣嶇Щ鎸囧畾浣嶇疆鐨勫瓧绗︿覆涓烘寚瀹氳窛绂?br>
-	 * 褰搈oveLength澶т簬0鍚戝彸浣嶇Щ锛屽皬浜?鍚戝乏浣嶇Щ锛?涓嶄綅绉?br>
-	 * 褰搈oveLength澶т簬瀛楃涓查暱搴︽椂閲囧彇寰幆浣嶇Щ绛栫暐锛屽嵆浣嶇Щ鍒板ご鍚庝粠澶达紙灏撅級浣嶇Щ锛屼緥濡傞暱搴︿负10锛屼綅绉?3鍒欒〃绀轰綅绉?
-	 *
-	 * @param str          瀛楃涓?
-	 * @param startInclude 璧峰浣嶇疆锛堝寘鎷級
-	 * @param endExclude   缁撴潫浣嶇疆锛堜笉鍖呮嫭锛?
-	 * @param moveLength   绉诲姩璺濈锛岃礋鏁拌〃绀哄乏绉伙紝姝ｆ暟涓哄彸绉?
-	 * @return 浣嶇Щ鍚庣殑瀛楃涓?
-	 * @since 4.0.7
-	 */
-	public static String move(CharSequence str, int startInclude, int endExclude, int moveLength) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		final int len = str.length();
-		// 鍙傛暟鏍￠獙
-		if (startInclude < 0 || endExclude > len || startInclude > endExclude) {
-			throw new IndexOutOfBoundsException("Invalid range: [" + startInclude + ", " + endExclude + ")");
-		}
-
-		if (Math.abs(moveLength) > len) {
-			// 寰幆浣嶇Щ锛屽綋瓒婄晫鏃跺惊鐜?
-			moveLength = moveLength % len;
-		}
-		// 鍒嗙鈥滅Щ鍔ㄥ潡鈥濆拰鈥滃墿浣欒建閬撯€?
-		final String block = str.subSequence(startInclude, endExclude).toString();
-		final String rest = new StringBuilder(str).delete(startInclude, endExclude).toString();
-
-		final int restLen = rest.length();
-		if (restLen == 0) {
-			return str.toString(); // 鍏ㄩ€夋椂浣嶇Щ鏃犳剰涔?
-		}
-		// 璁＄畻寰幆鍛ㄦ湡锛氬墿浣欏瓧绗︽暟 + 1锛堜唬琛ㄥ潡鍙互瀛樺湪鐨勪笉鍚屼綅缃偣锛?
-		final int totalPositions = restLen + 1;
-		// 璁＄畻绉诲姩鍚庣殑鏂颁綅缃?(澶勭悊姝ｈ礋鏁?
-		final int newPos = (startInclude + moveLength % totalPositions + totalPositions) % totalPositions;
-		// 閲嶆柊缁勮
-		return rest.substring(0, newPos) + // 鏀惧叆鏂颁綅缃墠鐨勫墿浣欏瓧绗?
-			block +                     // 鏀惧叆鏁翠綋鍧?
-			rest.substring(newPos); // 鏀惧叆鍓╀笅鐨勫墿浣欏瓧绗?
-	}
-
-	/**
-	 * 妫€鏌ョ粰瀹氬瓧绗︿覆鐨勬墍鏈夊瓧绗︽槸鍚﹂兘涓€鏍?
-	 *
-	 * @param str 瀛楃鍑哄晩
-	 * @return 缁欏畾瀛楃涓茬殑鎵€鏈夊瓧绗︽槸鍚﹂兘涓€鏍?
-	 * @since 5.7.3
-	 */
-	public static boolean isCharEquals(CharSequence str) {
-		Assert.isTrue(isNotEmpty(str), "Str to check must be not empty!");
-		return count(str, str.charAt(0)) == str.length();
-	}
-
-	/**
-	 * 瀵瑰瓧绗︿覆褰掍竴鍖栧鐞嗭紝濡?"脕" 鍙互浣跨敤 "u00C1"鎴?"u0041u0301"琛ㄧず锛屽疄闄呮祴璇曚腑涓や釜瀛楃涓插苟涓峞quals<br>
-	 * 鍥犳浣跨敤姝ゆ柟娉曞綊涓€涓轰竴绉嶈〃绀哄舰寮忥紝榛樿鎸夌収W3C閫氬父寤鸿鐨勶紝鍦∟FC涓氦鎹㈡枃鏈€?
-	 *
-	 * @param str 褰掍竴鍖栫殑瀛楃涓?
-	 * @return 褰掍竴鍖栧悗鐨勫瓧绗︿覆
-	 * @see Normalizer#normalize(CharSequence, Normalizer.Form)
-	 * @since 5.7.16
-	 */
-	public static String normalize(CharSequence str) {
-		return Normalizer.normalize(str, Normalizer.Form.NFC);
-	}
-
-	/**
-	 * 鍦ㄧ粰瀹氬瓧绗︿覆鏈熬濉厖鎸囧畾瀛楃锛屼互杈惧埌缁欏畾闀垮害<br>
-	 * 濡傛灉瀛楃涓叉湰韬殑闀垮害澶т簬绛変簬length锛岃繑鍥炲師瀛楃涓?
-	 *
-	 * @param str       瀛楃涓?
-	 * @param fixedChar 琛ュ厖鐨勫瓧绗?
-	 * @param length    琛ュ厖鍒扮殑闀垮害
-	 * @return 琛ュ厖鍚庣殑瀛楃涓?
-	 * @since 5.8.0
-	 */
-	public static String fixLength(CharSequence str, char fixedChar, int length) {
-		final int fixedLength = length - str.length();
-		if (fixedLength <= 0) {
-			return str.toString();
-		}
-		return str + repeat(fixedChar, fixedLength);
-	}
-
-	/**
-	 * <p>鎸囧畾瀛楃涓叉暟缁勪腑锛屾槸鍚﹀寘鍚┖瀛楃涓层€?/p>
-	 * <p>濡傛灉浼犲叆鍙傛暟瀵硅薄涓嶆槸涓虹┖,鍒欒繑鍥瀎alse銆傚鏋滃瓧绗︿覆鍖呭惈瀛楁瘝,涓嶅尯鍒嗗ぇ灏忓啓,鍒欒繑鍥瀟rue</p>
-	 *
-	 * @param str 瀵硅薄
-	 * @return 濡傛灉涓哄瓧绗︿覆, 鏄惁鏈夊瓧姣?
-	 */
-	public static boolean hasLetter(CharSequence str) {
-		if (null == str) {
-			return false;
-		}
-		for (int i = 0; i < str.length(); i++) {
-			if (CharUtil.isLetter(str.charAt(i))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 瀛楃涓?鍜屽瓧绗︿覆2鐨勫叕鍏卞墠缂€
-	 *
-	 * @param str1 瀛楃涓?
-	 * @param str2 瀛楃涓?
-	 * @return 瀛楃涓?鍜屽瓧绗︿覆2鐨勫叕鍏卞墠缂€
-	 */
-	public static CharSequence commonPrefix(CharSequence str1, CharSequence str2) {
-		if (isEmpty(str1) || isEmpty(str2)) {
-			return EMPTY;
-		}
-		final int minLength = Math.min(str1.length(), str2.length());
-
-		int index = 0;
-
-		for (; index < minLength; index++) {
-
-			if (str1.charAt(index) != str2.charAt(index)) {
-				break;
-			}
-		}
-		return str1.subSequence(0, index);
-	}
-
-	/**
-	 * 瀛楃涓?鍜屽瓧绗︿覆2鐨勫叕鍏卞悗缂€
-	 *
-	 * @param str1 瀛楃涓?
-	 * @param str2 瀛楃涓?
-	 * @return 瀛楃涓?鍜屽瓧绗︿覆2鐨勫叕鍏卞悗缂€
-	 */
-	public static CharSequence commonSuffix(CharSequence str1, CharSequence str2) {
-		if (isEmpty(str1) || isEmpty(str2)) {
-			return EMPTY;
-		}
-		int str1Index = str1.length() - 1;
-		int str2Index = str2.length() - 1;
-		for (; str1Index >= 0 && str2Index >= 0; str1Index--, str2Index--) {
-			if (str1.charAt(str1Index) != str2.charAt(str2Index)) {
-				break;
-			}
-		}
-		return str1.subSequence(str1Index + 1, str1.length());
-	}
-
-
-	// ==================== StrUtil methods ====================
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * 瀛楃涓插伐鍏风被
- *
- * @author xiaoleilu
- */
-
-
-	// ------------------------------------------------------------------------ Blank
-
-	/**
-	 * <p>濡傛灉瀵硅薄鏄瓧绗︿覆鏄惁涓虹┖鐧斤紝绌虹櫧鐨勫畾涔夊涓嬶細</p>
-	 * <ol>
-	 *     <li>{@code null}</li>
-	 *     <li>绌哄瓧绗︿覆锛歿@code ""}</li>
-	 *     <li>绌烘牸銆佸叏瑙掔┖鏍笺€佸埗琛ㄧ銆佹崲琛岀锛岀瓑涓嶅彲瑙佸瓧绗?/li>
-	 * </ol>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code StrUtil.isBlankIfStr(null)     // true}</li>
-	 *     <li>{@code StrUtil.isBlankIfStr("")       // true}</li>
-	 *     <li>{@code StrUtil.isBlankIfStr(" \t\n")  // true}</li>
-	 *     <li>{@code StrUtil.isBlankIfStr("abc")    // false}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isEmptyIfStr(Object)} 鐨勫尯鍒槸锛?
-	 * 璇ユ柟娉曚細鏍￠獙绌虹櫧瀛楃锛屼笖鎬ц兘鐩稿浜?{@link #isEmptyIfStr(Object)} 鐣ユ參銆?/p>
-	 *
-	 * @param obj 瀵硅薄
-	 * @return 濡傛灉涓哄瓧绗︿覆鏄惁涓虹┖涓?
-	 * @see StrUtil#isBlank(CharSequence)
-	 * @since 3.3.0
-	 */
-	public static boolean isBlankIfStr(Object obj) {
-		if (null == obj) {
-			return true;
-		} else if (obj instanceof CharSequence) {
-			return isBlank((CharSequence) obj);
-		}
-		return false;
-	}
-	// ------------------------------------------------------------------------ Empty
-
-	/**
-	 * <p>濡傛灉瀵硅薄鏄瓧绗︿覆鏄惁涓虹┖涓诧紝绌虹殑瀹氫箟濡備笅锛?/p><br>
-	 * <ol>
-	 *     <li>{@code null}</li>
-	 *     <li>绌哄瓧绗︿覆锛歿@code ""}</li>
-	 * </ol>
-	 *
-	 * <p>渚嬶細</p>
-	 * <ul>
-	 *     <li>{@code StrUtil.isEmptyIfStr(null)     // true}</li>
-	 *     <li>{@code StrUtil.isEmptyIfStr("")       // true}</li>
-	 *     <li>{@code StrUtil.isEmptyIfStr(" \t\n")  // false}</li>
-	 *     <li>{@code StrUtil.isEmptyIfStr("abc")    // false}</li>
-	 * </ul>
-	 *
-	 * <p>娉ㄦ剰锛氳鏂规硶涓?{@link #isBlankIfStr(Object)} 鐨勫尯鍒槸锛氳鏂规硶涓嶆牎楠岀┖鐧藉瓧绗︺€?/p>
-	 *
-	 * @param obj 瀵硅薄
-	 * @return 濡傛灉涓哄瓧绗︿覆鏄惁涓虹┖涓?
-	 * @since 3.3.0
-	 */
-	public static boolean isEmptyIfStr(Object obj) {
-		if (null == obj) {
-			return true;
-		} else if (obj instanceof CharSequence) {
-			return 0 == ((CharSequence) obj).length();
-		}
-		return false;
-	}
-
-	// ------------------------------------------------------------------------ Trim
-
-	/**
-	 * 缁欏畾瀛楃涓叉暟缁勫叏閮ㄥ仛鍘婚灏剧┖鏍?
-	 *
-	 * @param strs 瀛楃涓叉暟缁?
-	 */
-	public static void trim(String[] strs) {
-		if (null == strs) {
-			return;
-		}
-		String str;
-		for (int i = 0; i < strs.length; i++) {
-			str = strs[i];
-			if (null != str) {
-				strs[i] = trim(str);
-			}
-		}
-	}
-
-	/**
-	 * 灏嗗璞¤浆涓哄瓧绗︿覆<br>
-	 *
-	 * <pre>
-	 * 1銆丅yte鏁扮粍鍜孊yteBuffer浼氳杞崲涓哄搴斿瓧绗︿覆鐨勬暟缁?
-	 * 2銆佸璞℃暟缁勪細璋冪敤Arrays.toString鏂规硶
-	 * </pre>
-	 *
-	 * @param obj 瀵硅薄
-	 * @return 瀛楃涓?
-	 */
-	public static String utf8Str(Object obj) {
-		return str(obj, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 灏嗗璞¤浆涓哄瓧绗︿覆
-	 *
-	 * <pre>
-	 * 1銆丅yte鏁扮粍鍜孊yteBuffer浼氳杞崲涓哄搴斿瓧绗︿覆鐨勬暟缁?
-	 * 2銆佸璞℃暟缁勪細璋冪敤Arrays.toString鏂规硶
-	 * </pre>
-	 *
-	 * @param obj         瀵硅薄
-	 * @param charsetName 瀛楃闆?
-	 * @return 瀛楃涓?
-	 * @deprecated 璇蜂娇鐢?{@link #str(Object, Charset)}
-	 */
-	@Deprecated
-	public static String str(Object obj, String charsetName) {
-		return str(obj, Charset.forName(charsetName));
-	}
-
-	/**
-	 * 灏嗗璞¤浆涓哄瓧绗︿覆
-	 * <pre>
-	 * 	 1銆丅yte鏁扮粍鍜孊yteBuffer浼氳杞崲涓哄搴斿瓧绗︿覆鐨勬暟缁?
-	 * 	 2銆佸璞℃暟缁勪細璋冪敤Arrays.toString鏂规硶
-	 * </pre>
-	 *
-	 * @param obj     瀵硅薄
-	 * @param charset 瀛楃闆?
-	 * @return 瀛楃涓?
-	 */
-	public static String str(Object obj, Charset charset) {
-		if (null == obj) {
-			return null;
-		}
-
-		if (obj instanceof String) {
-			return (String) obj;
-		} else if (obj instanceof byte[]) {
-			return str((byte[]) obj, charset);
-		} else if (obj instanceof Byte[]) {
-			return str((Byte[]) obj, charset);
-		} else if (obj instanceof ByteBuffer) {
-			return str((ByteBuffer) obj, charset);
-		} else if (ArrayUtil.isArray(obj)) {
-			return ArrayUtil.toString(obj);
-		}
-
-		return obj.toString();
-	}
-
-	/**
-	 * 灏哹yte鏁扮粍杞负瀛楃涓?
-	 *
-	 * @param bytes   byte鏁扮粍
-	 * @param charset 瀛楃闆?
-	 * @return 瀛楃涓?
-	 */
-	public static String str(byte[] bytes, String charset) {
-		return str(bytes, CharsetUtil.charset(charset));
-	}
-
-	/**
-	 * 瑙ｇ爜瀛楄妭鐮?
-	 *
-	 * @param data    byte鏁扮粍
-	 * @param charset 瀛楃闆嗭紝濡傛灉姝ゅ瓧娈典负绌猴紝鍒欒В鐮佺殑缁撴灉鍙栧喅浜庡钩鍙?
-	 * @return 瑙ｇ爜鍚庣殑瀛楃涓?
-	 */
-	public static String str(byte[] data, Charset charset) {
-		if (data == null) {
-			return null;
-		}
-
-		if (null == charset) {
-			return new String(data);
-		}
-		return new String(data, charset);
-	}
-
-	/**
-	 * 灏咮yte鏁扮粍杞负瀛楃涓?
-	 *
-	 * @param bytes   byte鏁扮粍
-	 * @param charset 瀛楃闆?
-	 * @return 瀛楃涓?
-	 */
-	public static String str(Byte[] bytes, String charset) {
-		return str(bytes, CharsetUtil.charset(charset));
-	}
-
-	/**
-	 * 瑙ｇ爜瀛楄妭鐮?
-	 *
-	 * @param data    Byte鏁扮粍
-	 * @param charset 瀛楃闆嗭紝濡傛灉姝ゅ瓧娈典负绌猴紝鍒欒В鐮佺殑缁撴灉鍙栧喅浜庡钩鍙?
-	 * @return 瑙ｇ爜鍚庣殑瀛楃涓?
-	 */
-	public static String str(Byte[] data, Charset charset) {
-		if (data == null) {
-			return null;
-		}
-
-		byte[] bytes = new byte[data.length];
-		Byte dataByte;
-		for (int i = 0; i < data.length; i++) {
-			dataByte = data[i];
-			bytes[i] = (null == dataByte) ? -1 : dataByte;
-		}
-
-		return str(bytes, charset);
-	}
-
-	/**
-	 * 灏嗙紪鐮佺殑byteBuffer鏁版嵁杞崲涓哄瓧绗︿覆
-	 *
-	 * @param data    鏁版嵁
-	 * @param charset 瀛楃闆嗭紝濡傛灉涓虹┖浣跨敤褰撳墠绯荤粺瀛楃闆?
-	 * @return 瀛楃涓?
-	 */
-	public static String str(ByteBuffer data, String charset) {
-		if (data == null) {
-			return null;
-		}
-
-		return str(data, CharsetUtil.charset(charset));
-	}
-
-	/**
-	 * 灏嗙紪鐮佺殑byteBuffer鏁版嵁杞崲涓哄瓧绗︿覆
-	 *
-	 * @param data    鏁版嵁
-	 * @param charset 瀛楃闆嗭紝濡傛灉涓虹┖浣跨敤褰撳墠绯荤粺瀛楃闆?
-	 * @return 瀛楃涓?
-	 */
-	public static String str(ByteBuffer data, Charset charset) {
-		if (null == charset) {
-			charset = Charset.defaultCharset();
-		}
-		return charset.decode(data.duplicate()).toString();
-	}
-
-	/**
-	 * 璋冪敤瀵硅薄鐨則oString鏂规硶锛宯ull浼氳繑鍥炩€渘ull鈥?
-	 *
-	 * @param obj 瀵硅薄
-	 * @return 瀛楃涓?
-	 * @see String#valueOf(Object)
-	 * @since 4.1.3
-	 */
-	public static String toString(Object obj) {
-		return String.valueOf(obj);
-	}
-
-	/**
-	 * 璋冪敤瀵硅薄鐨則oString鏂规硶锛宯ull浼氳繑鍥瀧@code null}
-	 *
-	 * @param obj 瀵硅薄
-	 * @return 瀛楃涓?or {@code null}
-	 * @since 5.7.17
-	 */
-	public static String toStringOrNull(Object obj) {
-		return null == obj ? null : obj.toString();
-	}
-
-	/**
-	 * 璋冪敤瀵硅薄鐨則oString鏂规硶锛宯ull浼氳繑鍥炵┖瀛楃涓?""
-	 *
-	 * @param obj 瀵硅薄
-	 * @return {@link String }
-	 * @author Junwei Xu
-	 */
-	public static String toStringOrEmpty(Object obj) {
-		// obj涓虹┖鏃? 杩斿洖 null 鎴?"null" 閮戒笉閫傜敤閮ㄥ垎鍦烘櫙, 姝ゅ杩斿洖 "" 绌哄瓧绗︿覆
-		return null == obj ? EMPTY : obj.toString();
-	}
-
-	/**
-	 * 鍒涘缓StringBuilder瀵硅薄
-	 *
-	 * @return StringBuilder瀵硅薄
-	 */
-	public static StringBuilder builder() {
-		return new StringBuilder();
-	}
-
-	/**
-	 * 鍒涘缓StrBuilder瀵硅薄
-	 *
-	 * @return StrBuilder瀵硅薄
-	 * @since 4.0.1
-	 */
-	public static StrBuilder strBuilder() {
-		return StrBuilder.create();
-	}
-
-	/**
-	 * 鍒涘缓StringBuilder瀵硅薄
-	 *
-	 * @param capacity 鍒濆澶у皬
-	 * @return StringBuilder瀵硅薄
-	 */
-	public static StringBuilder builder(int capacity) {
-		return new StringBuilder(capacity);
-	}
-
-	/**
-	 * 鍒涘缓StrBuilder瀵硅薄
-	 *
-	 * @param capacity 鍒濆澶у皬
-	 * @return StrBuilder瀵硅薄
-	 * @since 4.0.1
-	 */
-	public static StrBuilder strBuilder(int capacity) {
-		return StrBuilder.create(capacity);
-	}
-
-	/**
-	 * 鑾峰緱StringReader
-	 *
-	 * @param str 瀛楃涓?
-	 * @return StringReader
-	 */
-	public static StringReader getReader(CharSequence str) {
-		if (null == str) {
-			return null;
-		}
-		return new StringReader(str.toString());
-	}
-
-	/**
-	 * 鑾峰緱StringWriter
-	 *
-	 * @return StringWriter
-	 */
-	public static StringWriter getWriter() {
-		return new StringWriter();
-	}
-
-	/**
-	 * 鍙嶈浆瀛楃涓?br>
-	 * 渚嬪锛歛bcd =銆媎cba
-	 *
-	 * @param str 琚弽杞殑瀛楃涓?
-	 * @return 鍙嶈浆鍚庣殑瀛楃涓?
-	 * @since 3.0.9
-	 */
-	public static String reverse(final String str) {
-		if (isBlank(str)) {
-			return str;
-		}
-		return new String(ArrayUtil.reverse(str.toCharArray()));
-	}
-
-	/**
-	 * 鍙嶈浆瀛楃涓?br>
-	 * 渚嬪锛歛bcd =銆媎cba
-	 * <p>
-	 * 璇ユ柟娉曟寜Unicode code point杩涜鍙嶈浆锛屾敮鎸乁nicode瀛楃鐨勬纭弽杞?
-	 * 纭繚澶嶆潅瀛楃涓嶄細琚媶鍒嗭紝濡傝〃鎯呯鍙风瓑澶氬瓧鑺傚瓧绗?
-	 * </p>
-	 *
-	 * @param str 琚弽杞殑瀛楃涓?
-	 * @return 鍙嶈浆鍚庣殑瀛楃涓诧紝濡傛灉杈撳叆涓簄ull鍒欒繑鍥瀗ull
-	 * @since 5.8.43
-	 */
-	public static String reverseByCodePoint(String str) {
-		if (null == str) {
-			return null;
-		}
-
-		//鎸塙nicode code point鏂瑰紡杩涜鍙嶈浆澶勭悊
-		StringBuilder result = new StringBuilder();
-		for (int i = str.length(); i > 0; ) {
-			//鑾峰彇鎸囧畾浣嶇疆鍓嶇殑code point
-			int codePoint = str.codePointBefore(i);
-			//鏍规嵁code point鐨勫瓧绗︽暟閲忚皟鏁寸储寮曚綅缃?
-			i -= Character.charCount(codePoint);
-			//灏哻ode point杩藉姞鍒扮粨鏋滀腑
-			result.appendCodePoint(codePoint);
-		}
-
-		return result.toString();
-	}
-
-	// ------------------------------------------------------------------------ fill
-
-	/**
-	 * 灏嗗凡鏈夊瓧绗︿覆濉厖涓鸿瀹氶暱搴︼紝濡傛灉宸叉湁瀛楃涓茶秴杩囪繖涓暱搴﹀垯杩斿洖杩欎釜瀛楃涓?br>
-	 * 瀛楃濉厖浜庡瓧绗︿覆鍓?
-	 *
-	 * @param str        琚～鍏呯殑瀛楃涓?
-	 * @param filledChar 濉厖鐨勫瓧绗?
-	 * @param len        濉厖闀垮害
-	 * @return 濉厖鍚庣殑瀛楃涓?
-	 * @since 3.1.2
-	 */
-	public static String fillBefore(String str, char filledChar, int len) {
-		return fill(str, filledChar, len, true);
-	}
-
-	/**
-	 * 灏嗗凡鏈夊瓧绗︿覆濉厖涓鸿瀹氶暱搴︼紝濡傛灉宸叉湁瀛楃涓茶秴杩囪繖涓暱搴﹀垯杩斿洖杩欎釜瀛楃涓?br>
-	 * 瀛楃濉厖浜庡瓧绗︿覆鍚?
-	 *
-	 * @param str        琚～鍏呯殑瀛楃涓?
-	 * @param filledChar 濉厖鐨勫瓧绗?
-	 * @param len        濉厖闀垮害
-	 * @return 濉厖鍚庣殑瀛楃涓?
-	 * @since 3.1.2
-	 */
-	public static String fillAfter(String str, char filledChar, int len) {
-		return fill(str, filledChar, len, false);
-	}
-
-	/**
-	 * 灏嗗凡鏈夊瓧绗︿覆濉厖涓鸿瀹氶暱搴︼紝濡傛灉宸叉湁瀛楃涓茶秴杩囪繖涓暱搴﹀垯杩斿洖杩欎釜瀛楃涓?
-	 *
-	 * @param str        琚～鍏呯殑瀛楃涓?
-	 * @param filledChar 濉厖鐨勫瓧绗?
-	 * @param len        濉厖闀垮害
-	 * @param isPre      鏄惁濉厖鍦ㄥ墠
-	 * @return 濉厖鍚庣殑瀛楃涓?
-	 * @since 3.1.2
-	 */
-	public static String fill(String str, char filledChar, int len, boolean isPre) {
-		if (null == str) {
-			str = "";
-		}
-		final int strLen = str.length();
-		if (strLen > len) {
-			return str;
-		}
-
-		String filledStr = StrUtil.repeat(filledChar, len - strLen);
-		return isPre ? filledStr.concat(str) : str.concat(filledStr);
-	}
-
-	/**
-	 * 璁＄畻涓や釜瀛楃涓茬殑鐩镐技搴?
-	 *
-	 * @param str1 瀛楃涓?
-	 * @param str2 瀛楃涓?
-	 * @return 鐩镐技搴?
-	 * @since 3.2.3
-	 */
-	public static double similar(String str1, String str2) {
-		if (str1 == null || str2 == null) return 0;
-		if (str1.equals(str2)) return 1.0;
-		final int maxLen = Math.max(str1.length(), str2.length());
-		if (maxLen == 0) return 1.0;
-		int distance = 0;
-		final char[] chars1 = str1.toCharArray();
-		final char[] chars2 = str2.toCharArray();
-		final int minLen = Math.min(chars1.length, chars2.length);
-		for (int i = 0; i < minLen; i++) {
-			if (chars1[i] != chars2[i]) distance++;
-		}
-		distance += Math.abs(chars1.length - chars2.length);
-		return 1.0 - (double) distance / maxLen;
-	}
-
-	/**
-	 * 璁＄畻涓や釜瀛楃涓茬殑鐩镐技搴︾櫨鍒嗘瘮
-	 *
-	 * @param str1  瀛楃涓?
-	 * @param str2  瀛楃涓?
-	 * @param scale 鐩镐技搴?
-	 * @return 鐩镐技搴︾櫨鍒嗘瘮
-	 * @since 3.2.3
-	 */
-	public static String similar(String str1, String str2, int scale) {
-		final double similar = similar(str1, str2);
-		return String.format("%." + scale + "f", similar * 100) + "%";
-	}
-
-	/**
-	 * 鐢熸垚闅忔満UUID
-	 *
-	 * @return UUID瀛楃涓?
-	 * @see IdUtil#randomUUID()
-	 * @since 4.0.10
-	 */
-	public static String uuid() {
-		return IdUtil.randomUUID();
-	}
-
-	/**
-	 * 鏍煎紡鍖栨枃鏈紝浣跨敤 {varName} 鍗犱綅<br>
-	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=銆?aValue and bValue
-	 *
-	 * @param template 鏂囨湰妯℃澘锛岃鏇挎崲鐨勯儴鍒嗙敤 {key} 琛ㄧず
-	 * @param map      鍙傛暟鍊煎
-	 * @return 鏍煎紡鍖栧悗鐨勬枃鏈?
-	 */
-	public static String format(CharSequence template, Map<?, ?> map) {
-		return format(template, map, true);
-	}
-
-	/**
-	 * 鏍煎紡鍖栨枃鏈紝浣跨敤 {varName} 鍗犱綅<br>
-	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=銆?aValue and bValue
-	 *
-	 * @param template   鏂囨湰妯℃澘锛岃鏇挎崲鐨勯儴鍒嗙敤 {key} 琛ㄧず
-	 * @param map        鍙傛暟鍊煎
-	 * @param ignoreNull 鏄惁蹇界暐 {@code null} 鍊硷紝蹇界暐鍒?{@code null} 鍊煎搴旂殑鍙橀噺涓嶈鏇挎崲锛屽惁鍒欐浛鎹负""
-	 * @return 鏍煎紡鍖栧悗鐨勬枃鏈?
-	 * @since 5.4.3
-	 */
-	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
-		if (template == null) return null;
-		String result = template.toString();
-		if (map != null) {
-			for (java.util.Map.Entry<?, ?> entry : map.entrySet()) {
-				Object key = entry.getKey();
-				Object value = entry.getValue();
-				if (ignoreNull && value == null) continue;
-				String placeholder = "{" + key + "}";
-				result = result.replace(placeholder, value != null ? value.toString() : "");
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * 鎴柇瀛楃涓诧紝浣跨敤鍏舵寜鐓TF-8缂栫爜涓哄瓧鑺傚悗涓嶈秴杩噈axBytes闀垮害銆傛埅鏂悗鑷姩杩藉姞鐪佺暐鍙?...)
-	 * 鐢ㄤ簬瀛樺偍鏁版嵁搴搗archar涓旂紪鐮佷负UTF-8鐨勫瓧娈?
-	 *
-	 * @param str      java瀛楃涓?
-	 * @param maxBytes 鏈€澶у瓧鑺傞暱搴?
-	 * @return 鎴柇鍚庣殑瀛楃
-	 */
-	public static String truncateUtf8(String str, int maxBytes) {
-		Charset charset = StandardCharsets.UTF_8;
-		//UTF-8缂栫爜鍗曚釜瀛楃鏈€澶ч暱搴?
-		return truncateByByteLength(str, charset, maxBytes, 4, true);
-	}
-
-	/**
-	 * 鎴柇瀛楃涓诧紝浣跨敤鍏舵寜鐓ф寚瀹氱紪鐮佷负瀛楄妭鍚庝笉瓒呰繃maxBytes闀垮害<br>
-	 * 姝ゆ柟娉曠敤浜庢埅鍙栨€籦ytes鏁颁笉瓒呰繃鎸囧畾闀垮害锛屽鏋滃瓧绗﹀嚭娌℃湁瓒呭嚭鍘熸牱杈撳嚭锛屽鏋滆秴鍑轰簡锛屽垯鎴彇鎺夎秴鍑洪儴鍒嗭紝骞跺彲閫夋坊鍔?..锛?
-	 * 浣嗘槸娣诲姞鈥?..鈥濆悗鎬婚暱搴︿篃涓嶈秴杩囬檺鍒堕暱搴︺€?
-	 *
-	 * @param str            鍘熷瀛楃涓?
-	 * @param charset        鎸囧畾缂栫爜
-	 * @param maxBytesLength 鏈€澶у瓧鑺傛暟
-	 * @param factor         閫熺畻鍥犲瓙锛屽彇璇ョ紪鐮佷笅鍗曚釜瀛楃鐨勬渶澶у彲鑳藉瓧鑺傛暟
-	 * @param appendDots     鎴柇鍚庢槸鍚﹁拷鍔犵渷鐣ュ彿...锛屽鏋渕axBytesLength灏忎簬鐪佺暐鍙烽暱搴︼紝鍒欎笉娣诲姞...
-	 * @return 鎴柇鍚庣殑瀛楃涓?
-	 */
-	public static String truncateByByteLength(String str, Charset charset, int maxBytesLength, int factor,
-											  boolean appendDots) {
-		//瀛楃鏁?閫熺畻鍥犲瓙<=鏈€澶у瓧鑺傛暟
-		if (str == null || str.length() * factor <= maxBytesLength) {
-			return str;
-		}
-		final byte[] sba = str.getBytes(charset);
-		if (sba.length <= maxBytesLength) {
-			return str;
-		}
-		//闄愬埗瀛楄妭鏁?
-		final int dotsBytesLength = "...".getBytes(charset).length;
-		final int limitBytes;
-		// issue#IDFTJS 淇鎴柇鍚庤拷鍔犵渷鐣ュ彿...瀵艰嚧瓒呭嚭闄愬埗闀垮害鐨勯棶棰?
-		if (appendDots && maxBytesLength > dotsBytesLength) {
-			limitBytes = maxBytesLength - "...".getBytes(charset).length;
-		} else {
-			limitBytes = maxBytesLength;
-		}
-		final ByteBuffer bb = ByteBuffer.wrap(sba, 0, limitBytes);
-		final CharBuffer cb = CharBuffer.allocate(limitBytes);
-		final CharsetDecoder decoder = charset.newDecoder();
-		//蹇界暐琚埅鏂殑瀛楃
-		decoder.onMalformedInput(CodingErrorAction.IGNORE);
-		decoder.decode(bb, cb, true);
-		decoder.flush(cb);
-		final String result = new String(cb.array(), 0, cb.position());
-		if (appendDots && maxBytesLength > dotsBytesLength) {
-			return result + "...";
-		}
-		return result;
-	}
-
-	// NamingCase toSymbolCase implementation moved to public toSymbolCase above
-
-	/**
-	 * 将连接符方式命名的字符串转换为驼峰式。
-	 *
-	 * @param name   转换前的自定义方式命名的字符串
-	 * @param symbol 原字符串中的连接符
-	 * @return 转换后的驼峰式命名的字符串
-	 */
-	private static String toCamelCaseInternal(CharSequence name, char symbol) {
-		if (null == name) {
-			return null;
-		}
-		final String name2 = name.toString();
-		if (name2.indexOf(symbol) != -1) {
-			final int length = name2.length();
-			final StringBuilder sb = new StringBuilder(length);
-			boolean upperCase = false;
-			for (int i = 0; i < length; i++) {
-				char c = name2.charAt(i);
-				if (c == symbol) {
-					upperCase = true;
-				} else if (upperCase) {
-					sb.append(Character.toUpperCase(c));
-					upperCase = false;
-				} else {
-					sb.append(Character.toLowerCase(c));
-				}
-			}
-			return sb.toString();
-		} else {
-			return name2;
-		}
-	}
-
-	// ==================== stringBuilder methods ====================
-
-	/**
-	 * 创建StringBuilder对象
-	 *
-	 * @return StringBuilder对象
-	 */
-	public static StringBuilder stringBuilder() {
-		return new StringBuilder();
-	}
-
-	/**
-	 * 创建StringBuilder对象
-	 *
-	 * @param capacity 初始容量
-	 * @return StringBuilder对象
-	 */
-	public static StringBuilder stringBuilder(int capacity) {
-		return new StringBuilder(capacity);
-	}
-
-	/**
-	 * char[] 转 String
-	 *
-	 * @param chars 字符数组
-	 * @return 字符串
-	 */
-	public static String str(char[] chars) {
-		return chars == null ? null : new String(chars);
-	}
-
+public final class StrUtil {
+
+    /**
+     * 私有构造器.
+     */
+    private StrUtil() {
+    }
+
+    // ==================== StrPool constants ====================
+
+    /**
+    * 字符常量：空格符 {@code ' '}.
+    */
+    public static final char C_SPACE = CharPool.SPACE;
+    /**
+    * 字符常量：制表符 {@code '\t'}.
+    */
+    public static final char C_TAB = CharPool.TAB;
+    /**
+    * 字符常量：点 {@code '.'}.
+    */
+    public static final char C_DOT = CharPool.DOT;
+    /**
+    * 字符常量：斜杠 {@code '/'}.
+    */
+    public static final char C_SLASH = CharPool.SLASH;
+    /**
+    * 字符常量：反斜杠 {@code '\\'}.
+    */
+    public static final char C_BACKSLASH = CharPool.BACKSLASH;
+    /**
+    * 字符常量：回车符 {@code '\r'}.
+    */
+    public static final char C_CR = CharPool.CR;
+    /**
+    * 字符常量：换行符 {@code '\n'}.
+    */
+    public static final char C_LF = CharPool.LF;
+    /**
+    * 字符常量：下划线 {@code '_'}.
+    */
+    public static final char C_UNDERLINE = CharPool.UNDERLINE;
+    /**
+    * 字符常量：逗号 {@code ','}.
+    */
+    public static final char C_COMMA = CharPool.COMMA;
+    /**
+    * 字符常量：花括号（左） <code>'{'</code>.
+    */
+    public static final char C_DELIM_START = CharPool.DELIM_START;
+    /**
+    * 字符常量：花括号（右） <code>'}'</code>.
+    */
+    public static final char C_DELIM_END = CharPool.DELIM_END;
+    /**
+    * 字符常量：中括号（左） {@code '['}.
+    */
+    public static final char C_BRACKET_START = CharPool.BRACKET_START;
+    /**
+    * 字符常量：中括号（右） {@code ']'}.
+    */
+    public static final char C_BRACKET_END = CharPool.BRACKET_END;
+    /**
+    * 字符常量：冒号 {@code ':'}.
+    */
+    public static final char C_COLON = CharPool.COLON;
+    /**
+    * 字符常量：艾特 {@code '@'}.
+    */
+    public static final char C_AT = CharPool.AT;
+    /**
+    * 字符串常量：制表符 {@code "\t"}.
+    */
+    public static final String TAB = "\t";
+    /**
+    * 字符串常量：点 {@code "."}.
+    */
+    public static final String DOT = ".";
+    /**
+    * 字符串常量：双点 {@code ".."} <br>.
+    * 用途：作为指向上级文件夹的路径，如：{@code "../path"}
+    */
+    public static final String DOUBLE_DOT = "..";
+    /**
+    * 字符串常量：斜杠 {@code "/"}.
+    */
+    public static final String SLASH = "/";
+    /**
+    * 字符串常量：反斜杠 {@code "\\"}.
+    */
+    public static final String BACKSLASH = "\\";
+    /**
+    * 字符串常量：回车符 {@code "\r"} <br>.
+    * 解释：该字符常用于表示 Linux 系统和 MacOS 系统下的文本换行
+    */
+    public static final String CR = "\r";
+    /**
+    * 字符串常量：换行符 {@code "\n"}.
+    */
+    public static final String LF = "\n";
+    /**
+    * 字符串常量：Windows 换行 {@code "\r\n"} <br>.
+    * 解释：该字符串常用于表示 Windows 系统下的文本换行
+    */
+    public static final String CRLF = "\r\n";
+    /**
+    * 字符串常量：下划线 {@code "_"}.
+    */
+    public static final String UNDERLINE = "_";
+    /**
+    * 字符串常量：减号（连接符） {@code "-"}.
+    */
+    public static final String DASHED = "-";
+    /**
+    * 字符串常量：逗号 {@code ","}.
+    */
+    public static final String COMMA = ",";
+    /**
+    * 字符串常量：花括号（左） <code>"{"</code>.
+    */
+    public static final String DELIM_START = "{";
+    /**
+    * 字符串常量：花括号（右） <code>"}"</code>.
+    */
+    public static final String DELIM_END = "}";
+    /**
+    * 字符串常量：中括号（左） {@code "["}.
+    */
+    public static final String BRACKET_START = "[";
+    /**
+    * 字符串常量：中括号（右） {@code "]"}.
+    */
+    public static final String BRACKET_END = "]";
+    /**
+    * 字符串常量：冒号 {@code ":"}.
+    */
+    public static final String COLON = ":";
+    /**
+    * 字符串常量：艾特 {@code "@"}.
+    */
+    public static final String AT = "@";
+    /**
+    * 字符串常量：HTML 不间断空格转义 {@code "&nbsp;" -> " "}.
+    */
+    public static final String HTML_NBSP = XmlUtil.NBSP;
+    /**
+    * 字符串常量：HTML And 符转义 {@code "&amp;" -> "&"}.
+    */
+    public static final String HTML_AMP = XmlUtil.AMP;
+    /**
+    * 字符串常量：HTML 双引号转义 {@code "&quot;" -> "\""}.
+    */
+    public static final String HTML_QUOTE = XmlUtil.QUOTE;
+    /**
+    * 字符串常量：HTML 单引号转义 {@code "&apos" -> "'"}.
+    */
+    public static final String HTML_APOS = XmlUtil.APOS;
+    /**
+    * 字符串常量：HTML 小于号转义 {@code "&lt;" -> "<"}.
+    */
+    public static final String HTML_LT = XmlUtil.LT;
+    /**
+    * 字符串常量：HTML 大于号转义 {@code "&gt;" -> ">"}.
+    */
+    public static final String HTML_GT = XmlUtil.GT;
+    /**
+    * 字符串常量：空 JSON {@code "{}"}.
+    */
+    public static final String EMPTY_JSON = "{}";
+
+    // ==================== CharSequenceUtil methods ====================
+
+
+
+    /**
+     * 索引值：{@code -1}.
+     */
+    public static final int INDEX_NOT_FOUND = Finder.INDEX_NOT_FOUND;
+
+    /**
+     * 字符串常量：{@code "null"} <br>.
+     * 注意：{@code "null" != null}
+     */
+    public static final String NULL = "null";
+
+    /**
+     * 字符串常量：空字符串 {@code ""}.
+     */
+    public static final String EMPTY = "";
+
+    /**
+     * 字符串常量：空格符 {@code " "}.
+     */
+    public static final String SPACE = " ";
+
+    /**
+     * <p>字符串是否为空白，空白的定义如下：.</p>
+     * <ol>
+     *     <li>{@code null}</li>
+     *     <li>空字符串：{@code ""}</li>
+     *     <li>空格、全角空格、制表符、换行符，等不可见字符</li>
+     * </ol>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.isBlank(null)     // true}</li>
+     *     <li>{@code StrUtil.isBlank("")       // true}</li>
+     *     <li>{@code StrUtil.isBlank(" \t\n")  // true}</li>
+     *     <li>{@code StrUtil.isBlank("abc")    // false}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isEmpty(CharSequence)} 的区别是：
+     * 该方法会校验空白字符，且性能相对于 {@link #isEmpty(CharSequence)} 略慢。</p>
+     * <br>
+     *
+     * <p>建议：</p>
+     * <ul>
+     *     <li>该方法建议仅对于客户端（或第三方接口）传入的参数使用该方法。</li>
+     *     <li>需要同时校验多个字符串时，建议采用 {@link #hasBlank(CharSequence...)} 或 {@link #isAllBlank(CharSequence...)}</li>
+     * </ul>
+     *
+     * @param str 被检测的字符串
+     * @return 若为空白，则返回 true
+     * @see #isEmpty(CharSequence)
+     */
+    public static boolean isBlank(final CharSequence str) {
+        final int length;
+        if ((str == null) || ((length = str.length()) == 0)) {
+            return true;
+        }
+
+        for (int i = 0; i < length; i++) {
+            // 只要有一个非空字符即为非空字符串
+            if (false == CharUtil.isBlankChar(str.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * <p>字符串是否为非空白，非空白的定义如下：.</p>
+     * <ol>
+     *     <li>不为 {@code null}</li>
+     *     <li>不为空字符串：{@code ""}</li>
+     *     <li>不为空格、全角空格、制表符、换行符，等不可见字符</li>
+     * </ol>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.isNotBlank(null)     // false}</li>
+     *     <li>{@code StrUtil.isNotBlank("")       // false}</li>
+     *     <li>{@code StrUtil.isNotBlank(" \t\n")  // false}</li>
+     *     <li>{@code StrUtil.isNotBlank("abc")    // true}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isNotEmpty(CharSequence)} 的区别是：
+     * 该方法会校验空白字符，且性能相对于 {@link #isNotEmpty(CharSequence)} 略慢。</p>
+     * <p>建议：仅对于客户端（或第三方接口）传入的参数使用该方法。</p>
+     *
+     * @param str 被检测的字符串
+     * @return 是否为非空
+     * @see #isBlank(CharSequence)
+     */
+    public static boolean isNotBlank(final CharSequence str) {
+        return !isBlank(str);
+    }
+
+    /**
+     * <p>指定字符串数组中，是否包含空字符串.</p>
+     * <p>如果指定的字符串数组的长度为 0，或者其中的任意一个元素是空字符串，则返回 true。</p>
+     * <br>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.hasBlank()                  // true}</li>
+     *     <li>{@code StrUtil.hasBlank("", null, " ")     // true}</li>
+     *     <li>{@code StrUtil.hasBlank("123", " ")        // true}</li>
+     *     <li>{@code StrUtil.hasBlank("123", "abc")      // false}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isAllBlank(CharSequence...)} 的区别在于：</p>
+     * <ul>
+     *     <li>hasBlank(CharSequence...)            等价于 {@code isBlank(...) || isBlank(...) || ...}</li>
+     *     <li>{@link #isAllBlank(CharSequence...)} 等价于 {@code isBlank(...) && isBlank(...) && ...}</li>
+     * </ul>
+     *
+     * @param strs 字符串列表
+     * @return 是否包含空字符串
+     */
+    public static boolean hasBlank(final CharSequence... strs) {
+        if (ArrayUtil.isEmpty(strs)) {
+            return true;
+        }
+
+        for (CharSequence str : strs) {
+            if (isBlank(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * <p>指定字符串数组中的元素，是否全部为空字符串.</p>
+     * <p>如果指定的字符串数组的长度为 0，或者所有元素都是空字符串，则返回 true。</p>
+     * <br>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.isAllBlank()                  // true}</li>
+     *     <li>{@code StrUtil.isAllBlank("", null, " ")     // true}</li>
+     *     <li>{@code StrUtil.isAllBlank("123", " ")        // false}</li>
+     *     <li>{@code StrUtil.isAllBlank("123", "abc")      // false}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #hasBlank(CharSequence...)} 的区别在于：</p>
+     * <ul>
+     *     <li>{@link #hasBlank(CharSequence...)}   等价于 {@code isBlank(...) || isBlank(...) || ...}</li>
+     *     <li>isAllBlank(CharSequence...)          等价于 {@code isBlank(...) && isBlank(...) && ...}</li>
+     * </ul>
+     *
+     * @param strs 字符串列表
+     * @return 所有字符串是否为空白
+     */
+    public static boolean isAllBlank(final CharSequence... strs) {
+        if (ArrayUtil.isEmpty(strs)) {
+            return true;
+        }
+
+        for (CharSequence str : strs) {
+            if (isNotBlank(str)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * <p>字符串是否为空，空的定义如下：.</p>
+     * <ol>
+     *     <li>{@code null}</li>
+     *     <li>空字符串：{@code ""}</li>
+     * </ol>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.isEmpty(null)     // true}</li>
+     *     <li>{@code StrUtil.isEmpty("")       // true}</li>
+     *     <li>{@code StrUtil.isEmpty(" \t\n")  // false}</li>
+     *     <li>{@code StrUtil.isEmpty("abc")    // false}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isBlank(CharSequence)} 的区别是：该方法不校验空白字符。</p>
+     * <p>建议：</p>
+     * <ul>
+     *     <li>该方法建议用于工具类或任何可以预期的方法参数的校验中。</li>
+     *     <li>需要同时校验多个字符串时，建议采用 {@link #hasEmpty(CharSequence...)} 或 {@link #isAllEmpty(CharSequence...)}</li>
+     * </ul>
+     *
+     * @param str 被检测的字符串
+     * @return 是否为空
+     * @see #isBlank(CharSequence)
+     */
+    public static boolean isEmpty(final CharSequence str) {
+        return str == null || str.length() == 0;
+    }
+
+    /**
+     * <p>字符串是否为非空白，非空白的定义如下：.</p>
+     * <ol>
+     *     <li>不为 {@code null}</li>
+     *     <li>不为空字符串：{@code ""}</li>
+     * </ol>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.isNotEmpty(null)     // false}</li>
+     *     <li>{@code StrUtil.isNotEmpty("")       // false}</li>
+     *     <li>{@code StrUtil.isNotEmpty(" \t\n")  // true}</li>
+     *     <li>{@code StrUtil.isNotEmpty("abc")    // true}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isNotBlank(CharSequence)} 的区别是：该方法不校验空白字符。</p>
+     * <p>建议：该方法建议用于工具类或任何可以预期的方法参数的校验中。</p>
+     *
+     * @param str 被检测的字符串
+     * @return 是否为非空
+     * @see #isEmpty(CharSequence)
+     */
+    public static boolean isNotEmpty(final CharSequence str) {
+        return !isEmpty(str);
+    }
+
+    /**
+     * 当给定字符串为null时，转换为Empty.
+     *
+     * @param str 被检查的字符串
+     * @return 原字符串或者空串
+     * @see #nullToEmpty(CharSequence)
+     * @since 4.6.3
+     */
+    public static String emptyIfNull(final CharSequence str) {
+        return nullToEmpty(str);
+    }
+
+    /**
+     * 当给定字符串为null时，转换为Empty.
+     *
+     * @param str 被转换的字符串
+     * @return 转换后的字符串
+     */
+    public static String nullToEmpty(final CharSequence str) {
+        return nullToDefault(str, EMPTY);
+    }
+
+    /**
+     * 如果字符串是 {@code null}，则返回指定默认字符串，否则返回字符串本身.
+     *
+     * <pre>
+     * nullToDefault(null, &quot;default&quot;)  = &quot;default&quot;
+     * nullToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;&quot;
+     * nullToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;  &quot;
+     * nullToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
+     * </pre>
+     *
+     * @param str        要转换的字符串
+     * @param defaultStr 默认字符串
+     * @return 字符串本身或指定的默认字符串
+     */
+    public static String nullToDefault(final CharSequence str, final String defaultStr) {
+        return (str == null) ? defaultStr : str.toString();
+    }
+
+    /**
+     * 如果字符串是{@code null}或者&quot;&quot;，则返回指定默认字符串，否则返回字符串本身.
+     *
+     * <pre>
+     * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
+     * emptyToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
+     * emptyToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;  &quot;
+     * emptyToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
+     * </pre>
+     *
+     * @param str        要转换的字符串
+     * @param defaultStr 默认字符串
+     * @return 字符串本身或指定的默认字符串
+     * @since 4.1.0
+     */
+    public static String emptyToDefault(final CharSequence str, final String defaultStr) {
+        return isEmpty(str) ? defaultStr : str.toString();
+    }
+
+    /**
+     * 如果字符串是{@code null}或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身.
+     *
+     * <pre>
+     * blankToDefault(null, &quot;default&quot;)  = &quot;default&quot;
+     * blankToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
+     * blankToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;default&quot;
+     * blankToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
+     * </pre>
+     *
+     * @param str        要转换的字符串
+     * @param defaultStr 默认字符串
+     * @return 字符串本身或指定的默认字符串
+     * @since 4.1.0
+     */
+    public static String blankToDefault(final CharSequence str, final String defaultStr) {
+        return isBlank(str) ? defaultStr : str.toString();
+    }
+
+    /**
+     * 当给定字符串为空字符串时，转换为{@code null}.
+     *
+     * @param str 被转换的字符串
+     * @return 转换后的字符串
+     */
+    public static String emptyToNull(final CharSequence str) {
+        return isEmpty(str) ? null : str.toString();
+    }
+
+    /**
+     * <p>是否包含空字符串.</p>
+     * <p>如果指定的字符串数组的长度为 0，或者其中的任意一个元素是空字符串，则返回 true。</p>
+     * <br>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.hasEmpty()                  // true}</li>
+     *     <li>{@code StrUtil.hasEmpty("", null)          // true}</li>
+     *     <li>{@code StrUtil.hasEmpty("123", "")         // true}</li>
+     *     <li>{@code StrUtil.hasEmpty("123", "abc")      // false}</li>
+     *     <li>{@code StrUtil.hasEmpty(" ", "\t", "\n")   // false}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isAllEmpty(CharSequence...)} 的区别在于：</p>
+     * <ul>
+     *     <li>hasEmpty(CharSequence...)            等价于 {@code isEmpty(...) || isEmpty(...) || ...}</li>
+     *     <li>{@link #isAllEmpty(CharSequence...)} 等价于 {@code isEmpty(...) && isEmpty(...) && ...}</li>
+     * </ul>
+     *
+     * @param strs 字符串列表
+     * @return 是否包含空字符串
+     */
+    public static boolean hasEmpty(final CharSequence... strs) {
+        if (ArrayUtil.isEmpty(strs)) {
+            return true;
+        }
+
+        for (CharSequence str : strs) {
+            if (isEmpty(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * <p>指定字符串数组中的元素，是否全部为空字符串.</p>
+     * <p>如果指定的字符串数组的长度为 0，或者所有元素都是空字符串，则返回 true。</p>
+     * <br>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.isAllEmpty()                  // true}</li>
+     *     <li>{@code StrUtil.isAllEmpty("", null)          // true}</li>
+     *     <li>{@code StrUtil.isAllEmpty("123", "")         // false}</li>
+     *     <li>{@code StrUtil.isAllEmpty("123", "abc")      // false}</li>
+     *     <li>{@code StrUtil.isAllEmpty(" ", "\t", "\n")   // false}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #hasEmpty(CharSequence...)} 的区别在于：</p>
+     * <ul>
+     *     <li>{@link #hasEmpty(CharSequence...)}   等价于 {@code isEmpty(...) || isEmpty(...) || ...}</li>
+     *     <li>isAllEmpty(CharSequence...)          等价于 {@code isEmpty(...) && isEmpty(...) && ...}</li>
+     * </ul>
+     *
+     * @param strs 字符串列表
+     * @return 所有字符串是否为空白
+     */
+    public static boolean isAllEmpty(final CharSequence... strs) {
+        if (ArrayUtil.isEmpty(strs)) {
+            return true;
+        }
+
+        for (CharSequence str : strs) {
+            if (isNotEmpty(str)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * <p>指定字符串数组中的元素，是否都不为空字符串.</p>
+     * <p>如果指定的字符串数组的长度不为 0，或者所有元素都不是空字符串，则返回 true。</p>
+     * <br>
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.isAllNotEmpty()                  // false}</li>
+     *     <li>{@code StrUtil.isAllNotEmpty("", null)          // false}</li>
+     *     <li>{@code StrUtil.isAllNotEmpty("123", "")         // false}</li>
+     *     <li>{@code StrUtil.isAllNotEmpty("123", "abc")      // true}</li>
+     *     <li>{@code StrUtil.isAllNotEmpty(" ", "\t", "\n")   // true}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isAllEmpty(CharSequence...)} 的区别在于：</p>
+     * <ul>
+     *     <li>{@link #isAllEmpty(CharSequence...)}    等价于 {@code isEmpty(...) && isEmpty(...) && ...}</li>
+     *     <li>isAllNotEmpty(CharSequence...)          等价于 {@code !isEmpty(...) && !isEmpty(...) && ...}</li>
+     * </ul>
+     *
+     * @param args 字符串数组
+     * @return 所有字符串是否都不为为空白
+     * @since 5.3.6
+     */
+    public static boolean isAllNotEmpty(final CharSequence... args) {
+        return false == hasEmpty(args);
+    }
+
+    /**
+     * 是否全都不为{@code null}或空对象或空白符的对象，通过{@link #hasBlank(CharSequence...)} 判断元素.
+     *
+     * @param args 被检查的对象,一个或者多个
+     * @return 是否都不为空
+     * @since 5.3.6
+     */
+    public static boolean isAllNotBlank(final CharSequence... args) {
+        return false == hasBlank(args);
+    }
+
+    /**
+     * 检查字符串是否为null、“null”、“undefined”.
+     *
+     * @param str 被检查的字符串
+     * @return 是否为null、“null”、“undefined”
+     * @since 4.0.10
+     */
+    public static boolean isNullOrUndefined(final CharSequence str) {
+        if (null == str) {
+            return true;
+        }
+        return isNullOrUndefinedStr(str);
+    }
+
+    /**
+     * 检查字符串是否为null、“”、“null”、“undefined”.
+     *
+     * @param str 被检查的字符串
+     * @return 是否为null、“”、“null”、“undefined”
+     * @since 4.0.10
+     */
+    public static boolean isEmptyOrUndefined(final CharSequence str) {
+        if (isEmpty(str)) {
+            return true;
+        }
+        return isNullOrUndefinedStr(str);
+    }
+
+    /**
+     * 检查字符串是否为null、空白串、“null”、“undefined”.
+     *
+     * @param str 被检查的字符串
+     * @return 是否为null、空白串、“null”、“undefined”
+     * @since 4.0.10
+     */
+    public static boolean isBlankOrUndefined(final CharSequence str) {
+        if (isBlank(str)) {
+            return true;
+        }
+        return isNullOrUndefinedStr(str);
+    }
+
+    /**
+     * 是否为“null”、“undefined”，不做空指针检查.
+     *
+     * @param str 字符串
+     * @return 是否为“null”、“undefined”
+     */
+    private static boolean isNullOrUndefinedStr(final CharSequence str) {
+        String strString = str.toString().trim();
+        return NULL.equals(strString) || "undefined".equals(strString);
+    }
+
+    // ------------------------------------------------------------------------ Trim
+
+    /**
+     * 除去字符串头尾部的空白，如果字符串是{@code null}，依然返回{@code null}.
+     *
+     * <p>
+     * 注意，和{@link String#trim()}不同，此方法使用{@link CharUtil#isBlankChar(char)} 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+     *
+     * <pre>
+     * trim(null)          = null
+     * trim(&quot;&quot;)            = &quot;&quot;
+     * trim(&quot;     &quot;)       = &quot;&quot;
+     * trim(&quot;abc&quot;)         = &quot;abc&quot;
+     * trim(&quot;    abc    &quot;) = &quot;abc&quot;
+     * </pre>
+     *
+     * @param str 要处理的字符串
+     * @return 除去头尾空白的字符串，如果原字串为{@code null}，则返回{@code null}
+     */
+    public static String trim(final CharSequence str) {
+        return (null == str) ? null : trim(str, 0);
+    }
+
+    /**
+     * 除去字符串头尾部的空白，如果字符串是{@code null}，返回{@code ""}.
+     *
+     * <pre>
+     * StrUtil.trimToEmpty(null)          = ""
+     * StrUtil.trimToEmpty("")            = ""
+     * StrUtil.trimToEmpty("     ")       = ""
+     * StrUtil.trimToEmpty("abc")         = "abc"
+     * StrUtil.trimToEmpty("    abc    ") = "abc"
+     * </pre>
+     *
+     * @param str 字符串
+     * @return 去除两边空白符后的字符串, 如果为null返回""
+     * @since 3.1.1
+     */
+    public static String trimToEmpty(final CharSequence str) {
+        return str == null ? EMPTY : trim(str);
+    }
+
+    /**
+     * 除去字符串头尾部的空白，如果字符串是{@code null}或者""，返回{@code null}.
+     *
+     * <pre>
+     * StrUtil.trimToNull(null)          = null
+     * StrUtil.trimToNull("")            = null
+     * StrUtil.trimToNull("     ")       = null
+     * StrUtil.trimToNull("abc")         = "abc"
+     * StrUtil.trimToEmpty("    abc    ") = "abc"
+     * </pre>
+     *
+     * @param str 字符串
+     * @return 去除两边空白符后的字符串, 如果为空返回null
+     * @since 3.2.1
+     */
+    public static String trimToNull(final CharSequence str) {
+        final String trimStr = trim(str);
+        return EMPTY.equals(trimStr) ? null : trimStr;
+    }
+
+    /**
+     * 除去字符串头部的空白，如果字符串是{@code null}，则返回{@code null}.
+     *
+     * <p>
+     * 注意，和{@link String#trim()}不同，此方法使用{@link CharUtil#isBlankChar(char)} 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+     *
+     * <pre>
+     * trimStart(null)         = null
+     * trimStart(&quot;&quot;)           = &quot;&quot;
+     * trimStart(&quot;abc&quot;)        = &quot;abc&quot;
+     * trimStart(&quot;  abc&quot;)      = &quot;abc&quot;
+     * trimStart(&quot;abc  &quot;)      = &quot;abc  &quot;
+     * trimStart(&quot; abc &quot;)      = &quot;abc &quot;
+     * </pre>
+     *
+     * @param str 要处理的字符串
+     * @return 除去空白的字符串，如果原字串为{@code null}或结果字符串为{@code ""}，则返回 {@code null}
+     */
+    public static String trimStart(final CharSequence str) {
+        return trim(str, -1);
+    }
+
+    /**
+     * 除去字符串尾部的空白，如果字符串是{@code null}，则返回{@code null}.
+     *
+     * <p>
+     * 注意，和{@link String#trim()}不同，此方法使用{@link CharUtil#isBlankChar(char)} 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+     *
+     * <pre>
+     * trimEnd(null)       = null
+     * trimEnd(&quot;&quot;)         = &quot;&quot;
+     * trimEnd(&quot;abc&quot;)      = &quot;abc&quot;
+     * trimEnd(&quot;  abc&quot;)    = &quot;  abc&quot;
+     * trimEnd(&quot;abc  &quot;)    = &quot;abc&quot;
+     * trimEnd(&quot; abc &quot;)    = &quot; abc&quot;
+     * </pre>
+     *
+     * @param str 要处理的字符串
+     * @return 除去空白的字符串，如果原字串为{@code null}或结果字符串为{@code ""}，则返回 {@code null}
+     */
+    public static String trimEnd(final CharSequence str) {
+        return trim(str, 1);
+    }
+
+    /**
+     * 除去字符串头尾部的空白符，如果字符串是{@code null}，依然返回{@code null}.
+     *
+     * @param str  要处理的字符串
+     * @param mode {@code -1}表示trimStart，{@code 0}表示trim全部， {@code 1}表示trimEnd
+     * @return 除去指定字符后的的字符串，如果原字串为{@code null}，则返回{@code null}
+     */
+    public static String trim(final CharSequence str, final int mode) {
+        return trim(str, mode, CharUtil::isBlankChar);
+    }
+
+    /**
+     * 按照断言，除去字符串头尾部的断言为真的字符，如果字符串是{@code null}，依然返回{@code null}.
+     *
+     * @param str       要处理的字符串
+     * @param mode      {@code -1}表示trimStart，{@code 0}表示trim全部， {@code 1}表示trimEnd
+     * @param predicate 断言是否过掉字符，返回{@code true}表述过滤掉，{@code false}表示不过滤
+     * @return 除去指定字符后的的字符串，如果原字串为{@code null}，则返回{@code null}
+     * @since 5.7.4
+     */
+    public static String trim(final CharSequence str, final int mode, final Predicate<Character> predicate) {
+        String result;
+        if (str == null) {
+            result = null;
+        } else {
+            int length = str.length();
+            int start = 0;
+            int end = length; // 扫描字符串头部
+            if (mode <= 0) {
+                while ((start < end) && (predicate.test(str.charAt(start)))) {
+                    start++;
+                }
+            } // 扫描字符串尾部
+            if (mode >= 0) {
+                while ((start < end) && (predicate.test(str.charAt(end - 1)))) {
+                    end--;
+                }
+            }
+            if ((start > 0) || (end < length)) {
+                result = str.toString().substring(start, end);
+            } else {
+                result = str.toString();
+            }
+        }
+
+        return result;
+    }
+
+    // ------------------------------------------------------------------------ startWith
+
+    /**
+     * 字符串是否以给定字符开始.
+     *
+     * @param str 字符串
+     * @param c   字符
+     * @return 是否开始
+     */
+    public static boolean startWith(final CharSequence str, final char c) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        return c == str.charAt(0);
+    }
+
+    /**
+     * 是否以指定字符串开头<br>.
+     * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+     *
+     * @param str        被监测字符串
+     * @param prefix     开头字符串
+     * @param ignoreCase 是否忽略大小写
+     * @return 是否以指定字符串开头
+     * @since 5.4.3
+     */
+    public static boolean startWith(final CharSequence str, final CharSequence prefix, final boolean ignoreCase) {
+        return startWith(str, prefix, ignoreCase, false);
+    }
+
+    /**
+     * 是否以指定字符串开头<br>.
+     * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false<br>
+     * <pre>
+     *     StrUtil.startWith("123", "123", false, true);   -- false
+     *     StrUtil.startWith("ABCDEF", "abc", true, true); -- true
+     *     StrUtil.startWith("abc", "abc", true, true);    -- false
+     * </pre>
+     *
+     * @param str          被监测字符串
+     * @param prefix       开头字符串
+     * @param ignoreCase   是否忽略大小写
+     * @param ignoreEquals 是否忽略字符串相等的情况
+     * @return 是否以指定字符串开头
+     * @since 5.4.3
+     */
+    public static boolean startWith(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final
+        boolean ignoreEquals) {
+        if (null == str || null == prefix) {
+            if (ignoreEquals) {
+                return false;
+            }
+            return null == str && null == prefix;
+        }
+
+        boolean isStartWith = str.toString()
+            .regionMatches(ignoreCase, 0, prefix.toString(), 0, prefix.length());
+
+        if (isStartWith) {
+            return (false == ignoreEquals) || (false == equals(str, prefix, ignoreCase));
+        }
+        return false;
+    }
+
+    /**
+     * 是否以指定字符串开头.
+     *
+     * @param str    被监测字符串
+     * @param prefix 开头字符串
+     * @return 是否以指定字符串开头
+     */
+    public static boolean startWith(final CharSequence str, final CharSequence prefix) {
+        return startWith(str, prefix, false);
+    }
+
+    /**
+     * 是否以指定字符串开头，忽略相等字符串的情况.
+     *
+     * @param str    被监测字符串
+     * @param prefix 开头字符串
+     * @return 是否以指定字符串开头并且两个字符串不相等
+     */
+    public static boolean startWithIgnoreEquals(final CharSequence str, final CharSequence prefix) {
+        return startWith(str, prefix, false, true);
+    }
+
+    /**
+     * 是否以指定字符串开头，忽略大小写.
+     *
+     * @param str    被监测字符串
+     * @param prefix 开头字符串
+     * @return 是否以指定字符串开头
+     */
+    public static boolean startWithIgnoreCase(final CharSequence str, final CharSequence prefix) {
+        return startWith(str, prefix, true);
+    }
+
+    /**
+     * 给定字符串是否以任何一个字符串开始<br>.
+     * 给定字符串和数组为空都返回false
+     *
+     * @param str      给定字符串
+     * @param prefixes 需要检测的开始字符串
+     * @return 给定字符串是否以任何一个字符串开始
+     * @since 3.0.6
+     */
+    public static boolean startWithAny(final CharSequence str, final CharSequence... prefixes) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(prefixes)) {
+            return false;
+        }
+
+        for (CharSequence prefix : prefixes) {
+            if (startWith(str, prefix, false)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 给定字符串是否以任何一个字符串开始（忽略大小写）<br>.
+     * 给定字符串和数组为空都返回false
+     *
+     * @param str      给定字符串
+     * @param prefixes 需要检测的开始字符串
+     * @return 给定字符串是否以任何一个字符串开始
+     * @since 5.8.1
+     */
+    public static boolean startWithAnyIgnoreCase(final CharSequence str, final CharSequence... prefixes) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(prefixes)) {
+            return false;
+        }
+
+        for (final CharSequence prefix : prefixes) {
+            if (startWith(str, prefix, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ------------------------------------------------------------------------ endWith
+
+    /**
+     * 字符串是否以给定字符结尾.
+     *
+     * @param str 字符串
+     * @param c   字符
+     * @return 是否结尾
+     */
+    public static boolean endWith(final CharSequence str, final char c) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        return c == str.charAt(str.length() - 1);
+    }
+
+    /**
+     * 是否以指定字符串结尾<br>.
+     * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+     *
+     * @param str        被监测字符串
+     * @param suffix     结尾字符串
+     * @param ignoreCase 是否忽略大小写
+     * @return 是否以指定字符串结尾
+     */
+    public static boolean endWith(final CharSequence str, final CharSequence suffix, final boolean ignoreCase) {
+        return endWith(str, suffix, ignoreCase, false);
+    }
+
+    /**
+     * 是否以指定字符串结尾<br>.
+     * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+     *
+     * @param str          被监测字符串
+     * @param suffix       结尾字符串
+     * @param ignoreCase   是否忽略大小写
+     * @param ignoreEquals 是否忽略字符串相等的情况
+     * @return 是否以指定字符串结尾
+     * @since 5.8.0
+     */
+    public static boolean endWith(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final
+        boolean ignoreEquals) {
+        if (null == str || null == suffix) {
+            if (ignoreEquals) {
+                return false;
+            }
+            return null == str && null == suffix;
+        }
+
+        final int strOffset = str.length() - suffix.length();
+        boolean isEndWith = str.toString()
+            .regionMatches(ignoreCase, strOffset, suffix.toString(), 0, suffix.length());
+
+        if (isEndWith) {
+            return (false == ignoreEquals) || (false == equals(str, suffix, ignoreCase));
+        }
+        return false;
+    }
+
+    /**
+     * 是否以指定字符串结尾.
+     *
+     * @param str    被监测字符串
+     * @param suffix 结尾字符串
+     * @return 是否以指定字符串结尾
+     */
+    public static boolean endWith(final CharSequence str, final CharSequence suffix) {
+        return endWith(str, suffix, false);
+    }
+
+    /**
+     * 是否以指定字符串结尾，忽略大小写.
+     *
+     * @param str    被监测字符串
+     * @param suffix 结尾字符串
+     * @return 是否以指定字符串结尾
+     */
+    public static boolean endWithIgnoreCase(final CharSequence str, final CharSequence suffix) {
+        return endWith(str, suffix, true);
+    }
+
+    /**
+     * 给定字符串是否以任何一个字符串结尾<br>.
+     * 给定字符串和数组为空都返回false
+     *
+     * @param str      给定字符串
+     * @param suffixes 需要检测的结尾字符串
+     * @return 给定字符串是否以任何一个字符串结尾
+     * @since 3.0.6
+     */
+    public static boolean endWithAny(final CharSequence str, final CharSequence... suffixes) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(suffixes)) {
+            return false;
+        }
+
+        for (CharSequence suffix : suffixes) {
+            if (endWith(str, suffix, false)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 给定字符串是否以任何一个字符串结尾（忽略大小写）<br>.
+     * 给定字符串和数组为空都返回false
+     *
+     * @param str      给定字符串
+     * @param suffixes 需要检测的结尾字符串
+     * @return 给定字符串是否以任何一个字符串结尾
+     * @since 5.5.9
+     */
+    public static boolean endWithAnyIgnoreCase(final CharSequence str, final CharSequence... suffixes) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(suffixes)) {
+            return false;
+        }
+
+        for (CharSequence suffix : suffixes) {
+            if (endWith(str, suffix, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ------------------------------------------------------------------------ contains
+
+    /**
+     * 指定字符是否在字符串中出现过.
+     *
+     * @param str        字符串
+     * @param searchChar 被查找的字符
+     * @return 是否包含
+     * @since 3.1.2
+     */
+    public static boolean contains(final CharSequence str, final char searchChar) {
+        return indexOf(str, searchChar) > -1;
+    }
+
+    /**
+     * 指定字符串是否在字符串中出现过.
+     *
+     * @param str       字符串
+     * @param searchStr 被查找的字符串
+     * @return 是否包含
+     * @since 5.1.1
+     */
+    public static boolean contains(final CharSequence str, final CharSequence searchStr) {
+        if (null == str || null == searchStr) {
+            return false;
+        }
+        return str.toString().contains(searchStr);
+    }
+
+    /**
+     * 查找指定字符串是否包含指定字符串列表中的任意一个字符串.
+     *
+     * @param str      指定字符串
+     * @param testStrs 需要检查的字符串数组
+     * @return 是否包含任意一个字符串
+     * @since 3.2.0
+     */
+    public static boolean containsAny(final CharSequence str, final CharSequence... testStrs) {
+        return null != getContainsStr(str, testStrs);
+    }
+
+    /**
+     * 查找指定字符串是否包含指定字符列表中的任意一个字符.
+     *
+     * @param str       指定字符串
+     * @param testChars 需要检查的字符数组
+     * @return 是否包含任意一个字符
+     * @since 4.1.11
+     */
+    public static boolean containsAny(final CharSequence str, final char... testChars) {
+        if (false == isEmpty(str)) {
+            int len = str.length();
+            for (int i = 0; i < len; i++) {
+                if (ArrayUtil.contains(testChars, str.charAt(i))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检查指定字符串中是否只包含给定的字符<br>.
+     * 这里的containsOnly并不是必须全部给定的testChars都需要有，而是一个子集。testChars是个限定集合，检查字符串中的字符是否在这个限定集合中。<br>
+     * <pre>{@code
+     *   StrUtil.containsOnly("asdas", 'a', 'd', 's','l');   --> true
+     * }</pre>
+     *
+     * @param str       字符串
+     * @param testChars 检查的字符
+     * @return 字符串含有非检查的字符，返回false
+     * @since 4.4.1
+     */
+    public static boolean containsOnly(final CharSequence str, final char... testChars) {
+        if (false == isEmpty(str)) {
+            int len = str.length();
+            for (int i = 0; i < len; i++) {
+                if (false == ArrayUtil.contains(testChars, str.charAt(i))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查指定字符串中是否含给定的所有字符串.
+     *
+     * @param str       字符串
+     * @param testChars 检查的字符
+     * @return 字符串含有非检查的字符，返回false
+     * @since 4.4.1
+     */
+    public static boolean containsAll(final CharSequence str, final CharSequence... testChars) {
+        if (isBlank(str) || ArrayUtil.isEmpty(testChars)) {
+            return false;
+        }
+        for (CharSequence testChar : testChars) {
+            if (false == contains(str, testChar)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 给定字符串是否包含空白符（空白符包括空格、制表符、全角空格和不间断空格）<br>.
+     * 如果给定字符串为null或者""，则返回false
+     *
+     * @param str 字符串
+     * @return 是否包含空白符
+     * @since 4.0.8
+     */
+    public static boolean containsBlank(final CharSequence str) {
+        if (null == str) {
+            return false;
+        }
+        final int length = str.length();
+        if (0 == length) {
+            return false;
+        }
+
+        for (int i = 0; i < length; i += 1) {
+            if (CharUtil.isBlankChar(str.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 查找指定字符串是否包含指定字符串列表中的任意一个字符串，如果包含返回找到的第一个字符串.
+     *
+     * @param str      指定字符串
+     * @param testStrs 需要检查的字符串数组
+     * @return 被包含的第一个字符串
+     * @since 3.2.0
+     */
+    public static String getContainsStr(final CharSequence str, final CharSequence... testStrs) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(testStrs)) {
+            return null;
+        }
+        for (CharSequence checkStr : testStrs) {
+            if (null != checkStr && str.toString().contains(checkStr)) {
+                return checkStr.toString();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 是否包含特定字符，忽略大小写，如果给定两个参数都为{@code null}，返回true.
+     *
+     * @param str     被检测字符串
+     * @param testStr 被测试是否包含的字符串
+     * @return 是否包含
+     */
+    public static boolean containsIgnoreCase(final CharSequence str, final CharSequence testStr) {
+        if (null == str) {
+            // 如果被监测字符串和
+            return null == testStr;
+        }
+        return indexOfIgnoreCase(str, testStr) > -1;
+    }
+
+    /**
+     * 查找指定字符串是否包含指定字符串列表中的任意一个字符串<br>.
+     * 忽略大小写
+     *
+     * @param str      指定字符串
+     * @param testStrs 需要检查的字符串数组
+     * @return 是否包含任意一个字符串
+     * @since 3.2.0
+     */
+    public static boolean containsAnyIgnoreCase(final CharSequence str, final CharSequence... testStrs) {
+        return null != getContainsStrIgnoreCase(str, testStrs);
+    }
+
+    /**
+     * 查找指定字符串是否包含指定字符串列表中的任意一个字符串，如果包含返回找到的第一个字符串<br>.
+     * 忽略大小写
+     *
+     * @param str      指定字符串
+     * @param testStrs 需要检查的字符串数组
+     * @return 被包含的第一个字符串
+     * @since 3.2.0
+     */
+    public static String getContainsStrIgnoreCase(final CharSequence str, final CharSequence... testStrs) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(testStrs)) {
+            return null;
+        }
+        for (CharSequence testStr : testStrs) {
+            if (containsIgnoreCase(str, testStr)) {
+                return testStr.toString();
+            }
+        }
+        return null;
+    }
+
+    // ------------------------------------------------------------------------ indexOf
+
+    /**
+     * 指定范围内查找指定字符.
+     *
+     * @param str        字符串
+     * @param searchChar 被查找的字符
+     * @return 位置
+     */
+    public static int indexOf(final CharSequence str, final char searchChar) {
+        return indexOf(str, searchChar, 0);
+    }
+
+    /**
+     * 指定范围内查找指定字符.
+     *
+     * @param str        字符串
+     * @param searchChar 被查找的字符
+     * @param start      起始位置，如果小于0，从0开始查找
+     * @return 位置
+     */
+    public static int indexOf(final CharSequence str, final char searchChar, final int start) {
+        if (str instanceof String) {
+            return ((String) str).indexOf(searchChar, start);
+        } else {
+            return indexOf(str, searchChar, start, -1);
+        }
+    }
+
+    /**
+     * 指定范围内查找指定字符.
+     *
+     * @param text       字符串
+     * @param searchChar 被查找的字符
+     * @param start      起始位置，如果小于0，从0开始查找
+     * @param end        终止位置，如果超过str.length()则默认查找到字符串末尾
+     * @return 位置
+     */
+    public static int indexOf(final CharSequence text, final char searchChar, final int start, final int end) {
+        if (isEmpty(text)) {
+            return INDEX_NOT_FOUND;
+        }
+        return new CharFinder(searchChar).setText(text).setEndIndex(end).start(start);
+    }
+
+    /**
+     * 指定范围内查找字符串，忽略大小写<br>.
+     *
+     * <pre>
+     * StrUtil.indexOfIgnoreCase(null, *, *)          = -1
+     * StrUtil.indexOfIgnoreCase(*, null, *)          = -1
+     * StrUtil.indexOfIgnoreCase("", "", 0)           = 0
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "A", 0)  = 0
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 0)  = 2
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "AB", 0) = 1
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 3)  = 5
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 9)  = -1
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "B", -1) = 2
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "", 2)   = 2
+     * StrUtil.indexOfIgnoreCase("abc", "", 9)        = -1
+     * </pre>
+     *
+     * @param str       字符串
+     * @param searchStr 需要查找位置的字符串
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int indexOfIgnoreCase(final CharSequence str, final CharSequence searchStr) {
+        return indexOfIgnoreCase(str, searchStr, 0);
+    }
+
+    /**
+     * 指定范围内查找字符串.
+     *
+     * <pre>
+     * StrUtil.indexOfIgnoreCase(null, *, *)          = -1
+     * StrUtil.indexOfIgnoreCase(*, null, *)          = -1
+     * StrUtil.indexOfIgnoreCase("", "", 0)           = 0
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "A", 0)  = 0
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 0)  = 2
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "AB", 0) = 1
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 3)  = 5
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 9)  = -1
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "B", -1) = 2
+     * StrUtil.indexOfIgnoreCase("aabaabaa", "", 2)   = 2
+     * StrUtil.indexOfIgnoreCase("abc", "", 9)        = -1
+     * </pre>
+     *
+     * @param str       字符串
+     * @param searchStr 需要查找位置的字符串
+     * @param fromIndex 起始位置
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int indexOfIgnoreCase(final CharSequence str, final CharSequence searchStr, final int fromIndex) {
+        return indexOf(str, searchStr, fromIndex, true);
+    }
+
+    /**
+     * 指定范围内查找字符串.
+     *
+     * @param text       字符串，空则返回-1
+     * @param searchStr  需要查找位置的字符串，空则返回-1
+     * @param from       起始位置（包含）
+     * @param ignoreCase 是否忽略大小写
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int indexOf(final CharSequence text, final CharSequence searchStr, final int from, final boolean
+        ignoreCase) {
+        if (isEmpty(text) || isEmpty(searchStr)) {
+            if (StrUtil.equals(text, searchStr)) {
+                return 0;
+            } else {
+                return INDEX_NOT_FOUND;
+            }
+        }
+        return new StrFinder(searchStr, ignoreCase).setText(text).start(from);
+    }
+
+    /**
+     * 指定范围内查找字符串，忽略大小写.
+     *
+     * @param str       字符串
+     * @param searchStr 需要查找位置的字符串
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int lastIndexOfIgnoreCase(final CharSequence str, final CharSequence searchStr) {
+        return lastIndexOfIgnoreCase(str, searchStr, str.length());
+    }
+
+    /**
+     * 指定范围内查找字符串，忽略大小写<br>.
+     * fromIndex 为搜索起始位置，从后往前计数
+     *
+     * @param str       字符串
+     * @param searchStr 需要查找位置的字符串
+     * @param fromIndex 起始位置，从后往前计数
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int lastIndexOfIgnoreCase(final CharSequence str, final CharSequence searchStr, final int fromIndex) {
+        return lastIndexOf(str, searchStr, fromIndex, true);
+    }
+
+    /**
+     * 指定范围内查找字符串<br>.
+     * fromIndex 为搜索起始位置，从后往前计数
+     *
+     * @param text       字符串
+     * @param searchStr  需要查找位置的字符串
+     * @param from       起始位置，从后往前计数
+     * @param ignoreCase 是否忽略大小写
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int lastIndexOf(final CharSequence text, final CharSequence searchStr, final int from, final boolean
+        ignoreCase) {
+        if (isEmpty(text) || isEmpty(searchStr)) {
+            if (StrUtil.equals(text, searchStr)) {
+                return 0;
+            } else {
+                return INDEX_NOT_FOUND;
+            }
+        }
+        return new StrFinder(searchStr, ignoreCase)
+            .setText(text).setNegative(true).start(from);
+    }
+
+    /**
+     * 返回字符串 searchStr 在字符串 str 中第 ordinal 次出现的位置。
+     *
+     * <p>.
+     * 如果 str=null 或 searchStr=null 或 ordinal&le;0 则返回-1<br>
+     * 此方法来自：Apache-Commons-Lang
+     * <p>
+     * 例子（*代表任意字符）：
+     *
+     * <pre>
+     * StrUtil.ordinalIndexOf(null, *, *)          = -1
+     * StrUtil.ordinalIndexOf(*, null, *)          = -1
+     * StrUtil.ordinalIndexOf("", "", *)           = 0
+     * StrUtil.ordinalIndexOf("aabaabaa", "a", 1)  = 0
+     * StrUtil.ordinalIndexOf("aabaabaa", "a", 2)  = 1
+     * StrUtil.ordinalIndexOf("aabaabaa", "b", 1)  = 2
+     * StrUtil.ordinalIndexOf("aabaabaa", "b", 2)  = 5
+     * StrUtil.ordinalIndexOf("aabaabaa", "ab", 1) = 1
+     * StrUtil.ordinalIndexOf("aabaabaa", "ab", 2) = 4
+     * StrUtil.ordinalIndexOf("aabaabaa", "", 1)   = 0
+     * StrUtil.ordinalIndexOf("aabaabaa", "", 2)   = 0
+     * </pre>
+     *
+     * @param str       被检查的字符串，可以为null
+     * @param searchStr 被查找的字符串，可以为null
+     * @param ordinal   第几次出现的位置
+     * @return 查找到的位置
+     * @since 3.2.3
+     */
+    public static int ordinalIndexOf(final CharSequence str, final CharSequence searchStr, final int ordinal) {
+        if (str == null || searchStr == null || ordinal <= 0) {
+            return INDEX_NOT_FOUND;
+        }
+        if (searchStr.length() == 0) {
+            return 0;
+        }
+        int found = 0;
+        int index = INDEX_NOT_FOUND;
+        do {
+            index = indexOf(str, searchStr, index + 1, false);
+            if (index < 0) {
+                return index;
+            }
+            found++;
+        } while (found < ordinal);
+        return index;
+    }
+
+    // ------------------------------------------------------------------------ remove
+
+    /**
+     * 移除字符串中所有给定字符串<br>.
+     * 例：removeAll("aa-bb-cc-dd", "-") =》 aabbccdd
+     *
+     * @param str         字符串
+     * @param strToRemove 被移除的字符串
+     * @return 移除后的字符串
+     */
+    public static String removeAll(final CharSequence str, final CharSequence strToRemove) {
+        // strToRemove如果为空， 也不用继续后面的逻辑
+        if (isEmpty(str) || isEmpty(strToRemove)) {
+            return str(str);
+        }
+        return str.toString().replace(strToRemove, EMPTY);
+    }
+
+    /**
+     * 移除字符串中所有给定字符串，当某个字符串出现多次，则全部移除<br>.
+     * 例：removeAny("aa-bb-cc-dd", "a", "b") =》 --cc-dd
+     *
+     * @param str          字符串
+     * @param strsToRemove 被移除的字符串
+     * @return 移除后的字符串
+     * @since 5.3.8
+     */
+    public static String removeAny(final CharSequence str, final CharSequence... strsToRemove) {
+        String result = str(str);
+        if (isNotEmpty(str)) {
+            for (CharSequence strToRemove : strsToRemove) {
+                result = removeAll(result, strToRemove);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 去除字符串中指定的多个字符，如有多个则全部去除.
+     *
+     * @param str   字符串
+     * @param chars 字符列表
+     * @return 去除后的字符
+     * @since 4.2.2
+     */
+    public static String removeAll(final CharSequence str, final char... chars) {
+        if (null == str || ArrayUtil.isEmpty(chars)) {
+            return str(str);
+        }
+        final int len = str.length();
+        if (0 == len) {
+            return str(str);
+        }
+        final StringBuilder builder = new StringBuilder(len);
+        char c;
+        for (int i = 0; i < len; i++) {
+            c = str.charAt(i);
+            if (false == ArrayUtil.contains(chars, c)) {
+                builder.append(c);
+            }
+        }
+        return builder.toString();
+    }
+
+    /**
+     * 去除所有换行符，包括：.
+     *
+     * <pre>
+     * 1. \r
+     * 1. \n
+     * </pre>
+     *
+     * @param str 字符串
+     * @return 处理后的字符串
+     * @since 4.2.2
+     */
+    public static String removeAllLineBreaks(final CharSequence str) {
+        return removeAll(str, CharUtil.CR, CharUtil.LF);
+    }
+
+    /**
+     * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br>.
+     * 例如：str=setName, preLength=3 =》 return name
+     *
+     * @param str       被处理的字符串
+     * @param preLength 去掉的长度
+     * @return 处理后的字符串，不符合规范返回null
+     */
+    public static String removePreAndLowerFirst(final CharSequence str, final int preLength) {
+        if (str == null) {
+            return null;
+        }
+        if (str.length() > preLength) {
+            char first = Character.toLowerCase(str.charAt(preLength));
+            if (str.length() > preLength + 1) {
+                return first + str.toString().substring(preLength + 1);
+            }
+            return String.valueOf(first);
+        } else {
+            return str.toString();
+        }
+    }
+
+    /**
+     * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br>.
+     * 例如：str=setName, prefix=set =》 return name
+     *
+     * @param str    被处理的字符串
+     * @param prefix 前缀
+     * @return 处理后的字符串，不符合规范返回null
+     */
+    public static String removePreAndLowerFirst(final CharSequence str, final CharSequence prefix) {
+        return lowerFirst(removePrefix(str, prefix));
+    }
+
+    /**
+     * 去掉指定前缀.
+     *
+     * @param str    字符串
+     * @param prefix 前缀
+     * @return 切掉后的字符串，若前缀不是 preffix， 返回原字符串
+     */
+    public static String removePrefix(final CharSequence str, final CharSequence prefix) {
+        if (isEmpty(str) || isEmpty(prefix)) {
+            return str(str);
+        }
+
+        final String str2 = str.toString();
+        if (str2.startsWith(prefix.toString())) {
+            return subSuf(str2, prefix.length()); // 截取后半段
+        }
+        return str2;
+    }
+
+    /**
+     * 去掉指定所有前缀，如：.
+     * <pre>{@code
+     *     str=abcdef, prefix=ab => return cdef
+     *     str=ababcdef, prefix=ab => return cdef
+     *     str=ababcdef, prefix="" => return ababcdef
+     *     str=ababcdef, prefix=null => return ababcdef
+     * }</pre>
+     *
+     * @param str    字符串，空返回原字符串
+     * @param prefix 前缀，空返回原字符串
+     * @return 去掉所有前缀的字符串，若前缀不是 preffix， 返回原字符串
+     * @since 5.8.30
+     */
+    public static String removeAllPrefix(final CharSequence str, final CharSequence prefix) {
+        if (isEmpty(str) || isEmpty(prefix)) {
+            return str(str);
+        }
+
+        final String prefixStr = prefix.toString();
+        final int prefixLength = prefixStr.length();
+
+        final String str2 = str.toString();
+        int toIndex = 0;
+        while (str2.startsWith(prefixStr, toIndex)) {
+            toIndex += prefixLength;
+        }
+        return subSuf(str2, toIndex);
+    }
+
+    /**
+     * 忽略大小写去掉指定前缀.
+     *
+     * @param str    字符串
+     * @param prefix 前缀
+     * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
+     */
+    public static String removePrefixIgnoreCase(final CharSequence str, final CharSequence prefix) {
+        if (isEmpty(str) || isEmpty(prefix)) {
+            return str(str);
+        }
+
+        final String str2 = str.toString();
+        if (startWithIgnoreCase(str, prefix)) {
+            return subSuf(str2, prefix.length()); // 截取后半段
+        }
+        return str2;
+    }
+
+    /**
+     * 去掉指定后缀.
+     *
+     * @param str    字符串
+     * @param suffix 后缀
+     * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
+     */
+    public static String removeSuffix(final CharSequence str, final CharSequence suffix) {
+        if (isEmpty(str) || isEmpty(suffix)) {
+            return str(str);
+        }
+
+        final String str2 = str.toString();
+        if (str2.endsWith(suffix.toString())) {
+            return subPre(str2, str2.length() - suffix.length()); // 截取前半段
+        }
+        return str2;
+    }
+
+    /**
+     * 去掉指定所有后缀，如：.
+     * <pre>{@code
+     *     str=11abab, suffix=ab => return 11
+     *     str=11ab, suffix=ab => return 11
+     *     str=11ab, suffix="" => return 11ab
+     *     str=11ab, suffix=null => return 11ab
+     * }</pre>
+     *
+     * @param str    字符串，空返回原字符串
+     * @param suffix 后缀字符串，空返回原字符串
+     * @return 去掉所有后缀的字符串，若后缀不是 suffix， 返回原字符串
+     * @since 5.8.30
+     */
+    public static String removeAllSuffix(final CharSequence str, final CharSequence suffix) {
+        if (isEmpty(str) || isEmpty(suffix)) {
+            return str(str);
+        }
+
+        final String suffixStr = suffix.toString();
+        final int suffixLength = suffixStr.length();
+
+        final String str2 = str.toString();
+        int toIndex = str2.length();
+        while (str2.startsWith(suffixStr, toIndex - suffixLength)) {
+            toIndex -= suffixLength;
+        }
+        return subPre(str2, toIndex);
+    }
+
+
+    /**
+     * 去掉指定后缀，并小写首字母.
+     *
+     * @param str    字符串
+     * @param suffix 后缀
+     * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
+     */
+    public static String removeSufAndLowerFirst(final CharSequence str, final CharSequence suffix) {
+        return lowerFirst(removeSuffix(str, suffix));
+    }
+
+    /**
+     * 忽略大小写去掉指定后缀.
+     *
+     * @param str    字符串
+     * @param suffix 后缀
+     * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
+     */
+    public static String removeSuffixIgnoreCase(final CharSequence str, final CharSequence suffix) {
+        if (isEmpty(str) || isEmpty(suffix)) {
+            return str(str);
+        }
+
+        final String str2 = str.toString();
+        if (endWithIgnoreCase(str, suffix)) {
+            return subPre(str2, str2.length() - suffix.length());
+        }
+        return str2;
+    }
+
+    /**
+     * 清理空白字符.
+     *
+     * @param str 被清理的字符串
+     * @return 清理后的字符串
+     */
+    public static String cleanBlank(final CharSequence str) {
+        return filter(str, c -> false == CharUtil.isBlankChar(c));
+    }
+
+    // ------------------------------------------------------------------------ strip
+
+    /**
+     * 去除两边的指定字符串，忽略大小写.
+     *
+     * @param str            被处理的字符串
+     * @param prefixOrSuffix 前缀或后缀
+     * @return 处理后的字符串
+     * @since 3.1.2
+     */
+    public static String stripIgnoreCase(final CharSequence str, final CharSequence prefixOrSuffix) {
+        return stripIgnoreCase(str, prefixOrSuffix, prefixOrSuffix);
+    }
+
+    /**
+     * 去除两边的指定字符串，忽略大小写.
+     *
+     * @param str    被处理的字符串
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @return 处理后的字符串
+     * @since 3.1.2
+     */
+    public static String stripIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+        return strip(str, prefix, suffix, true);
+    }
+
+    /**
+     * 去除两边的指定字符串.
+     *
+     * @param str            被处理的字符串
+     * @param prefixOrSuffix 前缀或后缀
+     * @return 处理后的字符串
+     * @since 3.1.2
+     */
+    public static String strip(final CharSequence str, final CharSequence prefixOrSuffix) {
+        if (equals(str, prefixOrSuffix)) {
+            // 对于去除相同字符的情况单独处理
+            return EMPTY;
+        }
+        return strip(str, prefixOrSuffix, prefixOrSuffix);
+    }
+
+    /**
+     * 去除两边的指定字符串<br>.
+     * 两边字符如果存在，则去除，不存在不做处理
+     * <pre>{@code
+     * "aaa_STRIPPED_bbb", "a", "b"  -> "aa_STRIPPED_bb"
+     * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_bb"
+     * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_bb"
+     * "aaa_STRIPPED_bbb", "a", ""  -> "aa_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "a", null  -> "aa_STRIPPED_bbb"
+     *
+     * "a", "a", "a"  -> ""
+     * }
+     * </pre>
+     *
+     * @param str    被处理的字符串
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @return 处理后的字符串
+     * @since 3.1.2
+     */
+    public static String strip(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+        return strip(str, prefix, suffix, false);
+    }
+
+    /**
+     * 去除两边的指定字符串<br>.
+     * 两边字符如果存在，则去除，不存在不做处理
+     * <pre>{@code
+     * "aaa_STRIPPED_bbb", "a", "b"  -> "aa_STRIPPED_bb"
+     * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_bb"
+     * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_bb"
+     * "aaa_STRIPPED_bbb", "a", ""  -> "aa_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "a", null  -> "aa_STRIPPED_bbb"
+     *
+     * "a", "a", "a"  -> ""
+     * }
+     * </pre>
+     *
+     * @param str        被处理的字符串
+     * @param prefix     前缀
+     * @param suffix     后缀
+     * @param ignoreCase 是否忽略大小写
+     * @return 处理后的字符串
+     * @since 3.1.2
+     */
+    public static String strip(final CharSequence str, final CharSequence prefix, final CharSequence suffix, final
+        boolean ignoreCase) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+
+        final String str2 = str.toString();
+        int from = 0;
+        int to = str2.length();
+
+        if (startWith(str2, prefix, ignoreCase)) {
+            from = prefix.length();
+            if (from == to) {
+                // "a", "a", "a"  -> ""
+                return EMPTY;
+            }
+        }
+        if (endWith(str2, suffix, ignoreCase)) {
+            to -= suffix.length();
+            if (from == to) {
+                // "a", "a", "a"  -> ""
+                return EMPTY;
+            } else if (to < from) {
+                // pre去除后和suffix有重叠，如 ("aba", "ab", "ba") -> "a"
+                to += suffix.length();
+            }
+        }
+
+        return str2.substring(from, to);
+    }
+
+    /**
+     * 去除两边<u><b>所有</b></u>的指定字符串.
+     *
+     * <pre>{@code
+     * "aaa_STRIPPED_bbb", "a"  -> "_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "a", "b"  -> "_STRIPPED_"
+     * "aaa_STRIPPED_bbb", ""  -> "aaa_STRIPPED_bbb"
+     * }
+     * </pre>
+     *
+     * @param str            被处理的字符串
+     * @param prefixOrSuffix 前缀或后缀
+     * @return 处理后的字符串
+     * @since 5.8.30
+     */
+    public static String stripAll(final CharSequence str, final CharSequence prefixOrSuffix) {
+        if (equals(str, prefixOrSuffix)) {
+            return EMPTY;
+        }
+        return stripAll(str, prefixOrSuffix, prefixOrSuffix);
+    }
+
+    /**
+     * 去除两边<u><b>所有</b></u>的指定字符串.
+     *
+     * <pre>{@code
+     * "aaa_STRIPPED_bbb", "a", "b"  -> "_STRIPPED_"
+     * "aaa_STRIPPED_bbb", null, null  -> "aaa_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "", ""  -> "aaa_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "", "b"  -> "aaa_STRIPPED_"
+     * "aaa_STRIPPED_bbb", null, "b"  -> "aaa_STRIPPED_"
+     * "aaa_STRIPPED_bbb", "a", ""  -> "_STRIPPED_bbb"
+     * "aaa_STRIPPED_bbb", "a", null  -> "_STRIPPED_bbb"
+     *
+     * // special test
+     * "aaaaaabbb", "aaa", null  -> "bbb"
+     * "aaaaaaabbb", "aa", null  -> "abbb"
+     *
+     * "aaaaaaaaa", "aaa", "aa"  -> ""
+     * "a", "a", "a"  -> ""
+     * }
+     * </pre>
+     *
+     * @param str    被处理的字符串
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @return 处理后的字符串
+     * @since 5.8.30
+     */
+    public static String stripAll(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+
+        final String prefixStr = emptyIfNull(prefix);
+        final String suffixStr = emptyIfNull(suffix);
+
+        final String str2 = str.toString();
+        int from = 0;
+        int to = str2.length();
+
+        if (!prefixStr.isEmpty()) {
+            while (str2.startsWith(prefixStr, from)) {
+                from += prefix.length();
+                if (from == to) {
+                    // "a", "a", "a"  -> ""
+                    return EMPTY;
+                }
+            }
+        }
+        if (!suffixStr.isEmpty()) {
+            while (str2.startsWith(suffixStr, to - suffixStr.length())) {
+                to -= suffixStr.length();
+                if (from == to) {
+                    // "a", "a", "a"  -> ""
+                    return EMPTY;
+                } else if (to < from) {
+                    // pre去除后和suffix有重叠，如 ("aba", "ab", "ba") -> "a"
+                    to += suffixStr.length();
+                    break;
+                }
+            }
+        }
+
+        return str2.substring(from, to);
+    }
+
+    // ------------------------------------------------------------------------ add
+
+    /**
+     * 如果给定字符串不是以prefix开头的，在开头补充 prefix.
+     *
+     * @param str    字符串
+     * @param prefix 前缀
+     * @return 补充后的字符串
+     * @see #prependIfMissing(CharSequence, CharSequence, CharSequence...)
+     */
+    public static String addPrefixIfNot(final CharSequence str, final CharSequence prefix) {
+        return prependIfMissing(str, prefix, prefix);
+    }
+
+    /**
+     * 如果给定字符串不是以suffix结尾的，在尾部补充 suffix.
+     *
+     * @param str    字符串
+     * @param suffix 后缀
+     * @return 补充后的字符串
+     * @see #appendIfMissing(CharSequence, CharSequence, CharSequence...)
+     */
+    public static String addSuffixIfNot(final CharSequence str, final CharSequence suffix) {
+        return appendIfMissing(str, suffix, suffix);
+    }
+
+    // ------------------------------------------------------------------------ split
+
+    /**
+     * 切分字符串为long数组.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符
+     * @return 切分后long数组
+     * @since 4.0.6
+     */
+    public static long[] splitToLong(final CharSequence str, final char separator) {
+        return Convert.convert(long[].class, splitTrim(str, separator));
+    }
+
+    /**
+     * 切分字符串为long数组.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符串
+     * @return 切分后long数组
+     * @since 4.0.6
+     */
+    public static long[] splitToLong(final CharSequence str, final CharSequence separator) {
+        return Convert.convert(long[].class, splitTrim(str, separator));
+    }
+
+    /**
+     * 切分字符串为int数组.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符
+     * @return 切分后long数组
+     * @since 4.0.6
+     */
+    public static int[] splitToInt(final CharSequence str, final char separator) {
+        return Convert.convert(int[].class, splitTrim(str, separator));
+    }
+
+    /**
+     * 切分字符串为int数组.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符串
+     * @return 切分后long数组
+     * @since 4.0.6
+     */
+    public static int[] splitToInt(final CharSequence str, final CharSequence separator) {
+        return Convert.convert(int[].class, splitTrim(str, separator));
+    }
+
+    /**
+     * 切分字符串<br>.
+     * a#b#c =》 [a,b,c] <br>
+     * a##b#c =》 [a,"",b,c]
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符
+     * @return 切分后的集合
+     */
+    public static List<String> split(final CharSequence str, final char separator) {
+        return split(str, separator, 0);
+    }
+
+    /**
+     * 切分字符串，如果分隔符不存在则返回原字符串.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符
+     * @return 字符串
+     * @since 5.6.7
+     */
+    public static String[] splitToArray(final CharSequence str, final CharSequence separator) {
+        if (str == null) {
+            return new String[]{};
+        }
+
+        return StrSplitter.splitToArray(str.toString(), str(separator), 0, false, false);
+    }
+
+    /**
+     * 切分字符串.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符
+     * @return 切分后的数组
+     */
+    public static String[] splitToArray(final CharSequence str, final char separator) {
+        return splitToArray(str, separator, 0);
+    }
+
+    /**
+     * 切分字符串.
+     *
+     * @param text      被切分的字符串
+     * @param separator 分隔符字符
+     * @param limit     限制分片数
+     * @return 切分后的数组
+     */
+    public static String[] splitToArray(final CharSequence text, final char separator, final int limit) {
+        Assert.notNull(text, "Text must be not null!");
+        return StrSplitter.splitToArray(text.toString(), separator, limit, false, false);
+    }
+
+    /**
+     * 切分字符串，不去除切分后每个元素两边的空白符，不去除空白项.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符
+     * @param limit     限制分片数，-1不限制
+     * @return 切分后的集合
+     */
+    public static List<String> split(final CharSequence str, final char separator, final int limit) {
+        return split(str, separator, limit, false, false);
+    }
+
+    /**
+     * 切分字符串，去除切分后每个元素两边的空白符，去除空白项.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符
+     * @return 切分后的集合
+     * @since 3.1.2
+     */
+    public static List<String> splitTrim(final CharSequence str, final char separator) {
+        return splitTrim(str, separator, -1);
+    }
+
+    /**
+     * 切分字符串，去除切分后每个元素两边的空白符，去除空白项.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符
+     * @return 切分后的集合
+     * @since 3.2.0
+     */
+    public static List<String> splitTrim(final CharSequence str, final CharSequence separator) {
+        return splitTrim(str, separator, -1);
+    }
+
+    /**
+     * 切分字符串，去除切分后每个元素两边的空白符，去除空白项.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符
+     * @param limit     限制分片数，-1不限制
+     * @return 切分后的集合
+     * @since 3.1.0
+     */
+    public static List<String> splitTrim(final CharSequence str, final char separator, final int limit) {
+        return split(str, separator, limit, true, true);
+    }
+
+    /**
+     * 切分字符串，去除切分后每个元素两边的空白符，去除空白项.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符字符
+     * @param limit     限制分片数，-1不限制
+     * @return 切分后的集合
+     * @since 3.2.0
+     */
+    public static List<String> splitTrim(final CharSequence str, final CharSequence separator, final int limit) {
+        return split(str, separator, limit, true, true);
+    }
+
+    /**
+     * 切分字符串，不限制分片数量.
+     *
+     * @param str         被切分的字符串
+     * @param separator   分隔符字符
+     * @param isTrim      是否去除切分字符串后每个元素两边的空格
+     * @param ignoreEmpty 是否忽略空串
+     * @return 切分后的集合
+     * @since 3.0.8
+     */
+    public static List<String> split(final CharSequence str, final char separator, final boolean isTrim, final boolean
+        ignoreEmpty) {
+        return split(str, separator, 0, isTrim, ignoreEmpty);
+    }
+
+    /**
+     * 切分字符串.
+     *
+     * @param str         被切分的字符串
+     * @param separator   分隔符字符
+     * @param limit       限制分片数，-1不限制
+     * @param isTrim      是否去除切分字符串后每个元素两边的空格
+     * @param ignoreEmpty 是否忽略空串
+     * @return 切分后的集合
+     * @since 3.0.8
+     */
+    public static List<String> split(final CharSequence str, final char separator, final int limit, final boolean
+        isTrim, final boolean ignoreEmpty) {
+        return StrSplitter.split(str, separator, limit, isTrim, ignoreEmpty);
+    }
+
+    /**
+     * 切分字符串.
+     *
+     * @param <R>         切分后元素类型
+     * @param str         被切分的字符串
+     * @param separator   分隔符字符
+     * @param limit       限制分片数，-1不限制
+     * @param ignoreEmpty 是否忽略空串
+     * @param mapping     切分后的字符串元素的转换方法
+     * @return 切分后的集合，元素类型是经过 mapping 转换后的
+     * @since 5.7.14
+     */
+    public static <R> List<R> split(final CharSequence str, final char separator, final int limit, final boolean
+        ignoreEmpty, final Function<String, R> mapping) {
+        return StrSplitter.split(str, separator, limit, ignoreEmpty, mapping);
+    }
+
+    /**
+     * 切分字符串，如果分隔符不存在则返回原字符串.
+     *
+     * @param str       被切分的字符串
+     * @param separator 分隔符
+     * @return 字符串
+     * @since 5.7.1
+     */
+    public static List<String> split(final CharSequence str, final CharSequence separator) {
+        return split(str, separator, false, false);
+    }
+
+    /**
+     * 切分字符串.
+     *
+     * @param str         被切分的字符串
+     * @param separator   分隔符字符
+     * @param isTrim      是否去除切分字符串后每个元素两边的空格
+     * @param ignoreEmpty 是否忽略空串
+     * @return 切分后的集合
+     * @since 5.6.7
+     */
+    public static List<String> split(final CharSequence str, final CharSequence separator, final boolean isTrim, final
+        boolean ignoreEmpty) {
+        return split(str, separator, 0, isTrim, ignoreEmpty);
+    }
+
+    /**
+     * 切分字符串.
+     *
+     * @param str         被切分的字符串
+     * @param separator   分隔符字符
+     * @param limit       限制分片数，-1不限制
+     * @param isTrim      是否去除切分字符串后每个元素两边的空格
+     * @param ignoreEmpty 是否忽略空串
+     * @return 切分后的集合
+     * @since 3.2.0
+     */
+    public static List<String> split(final CharSequence str, final CharSequence separator, final int limit, final
+        boolean isTrim, final boolean ignoreEmpty) {
+        final String separatorStr = (null == separator) ? null : separator.toString();
+        return StrSplitter.split(str, separatorStr, limit, isTrim, ignoreEmpty);
+    }
+
+    /**
+     * 根据给定长度，将给定字符串截取为多个部分.
+     *
+     * @param str 字符串
+     * @param len 每一个小节的长度
+     * @return 截取后的字符串数组
+     * @see StrSplitter#splitByLength(CharSequence, int)
+     */
+    public static String[] split(final CharSequence str, final int len) {
+        return StrSplitter.splitByLength(str, len);
+    }
+
+    /**
+     * 将字符串切分为N等份.
+     *
+     * @param str        字符串
+     * @param partLength 每等份的长度
+     * @return 切分后的数组
+     * @since 3.0.6
+     */
+    public static String[] cut(final CharSequence str, final int partLength) {
+        if (null == str) {
+            return null;
+        }
+        int len = str.length();
+        if (len < partLength) {
+            return new String[]{str.toString()};
+        }
+        int part = NumberUtil.count(len, partLength);
+        final String[] array = new String[part];
+
+        final String str2 = str.toString();
+        for (int i = 0; i < part; i++) {
+            array[i] = str2.substring(i * partLength, (i == part - 1) ? len : (partLength + i * partLength));
+        }
+        return array;
+    }
+
+    // ------------------------------------------------------------------------ sub
+
+    /**
+     * 改进JDK subString<br>.
+     * index从0开始计算，最后一个字符为-1<br>
+     * 如果from和to位置一样，返回 "" <br>
+     * 如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length<br>
+     * 如果经过修正的index中from大于to，则互换from和to example: <br>
+     * abcdefgh 2 3 =》 c <br>
+     * abcdefgh 2 -3 =》 cde <br>
+     *
+     * @param str              String
+     * @param fromIndexInclude 开始的index（包括）
+     * @param toIndexExclude   结束的index（不包括）
+     * @return 字串
+     */
+    public static String sub(final CharSequence str, final int fromIndexInclude, final int toIndexExclude) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+        final int len = str.length();
+        int from = fromIndexInclude;
+        int to = toIndexExclude;
+
+        if (from < 0) {
+            from = len + from;
+            if (from < 0) {
+                from = 0;
+            }
+        } else if (from > len) {
+            from = len;
+        }
+
+        if (to < 0) {
+            to = len + to;
+            if (to < 0) {
+                to = len;
+            }
+        } else if (to > len) {
+            to = len;
+        }
+
+        if (to < from) {
+            final int tmp = from;
+            from = to;
+            to = tmp;
+        }
+
+        if (from == to) {
+            return EMPTY;
+        }
+
+        return str.toString().substring(from, to);
+    }
+
+    /**
+     * 通过CodePoint截取字符串，可以截断Emoji.
+     *
+     * @param str       String
+     * @param fromIndex 开始的index（包括）
+     * @param toIndex   结束的index（不包括）
+     * @return 字串
+     */
+    public static String subByCodePoint(final CharSequence str, final int fromIndex, final int toIndex) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+
+        if (fromIndex < 0 || fromIndex > toIndex) {
+            throw new IllegalArgumentException();
+        }
+
+        if (fromIndex == toIndex) {
+            return EMPTY;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        final int subLen = toIndex - fromIndex;
+        str.toString().codePoints().skip(fromIndex).limit(subLen).forEach(v -> sb.append(Character.toChars(v)));
+        return sb.toString();
+    }
+
+    /**
+     * 截取部分字符串，这里一个汉字的长度认为是2.
+     *
+     * @param str    字符串
+     * @param len    bytes切割到的位置（包含）
+     * @param suffix 切割后加上后缀
+     * @return 切割后的字符串
+     * @since 3.1.1
+     */
+    public static String subPreGbk(final CharSequence str, final int len, final CharSequence suffix) {
+        return subPreGbk(str, len, true) + suffix;
+    }
+
+    /**
+     * 截取部分字符串，这里一个汉字的长度认为是2<br>.
+     * 可以自定义halfUp，如len为10，如果截取后最后一个字符是半个字符，{@code true}表示保留，则长度是11，否则长度9
+     *
+     * @param str    字符串
+     * @param len    bytes切割到的位置（包含）
+     * @param halfUp 遇到截取一半的GBK字符，是否保留。
+     * @return 切割后的字符串
+     * @since 5.7.17
+     */
+    public static String subPreGbk(final CharSequence str, final int len, final boolean halfUp) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+
+        int counterOfDoubleByte = 0;
+        final byte[] b = bytes(str, CharsetUtil.CHARSET_GBK);
+        if (b.length <= len) {
+            return str.toString();
+        }
+        for (int i = 0; i < len; i++) {
+            if (b[i] < 0) {
+                counterOfDoubleByte++;
+            }
+        }
+
+        int actualLen = len;
+        if (counterOfDoubleByte % 2 != 0) {
+            if (halfUp) {
+                actualLen += 1;
+            } else {
+                actualLen -= 1;
+            }
+        }
+        return new String(b, 0, actualLen, CharsetUtil.CHARSET_GBK);
+    }
+
+    /**
+     * 切割指定位置之前部分的字符串.
+     *
+     * @param string         字符串
+     * @param toIndexExclude 切割到的位置（不包括）
+     * @return 切割后的剩余的前半部分字符串
+     */
+    public static String subPre(final CharSequence string, final int toIndexExclude) {
+        return sub(string, 0, toIndexExclude);
+    }
+
+    /**
+     * 切割指定位置之后部分的字符串.
+     *
+     * @param string    字符串
+     * @param fromIndex 切割开始的位置（包括）
+     * @return 切割后后剩余的后半部分字符串
+     */
+    public static String subSuf(final CharSequence string, final int fromIndex) {
+        if (isEmpty(string)) {
+            return null;
+        }
+        return sub(string, fromIndex, string.length());
+    }
+
+    /**
+     * 切割指定长度的后部分的字符串.
+     *
+     * <pre>
+     * StrUtil.subSufByLength("abcde", 3)      =    "cde"
+     * StrUtil.subSufByLength("abcde", 0)      =    ""
+     * StrUtil.subSufByLength("abcde", -5)     =    ""
+     * StrUtil.subSufByLength("abcde", -1)     =    ""
+     * StrUtil.subSufByLength("abcde", 5)       =    "abcde"
+     * StrUtil.subSufByLength("abcde", 10)     =    "abcde"
+     * StrUtil.subSufByLength(null, 3)               =    null
+     * </pre>
+     *
+     * @param string 字符串
+     * @param length 切割长度
+     * @return 切割后后剩余的后半部分字符串
+     * @since 4.0.1
+     */
+    public static String subSufByLength(final CharSequence string, final int length) {
+        if (isEmpty(string)) {
+            return null;
+        }
+        if (length <= 0) {
+            return EMPTY;
+        }
+        return sub(string, -length, string.length());
+    }
+
+    /**
+     * 截取字符串,从指定位置开始,截取指定长度的字符串<br>.
+     * 如果fromIndex为正数，则向后截取指定length长度，如果为负数，则向前截取length长度。
+     *
+     * @param input     原始字符串
+     * @param fromIndex 开始的index,包括
+     * @param length    要截取的长度
+     * @return 截取后的字符串
+     * @author weibaohui
+     */
+    public static String subWithLength(final String input, final int fromIndex, final int length) {
+        final int toIndex;
+        if (fromIndex < 0) {
+            toIndex = fromIndex - length;
+        } else {
+            toIndex = fromIndex + length;
+        }
+        return sub(input, fromIndex, toIndex);
+    }
+
+    /**
+     * 截取分隔字符串之前的字符串，不包括分隔字符串<br>.
+     * 如果给定的字符串为空串（null或""）或者分隔字符串为null，返回原字符串<br>
+     * 如果分隔字符串为空串""，则返回空串，如果分隔字符串未找到，返回原字符串，举例如下：
+     *
+     * <pre>
+     * StrUtil.subBefore(null, *, false)      = null
+     * StrUtil.subBefore("", *, false)        = ""
+     * StrUtil.subBefore("abc", "a", false)   = ""
+     * StrUtil.subBefore("abcba", "b", false) = "a"
+     * StrUtil.subBefore("abc", "c", false)   = "ab"
+     * StrUtil.subBefore("abc", "d", false)   = "abc"
+     * StrUtil.subBefore("abc", "", false)    = ""
+     * StrUtil.subBefore("abc", null, false)  = "abc"
+     * </pre>
+     *
+     * @param string          被查找的字符串
+     * @param separator       分隔字符串（不包括）
+     * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
+     * @return 切割后的字符串
+     * @since 3.1.1
+     */
+    public static String subBefore(final CharSequence string, final CharSequence separator, final boolean
+        isLastSeparator) {
+        if (isEmpty(string) || separator == null) {
+            return null == string ? null : string.toString();
+        }
+
+        final String str = string.toString();
+        final String sep = separator.toString();
+        if (sep.isEmpty()) {
+            return EMPTY;
+        }
+        final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
+        if (INDEX_NOT_FOUND == pos) {
+            return str;
+        }
+        if (0 == pos) {
+            return EMPTY;
+        }
+        return str.substring(0, pos);
+    }
+
+    /**
+     * 截取分隔字符串之前的字符串，不包括分隔字符串<br>.
+     * 如果给定的字符串为空串（null或""）或者分隔字符串为null，返回原字符串<br>
+     * 如果分隔字符串未找到，返回原字符串，举例如下：
+     *
+     * <pre>
+     * StrUtil.subBefore(null, *, false)      = null
+     * StrUtil.subBefore("", *, false)        = ""
+     * StrUtil.subBefore("abc", 'a', false)   = ""
+     * StrUtil.subBefore("abcba", 'b', false) = "a"
+     * StrUtil.subBefore("abc", 'c', false)   = "ab"
+     * StrUtil.subBefore("abc", 'd', false)   = "abc"
+     * </pre>
+     *
+     * @param string          被查找的字符串
+     * @param separator       分隔字符串（不包括）
+     * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
+     * @return 切割后的字符串
+     * @since 4.1.15
+     */
+    public static String subBefore(final CharSequence string, final char separator, final boolean isLastSeparator) {
+        if (isEmpty(string)) {
+            return null == string ? null : EMPTY;
+        }
+
+        final String str = string.toString();
+        final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
+        if (INDEX_NOT_FOUND == pos) {
+            return str;
+        }
+        if (0 == pos) {
+            return EMPTY;
+        }
+        return str.substring(0, pos);
+    }
+
+    /**
+     * 截取分隔字符串之后的字符串，不包括分隔字符串<br>.
+     * 如果给定的字符串为空串（null或""），返回原字符串<br>
+     * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串，举例如下：
+     *
+     * <pre>
+     * StrUtil.subAfter(null, *, false)      = null
+     * StrUtil.subAfter("", *, false)        = ""
+     * StrUtil.subAfter(*, null, false)      = ""
+     * StrUtil.subAfter("abc", "a", false)   = "bc"
+     * StrUtil.subAfter("abcba", "b", false) = "cba"
+     * StrUtil.subAfter("abc", "c", false)   = ""
+     * StrUtil.subAfter("abc", "d", false)   = ""
+     * StrUtil.subAfter("abc", "", false)    = "abc"
+     * </pre>
+     *
+     * @param string          被查找的字符串
+     * @param separator       分隔字符串（不包括）
+     * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
+     * @return 切割后的字符串
+     * @since 3.1.1
+     */
+    public static String subAfter(final CharSequence string, final CharSequence separator, final boolean
+        isLastSeparator) {
+        if (isEmpty(string)) {
+            return null == string ? null : EMPTY;
+        }
+        if (separator == null) {
+            return EMPTY;
+        }
+        final String str = string.toString();
+        final String sep = separator.toString();
+        final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
+        if (INDEX_NOT_FOUND == pos || (string.length() - 1) == pos) {
+            return EMPTY;
+        }
+        return str.substring(pos + separator.length());
+    }
+
+    /**
+     * 截取分隔字符串之后的字符串，不包括分隔字符串<br>.
+     * 如果给定的字符串为空串（null或""），返回原字符串<br>
+     * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串，举例如下：
+     *
+     * <pre>
+     * StrUtil.subAfter(null, *, false)      = null
+     * StrUtil.subAfter("", *, false)        = ""
+     * StrUtil.subAfter("abc", 'a', false)   = "bc"
+     * StrUtil.subAfter("abcba", 'b', false) = "cba"
+     * StrUtil.subAfter("abc", 'c', false)   = ""
+     * StrUtil.subAfter("abc", 'd', false)   = ""
+     * </pre>
+     *
+     * @param string          被查找的字符串
+     * @param separator       分隔字符串（不包括）
+     * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
+     * @return 切割后的字符串
+     * @since 4.1.15
+     */
+    public static String subAfter(final CharSequence string, final char separator, final boolean isLastSeparator) {
+        if (isEmpty(string)) {
+            return null == string ? null : EMPTY;
+        }
+        final String str = string.toString();
+        final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
+        if (INDEX_NOT_FOUND == pos) {
+            return EMPTY;
+        }
+        return str.substring(pos + 1);
+    }
+
+    /**
+     * 截取指定字符串中间部分，不包括标识字符串<br>.
+     * <p>
+     * 栗子：
+     *
+     * <pre>
+     * StrUtil.subBetween("wx[b]yz", "[", "]") = "b"
+     * StrUtil.subBetween(null, *, *)          = null
+     * StrUtil.subBetween(*, null, *)          = null
+     * StrUtil.subBetween(*, *, null)          = null
+     * StrUtil.subBetween("", "", "")          = ""
+     * StrUtil.subBetween("", "", "]")         = null
+     * StrUtil.subBetween("", "[", "]")        = null
+     * StrUtil.subBetween("yabcz", "", "")     = ""
+     * StrUtil.subBetween("yabcz", "y", "z")   = "abc"
+     * StrUtil.subBetween("yabczyabcz", "y", "z")   = "abc"
+     * </pre>
+     *
+     * @param str    被切割的字符串
+     * @param before 截取开始的字符串标识
+     * @param after  截取到的字符串标识
+     * @return 截取后的字符串
+     * @since 3.1.1
+     */
+    public static String subBetween(final CharSequence str, final CharSequence before, final CharSequence after) {
+        if (str == null || before == null || after == null) {
+            return null;
+        }
+
+        final String str2 = str.toString();
+        final String before2 = before.toString();
+        final String after2 = after.toString();
+
+        final int start = str2.indexOf(before2);
+        if (start != INDEX_NOT_FOUND) {
+            final int end = str2.indexOf(after2, start + before2.length());
+            if (end != INDEX_NOT_FOUND) {
+                return str2.substring(start + before2.length(), end);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 截取指定字符串中间部分，不包括标识字符串<br>.
+     * <p>
+     * 栗子：
+     *
+     * <pre>
+     * StrUtil.subBetween(null, *)            = null
+     * StrUtil.subBetween("", "")             = ""
+     * StrUtil.subBetween("", "tag")          = null
+     * StrUtil.subBetween("tagabctag", null)  = null
+     * StrUtil.subBetween("tagabctag", "")    = ""
+     * StrUtil.subBetween("tagabctag", "tag") = "abc"
+     * </pre>
+     *
+     * @param str            被切割的字符串
+     * @param beforeAndAfter 截取开始和结束的字符串标识
+     * @return 截取后的字符串
+     * @since 3.1.1
+     */
+    public static String subBetween(final CharSequence str, final CharSequence beforeAndAfter) {
+        return subBetween(str, beforeAndAfter, beforeAndAfter);
+    }
+
+    /**
+     * 截取指定字符串多段中间部分，不包括标识字符串<br>.
+     * <p>
+     * 栗子：
+     *
+     * <pre>
+     * StrUtil.subBetweenAll("wx[b]y[z]", "[", "]")         = ["b","z"]
+     * StrUtil.subBetweenAll(null, *, *)                      = []
+     * StrUtil.subBetweenAll(*, null, *)                      = []
+     * StrUtil.subBetweenAll(*, *, null)                      = []
+     * StrUtil.subBetweenAll("", "", "")                      = []
+     * StrUtil.subBetweenAll("", "", "]")                     = []
+     * StrUtil.subBetweenAll("", "[", "]")                    = []
+     * StrUtil.subBetweenAll("yabcz", "", "")                 = []
+     * StrUtil.subBetweenAll("yabcz", "y", "z")               = ["abc"]
+     * StrUtil.subBetweenAll("yabczyabcz", "y", "z")           = ["abc","abc"]
+     * StrUtil.subBetweenAll("[yabc[zy]abcz]", "[", "]");   = ["zy"]           重叠时只截取内部，
+     * </pre>
+     *
+     * @param str    被切割的字符串
+     * @param prefix 截取开始的字符串标识
+     * @param suffix 截取到的字符串标识
+     * @return 截取后的字符串
+     * @author dahuoyzs
+     * @since 5.2.5
+     */
+    public static String[] subBetweenAll(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+        if (hasEmpty(str, prefix, suffix) ||
+            // 不包含起始字符串，则肯定没有子串
+            false == contains(str, prefix)) {
+            return new String[0];
+        }
+
+        final List<String> result = new LinkedList<>();
+        final String[] split = splitToArray(str, prefix);
+        if (prefix.equals(suffix)) {
+            // 前后缀字符相同，单独处理
+            for (int i = 1, length = split.length - 1; i < length; i += 2) {
+                result.add(split[i]);
+            }
+        } else {
+            int suffixIndex;
+            String fragment;
+            for (int i = 1; i < split.length; i++) {
+                fragment = split[i];
+                suffixIndex = fragment.indexOf(suffix.toString());
+                if (suffixIndex > 0) {
+                    result.add(fragment.substring(0, suffixIndex));
+                }
+            }
+        }
+
+        return result.toArray(new String[0]);
+    }
+
+    /**
+     * 截取指定字符串多段中间部分，不包括标识字符串<br>.
+     * <p>
+     * 栗子：
+     *
+     * <pre>
+     * StrUtil.subBetweenAll(null, *)                      = []
+     * StrUtil.subBetweenAll(*, null)                      = []
+     * StrUtil.subBetweenAll(*, *)                      = []
+     * StrUtil.subBetweenAll("", "")                      = []
+     * StrUtil.subBetweenAll("", "#")                     = []
+     * StrUtil.subBetweenAll("gotanks", "")             = []
+     * StrUtil.subBetweenAll("#gotanks#", "#")           = ["gotanks"]
+     * StrUtil.subBetweenAll("#hello# #world#!", "#")   = ["hello", "world"]
+     * StrUtil.subBetweenAll("#hello# world#!", "#");   = ["hello"]
+     * </pre>
+     *
+     * @param str             被切割的字符串
+     * @param prefixAndSuffix 截取开始和结束的字符串标识
+     * @return 截取后的字符串
+     * @author gotanks
+     * @since 5.5.0
+     */
+    public static String[] subBetweenAll(final CharSequence str, final CharSequence prefixAndSuffix) {
+        return subBetweenAll(str, prefixAndSuffix, prefixAndSuffix);
+    }
+
+    // ------------------------------------------------------------------------ repeat
+
+    /**
+     * 重复某个字符.
+     *
+     * <pre>
+     * StrUtil.repeat('e', 0)  = ""
+     * StrUtil.repeat('e', 3)  = "eee"
+     * StrUtil.repeat('e', -2) = ""
+     * </pre>
+     *
+     * @param c     被重复的字符
+     * @param count 重复的数目，如果小于等于0则返回""
+     * @return 重复字符字符串
+     */
+    public static String repeat(final char c, final int count) {
+        if (count <= 0) {
+            return EMPTY;
+        }
+
+        char[] result = new char[count];
+        Arrays.fill(result, c);
+        return new String(result);
+    }
+
+    /**
+     * 重复某个字符串.
+     *
+     * @param str   被重复的字符
+     * @param count 重复的数目
+     * @return 重复字符字符串
+     */
+    public static String repeat(final CharSequence str, final int count) {
+        if (null == str) {
+            return null;
+        }
+        if (count <= 0 || str.length() == 0) {
+            return EMPTY;
+        }
+        if (count == 1) {
+            return str.toString();
+        }
+
+        // 检查
+        final int len = str.length();
+        final long longSize = (long) len * (long) count;
+        final int size = (int) longSize;
+        if (size != longSize) {
+            throw new ArrayIndexOutOfBoundsException("Required String length is too large: " + longSize);
+        }
+
+        final char[] array = new char[size];
+        str.toString().getChars(0, len, array, 0);
+        int n;
+        for (n = len; n < size - n; n <<= 1) { // n <<= 1相当于n *2
+            System.arraycopy(array, 0, array, n, n);
+        }
+        System.arraycopy(array, 0, array, n, size - n);
+        return new String(array);
+    }
+
+    /**
+     * 重复某个字符串到指定长度.
+     *
+     * @param str    被重复的字符
+     * @param padLen 指定长度
+     * @return 重复字符字符串
+     * @since 4.3.2
+     */
+    public static String repeatByLength(final CharSequence str, final int padLen) {
+        if (null == str) {
+            return null;
+        }
+        if (padLen <= 0) {
+            return StrUtil.EMPTY;
+        }
+        final int strLen = str.length();
+        if (strLen == padLen) {
+            return str.toString();
+        } else if (strLen > padLen) {
+            return subPre(str, padLen);
+        }
+
+        // 重复，直到达到指定长度
+        final char[] padding = new char[padLen];
+        for (int i = 0; i < padLen; i++) {
+            padding[i] = str.charAt(i % strLen);
+        }
+        return new String(padding);
+    }
+
+    /**
+     * 重复某个字符串并通过分界符连接.
+     *
+     * <pre>
+     * StrUtil.repeatAndJoin("?", 5, ",")   = "?,?,?,?,?"
+     * StrUtil.repeatAndJoin("?", 0, ",")   = ""
+     * StrUtil.repeatAndJoin("?", 5, null) = "?????"
+     * </pre>
+     *
+     * @param str       被重复的字符串
+     * @param count     数量
+     * @param delimiter 分界符
+     * @return 连接后的字符串
+     * @since 4.0.1
+     */
+    public static String repeatAndJoin(final CharSequence str, final int count, final CharSequence delimiter) {
+        if (count <= 0) {
+            return EMPTY;
+        }
+        final StringBuilder builder = new StringBuilder(str.length() * count);
+        builder.append(str);
+        int remaining = count - 1;
+
+        final boolean isAppendDelimiter = isNotEmpty(delimiter);
+        while (remaining-- > 0) {
+            if (isAppendDelimiter) {
+                builder.append(delimiter);
+            }
+            builder.append(str);
+        }
+        return builder.toString();
+    }
+
+    // ------------------------------------------------------------------------ equals
+
+    /**
+     * 比较两个字符串（大小写敏感）。
+     *
+     * <pre>
+     * equals(null, null)   = true.
+     * equals(null, &quot;abc&quot;)  = false
+     * equals(&quot;abc&quot;, null)  = false
+     * equals(&quot;abc&quot;, &quot;abc&quot;) = true
+     * equals(&quot;abc&quot;, &quot;ABC&quot;) = false
+     * </pre>
+     *
+     * @param str1 要比较的字符串1
+     * @param str2 要比较的字符串2
+     * @return 如果两个字符串相同，或者都是{@code null}，则返回{@code true}
+     */
+    public static boolean equals(final CharSequence str1, final CharSequence str2) {
+        return equals(str1, str2, false);
+    }
+
+    /**
+     * 比较两个字符串（大小写不敏感）。
+     *
+     * <pre>
+     * equalsIgnoreCase(null, null)   = true.
+     * equalsIgnoreCase(null, &quot;abc&quot;)  = false
+     * equalsIgnoreCase(&quot;abc&quot;, null)  = false
+     * equalsIgnoreCase(&quot;abc&quot;, &quot;abc&quot;) = true
+     * equalsIgnoreCase(&quot;abc&quot;, &quot;ABC&quot;) = true
+     * </pre>
+     *
+     * @param str1 要比较的字符串1
+     * @param str2 要比较的字符串2
+     * @return 如果两个字符串相同，或者都是{@code null}，则返回{@code true}
+     */
+    public static boolean equalsIgnoreCase(final CharSequence str1, final CharSequence str2) {
+        return equals(str1, str2, true);
+    }
+
+    /**
+     * 比较两个字符串是否相等，规则如下.
+     * <ul>
+     *     <li>str1和str2都为{@code null}</li>
+     *     <li>忽略大小写使用{@link String#equalsIgnoreCase(String)}判断相等</li>
+     *     <li>不忽略大小写使用{@link String#contentEquals(CharSequence)}判断相等</li>
+     * </ul>
+     *
+     * @param str1       要比较的字符串1
+     * @param str2       要比较的字符串2
+     * @param ignoreCase 是否忽略大小写
+     * @return 如果两个字符串相同，或者都是{@code null}，则返回{@code true}
+     * @since 3.2.0
+     */
+    public static boolean equals(final CharSequence str1, final CharSequence str2, final boolean ignoreCase) {
+        if (null == str1) {
+            // 只有两个都为null才判断相等
+            return str2 == null;
+        }
+        if (null == str2) {
+            // 字符串2空，字符串1非空，直接false
+            return false;
+        }
+
+        if (ignoreCase) {
+            return str1.toString().equalsIgnoreCase(str2.toString());
+        } else {
+            return str1.toString().contentEquals(str2);
+        }
+    }
+
+    /**
+     * 给定字符串是否与提供的中任一字符串相同（忽略大小写），相同则返回{@code true}，没有相同的返回{@code false}<br>.
+     * 如果参与比对的字符串列表为空，返回{@code false}
+     *
+     * @param str1 给定需要检查的字符串
+     * @param strs 需要参与比对的字符串列表
+     * @return 是否相同
+     * @since 4.3.2
+     */
+    public static boolean equalsAnyIgnoreCase(final CharSequence str1, final CharSequence... strs) {
+        return equalsAny(str1, true, strs);
+    }
+
+    /**
+     * 给定字符串是否与提供的中任一字符串相同，相同则返回{@code true}，没有相同的返回{@code false}<br>.
+     * 如果参与比对的字符串列表为空，返回{@code false}
+     *
+     * @param str1 给定需要检查的字符串
+     * @param strs 需要参与比对的字符串列表
+     * @return 是否相同
+     * @since 4.3.2
+     */
+    public static boolean equalsAny(final CharSequence str1, final CharSequence... strs) {
+        return equalsAny(str1, false, strs);
+    }
+
+    /**
+     * 给定字符串是否与提供的中任一字符串相同，相同则返回{@code true}，没有相同的返回{@code false}<br>.
+     * 如果参与比对的字符串列表为空，返回{@code false}
+     *
+     * @param str1       给定需要检查的字符串
+     * @param ignoreCase 是否忽略大小写
+     * @param strs       需要参与比对的字符串列表
+     * @return 是否相同
+     * @since 4.3.2
+     */
+    public static boolean equalsAny(final CharSequence str1, final boolean ignoreCase, final CharSequence... strs) {
+        if (ArrayUtil.isEmpty(strs)) {
+            return false;
+        }
+
+        for (CharSequence str : strs) {
+            if (equals(str1, str, ignoreCase)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 字符串指定位置的字符是否与给定字符相同<br>.
+     * 如果字符串为null，返回false<br>
+     * 如果给定的位置大于字符串长度，返回false<br>
+     * 如果给定的位置小于0，返回false
+     *
+     * @param str      字符串
+     * @param position 位置
+     * @param c        需要对比的字符
+     * @return 字符串指定位置的字符是否与给定字符相同
+     * @since 3.3.1
+     */
+    public static boolean equalsCharAt(final CharSequence str, final int position, final char c) {
+        if (null == str || position < 0) {
+            return false;
+        }
+        return str.length() > position && c == str.charAt(position);
+    }
+
+    /**
+     * 截取第一个字串的部分字符，与第二个字符串比较（长度一致），判断截取的子串是否相同<br>.
+     * 任意一个字符串为null返回false
+     *
+     * @param str1       第一个字符串
+     * @param start1     第一个字符串开始的位置
+     * @param str2       第二个字符串
+     * @param ignoreCase 是否忽略大小写
+     * @return 子串是否相同
+     * @since 3.2.1
+     */
+    public static boolean isSubEquals(final CharSequence str1, final int start1, final CharSequence str2, final boolean
+        ignoreCase) {
+        return isSubEquals(str1, start1, str2, 0, str2.length(), ignoreCase);
+    }
+
+    /**
+     * 截取两个字符串的不同部分（长度一致），判断截取的子串是否相同<br>.
+     * 任意一个字符串为null返回false
+     *
+     * @param str1       第一个字符串
+     * @param start1     第一个字符串开始的位置
+     * @param str2       第二个字符串
+     * @param start2     第二个字符串开始的位置
+     * @param length     截取长度
+     * @param ignoreCase 是否忽略大小写
+     * @return 子串是否相同
+     * @since 3.2.1
+     */
+    public static boolean isSubEquals(final CharSequence str1, final int start1, final CharSequence str2, final int
+        start2, final int length, final boolean ignoreCase) {
+        if (null == str1 || null == str2) {
+            return false;
+        }
+
+        return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
+    }
+
+    // ------------------------------------------------------------------------ format
+
+    /**
+     * 格式化文本, {} 表示占位符<br>.
+     * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
+     * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
+     * 例：<br>
+     * 通常使用：format("this is {} for {}", "a", "b") =》 this is a for b<br>
+     * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is {} for a<br>
+     * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
+     *
+     * @param template 文本模板，被替换的部分用 {} 表示，如果模板为null，返回"null"
+     * @param params   参数值
+     * @return 格式化后的文本，如果模板为null，返回"null"
+     */
+    public static String format(final CharSequence template, final Object... params) {
+        if (null == template) {
+            return NULL;
+        }
+        if (ArrayUtil.isEmpty(params) || isBlank(template)) {
+            return template.toString();
+        }
+        return StrFormatter.format(template.toString(), params);
+    }
+
+    /**
+     * 有序的格式化文本，使用{number}做为占位符<br>.
+     * 通常使用：format("this is {0} for {1}", "a", "b") =》 this is a for b<br>
+     *
+     * @param pattern   文本格式
+     * @param arguments 参数
+     * @return 格式化后的文本
+     */
+    public static String indexedFormat(final CharSequence pattern, final Object... arguments) {
+        return MessageFormat.format(pattern.toString(), arguments);
+    }
+    // ------------------------------------------------------------------------ bytes
+
+    /**
+     * 编码字符串，编码为UTF-8.
+     *
+     * @param str 字符串
+     * @return 编码后的字节码
+     */
+    public static byte[] utf8Bytes(final CharSequence str) {
+        return bytes(str, CharsetUtil.CHARSET_UTF_8);
+    }
+
+    /**
+     * 编码字符串<br>.
+     * 使用系统默认编码
+     *
+     * @param str 字符串
+     * @return 编码后的字节码
+     */
+    public static byte[] bytes(final CharSequence str) {
+        return bytes(str, Charset.defaultCharset());
+    }
+
+    /**
+     * 编码字符串.
+     *
+     * @param str     字符串
+     * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+     * @return 编码后的字节码
+     */
+    public static byte[] bytes(final CharSequence str, final String charset) {
+        return bytes(str, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+    }
+
+    /**
+     * 编码字符串.
+     *
+     * @param str     字符串
+     * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+     * @return 编码后的字节码
+     */
+    public static byte[] bytes(final CharSequence str, final Charset charset) {
+        if (str == null) {
+            return null;
+        }
+
+        if (null == charset) {
+            return str.toString().getBytes();
+        }
+        return str.toString().getBytes(charset);
+    }
+
+    /**
+     * 字符串转换为byteBuffer.
+     *
+     * @param str     字符串
+     * @param charset 编码
+     * @return byteBuffer
+     */
+    public static ByteBuffer byteBuffer(final CharSequence str, final String charset) {
+        return ByteBuffer.wrap(bytes(str, charset));
+    }
+
+    // ------------------------------------------------------------------------ wrap
+
+    /**
+     * 包装指定字符串<br>.
+     * 当前缀和后缀一致时使用此方法
+     *
+     * @param str             被包装的字符串
+     * @param prefixAndSuffix 前缀和后缀
+     * @return 包装后的字符串
+     * @since 3.1.0
+     */
+    public static String wrap(final CharSequence str, final CharSequence prefixAndSuffix) {
+        return wrap(str, prefixAndSuffix, prefixAndSuffix);
+    }
+
+    /**
+     * 包装指定字符串.
+     *
+     * @param str    被包装的字符串
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @return 包装后的字符串
+     */
+    public static String wrap(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+        return nullToEmpty(prefix).concat(nullToEmpty(str)).concat(nullToEmpty(suffix));
+    }
+
+    /**
+     * 使用单个字符包装多个字符串.
+     *
+     * @param prefixAndSuffix 前缀和后缀
+     * @param strs            多个字符串
+     * @return 包装的字符串数组
+     * @since 5.4.1
+     */
+    public static String[] wrapAllWithPair(final CharSequence prefixAndSuffix, final CharSequence... strs) {
+        return wrapAll(prefixAndSuffix, prefixAndSuffix, strs);
+    }
+
+    /**
+     * 包装多个字符串.
+     *
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @param strs   多个字符串
+     * @return 包装的字符串数组
+     * @since 4.0.7
+     */
+    public static String[] wrapAll(final CharSequence prefix, final CharSequence suffix, final CharSequence... strs) {
+        final String[] results = new String[strs.length];
+        for (int i = 0; i < strs.length; i++) {
+            results[i] = wrap(strs[i], prefix, suffix);
+        }
+        return results;
+    }
+
+    /**
+     * 包装指定字符串，如果前缀或后缀已经包含对应的字符串，则不再包装.
+     *
+     * @param str    被包装的字符串
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @return 包装后的字符串
+     */
+    public static String wrapIfMissing(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+        int len = 0;
+        if (isNotEmpty(str)) {
+            len += str.length();
+        }
+        if (isNotEmpty(prefix)) {
+            len += prefix.length();
+        }
+        if (isNotEmpty(suffix)) {
+            len += suffix.length();
+        }
+        StringBuilder sb = new StringBuilder(len);
+        if (isNotEmpty(prefix) && false == startWith(str, prefix)) {
+            sb.append(prefix);
+        }
+        if (isNotEmpty(str)) {
+            sb.append(str);
+        }
+        if (isNotEmpty(suffix) && false == endWith(str, suffix)) {
+            sb.append(suffix);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 使用成对的字符包装多个字符串，如果已经包装，则不再包装.
+     *
+     * @param prefixAndSuffix 前缀和后缀
+     * @param strs            多个字符串
+     * @return 包装的字符串数组
+     * @since 5.4.1
+     */
+    public static String[] wrapAllWithPairIfMissing(final CharSequence prefixAndSuffix, final CharSequence... strs) {
+        return wrapAllIfMissing(prefixAndSuffix, prefixAndSuffix, strs);
+    }
+
+    /**
+     * 包装多个字符串，如果已经包装，则不再包装.
+     *
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @param strs   多个字符串
+     * @return 包装的字符串数组
+     * @since 4.0.7
+     */
+    public static String[] wrapAllIfMissing(final CharSequence prefix, final CharSequence suffix, final CharSequence...
+        strs) {
+        final String[] results = new String[strs.length];
+        for (int i = 0; i < strs.length; i++) {
+            results[i] = wrapIfMissing(strs[i], prefix, suffix);
+        }
+        return results;
+    }
+
+    /**
+     * 去掉字符包装，如果未被包装则返回原字符串.
+     *
+     * @param str    字符串
+     * @param prefix 前置字符串
+     * @param suffix 后置字符串
+     * @return 去掉包装字符的字符串
+     * @since 4.0.1
+     */
+    public static String unWrap(final CharSequence str, final String prefix, final String suffix) {
+        if (isWrap(str, prefix, suffix)) {
+            return sub(str, prefix.length(), str.length() - suffix.length());
+        }
+        return str.toString();
+    }
+
+    /**
+     * 去掉字符包装，如果未被包装则返回原字符串.
+     *
+     * @param str    字符串
+     * @param prefix 前置字符
+     * @param suffix 后置字符
+     * @return 去掉包装字符的字符串
+     * @since 4.0.1
+     */
+    public static String unWrap(final CharSequence str, final char prefix, final char suffix) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+        if (str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix) {
+            return sub(str, 1, str.length() - 1);
+        }
+        return str.toString();
+    }
+
+    /**
+     * 去掉字符包装，如果未被包装则返回原字符串.
+     *
+     * @param str             字符串
+     * @param prefixAndSuffix 前置和后置字符
+     * @return 去掉包装字符的字符串
+     * @since 4.0.1
+     */
+    public static String unWrap(final CharSequence str, final char prefixAndSuffix) {
+        return unWrap(str, prefixAndSuffix, prefixAndSuffix);
+    }
+
+    /**
+     * 指定字符串是否被包装.
+     *
+     * @param str    字符串
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @return 是否被包装
+     */
+    public static boolean isWrap(final CharSequence str, final String prefix, final String suffix) {
+        if (ArrayUtil.hasNull(str, prefix, suffix)) {
+            return false;
+        }
+        final String str2 = str.toString();
+        return str2.startsWith(prefix) && str2.endsWith(suffix);
+    }
+
+    /**
+     * 指定字符串是否被同一字符包装（前后都有这些字符串）.
+     *
+     * @param str     字符串
+     * @param wrapper 包装字符串
+     * @return 是否被包装
+     */
+    public static boolean isWrap(final CharSequence str, final String wrapper) {
+        return isWrap(str, wrapper, wrapper);
+    }
+
+    /**
+     * 指定字符串是否被同一字符包装（前后都有这些字符串）.
+     *
+     * @param str     字符串
+     * @param wrapper 包装字符
+     * @return 是否被包装
+     */
+    public static boolean isWrap(final CharSequence str, final char wrapper) {
+        return isWrap(str, wrapper, wrapper);
+    }
+
+    /**
+     * 指定字符串是否被包装.
+     *
+     * @param str        字符串
+     * @param prefixChar 前缀
+     * @param suffixChar 后缀
+     * @return 是否被包装
+     */
+    public static boolean isWrap(final CharSequence str, final char prefixChar, final char suffixChar) {
+        if (null == str || str.length() < 2) {
+            return false;
+        }
+
+        return str.charAt(0) == prefixChar && str.charAt(str.length() - 1) == suffixChar;
+    }
+
+    // ------------------------------------------------------------------------ pad
+
+    /**
+     * 补充字符串以满足指定长度，如果提供的字符串大于指定长度，截断之.
+     * 同：leftPad (org.apache.commons.lang3.leftPad)
+     *
+     * <pre>
+     * StrUtil.padPre(null, *, *);//null
+     * StrUtil.padPre("1", 3, "ABC");//"AB1"
+     * StrUtil.padPre("123", 2, "ABC");//"12"
+     * StrUtil.padPre("1039", -1, "0");//"103"
+     * </pre>
+     *
+     * @param str    字符串
+     * @param length 长度
+     * @param padStr 补充的字符
+     * @return 补充后的字符串
+     */
+    public static String padPre(final CharSequence str, final int length, final CharSequence padStr) {
+        if (null == str) {
+            return null;
+        }
+        final int strLen = str.length();
+        if (strLen == length) {
+            return str.toString();
+        } else if (strLen > length) {
+            //如果提供的字符串大于指定长度，截断之
+            return subPre(str, length);
+        }
+
+        return repeatByLength(padStr, length - strLen).concat(str.toString());
+    }
+
+    /**
+     * 补充字符串以满足最小长度，如果提供的字符串大于指定长度，截断之.
+     * 同：leftPad (org.apache.commons.lang3.leftPad)
+     *
+     * <pre>
+     * StrUtil.padPre(null, *, *);//null
+     * StrUtil.padPre("1", 3, '0');//"001"
+     * StrUtil.padPre("123", 2, '0');//"12"
+     * </pre>
+     *
+     * @param str     字符串
+     * @param length  长度
+     * @param padChar 补充的字符
+     * @return 补充后的字符串
+     */
+    public static String padPre(final CharSequence str, final int length, final char padChar) {
+        if (null == str) {
+            return null;
+        }
+        final int strLen = str.length();
+        if (strLen == length) {
+            return str.toString();
+        } else if (strLen > length) {
+            //如果提供的字符串大于指定长度，截断之
+            return subPre(str, length);
+        }
+
+        return repeat(padChar, length - strLen).concat(str.toString());
+    }
+
+    /**
+     * 补充字符串以满足最小长度，如果提供的字符串大于指定长度，截断之.
+     *
+     * <pre>
+     * StrUtil.padAfter(null, *, *);//null
+     * StrUtil.padAfter("1", 3, '0');//"100"
+     * StrUtil.padAfter("123", 2, '0');//"23"
+     * StrUtil.padAfter("123", -1, '0')//"" 空串
+     * </pre>
+     *
+     * @param str     字符串，如果为{@code null}，直接返回null
+     * @param length  长度
+     * @param padChar 补充的字符
+     * @return 补充后的字符串
+     */
+    public static String padAfter(final CharSequence str, final int length, final char padChar) {
+        if (null == str) {
+            return null;
+        }
+        final int strLen = str.length();
+        if (strLen == length) {
+            return str.toString();
+        } else if (strLen > length) {
+            //如果提供的字符串大于指定长度，截断之
+            return sub(str, strLen - length, strLen);
+        }
+
+        return str.toString().concat(repeat(padChar, length - strLen));
+    }
+
+    /**
+     * 补充字符串以满足最小长度.
+     *
+     * <pre>
+     * StrUtil.padAfter(null, *, *);//null
+     * StrUtil.padAfter("1", 3, "ABC");//"1AB"
+     * StrUtil.padAfter("123", 2, "ABC");//"23"
+     * </pre>
+     *
+     * @param str    字符串，如果为{@code null}，直接返回null
+     * @param length 长度
+     * @param padStr 补充的字符
+     * @return 补充后的字符串
+     * @since 4.3.2
+     */
+    public static String padAfter(final CharSequence str, final int length, final CharSequence padStr) {
+        if (null == str) {
+            return null;
+        }
+        final int strLen = str.length();
+        if (strLen == length) {
+            return str.toString();
+        } else if (strLen > length) {
+            //如果提供的字符串大于指定长度，截断之
+            return subSufByLength(str, length);
+        }
+
+        return str.toString().concat(repeatByLength(padStr, length - strLen));
+    }
+
+    // ------------------------------------------------------------------------ center
+
+    /**
+     * 居中字符串，两边补充空格符，如果指定长度小于字符串，则返回原字符串.
+     *
+     * <pre>
+     * StrUtil.center(null, *)   = null
+     * StrUtil.center("", 4)     = "    "
+     * StrUtil.center("ab", -1)  = "ab"
+     * StrUtil.center("ab", 4)   = " ab "
+     * StrUtil.center("abcd", 2) = "abcd"
+     * StrUtil.center("a", 4)    = " a  "
+     * </pre>
+     *
+     * @param str  字符串
+     * @param size 指定长度
+     * @return 补充后的字符串
+     * @since 4.3.2
+     */
+    public static String center(final CharSequence str, final int size) {
+        return center(str, size, CharUtil.SPACE);
+    }
+
+    /**
+     * 居中字符串，两边补充指定字符，如果指定长度小于字符串，则返回原字符串.
+     *
+     * <pre>
+     * StrUtil.center(null, *, *)     = null
+     * StrUtil.center("", 4, ' ')     = "    "
+     * StrUtil.center("ab", -1, ' ')  = "ab"
+     * StrUtil.center("ab", 4, ' ')   = " ab "
+     * StrUtil.center("abcd", 2, ' ') = "abcd"
+     * StrUtil.center("a", 4, ' ')    = " a  "
+     * StrUtil.center("a", 4, 'y')   = "yayy"
+     * StrUtil.center("abc", 7, ' ')   = "  abc  "
+     * </pre>
+     *
+     * @param str     字符串
+     * @param size    指定长度
+     * @param padChar 两边补充的字符
+     * @return 补充后的字符串
+     * @since 4.3.2
+     */
+    public static String center(final CharSequence str, final int size, final char padChar) {
+        if (str == null || size <= 0) {
+            return str(str);
+        }
+        final int strLen = str.length();
+        final int pads = size - strLen;
+        if (pads <= 0) {
+            return str.toString();
+        }
+        CharSequence padded = padPre(str, strLen + pads / 2, padChar);
+        padded = padAfter(padded, size, padChar);
+        return padded.toString();
+    }
+
+    /**
+     * 居中字符串，两边补充指定字符串，如果指定长度小于字符串，则返回原字符串.
+     *
+     * <pre>
+     * StrUtil.center(null, *, *)     = null
+     * StrUtil.center("", 4, " ")     = "    "
+     * StrUtil.center("ab", -1, " ")  = "ab"
+     * StrUtil.center("ab", 4, " ")   = " ab "
+     * StrUtil.center("abcd", 2, " ") = "abcd"
+     * StrUtil.center("a", 4, " ")    = " a  "
+     * StrUtil.center("a", 4, "yz")   = "yayz"
+     * StrUtil.center("abc", 7, null) = "  abc  "
+     * StrUtil.center("abc", 7, "")   = "  abc  "
+     * </pre>
+     *
+     * @param str    字符串
+     * @param size   指定长度
+     * @param padStr 两边补充的字符串
+     * @return 补充后的字符串
+     */
+    public static String center(final CharSequence str, final int size, final CharSequence padStr) {
+        if (str == null || size <= 0) {
+            return str(str);
+        }
+        final CharSequence actualPad = isEmpty(padStr) ? SPACE : padStr;
+        final int strLen = str.length();
+        final int pads = size - strLen;
+        if (pads <= 0) {
+            return str.toString();
+        }
+        CharSequence padded = padPre(str, strLen + pads / 2, actualPad);
+        padded = padAfter(padded, size, actualPad);
+        return padded.toString();
+    }
+
+    // ------------------------------------------------------------------------ str
+
+    /**
+     * {@link CharSequence} 转为字符串，null安全.
+     *
+     * @param cs {@link CharSequence}
+     * @return 字符串
+     */
+    public static String str(final CharSequence cs) {
+        return null == cs ? null : cs.toString();
+    }
+
+    // ------------------------------------------------------------------------ count
+
+    /**
+     * 统计指定内容中包含指定字符串的数量<br>.
+     * 参数为 {@code null} 或者 "" 返回 {@code 0}.
+     *
+     * <pre>
+     * StrUtil.count(null, *)       = 0
+     * StrUtil.count("", *)         = 0
+     * StrUtil.count("abba", null)  = 0
+     * StrUtil.count("abba", "")    = 0
+     * StrUtil.count("abba", "a")   = 2
+     * StrUtil.count("abba", "ab")  = 1
+     * StrUtil.count("abba", "xxx") = 0
+     * </pre>
+     *
+     * @param content      被查找的字符串
+     * @param strForSearch 需要查找的字符串
+     * @return 查找到的个数
+     */
+    public static int count(final CharSequence content, final CharSequence strForSearch) {
+        if (hasEmpty(content, strForSearch) || strForSearch.length() > content.length()) {
+            return 0;
+        }
+
+        int count = 0;
+        int idx = 0;
+        final String content2 = content.toString();
+        final String strForSearch2 = strForSearch.toString();
+        while ((idx = content2.indexOf(strForSearch2, idx)) > -1) {
+            count++;
+            idx += strForSearch.length();
+        }
+        return count;
+    }
+
+    /**
+     * 统计指定内容中包含指定字符的数量.
+     *
+     * @param content       内容
+     * @param charForSearch 被统计的字符
+     * @return 包含数量
+     */
+    public static int count(final CharSequence content, final char charForSearch) {
+        int count = 0;
+        if (isEmpty(content)) {
+            return 0;
+        }
+        int contentLength = content.length();
+        for (int i = 0; i < contentLength; i++) {
+            if (charForSearch == content.charAt(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // ------------------------------------------------------------------------ compare
+
+    /**
+     * 比较两个字符串，用于排序.
+     *
+     * <pre>
+     * StrUtil.compare(null, null, *)     = 0
+     * StrUtil.compare(null , "a", true)  &lt; 0
+     * StrUtil.compare(null , "a", false) &gt; 0
+     * StrUtil.compare("a", null, true)   &gt; 0
+     * StrUtil.compare("a", null, false)  &lt; 0
+     * StrUtil.compare("abc", "abc", *)   = 0
+     * StrUtil.compare("a", "b", *)       &lt; 0
+     * StrUtil.compare("b", "a", *)       &gt; 0
+     * StrUtil.compare("a", "B", *)       &gt; 0
+     * StrUtil.compare("ab", "abc", *)    &lt; 0
+     * </pre>
+     *
+     * @param str1       字符串1
+     * @param str2       字符串2
+     * @param nullIsLess {@code null} 值是否排在前（null是否小于非空值）
+     * @return 排序值。负数：str1 &lt; str2，正数：str1 &gt; str2, 0：str1 == str2
+     */
+    public static int compare(final CharSequence str1, final CharSequence str2, final boolean nullIsLess) {
+        if (str1 == str2) {
+            return 0;
+        }
+        if (str1 == null) {
+            return nullIsLess ? -1 : 1;
+        }
+        if (str2 == null) {
+            return nullIsLess ? 1 : -1;
+        }
+        return str1.toString().compareTo(str2.toString());
+    }
+
+    /**
+     * 比较两个字符串，用于排序，大小写不敏感.
+     *
+     * <pre>
+     * StrUtil.compareIgnoreCase(null, null, *)     = 0
+     * StrUtil.compareIgnoreCase(null , "a", true)  &lt; 0
+     * StrUtil.compareIgnoreCase(null , "a", false) &gt; 0
+     * StrUtil.compareIgnoreCase("a", null, true)   &gt; 0
+     * StrUtil.compareIgnoreCase("a", null, false)  &lt; 0
+     * StrUtil.compareIgnoreCase("abc", "abc", *)   = 0
+     * StrUtil.compareIgnoreCase("abc", "ABC", *)   = 0
+     * StrUtil.compareIgnoreCase("a", "b", *)       &lt; 0
+     * StrUtil.compareIgnoreCase("b", "a", *)       &gt; 0
+     * StrUtil.compareIgnoreCase("a", "B", *)       &lt; 0
+     * StrUtil.compareIgnoreCase("A", "b", *)       &lt; 0
+     * StrUtil.compareIgnoreCase("ab", "abc", *)    &lt; 0
+     * </pre>
+     *
+     * @param str1       字符串1
+     * @param str2       字符串2
+     * @param nullIsLess {@code null} 值是否排在前（null是否小于非空值）
+     * @return 排序值。负数：str1 &lt; str2，正数：str1 &gt; str2, 0：str1 == str2
+     */
+    public static int compareIgnoreCase(final CharSequence str1, final CharSequence str2, final boolean nullIsLess) {
+        if (str1 == str2) {
+            return 0;
+        }
+        if (str1 == null) {
+            return nullIsLess ? -1 : 1;
+        }
+        if (str2 == null) {
+            return nullIsLess ? 1 : -1;
+        }
+        return str1.toString().compareToIgnoreCase(str2.toString());
+    }
+
+    /**
+     * 比较两个版本<br>.
+     * null版本排在最小：即：
+     *
+     * <pre>
+     * StrUtil.compareVersion(null, "v1") &lt; 0
+     * StrUtil.compareVersion("v1", "v1")  = 0
+     * StrUtil.compareVersion(null, null)   = 0
+     * StrUtil.compareVersion("v1", null) &gt; 0
+     * StrUtil.compareVersion("1.0.0", "1.0.2") &lt; 0
+     * StrUtil.compareVersion("1.0.2", "1.0.2a") &lt; 0
+     * StrUtil.compareVersion("1.13.0", "1.12.1c") &gt; 0
+     * StrUtil.compareVersion("V0.0.20170102", "V0.0.20170101") &gt; 0
+     * </pre>
+     *
+     * @param version1 版本1
+     * @param version2 版本2
+     * @return 排序值。负数：version1 &lt; version2，正数：version1 &gt; version2, 0：version1 == version2
+     * @since 4.0.2
+     */
+    public static int compareVersion(final CharSequence version1, final CharSequence version2) {
+        return VersionComparator.INSTANCE.compare(str(version1), str(version2));
+    }
+
+    // ------------------------------------------------------------------------ append and prepend
+
+    /**
+     * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串<br>.
+     * 不忽略大小写
+     *
+     * @param str      被检查的字符串
+     * @param suffix   需要添加到结尾的字符串
+     * @param suffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
+     * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+     * @since 3.0.7
+     */
+    public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final CharSequence...
+        suffixes) {
+        return appendIfMissing(str, suffix, false, suffixes);
+    }
+
+    /**
+     * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串<br>.
+     * 忽略大小写
+     *
+     * @param str      被检查的字符串
+     * @param suffix   需要添加到结尾的字符串
+     * @param suffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
+     * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+     * @since 3.0.7
+     */
+    public static String appendIfMissingIgnoreCase(final CharSequence str, final CharSequence suffix, final
+        CharSequence... suffixes) {
+        return appendIfMissing(str, suffix, true, suffixes);
+    }
+
+    /**
+     * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串.
+     *
+     * @param str          被检查的字符串
+     * @param suffix       需要添加到结尾的字符串，不参与检查匹配
+     * @param ignoreCase   检查结尾时是否忽略大小写
+     * @param testSuffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
+     * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+     * @since 3.0.7
+     */
+    public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final boolean ignoreCase,
+        final CharSequence... testSuffixes) {
+        if (str == null || isEmpty(suffix) || endWith(str, suffix, ignoreCase)) {
+            return str(str);
+        }
+        if (ArrayUtil.isNotEmpty(testSuffixes)) {
+            for (final CharSequence testSuffix : testSuffixes) {
+                if (endWith(str, testSuffix, ignoreCase)) {
+                    return str.toString();
+                }
+            }
+        }
+        return str.toString().concat(suffix.toString());
+    }
+
+    /**
+     * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串<br>.
+     * 不忽略大小写
+     *
+     * @param str      被检查的字符串
+     * @param prefix   需要添加到首部的字符串
+     * @param prefixes 需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
+     * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+     * @since 3.0.7
+     */
+    public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final CharSequence...
+        prefixes) {
+        return prependIfMissing(str, prefix, false, prefixes);
+    }
+
+    /**
+     * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串<br>.
+     * 忽略大小写
+     *
+     * @param str      被检查的字符串
+     * @param prefix   需要添加到首部的字符串
+     * @param prefixes 需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
+     * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+     * @since 3.0.7
+     */
+    public static String prependIfMissingIgnoreCase(final CharSequence str, final CharSequence prefix, final
+        CharSequence... prefixes) {
+        return prependIfMissing(str, prefix, true, prefixes);
+    }
+
+    /**
+     * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串.
+     *
+     * @param str        被检查的字符串
+     * @param prefix     需要添加到首部的字符串
+     * @param ignoreCase 检查结尾时是否忽略大小写
+     * @param prefixes   需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
+     * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+     * @since 3.0.7
+     */
+    public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final boolean ignoreCase,
+        final CharSequence... prefixes) {
+        if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
+            return str(str);
+        }
+        if (prefixes != null) {
+            for (final CharSequence s : prefixes) {
+                if (startWith(str, s, ignoreCase)) {
+                    return str.toString();
+                }
+            }
+        }
+        return prefix.toString().concat(str.toString());
+    }
+
+    // ------------------------------------------------------------------------ replace
+
+    /**
+     * 替换字符串中的指定字符串，忽略大小写.
+     *
+     * @param str         字符串
+     * @param searchStr   被查找的字符串
+     * @param replacement 被替换的字符串
+     * @return 替换后的字符串
+     * @since 4.0.3
+     */
+    public static String replaceIgnoreCase(final CharSequence str, final CharSequence searchStr, final CharSequence
+        replacement) {
+        return replace(str, 0, searchStr, replacement, true);
+    }
+
+    /**
+     * 替换字符串中的指定字符串.
+     *
+     * @param str         字符串
+     * @param searchStr   被查找的字符串
+     * @param replacement 被替换的字符串
+     * @return 替换后的字符串
+     * @since 4.0.3
+     */
+    public static String replace(final CharSequence str, final CharSequence searchStr, final CharSequence replacement) {
+        return replace(str, 0, searchStr, replacement, false);
+    }
+
+    /**
+     * 替换字符串中的指定字符串.
+     *
+     * @param str         字符串
+     * @param searchStr   被查找的字符串
+     * @param replacement 被替换的字符串
+     * @param ignoreCase  是否忽略大小写
+     * @return 替换后的字符串
+     * @since 4.0.3
+     */
+    public static String replace(final CharSequence str, final CharSequence searchStr, final CharSequence replacement,
+        final boolean ignoreCase) {
+        return replace(str, 0, searchStr, replacement, ignoreCase);
+    }
+
+    /**
+     * 替换字符串中的指定字符串.
+     *
+     * @param str         字符串
+     * @param fromIndex   开始位置（包括）
+     * @param searchStr   被查找的字符串
+     * @param replacement 被替换的字符串
+     * @param ignoreCase  是否忽略大小写
+     * @return 替换后的字符串
+     * @since 4.0.3
+     */
+    public static String replace(final CharSequence str, final int fromIndex, final CharSequence searchStr, final
+        CharSequence replacement, final boolean ignoreCase) {
+        if (isEmpty(str) || isEmpty(searchStr)) {
+            return str(str);
+        }
+        final CharSequence actualReplacement = null == replacement ? EMPTY : replacement;
+
+        final int strLength = str.length();
+        final int searchStrLength = searchStr.length();
+        if (strLength < searchStrLength) {
+            // issue#I4M16G@Gitee
+            return str(str);
+        }
+
+        final int actualFromIndex;
+        if (fromIndex > strLength) {
+            return str(str);
+        } else if (fromIndex < 0) {
+            actualFromIndex = 0;
+        } else {
+            actualFromIndex = fromIndex;
+        }
+
+        final StringBuilder result = new StringBuilder(strLength - searchStrLength + actualReplacement.length());
+        if (0 != actualFromIndex) {
+            result.append(str.subSequence(0, actualFromIndex));
+        }
+
+        int preIndex = actualFromIndex;
+        int index;
+        while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > -1) {
+            result.append(str.subSequence(preIndex, index));
+            result.append(actualReplacement);
+            preIndex = index + searchStrLength;
+        }
+
+        if (preIndex < strLength) {
+            // 结尾部分
+            result.append(str.subSequence(preIndex, strLength));
+        }
+        return result.toString();
+    }
+
+    /**
+     * 替换指定字符串的指定区间内字符为固定字符<br>.
+     * 此方法使用{@link String#codePoints()}完成拆分替换
+     *
+     * @param str          字符串
+     * @param startInclude 开始位置（包含）
+     * @param endExclude   结束位置（不包含）
+     * @param replacedChar 被替换的字符
+     * @return 替换后的字符串
+     * @since 3.2.1
+     * @deprecated 歧义，请使用{@link #replaceByCodePoint(CharSequence, int, int, char)}
+     */
+    @Deprecated
+    public static String replace(final CharSequence str, final int startInclude, final int endExclude, final char
+        replacedChar) {
+        return replaceByCodePoint(str, startInclude, endExclude, replacedChar);
+    }
+
+    /**
+     * 替换指定字符串的指定区间内字符为固定字符<br>.
+     * 此方法使用{@link String#codePoints()}完成拆分替换
+     *
+     * @param str          字符串
+     * @param startInclude 开始位置（包含）
+     * @param endExclude   结束位置（不包含）
+     * @param replacedChar 被替换的字符
+     * @return 替换后的字符串
+     * @since 5.8.27
+     */
+    public static String replaceByCodePoint(final CharSequence str, final int startInclude, final int endExclude, final
+        char replacedChar) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+        final String originalStr = str(str);
+        int[] strCodePoints = originalStr.codePoints().toArray();
+        final int strLength = strCodePoints.length;
+        if (startInclude > strLength) {
+            return originalStr;
+        }
+        final int actualEnd = endExclude > strLength ? strLength : endExclude;
+        if (startInclude > actualEnd) {
+            // 如果起始位置大于结束位置，不替换
+            return originalStr;
+        }
+
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < strLength; i++) {
+            if (i >= startInclude && i < actualEnd) {
+                stringBuilder.append(replacedChar);
+            } else {
+                stringBuilder.append(new String(strCodePoints, i, 1));
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 替换指定字符串的指定区间内字符为指定字符串，字符串只重复一次<br>.
+     * 此方法使用{@link String#codePoints()}完成拆分替换
+     *
+     * @param str          字符串
+     * @param startInclude 开始位置（包含）
+     * @param endExclude   结束位置（不包含）
+     * @param replacedStr  被替换的字符串
+     * @return 替换后的字符串
+     * @since 3.2.1
+     * @deprecated 歧义，请使用{@link #replaceByCodePoint(CharSequence, int, int, CharSequence)}
+     */
+    @Deprecated
+    public static String replace(final CharSequence str, final int startInclude, final int endExclude, final
+        CharSequence replacedStr) {
+        return replaceByCodePoint(str, startInclude, endExclude, replacedStr);
+    }
+
+    /**
+     * 替换指定字符串的指定区间内字符为指定字符串，字符串只重复一次<br>.
+     * 此方法使用{@link String#codePoints()}完成拆分替换
+     *
+     * @param str          字符串
+     * @param startInclude 开始位置（包含）
+     * @param endExclude   结束位置（不包含）
+     * @param replacedStr  被替换的字符串
+     * @return 替换后的字符串
+     * @since 5.8.27
+     */
+    public static String replaceByCodePoint(final CharSequence str, final int startInclude, final int endExclude, final
+        CharSequence replacedStr) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+        final String originalStr = str(str);
+        int[] strCodePoints = originalStr.codePoints().toArray();
+        final int strLength = strCodePoints.length;
+        if (startInclude > strLength) {
+            return originalStr;
+        }
+        final int actualEnd = endExclude > strLength ? strLength : endExclude;
+        if (startInclude > actualEnd) {
+            // 如果起始位置大于结束位置，不替换
+            return originalStr;
+        }
+
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < startInclude; i++) {
+            stringBuilder.append(new String(strCodePoints, i, 1));
+        }
+        stringBuilder.append(replacedStr);
+        for (int i = actualEnd; i < strLength; i++) {
+            stringBuilder.append(new String(strCodePoints, i, 1));
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>.
+     * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
+     * <pre class="code">
+     *     replace(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
+     *     // 结果为："ZZZaaabbbccc中文-1234-"
+     * </pre>
+     *
+     * @param str        要替换的字符串
+     * @param pattern    用于匹配的正则式
+     * @param replaceFun 决定如何替换的函数
+     * @return 替换后的字符串
+     * @see ReUtil#replaceAll(CharSequence, java.util.regex.Pattern, Func1)
+     * @since 4.2.2
+     */
+    public static String replace(final CharSequence str, final java.util.regex.Pattern pattern, final
+        Func1<java.util.regex.Matcher, String> replaceFun) {
+        return ReUtil.replaceAll(str, pattern, replaceFun);
+    }
+
+    /**
+     * 替换所有正则匹配的文本，并使用自定义函数决定如何替换.
+     *
+     * @param str        要替换的字符串
+     * @param regex      用于匹配的正则式
+     * @param replaceFun 决定如何替换的函数
+     * @return 替换后的字符串
+     * @see ReUtil#replaceAll(CharSequence, String, Func1)
+     * @since 4.2.2
+     */
+    public static String replace(final CharSequence str, final String regex, final Func1<java.util.regex.Matcher,
+        String> replaceFun) {
+        return ReUtil.replaceAll(str, regex, replaceFun);
+    }
+
+    /**
+     * 替换字符串中最后一个指定字符串.
+     *
+     * @param str         字符串
+     * @param searchStr   被查找的字符串
+     * @param replacedStr 被替换的字符串
+     * @return 替换后的字符串
+     */
+    public static String replaceLast(final CharSequence str, final CharSequence searchStr, final CharSequence
+        replacedStr) {
+        return replaceLast(str, searchStr, replacedStr, false);
+    }
+
+    /**
+     * 替换字符串中最后一个指定字符串.
+     *
+     * @param str         字符串
+     * @param searchStr   被查找的字符串
+     * @param replacedStr 被替换的字符串
+     * @param ignoreCase  是否忽略大小写
+     * @return 替换后的字符串
+     */
+    public static String replaceLast(final CharSequence str, final CharSequence searchStr, final CharSequence
+        replacedStr, final boolean ignoreCase) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+        int lastIndex = lastIndexOf(str, searchStr, str.length(), ignoreCase);
+        if (INDEX_NOT_FOUND == lastIndex) {
+            return str(str);
+        }
+        return replace(str, lastIndex, searchStr, replacedStr, ignoreCase);
+    }
+
+    /**
+     * 替换字符串中第一个指定字符串.
+     *
+     * @param str         字符串
+     * @param searchStr   被查找的字符串
+     * @param replacedStr 被替换的字符串
+     * @return 替换后的字符串
+     */
+    public static String replaceFirst(final CharSequence str, final CharSequence searchStr, final CharSequence
+        replacedStr) {
+        return replaceFirst(str, searchStr, replacedStr, false);
+    }
+
+    /**
+     * 替换字符串中第一个指定字符串.
+     *
+     * @param str         字符串
+     * @param searchStr   被查找的字符串
+     * @param replacedStr 被替换的字符串
+     * @param ignoreCase  是否忽略大小写
+     * @return 替换后的字符串
+     */
+    public static String replaceFirst(final CharSequence str, final CharSequence searchStr, final CharSequence
+        replacedStr, final boolean ignoreCase) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+        int startInclude = indexOf(str, searchStr, 0, ignoreCase);
+        if (INDEX_NOT_FOUND == startInclude) {
+            return str(str);
+        }
+        return replaceByCodePoint(str, startInclude, startInclude + searchStr.length(), replacedStr);
+    }
+
+    /**
+     * 替换指定字符串的指定区间内字符为"*".
+     * 俗称：脱敏功能，后面其他功能，可以见：DesensitizedUtil(脱敏工具类)
+     *
+     * <pre>
+     * StrUtil.hide(null,*,*)=null
+     * StrUtil.hide("",0,*)=""
+     * StrUtil.hide("jackduan@163.com",-1,4)   ****duan@163.com
+     * StrUtil.hide("jackduan@163.com",2,3)    ja*kduan@163.com
+     * StrUtil.hide("jackduan@163.com",3,2)    jackduan@163.com
+     * StrUtil.hide("jackduan@163.com",16,16)  jackduan@163.com
+     * StrUtil.hide("jackduan@163.com",16,17)  jackduan@163.com
+     * </pre>
+     *
+     * @param str          字符串
+     * @param startInclude 开始位置（包含）
+     * @param endExclude   结束位置（不包含）
+     * @return 替换后的字符串
+     * @since 4.1.14
+     */
+    public static String hide(final CharSequence str, final int startInclude, final int endExclude) {
+        return replaceByCodePoint(str, startInclude, endExclude, '*');
+    }
+
+    /**
+     * 脱敏，使用默认的脱敏策略.
+     *
+     * <pre>
+     * StrUtil.desensitized("100", DesensitizedUtil.DesensitizedType.USER_ID)) =  "0"
+     * StrUtil.desensitized("段正淳", DesensitizedUtil.DesensitizedType.CHINESE_NAME)) = "段**"
+     * StrUtil.desensitized("51343620000320711X", DesensitizedUtil.DesensitizedType.ID_CARD)) = "5***************1X"
+     * StrUtil.desensitized("09157518479", DesensitizedUtil.DesensitizedType.FIXED_PHONE)) = "0915*****79"
+     * StrUtil.desensitized("18049531999", DesensitizedUtil.DesensitizedType.MOBILE_PHONE)) = "180****1999"
+     * StrUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtil.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
+     * StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtil.DesensitizedType.EMAIL)) =
+      * "d*************@gmail.com.cn"
+     * StrUtil.desensitized("1234567890", DesensitizedUtil.DesensitizedType.PASSWORD)) = "**********"
+     * StrUtil.desensitized("苏D40000", DesensitizedUtil.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
+     * StrUtil.desensitized("11011111222233333256", DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
+     * </pre>
+     *
+     * @param str              字符串
+     * @param desensitizedType 脱敏类型;可以脱敏：用户id、中文名、身份证号、座机号、手机号、地址、电子邮件、密码
+     * @return 脱敏之后的字符串
+     * @author dazer and neusoft and qiaomu
+     * @see DesensitizedUtil 如果需要自定义，脱敏规则，请使用该工具类；
+     * @since 5.6.2
+     */
+    public static String desensitized(final CharSequence str,
+        final DesensitizedUtil.DesensitizedType desensitizedType) {
+        return DesensitizedUtil.desensitized(str, desensitizedType);
+    }
+
+    /**
+     * 替换字符字符数组中所有的字符为replacedStr<br>.
+     * 提供的chars为所有需要被替换的字符，例如："\r\n"，则"\r"和"\n"都会被替换，哪怕他们单独存在
+     *
+     * @param str         被检查的字符串
+     * @param chars       需要替换的字符列表，用一个字符串表示这个字符列表
+     * @param replacedStr 替换成的字符串
+     * @return 新字符串
+     * @since 3.2.2
+     */
+    public static String replaceChars(final CharSequence str, final String chars, final CharSequence replacedStr) {
+        if (isEmpty(str) || isEmpty(chars)) {
+            return str(str);
+        }
+        return replaceChars(str, chars.toCharArray(), replacedStr);
+    }
+
+    /**
+     * 替换字符字符数组中所有的字符为replacedStr.
+     *
+     * @param str         被检查的字符串
+     * @param chars       需要替换的字符列表
+     * @param replacedStr 替换成的字符串
+     * @return 新字符串
+     * @since 3.2.2
+     */
+    public static String replaceChars(final CharSequence str, final char[] chars, final CharSequence replacedStr) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(chars)) {
+            return str(str);
+        }
+
+        final Set<Character> set = new HashSet<>(chars.length);
+        for (char c : chars) {
+            set.add(c);
+        }
+        int strLen = str.length();
+        final StringBuilder builder = new StringBuilder();
+        char c;
+        for (int i = 0; i < strLen; i++) {
+            c = str.charAt(i);
+            builder.append(set.contains(c) ? replacedStr : c);
+        }
+        return builder.toString();
+    }
+
+    // ------------------------------------------------------------------------ length
+
+    /**
+     * 获取字符串的长度，如果为null返回0.
+     *
+     * @param cs a 字符串
+     * @return 字符串的长度，如果为null返回0
+     * @since 4.3.2
+     */
+    public static int length(final CharSequence cs) {
+        return cs == null ? 0 : cs.length();
+    }
+
+    /**
+     * 给定字符串转为bytes后的byte数（byte长度）.
+     *
+     * @param cs      字符串
+     * @param charset 编码
+     * @return byte长度
+     * @since 4.5.2
+     */
+    public static int byteLength(final CharSequence cs, final Charset charset) {
+        return cs == null ? 0 : cs.toString().getBytes(charset).length;
+    }
+
+    /**
+     * 给定字符串数组的总长度<br>.
+     * null字符长度定义为0
+     *
+     * @param strs 字符串数组
+     * @return 总长度
+     * @since 4.0.1
+     */
+    public static int totalLength(final CharSequence... strs) {
+        int totalLength = 0;
+        for (CharSequence str : strs) {
+            totalLength += (null == str ? 0 : str.length());
+        }
+        return totalLength;
+    }
+
+    /**
+     * 限制字符串长度，如果超过指定长度，截取指定长度并在末尾加"...".
+     *
+     * @param string 字符串
+     * @param length 最大长度
+     * @return 切割后的剩余的前半部分字符串+"..."
+     * @since 4.0.10.
+     */
+    public static String maxLength(final CharSequence string, final int length) {
+        Assert.isTrue(length > 0);
+        if (null == string) {
+            return null;
+        }
+        if (string.length() <= length) {
+            return string.toString();
+        }
+        return sub(string, 0, length) + "...";
+    }
+
+    // ------------------------------------------------------------------------ firstXXX
+
+    /**
+     * 返回第一个非{@code null} 元素.
+     *
+     * @param strs 多个元素
+     * @param <T>  元素类型
+     * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
+     * @since 5.4.1
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends CharSequence> T firstNonNull(final T... strs) {
+        return ArrayUtil.firstNonNull(strs);
+    }
+
+    /**
+     * 返回第一个非empty 元素.
+     *
+     * @param strs 多个元素
+     * @param <T>  元素类型
+     * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
+     * @see #isNotEmpty(CharSequence)
+     * @since 5.4.1
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends CharSequence> T firstNonEmpty(final T... strs) {
+        return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
+    }
+
+    /**
+     * 返回第一个非blank 元素.
+     *
+     * @param strs 多个元素
+     * @param <T>  元素类型
+     * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
+     * @see #isNotBlank(CharSequence)
+     * @since 5.4.1
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends CharSequence> T firstNonBlank(final T... strs) {
+        return ArrayUtil.firstMatch(StrUtil::isNotBlank, strs);
+    }
+
+    // ------------------------------------------------------------------------ lower and upper
+
+    /**
+     * 将字符串转为小写.
+     *
+     * @param str 被转的字符串
+     * @return 转换后的字符串
+     * @see String#toLowerCase()
+     * @since 5.8.38
+     * @deprecated 拼写错误，请使用 {@link #toLowerCase(CharSequence)}
+     */
+    @Deprecated
+    public static String toLoweCase(final CharSequence str) {
+        return toLowerCase(str);
+    }
+
+    /**
+     * 将字符串转为小写.
+     *
+     * @param str 被转的字符串
+     * @return 转换后的字符串
+     * @see String#toLowerCase()
+     * @since 5.8.39
+     */
+    public static String toLowerCase(final CharSequence str) {
+        if (null == str) {
+            return null;
+        }
+        if (0 == str.length()) {
+            return EMPTY;
+        }
+        return str.toString().toLowerCase();
+    }
+
+    /**
+     * 将字符串转为大写.
+     *
+     * @param str 被转的字符串
+     * @return 转换后的字符串
+     * @see String#toUpperCase()
+     * @since 5.8.38
+     */
+    public static String toUpperCase(final CharSequence str) {
+        if (null == str) {
+            return null;
+        }
+        if (0 == str.length()) {
+            return EMPTY;
+        }
+        return str.toString().toUpperCase();
+    }
+
+    /**
+     * 原字符串首字母大写并在其首部添加指定字符串 例如：str=name, preString=get =》 return getName.
+     *
+     * @param str       被处理的字符串
+     * @param preString 添加的首部
+     * @return 处理后的字符串
+     */
+    public static String upperFirstAndAddPre(final CharSequence str, final String preString) {
+        if (str == null || preString == null) {
+            return null;
+        }
+        return preString + upperFirst(str);
+    }
+
+    /**
+     * 大写首字母<br>.
+     * 例如：str = name, return Name
+     *
+     * @param str 字符串
+     * @return 字符串
+     */
+    public static String upperFirst(final CharSequence str) {
+        if (null == str) {
+            return null;
+        }
+        if (str.length() > 0) {
+            char firstChar = str.charAt(0);
+            if (Character.isLowerCase(firstChar)) {
+                return Character.toUpperCase(firstChar) + subSuf(str, 1);
+            }
+        }
+        return str.toString();
+    }
+
+    /**
+     * 小写首字母<br>.
+     * 例如：str = Name, return name
+     *
+     * @param str 字符串
+     * @return 字符串
+     */
+    public static String lowerFirst(final CharSequence str) {
+        if (null == str) {
+            return null;
+        }
+        if (str.length() > 0) {
+            char firstChar = str.charAt(0);
+            if (Character.isUpperCase(firstChar)) {
+                return Character.toLowerCase(firstChar) + subSuf(str, 1);
+            }
+        }
+        return str.toString();
+    }
+
+    // ------------------------------------------------------------------------ filter
+
+    /**
+     * 过滤字符串.
+     *
+     * @param str    字符串
+     * @param filter 过滤器，{@link Filter#accept(Object)}返回为{@code true}的保留字符
+     * @return 过滤后的字符串
+     * @since 5.4.0
+     */
+    public static String filter(final CharSequence str, final Filter<Character> filter) {
+        if (str == null || filter == null) {
+            return str(str);
+        }
+
+        int len = str.length();
+        final StringBuilder sb = new StringBuilder(len);
+        char c;
+        for (int i = 0; i < len; i++) {
+            c = str.charAt(i);
+            if (filter.accept(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    // ------------------------------------------------------------------------ case
+
+    /**
+     * 给定字符串中的字母是否全部为大写，判断依据如下：.
+     *
+     * <pre>
+     * 1. 大写字母包括A-Z
+     * 2. 其它非字母的Unicode符都算作大写
+     * </pre>
+     *
+     * @param str 被检查的字符串
+     * @return 是否全部为大写
+     * @since 4.2.2
+     */
+    public static boolean isUpperCase(final CharSequence str) {
+        if (null == str) {
+            return false;
+        }
+        final int len = str.length();
+        for (int i = 0; i < len; i++) {
+            if (Character.isLowerCase(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 给定字符串中的字母是否全部为小写，判断依据如下：.
+     *
+     * <pre>
+     * 1. 小写字母包括a-z
+     * 2. 其它非字母的Unicode符都算作小写
+     * </pre>
+     *
+     * @param str 被检查的字符串
+     * @return 是否全部为小写
+     * @since 4.2.2
+     */
+    public static boolean isLowerCase(final CharSequence str) {
+        if (null == str) {
+            return false;
+        }
+        final int len = str.length();
+        for (int i = 0; i < len; i++) {
+            if (Character.isUpperCase(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 切换给定字符串中的大小写。大写转小写，小写转大写。
+     *
+     * <pre>
+     * StrUtil.swapCase(null)                 = null
+     * StrUtil.swapCase("")                   = ""
+     * StrUtil.swapCase("The dog has a BONE") = "tHE DOG HAS A bone".
+     * </pre>
+     *
+     * @param str 字符串
+     * @return 交换后的字符串
+     * @since 4.3.2
+     */
+    public static String swapCase(final String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
+
+        final char[] buffer = str.toCharArray();
+
+        for (int i = 0; i < buffer.length; i++) {
+            final char ch = buffer[i];
+            if (Character.isUpperCase(ch)) {
+                buffer[i] = Character.toLowerCase(ch);
+            } else if (Character.isTitleCase(ch)) {
+                buffer[i] = Character.toLowerCase(ch);
+            } else if (Character.isLowerCase(ch)) {
+                buffer[i] = Character.toUpperCase(ch);
+            }
+        }
+        return new String(buffer);
+    }
+
+    /**
+     * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br>
+     * 例如：
+     *
+     * <pre>
+     * HelloWorld=》hello_world
+     * Hello_World=》hello_world.
+     * HelloWorld_test=》hello_world_test
+     * </pre>
+     *
+     * @param str 转换前的驼峰式命名的字符串，也可以为下划线形式
+     * @return 转换后下划线方式命名的字符串
+     * @see NamingCase#toUnderlineCase(CharSequence)
+     */
+    public static String toUnderlineCase(final CharSequence str) {
+        return NamingCase.toUnderlineCase(str);
+    }
+
+    /**
+     * 将驼峰式命名的字符串转换为使用符号连接方式. 如果转换前的驼峰式命名的字符串为空，则返回空字符串.
+     *
+     * @param str    转换前的驼峰式命名的字符串，也可以为符号连接形式
+     * @param symbol 连接符
+     * @return 转换后符号连接方式命名的字符串
+     * @see NamingCase#toSymbolCase(CharSequence, char).
+     * @since 4.0.10
+     */
+    public static String toSymbolCase(final CharSequence str, final char symbol) {
+        return NamingCase.toSymbolCase(str, symbol);
+    }
+
+    /**
+     * 将下划线方式命名的字符串转换为驼峰式. 如果转换前的下划线大写方式命名的字符串为空，则返回空字符串.
+     * 例如：hello_world=》helloWorld
+     *
+     * @param name 转换前的下划线大写方式命名的字符串
+     * @return 转换后的驼峰式命名的字符串
+     * @see NamingCase#toCamelCase(CharSequence).
+     */
+    public static String toCamelCase(final CharSequence name) {
+        return NamingCase.toCamelCase(name);
+    }
+
+    /**
+     * 将连接符方式命名的字符串转换为驼峰式. 如果转换前的下划线大写方式命名的字符串为空，则返回空字符串.
+     * 例如：hello_world=》helloWorld; hello-world=》helloWorld
+     *
+     * @param name   转换前的下划线大写方式命名的字符串
+     * @param symbol 连接符
+     * @return 转换后的驼峰式命名的字符串.
+     * @see NamingCase#toCamelCase(CharSequence, char)
+     */
+    public static String toCamelCase(final CharSequence name, final char symbol) {
+        return NamingCase.toCamelCase(name, symbol);
+    }
+
+    // ------------------------------------------------------------------------ isSurround
+
+    /**
+     * 给定字符串是否被字符包围.
+     *
+     * @param str    字符串
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @return 是否包围，空串不包围
+     */
+    public static boolean isSurround(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
+        if (StrUtil.isBlank(str)) {
+            return false;
+        }
+        if (str.length() < (prefix.length() + suffix.length())) {
+            return false;
+        }
+
+        final String str2 = str.toString();
+        return str2.startsWith(prefix.toString()) && str2.endsWith(suffix.toString());
+    }
+
+    /**
+     * 给定字符串是否被字符包围.
+     *
+     * @param str    字符串
+     * @param prefix 前缀
+     * @param suffix 后缀
+     * @return 是否包围，空串不包围
+     */
+    public static boolean isSurround(final CharSequence str, final char prefix, final char suffix) {
+        if (StrUtil.isBlank(str)) {
+            return false;
+        }
+        if (str.length() < 2) {
+            return false;
+        }
+
+        return str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix;
+    }
+
+    /**
+     * 创建StringBuilder对象.
+     *
+     * @return StringBuilder对象
+     */
+    public static StringBuilder stringBuilder() {
+        return new StringBuilder();
+    }
+
+    /**
+     * 创建StringBuilder对象.
+     *
+     * @param capacity 初始容量
+     * @return StringBuilder对象
+     */
+    public static StringBuilder stringBuilder(final int capacity) {
+        return new StringBuilder(capacity);
+    }
+
+    // ------------------------------------------------------------------------ builder
+
+    /**
+     * 创建StringBuilder对象.
+     *
+     * @param strs 初始字符串列表
+     * @return StringBuilder对象
+     */
+    public static StringBuilder builder(final CharSequence... strs) {
+        return builder(Function.identity(), strs);
+    }
+
+    /**
+     * 创建StringBuilder对象.
+     *
+     * @param strEditor 编辑器，用于对每个字符串进行编辑
+     * @param strs      待处理的字符串列表
+     * @return StringBuilder对象
+     * @since 5.8.42
+     */
+    public static StringBuilder builder(final Function<CharSequence, CharSequence> strEditor, final CharSequence...
+        strs) {
+        final StringBuilder sb = new StringBuilder();
+        for (final CharSequence str : strs) {
+            sb.append(strEditor.apply(str));
+        }
+        return sb;
+    }
+
+    /**
+     * 创建StrBuilder对象.
+     *
+     * @param strs 初始字符串列表
+     * @return StrBuilder对象
+     */
+    public static StrBuilder strBuilder(final CharSequence... strs) {
+        return StrBuilder.create(strs);
+    }
+
+    // ------------------------------------------------------------------------ getter and setter
+
+    /**
+     * 获得set或get或is方法对应的标准属性名<br>.
+     * 例如：setName 返回 name
+     *
+     * <pre>
+     * getName =》name
+     * setName =》name
+     * isName  =》name
+     * </pre>
+     *
+     * @param getOrSetMethodName Get或Set方法名
+     * @return 如果是set或get方法名，返回field， 否则null
+     */
+    public static String getGeneralField(final CharSequence getOrSetMethodName) {
+        final String getOrSetMethodNameStr = getOrSetMethodName.toString();
+        if (getOrSetMethodNameStr.startsWith("get") || getOrSetMethodNameStr.startsWith("set")) {
+            return removePreAndLowerFirst(getOrSetMethodName, 3);
+        } else if (getOrSetMethodNameStr.startsWith("is")) {
+            return removePreAndLowerFirst(getOrSetMethodName, 2);
+        }
+        return null;
+    }
+
+    /**
+     * 生成set方法名<br>.
+     * 例如：name 返回 setName
+     *
+     * @param fieldName 属性名
+     * @return setXxx
+     */
+    public static String genSetter(final CharSequence fieldName) {
+        return upperFirstAndAddPre(fieldName, "set");
+    }
+
+    /**
+     * 生成get方法名.
+     *
+     * @param fieldName 属性名
+     * @return getXxx
+     */
+    public static String genGetter(final CharSequence fieldName) {
+        return upperFirstAndAddPre(fieldName, "get");
+    }
+
+    // ------------------------------------------------------------------------ other
+
+    /**
+     * 连接多个字符串为一个.
+     *
+     * @param isNullToEmpty 是否null转为""
+     * @param strs          字符串数组
+     * @return 连接后的字符串
+     * @since 4.1.0
+     */
+    public static String concat(final boolean isNullToEmpty, final CharSequence... strs) {
+        final StrBuilder sb = new StrBuilder();
+        for (CharSequence str : strs) {
+            sb.append(isNullToEmpty ? nullToEmpty(str) : str);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 将给定字符串，变成 "xxx...xxx" 形式的字符串
+     *
+     * <ul>
+     *     <li>abcdefgh  9 -》 abcdefgh</li>
+     *     <li>abcdefgh  8 -》 abcdefgh</li>
+     *     <li>abcdefgh  7 -》 ab...gh</li>
+     *     <li>abcdefgh  6 -》 ab...h</li>
+     *     <li>abcdefgh  5 -》 a...h</li>
+     *     <li>abcdefgh  4 -》 a..h</li>
+     *     <li>abcdefgh  3 -》 a.h</li>
+     *     <li>abcdefgh  2 -》 a.</li>
+     *     <li>abcdefgh  1 -》 a</li>
+     *     <li>abcdefgh  0 -》 abcdefgh</li>
+     *     <li>abcdefgh -1 -》 abcdefgh</li>
+     * </ul>
+     *
+     * @param str       字符串
+     * @param maxLength 结果的最大长度
+     * @return 截取后的字符串
+     */
+    public static String brief(final CharSequence str, final int maxLength) {
+        if (null == str) {
+            return null;
+        }
+        final int strLength = str.length();
+        if (maxLength <= 0 || strLength <= maxLength) {
+            return str.toString();
+        }
+
+        // since 5.7.5，特殊长度
+        switch (maxLength) {
+            case 1:
+                return String.valueOf(str.charAt(0));
+            case 2:
+                return str.charAt(0) + ".";
+            case 3:
+                return str.charAt(0) + "." + str.charAt(strLength - 1);
+            case 4:
+                return str.charAt(0) + ".." + str.charAt(strLength - 1);
+        }
+
+        final int suffixLength = (maxLength - 3) / 2;
+        final int preLength = suffixLength + (maxLength - 3) % 2; // suffixLength 或 suffixLength + 1
+        final String str2 = str.toString();
+        return format("{}...{}",
+            str2.substring(0, preLength),
+            str2.substring(strLength - suffixLength));
+    }
+
+    /**
+     * 以 conjunction 为分隔符将多个对象转换为字符串.
+     *
+     * @param conjunction 分隔符 {@link StrPool#COMMA}
+     * @param objs        数组
+     * @return 连接后的字符串
+     * @see ArrayUtil#join(Object, CharSequence)
+     */
+    public static String join(final CharSequence conjunction, final Object... objs) {
+        return ArrayUtil.join(objs, conjunction);
+    }
+
+    /**
+     * 以 conjunction 为分隔符将多个对象转换为字符串.
+     *
+     * @param <T>         元素类型
+     * @param conjunction 分隔符 {@link StrPool#COMMA}
+     * @param iterable    集合
+     * @return 连接后的字符串
+     * @see CollUtil#join(Iterable, CharSequence)
+     * @since 5.6.6
+     */
+    public static <T> String join(final CharSequence conjunction, final Iterable<T> iterable) {
+        return CollUtil.join(iterable, conjunction);
+    }
+
+    /**
+     * 字符串的每一个字符是否都与定义的匹配器匹配.
+     *
+     * @param value   字符串
+     * @param matcher 匹配器
+     * @return 是否全部匹配
+     * @since 3.2.3
+     */
+    public static boolean isAllCharMatch(final CharSequence value, final Matcher<Character> matcher) {
+        if (StrUtil.isBlank(value)) {
+            return false;
+        }
+        for (int i = value.length(); --i >= 0; ) {
+            if (false == matcher.match(value.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查字符串是否都为数字组成.
+     *
+     * @param str 字符串
+     * @return 是否都为数字组成
+     * @since 5.7.3
+     */
+    public static boolean isNumeric(final CharSequence str) {
+        return isAllCharMatch(str, Character::isDigit);
+    }
+
+    /**
+     * 循环位移指定位置的字符串为指定距离<br>.
+     * 当moveLength大于0向右位移，小于0向左位移，0不位移<br>
+     * 当moveLength大于字符串长度时采取循环位移策略，即位移到头后从头（尾）位移，例如长度为10，位移13则表示位移3
+     *
+     * @param str          字符串
+     * @param startInclude 起始位置（包括）
+     * @param endExclude   结束位置（不包括）
+     * @param moveLength   移动距离，负数表示左移，正数为右移
+     * @return 位移后的字符串
+     * @since 4.0.7
+     */
+    public static String move(final CharSequence str, final int startInclude, final int endExclude, final int
+        moveLength) {
+        if (isEmpty(str)) {
+            return str(str);
+        }
+        final int len = str.length();
+        // 参数校验
+        if (startInclude < 0 || endExclude > len || startInclude > endExclude) {
+            throw new IndexOutOfBoundsException("Invalid range: [" + startInclude + ", " + endExclude + ")");
+        }
+
+        final int actualMove;
+        if (Math.abs(moveLength) > len) {
+            // 循环位移，当越界时循环
+            actualMove = moveLength % len;
+        } else {
+            actualMove = moveLength;
+        }
+        // 分离“移动块”和“剩余轨道”
+        final String block = str.subSequence(startInclude, endExclude).toString();
+        final String rest = new StringBuilder(str).delete(startInclude, endExclude).toString();
+
+        final int restLen = rest.length();
+        if (restLen == 0) {
+            return str.toString(); // 全选时位移无意义
+        }
+        // 计算循环周期：剩余字符数 + 1（代表块可以存在的不同位置点）
+        final int totalPositions = restLen + 1;
+        // 计算移动后的新位置 (处理正负数)
+        final int newPos = (startInclude + actualMove % totalPositions + totalPositions) % totalPositions;
+        // 重新组装
+        return rest.substring(0, newPos) + // 放入新位置前的剩余字符
+            block +                     // 放入整体块
+            rest.substring(newPos); // 放入剩下的剩余字符
+    }
+
+    /**
+     * 检查给定字符串的所有字符是否都一样.
+     *
+     * @param str 字符出啊
+     * @return 给定字符串的所有字符是否都一样
+     * @since 5.7.3
+     */
+    public static boolean isCharEquals(final CharSequence str) {
+        Assert.notEmpty(str, "Str to check must be not empty!");
+        return count(str, str.charAt(0)) == str.length();
+    }
+
+    /**
+     * 对字符串归一化处理，如 "Á" 可以使用 "u00C1"或 "u0041u0301"表示，实际测试中两个字符串并不equals<br>.
+     * 因此使用此方法归一为一种表示形式，默认按照W3C通常建议的，在NFC中交换文本。
+     *
+     * @param str 归一化的字符串
+     * @return 归一化后的字符串
+     * @see Normalizer#normalize(CharSequence, Normalizer.Form)
+     * @since 5.7.16
+     */
+    public static String normalize(final CharSequence str) {
+        return Normalizer.normalize(str, Normalizer.Form.NFC);
+    }
+
+    /**
+     * 在给定字符串末尾填充指定字符，以达到给定长度<br>.
+     * 如果字符串本身的长度大于等于length，返回原字符串
+     *
+     * @param str       字符串
+     * @param fixedChar 补充的字符
+     * @param length    补充到的长度
+     * @return 补充后的字符串
+     * @since 5.8.0
+     */
+    public static String fixLength(final CharSequence str, final char fixedChar, final int length) {
+        final int fixedLength = length - str.length();
+        if (fixedLength <= 0) {
+            return str.toString();
+        }
+        return str + repeat(fixedChar, fixedLength);
+    }
+
+    /**
+     * <p>指定字符串数组中，是否包含空字符串.</p>
+     * <p>如果传入参数对象不是为空,则返回false. 如果字符串包含字母,不区分大小写,则返回true.</p>
+     *
+     * @param str 对象
+     * @return 如果为字符串, 是否有字母
+     */
+    public static boolean hasLetter(final CharSequence str) {
+        if (null == str) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (CharUtil.isLetter(str.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 字符串1和字符串2的公共前缀.
+     *
+     * @param str1 字符串1
+     * @param str2 字符串2
+     * @return 字符串1和字符串2的公共前缀
+     */
+    public static CharSequence commonPrefix(final CharSequence str1, final CharSequence str2) {
+        if (isEmpty(str1) || isEmpty(str2)) {
+            return EMPTY;
+        }
+        final int minLength = Math.min(str1.length(), str2.length());
+
+        int index = 0;
+
+        for (; index < minLength; index++) {
+
+            if (str1.charAt(index) != str2.charAt(index)) {
+                break;
+            }
+        }
+        return str1.subSequence(0, index);
+    }
+
+    /**
+     * 字符串1和字符串2的公共后缀.
+     *
+     * @param str1 字符串1
+     * @param str2 字符串2
+     * @return 字符串1和字符串2的公共后缀
+     */
+    public static CharSequence commonSuffix(final CharSequence str1, final CharSequence str2) {
+        if (isEmpty(str1) || isEmpty(str2)) {
+            return EMPTY;
+        }
+        int str1Index = str1.length() - 1;
+        int str2Index = str2.length() - 1;
+        for (; str1Index >= 0 && str2Index >= 0; str1Index--, str2Index--) {
+            if (str1.charAt(str1Index) != str2.charAt(str2Index)) {
+                break;
+            }
+        }
+        return str1.subSequence(str1Index + 1, str1.length());
+    }
+
+
+    // ==================== StrUtil specific methods ====================
+
+
+
+    // ------------------------------------------------------------------------ Blank
+
+    /**
+     * <p>如果对象是字符串是否为空白，空白的定义如下：</p>
+     * <ol>
+     *     <li>{@code null}</li>
+     *     <li>空字符串：{@code ""}</li>
+     *     <li>空格、全角空格、制表符、换行符，等不可见字符</li>
+     * </ol>.
+     *
+     * <p>例：</p>
+     * <ul>
+     *     <li>{@code StrUtil.isBlankIfStr(null)     // true}</li>
+     *     <li>{@code StrUtil.isBlankIfStr("")       // true}</li>
+     *     <li>{@code StrUtil.isBlankIfStr(" \t\n")  // true}</li>
+     *     <li>{@code StrUtil.isBlankIfStr("abc")    // false}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isEmptyIfStr(Object)} 的区别是：
+     * 该方法会校验空白字符，且性能相对于 {@link #isEmptyIfStr(Object)} 略慢。</p>
+     *
+     * @param obj 对象
+     * @return 如果为字符串是否为空串
+     * @see StrUtil#isBlank(CharSequence)
+     * @since 3.3.0
+     */
+    public static boolean isBlankIfStr(final Object obj) {
+        if (null == obj) {
+            return true;
+        } else if (obj instanceof CharSequence) {
+            return isBlank((CharSequence) obj);
+        }
+        return false;
+    }
+    // ------------------------------------------------------------------------ Empty
+
+    /**
+     * <p>如果对象是字符串是否为空串，空的定义如下：</p><br>
+     * <ol>
+     *     <li>{@code null}</li>
+     *     <li>空字符串：{@code ""}</li>
+     * </ol>
+     *
+     * <p>例：.</p>
+     * <ul>
+     *     <li>{@code StrUtil.isEmptyIfStr(null)     // true}</li>
+     *     <li>{@code StrUtil.isEmptyIfStr("")       // true}</li>
+     *     <li>{@code StrUtil.isEmptyIfStr(" \t\n")  // false}</li>
+     *     <li>{@code StrUtil.isEmptyIfStr("abc")    // false}</li>
+     * </ul>
+     *
+     * <p>注意：该方法与 {@link #isBlankIfStr(Object)} 的区别是：该方法不校验空白字符。</p>
+     *
+     * @param obj 对象
+     * @return 如果为字符串是否为空串
+     * @since 3.3.0
+     */
+    public static boolean isEmptyIfStr(final Object obj) {
+        if (null == obj) {
+            return true;
+        } else if (obj instanceof CharSequence) {
+            return 0 == ((CharSequence) obj).length();
+        }
+        return false;
+    }
+
+    // ------------------------------------------------------------------------ Trim
+
+    /**
+     * 给定字符串数组全部做去首尾空格.
+     *
+     * @param strs 字符串数组
+     */
+    public static void trim(final String[] strs) {
+        if (null == strs) {
+            return;
+        }
+        String str;
+        for (int i = 0; i < strs.length; i++) {
+            str = strs[i];
+            if (null != str) {
+                strs[i] = trim(str);
+            }
+        }
+    }
+
+    /**
+     * 将对象转为字符串<br>.
+     *
+     * <pre>
+     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+     * 2、对象数组会调用Arrays.toString方法
+     * </pre>
+     *
+     * @param obj 对象
+     * @return 字符串
+     */
+    public static String utf8Str(final Object obj) {
+        return str(obj, CharsetUtil.CHARSET_UTF_8);
+    }
+
+    /**
+     * 将对象转为字符串.
+     *
+     * <pre>
+     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+     * 2、对象数组会调用Arrays.toString方法
+     * </pre>
+     *
+     * @param obj         对象
+     * @param charsetName 字符集
+     * @return 字符串
+     * @deprecated 请使用 {@link #str(Object, Charset)}
+     */
+    @Deprecated
+    public static String str(final Object obj, final String charsetName) {
+        return str(obj, Charset.forName(charsetName));
+    }
+
+    /**
+     * 将对象转为字符串.
+     * <pre>
+     *      1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+     *      2、对象数组会调用Arrays.toString方法
+     * </pre>
+     *
+     * @param obj     对象
+     * @param charset 字符集
+     * @return 字符串
+     */
+    public static String str(final Object obj, final Charset charset) {
+        if (null == obj) {
+            return null;
+        }
+
+        if (obj instanceof String) {
+            return (String) obj;
+        } else if (obj instanceof byte[]) {
+            return str((byte[]) obj, charset);
+        } else if (obj instanceof Byte[]) {
+            return str((Byte[]) obj, charset);
+        } else if (obj instanceof ByteBuffer) {
+            return str((ByteBuffer) obj, charset);
+        } else if (ArrayUtil.isArray(obj)) {
+            return ArrayUtil.toString(obj);
+        }
+
+        return obj.toString();
+    }
+
+    /**
+     * 将byte数组转为字符串.
+     *
+     * @param bytes   byte数组
+     * @param charset 字符集
+     * @return 字符串
+     */
+    public static String str(final byte[] bytes, final String charset) {
+        return str(bytes, CharsetUtil.charset(charset));
+    }
+
+    /**
+     * 解码字节码.
+     *
+     * @param data    byte数组
+     * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+     * @return 解码后的字符串
+     */
+    public static String str(final byte[] data, final Charset charset) {
+        if (data == null) {
+            return null;
+        }
+
+        if (null == charset) {
+            return new String(data);
+        }
+        return new String(data, charset);
+    }
+
+    /**
+     * 将Byte数组转为字符串.
+     *
+     * @param bytes   byte数组
+     * @param charset 字符集
+     * @return 字符串
+     */
+    public static String str(final Byte[] bytes, final String charset) {
+        return str(bytes, CharsetUtil.charset(charset));
+    }
+
+    /**
+     * 解码字节码.
+     *
+     * @param data    Byte数组
+     * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+     * @return 解码后的字符串
+     */
+    public static String str(final Byte[] data, final Charset charset) {
+        if (data == null) {
+            return null;
+        }
+
+        byte[] bytes = new byte[data.length];
+        Byte dataByte;
+        for (int i = 0; i < data.length; i++) {
+            dataByte = data[i];
+            bytes[i] = (null == dataByte) ? -1 : dataByte;
+        }
+
+        return str(bytes, charset);
+    }
+
+    /**
+     * 将编码的byteBuffer数据转换为字符串.
+     *
+     * @param data    数据
+     * @param charset 字符集，如果为空使用当前系统字符集
+     * @return 字符串
+     */
+    public static String str(final ByteBuffer data, final String charset) {
+        if (data == null) {
+            return null;
+        }
+
+        return str(data, CharsetUtil.charset(charset));
+    }
+
+    /**
+     * 将编码的byteBuffer数据转换为字符串.
+     *
+     * @param data    数据
+     * @param charset 字符集，如果为空使用当前系统字符集
+     * @return 字符串
+     */
+    public static String str(final ByteBuffer data, final Charset charset) {
+        final Charset actualCharset = null == charset ? Charset.defaultCharset() : charset;
+        return actualCharset.decode(data.duplicate()).toString();
+    }
+
+    /**
+     * 调用对象的toString方法，null会返回“null”.
+     *
+     * @param obj 对象
+     * @return 字符串
+     * @see String#valueOf(Object)
+     * @since 4.1.3
+     */
+    public static String toString(final Object obj) {
+        return String.valueOf(obj);
+    }
+
+    /**
+     * 调用对象的toString方法，null会返回{@code null}.
+     *
+     * @param obj 对象
+     * @return 字符串 or {@code null}
+     * @since 5.7.17
+     */
+    public static String toStringOrNull(final Object obj) {
+        return null == obj ? null : obj.toString();
+    }
+
+    /**
+     * 调用对象的toString方法，null会返回空字符串 "".
+     *
+     * @param obj 对象
+     * @return {@link String }
+     * @author Junwei Xu
+     */
+    public static String toStringOrEmpty(final Object obj) {
+        // obj为空时, 返回 null 或 "null" 都不适用部分场景, 此处返回 "" 空字符串
+        return null == obj ? EMPTY : obj.toString();
+    }
+
+    /**
+     * 创建StringBuilder对象.
+     *
+     * @return StringBuilder对象
+     */
+    public static StringBuilder builder() {
+        return new StringBuilder();
+    }
+
+    /**
+     * 创建StrBuilder对象.
+     *
+     * @return StrBuilder对象
+     * @since 4.0.1
+     */
+    public static StrBuilder strBuilder() {
+        return StrBuilder.create();
+    }
+
+    /**
+     * 创建StringBuilder对象.
+     *
+     * @param capacity 初始大小
+     * @return StringBuilder对象
+     */
+    public static StringBuilder builder(final int capacity) {
+        return new StringBuilder(capacity);
+    }
+
+    /**
+     * 创建StrBuilder对象.
+     *
+     * @param capacity 初始大小
+     * @return StrBuilder对象
+     * @since 4.0.1
+     */
+    public static StrBuilder strBuilder(final int capacity) {
+        return StrBuilder.create(capacity);
+    }
+
+    /**
+     * 获得StringReader.
+     *
+     * @param str 字符串
+     * @return StringReader
+     */
+    public static StringReader getReader(final CharSequence str) {
+        if (null == str) {
+            return null;
+        }
+        return new StringReader(str.toString());
+    }
+
+    /**
+     * 获得StringWriter.
+     *
+     * @return StringWriter
+     */
+    public static StringWriter getWriter() {
+        return new StringWriter();
+    }
+
+    /**
+     * 反转字符串<br>.
+     * 例如：abcd =》dcba
+     *
+     * @param str 被反转的字符串
+     * @return 反转后的字符串
+     * @since 3.0.9
+     */
+    public static String reverse(final String str) {
+        if (isBlank(str)) {
+            return str;
+        }
+        return new String(ArrayUtil.reverse(str.toCharArray()));
+    }
+
+    /**
+     * 反转字符串<br>.
+     * 例如：abcd =》dcba
+     * <p>
+     * 该方法按Unicode code point进行反转，支持Unicode字符的正确反转
+     * 确保复杂字符不会被拆分，如表情符号等多字节字符
+     * </p>
+     *
+     * @param str 被反转的字符串
+     * @return 反转后的字符串，如果输入为null则返回null
+     * @since 5.8.43
+     */
+    public static String reverseByCodePoint(final String str) {
+        if (null == str) {
+            return null;
+        }
+
+        //按Unicode code point方式进行反转处理
+        StringBuilder result = new StringBuilder();
+        for (int i = str.length(); i > 0; ) {
+            //获取指定位置前的code point
+            int codePoint = str.codePointBefore(i);
+            //根据code point的字符数量调整索引位置
+            i -= Character.charCount(codePoint);
+            //将code point追加到结果中
+            result.appendCodePoint(codePoint);
+        }
+
+        return result.toString();
+    }
+
+    // ------------------------------------------------------------------------ fill
+
+    /**
+     * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串<br>.
+     * 字符填充于字符串前
+     *
+     * @param str        被填充的字符串
+     * @param filledChar 填充的字符
+     * @param len        填充长度
+     * @return 填充后的字符串
+     * @since 3.1.2
+     */
+    public static String fillBefore(final String str, final char filledChar, final int len) {
+        return fill(str, filledChar, len, true);
+    }
+
+    /**
+     * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串<br>.
+     * 字符填充于字符串后
+     *
+     * @param str        被填充的字符串
+     * @param filledChar 填充的字符
+     * @param len        填充长度
+     * @return 填充后的字符串
+     * @since 3.1.2
+     */
+    public static String fillAfter(final String str, final char filledChar, final int len) {
+        return fill(str, filledChar, len, false);
+    }
+
+    /**
+     * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串.
+     *
+     * @param str        被填充的字符串
+     * @param filledChar 填充的字符
+     * @param len        填充长度
+     * @param isPre      是否填充在前
+     * @return 填充后的字符串
+     * @since 3.1.2
+     */
+    public static String fill(final String str, final char filledChar, final int len, final boolean isPre) {
+        final String actualStr = null == str ? "" : str;
+        final int strLen = actualStr.length();
+        if (strLen > len) {
+            return actualStr;
+        }
+
+        final String filledStr = StrUtil.repeat(filledChar, len - strLen);
+        return isPre ? filledStr.concat(actualStr) : actualStr.concat(filledStr);
+    }
+
+    /**
+     * 计算两个字符串的相似度.
+     *
+     * @param str1 字符串1
+     * @param str2 字符串2
+     * @return 相似度
+     * @since 3.2.3
+     */
+    public static double similar(final String str1, final String str2) {
+        return TextSimilarity.similar(str1, str2);
+    }
+
+    /**
+     * 计算两个字符串的相似度百分比.
+     *
+     * @param str1  字符串1
+     * @param str2  字符串2
+     * @param scale 相似度
+     * @return 相似度百分比
+     * @since 3.2.3
+     */
+    public static String similar(final String str1, final String str2, final int scale) {
+        return TextSimilarity.similar(str1, str2, scale);
+    }
+
+    /**
+     * 生成随机UUID.
+     *
+     * @return UUID字符串
+     * @see IdUtil#randomUUID()
+     * @since 4.0.10
+     */
+    public static String uuid() {
+        return IdUtil.randomUUID();
+    }
+
+    /**
+     * 格式化文本，使用 {varName} 占位<br>.
+     * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
+     *
+     * @param template 文本模板，被替换的部分用 {key} 表示
+     * @param map      参数值对
+     * @return 格式化后的文本
+     */
+    public static String format(final CharSequence template, final Map<?, ?> map) {
+        return format(template, map, true);
+    }
+
+    /**
+     * 格式化文本，使用 {varName} 占位<br>.
+     * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
+     *
+     * @param template   文本模板，被替换的部分用 {key} 表示
+     * @param map        参数值对
+     * @param ignoreNull 是否忽略 {@code null} 值，忽略则 {@code null} 值对应的变量不被替换，否则替换为""
+     * @return 格式化后的文本
+     * @since 5.4.3
+     */
+    public static String format(final CharSequence template, final Map<?, ?> map, final boolean ignoreNull) {
+        return StrFormatter.format(template, map, ignoreNull);
+    }
+
+    /**
+     * 截断字符串，使用其按照UTF-8编码为字节后不超过maxBytes长度. 截断后自动追加省略号(...).
+     * 用于存储数据库varchar且编码为UTF-8的字段.
+     *
+     * @param str      java字符串
+     * @param maxBytes 最大字节长度
+     * @return 截断后的字符.
+     */
+    public static String truncateUtf8(final String str, final int maxBytes) {
+        Charset charset = StandardCharsets.UTF_8;
+        //UTF-8编码单个字符最大长度4
+        return truncateByByteLength(str, charset, maxBytes, 4, true);
+    }
+
+    /**
+     * 截断字符串，使用其按照指定编码为字节后不超过maxBytes长度<br>.
+     * 此方法用于截取总bytes数不超过指定长度，如果字符出没有超出原样输出，如果超出了，则截取掉超出部分，并可选添加...，
+     * 但是添加“...”后总长度也不超过限制长度。
+     *
+     * @param str            原始字符串
+     * @param charset        指定编码
+     * @param maxBytesLength 最大字节数
+     * @param factor         速算因子，取该编码下单个字符的最大可能字节数
+     * @param appendDots     截断后是否追加省略号...，如果maxBytesLength小于省略号长度，则不添加...
+     * @return 截断后的字符串
+     */
+    public static String truncateByByteLength(final String str, final Charset charset, final int maxBytesLength, final
+        int factor, final boolean appendDots) {
+        //字符数*速算因子<=最大字节数
+        if (str == null || str.length() * factor <= maxBytesLength) {
+            return str;
+        }
+        final byte[] sba = str.getBytes(charset);
+        if (sba.length <= maxBytesLength) {
+            return str;
+        }
+        //限制字节数
+        final int dotsBytesLength = "...".getBytes(charset).length;
+        final int limitBytes;
+        // issue#IDFTJS 修正截断后追加省略号...导致超出限制长度的问题
+        if (appendDots && maxBytesLength > dotsBytesLength) {
+            limitBytes = maxBytesLength - "...".getBytes(charset).length;
+        } else {
+            limitBytes = maxBytesLength;
+        }
+        final ByteBuffer bb = ByteBuffer.wrap(sba, 0, limitBytes);
+        final CharBuffer cb = CharBuffer.allocate(limitBytes);
+        final CharsetDecoder decoder = charset.newDecoder();
+        //忽略被截断的字符
+        decoder.onMalformedInput(CodingErrorAction.IGNORE);
+        decoder.decode(bb, cb, true);
+        decoder.flush(cb);
+        final String result = new String(cb.array(), 0, cb.position());
+        if (appendDots && maxBytesLength > dotsBytesLength) {
+            return result + "...";
+        }
+        return result;
+    }
 
 }
