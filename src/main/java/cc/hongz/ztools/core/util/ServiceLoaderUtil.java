@@ -20,7 +20,7 @@ import java.util.ServiceLoader;
  * @author looly
  * @since 5.1.6
  */
-public class ServiceLoaderUtil {
+public final class ServiceLoaderUtil {
 
     /**
      * 私有构造函数，防止实例化工具类.
