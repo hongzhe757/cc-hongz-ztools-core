@@ -1,6 +1,5 @@
 package cc.hongz.ztools.core.util;
 
-import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.lang.ParameterizedTypeImpl;
 import cc.hongz.ztools.core.lang.reflect.ActualTypeMapperPool;
 
@@ -190,8 +189,7 @@ public final class TypeUtil {
             if (type instanceof TypeVariable) {
                 return true;
             }
-        }
-        return false;
+        } return false;
     }
 
     /**
@@ -409,20 +407,22 @@ public final class TypeUtil {
      * @param parameterizedType 泛型变量，例如List&lt;T&gt;等
      * @return 实际类型，可能为Class等
      */
-    public static Type getActualType(final Type type, ParameterizedType parameterizedType) {
+    public static Type getActualType(final Type type, final ParameterizedType parameterizedType) {
         // 字段类型为泛型参数类型，解析对应泛型类型为真实类型，类似于 List<T> a
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        ParameterizedType result = parameterizedType;
 
         // 泛型对象中含有未被转换的泛型变量
         if (hasTypeVariable(actualTypeArguments)) {
-            actualTypeArguments = getActualTypes(type, parameterizedType.getActualTypeArguments());
+            actualTypeArguments = getActualTypes(type, result.getActualTypeArguments());
             if (ArrayUtil.isNotEmpty(actualTypeArguments)) {
                 // 替换泛型变量为实际类型，例如 List<T> 变为 List<String>
-                parameterizedType = new ParameterizedTypeImpl(actualTypeArguments, parameterizedType.getOwnerType(), parameterizedType.getRawType());
+                result = new ParameterizedTypeImpl(actualTypeArguments,
+                        result.getOwnerType(), result.getRawType());
             }
         }
 
-        return parameterizedType;
+        return result;
     }
 
     /**
