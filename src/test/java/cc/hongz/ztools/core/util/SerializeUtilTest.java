@@ -61,7 +61,8 @@ class SerializeUtilTest {
     void deserializeInteger() {
         Integer original = 12345;
         byte[] bytes = SerializeUtil.serialize(original);
-        Integer result = SerializeUtil.deserialize(bytes, Integer.class);
+        // Integer 反序列化时需 Number 在白名单（Integer 父类）
+        Integer result = SerializeUtil.deserialize(bytes, Integer.class, Number.class);
         assertEquals(original, result);
     }
 
@@ -88,8 +89,8 @@ class SerializeUtilTest {
         original.put("one", 1);
         original.put("two", 2);
         byte[] bytes = SerializeUtil.serialize(original);
-        // Map中包含Integer值，需同时将HashMap和Integer加入白名单
-        Map<String, Integer> result = SerializeUtil.deserialize(bytes, HashMap.class, Integer.class);
+        // Map中包含Integer值，需同时将HashMap、Integer及父类Number加入白名单
+        Map<String, Integer> result = SerializeUtil.deserialize(bytes, HashMap.class, Integer.class, Number.class);
         assertEquals(original, result);
     }
 
