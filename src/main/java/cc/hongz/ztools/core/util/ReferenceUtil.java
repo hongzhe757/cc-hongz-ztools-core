@@ -2,7 +2,11 @@ package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.lang.ref.Ref;
 
-import java.lang.ref.*;
+import java.lang.ref.PhantomReference;
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 
 /**
  * 引用工具类，主要针对{@link Reference} 工具化封装.
@@ -20,6 +24,9 @@ import java.lang.ref.*;
  */
 public class ReferenceUtil {
 
+    private ReferenceUtil() {
+    }
+
     /**
      * 获得引用.
      *
@@ -28,7 +35,7 @@ public class ReferenceUtil {
      * @param referent 被引用对象
      * @return {@link Reference}
      */
-    public static <T> Reference<T> create(ReferenceType type, T referent) {
+    public static <T> Reference<T> create(final ReferenceType type, final T referent) {
         return create(type, referent, null);
     }
 
@@ -41,7 +48,7 @@ public class ReferenceUtil {
      * @param queue    引用队列
      * @return {@link Reference}
      */
-    public static <T> Reference<T> create(ReferenceType type, T referent, ReferenceQueue<T> queue) {
+    public static <T> Reference<T> create(final ReferenceType type, final T referent, final ReferenceQueue<T> queue) {
         switch (type) {
             case SOFT:
                 return new SoftReference<>(referent, queue);
@@ -82,13 +89,13 @@ public class ReferenceUtil {
      * @author looly
      */
     public enum ReferenceType {
-        /** 软引用，在GC报告内存不足时会被GC回收 */
+        /** 软引用，在GC报告内存不足时会被GC回收. */
         SOFT,
-        /** 弱引用，在GC时发现弱引用会回收其对象 */
+        /** 弱引用，在GC时发现弱引用会回收其对象. */
         WEAK,
         /**
          * 虚引用，在GC时发现虚引用对象，会将{@link PhantomReference}插入{@link ReferenceQueue}。
-         * 此时对象未被真正回收，要等到{@link ReferenceQueue}被真正处理后才会被回收。
+         * 此时对象未被真正回收，要等到{@link ReferenceQueue}被真正处理后才会被回收.
          */
         PHANTOM
     }
