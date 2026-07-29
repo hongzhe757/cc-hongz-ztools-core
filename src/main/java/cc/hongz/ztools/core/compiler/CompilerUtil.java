@@ -13,7 +13,7 @@ import javax.tools.ToolProvider;
  * @author looly
  * @since 5.5.2
  */
-public class CompilerUtil {
+public final class CompilerUtil {
 
     /**
      * java 编译器.

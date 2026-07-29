@@ -15,7 +15,7 @@ import java.util.zip.ZipFile;
  * @author lzpeng, looly
  * @since 5.5.2
  */
-public class JavaFileObjectUtil {
+public final class JavaFileObjectUtil {
 
     private JavaFileObjectUtil() {
     }

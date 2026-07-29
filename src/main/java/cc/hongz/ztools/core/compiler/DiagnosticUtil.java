@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * @author looly
  * @since 5.5.2
  */
-public class DiagnosticUtil {
+public final class DiagnosticUtil {
 
     private DiagnosticUtil() {
     }

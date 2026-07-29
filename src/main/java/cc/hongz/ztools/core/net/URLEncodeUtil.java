@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 5.7.13
  */
-public class URLEncodeUtil {
+public final class URLEncodeUtil {
 
     private URLEncodeUtil() {
     }

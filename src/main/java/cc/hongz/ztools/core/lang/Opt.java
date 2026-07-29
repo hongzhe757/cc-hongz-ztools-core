@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * @author VampireAchao
  * @see java.util.Optional
  */
-public class Opt<T> {
+public final class Opt<T> {
 	/**
 	 * 一个空的{@code Opt}
 	 */

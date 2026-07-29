@@ -19,7 +19,7 @@ import java.util.Random;
  * @author hongzhe.qin
  * @since 4.5.2
  */
-public class ColorUtil {
+public final class ColorUtil {
 
     /**
      * RGB 分量上界.

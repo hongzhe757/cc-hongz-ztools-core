@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author lzpeng
  */
-public class JavaSourceCompiler {
+public final class JavaSourceCompiler {
 
     private final List<Resource> sourceList = new ArrayList<>();
     private final List<File> libraryFileList = new ArrayList<>();

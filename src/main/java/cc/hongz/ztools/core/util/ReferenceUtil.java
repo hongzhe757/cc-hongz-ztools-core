@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
  * @author looly
  * @author hongzhe.qin
  */
-public class ReferenceUtil {
+public final class ReferenceUtil {
 
     private ReferenceUtil() {
     }

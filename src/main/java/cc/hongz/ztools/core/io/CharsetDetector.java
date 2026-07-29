@@ -19,7 +19,7 @@ import java.nio.charset.CharsetDecoder;
  * @author hongzhe.qin (migrated &amp; enhanced)
  * @since 5.4.7
  */
-public class CharsetDetector {
+public final class CharsetDetector {
 
     /**
      * 默认的参与测试的编码.

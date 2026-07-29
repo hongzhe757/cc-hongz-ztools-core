@@ -20,7 +20,7 @@ import cc.hongz.ztools.core.codec.PercentCodec;
  * @author looly
  * @since 5.7.16
  */
-public class RFC3986 {
+public final class RFC3986 {
 
     /**
      * gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"

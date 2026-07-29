@@ -38,7 +38,7 @@ import java.util.Set;
  * @author Looly
  * @since 3.0.9
  */
-public class ReflectUtil {
+public final class ReflectUtil {
 
     private ReflectUtil() {
     }

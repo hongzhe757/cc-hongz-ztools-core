@@ -78,6 +78,7 @@
 
         <!-- ============ Design ============ -->
         <module name="HideUtilityClassConstructor"/>
+        <module name="FinalClass"/>
 
         <!-- ============ Miscellaneous ============ -->
         <module name="ArrayTypeStyle"/>

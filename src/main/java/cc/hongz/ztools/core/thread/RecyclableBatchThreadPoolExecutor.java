@@ -266,7 +266,7 @@ public class RecyclableBatchThreadPoolExecutor {
 	 * 处理逻辑包装类
 	 * @param <R> 结果类型
 	 */
-	public static class Warp<R>{
+	public static final class Warp<R>{
 
 		private Warp(Supplier<R> supplier){
 			Objects.requireNonNull(supplier);
