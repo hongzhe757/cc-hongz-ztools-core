@@ -4,7 +4,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import cc.hongz.ztools.core.date.DateField;
@@ -187,14 +194,16 @@ public final class RandomUtil {
      * @param includeMax 是否包含最大值
      * @return 随机数
      */
-    public static long randomLong(long min, long max, final boolean includeMin, final boolean includeMax) {
+    public static long randomLong(final long min, final long max, final boolean includeMin, final boolean includeMax) {
+        long adjustedMin = min;
+        long adjustedMax = max;
         if (!includeMin) {
-            min++;
+            adjustedMin++;
         }
         if (includeMax) {
-            max++;
+            adjustedMax++;
         }
-        return getRandom().nextLong(min, max);
+        return getRandom().nextLong(adjustedMin, adjustedMax);
     }
 
     // --------------------------------------- float/double
@@ -372,14 +381,16 @@ public final class RandomUtil {
      * @param includeMax 是否包含最大值
      * @return 随机数
      */
-    public static int randomInt(int min, int max, final boolean includeMin, final boolean includeMax) {
+    public static int randomInt(final int min, final int max, final boolean includeMin, final boolean includeMax) {
+        int adjustedMin = min;
+        int adjustedMax = max;
         if (!includeMin) {
-            min++;
+            adjustedMin++;
         }
         if (includeMax) {
-            max++;
+            adjustedMax++;
         }
-        return getRandom().nextInt(min, max);
+        return getRandom().nextInt(adjustedMin, adjustedMax);
     }
 
     /**
@@ -446,11 +457,9 @@ public final class RandomUtil {
      * @param limit 限制列表的前N项
      * @return 随机元素
      */
-    public static <T> T randomEle(final List<T> list, int limit) {
-        if (list.size() < limit) {
-            limit = list.size();
-        }
-        return list.get(randomInt(limit));
+    public static <T> T randomEle(final List<T> list, final int limit) {
+        final int effectiveLimit = Math.min(limit, list.size());
+        return list.get(randomInt(effectiveLimit));
     }
 
     /**
@@ -472,11 +481,9 @@ public final class RandomUtil {
      * @param limit 限制列表的前N项
      * @return 随机元素
      */
-    public static <T> T randomEle(final T[] array, int limit) {
-        if (array.length < limit) {
-            limit = array.length;
-        }
-        return array[randomInt(limit)];
+    public static <T> T randomEle(final T[] array, final int limit) {
+        final int effectiveLimit = Math.min(limit, array.length);
+        return array[randomInt(effectiveLimit)];
     }
 
     /**

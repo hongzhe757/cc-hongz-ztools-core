@@ -24,6 +24,7 @@ class RandomUtilTest {
     // --------------------------------------- Random instances
 
     @Test
+    @DisplayName("getRandom 返回 ThreadLocalRandom")
     void getRandom() {
         assertTrue(RandomUtil.getRandom() instanceof ThreadLocalRandom);
     }
@@ -108,11 +109,13 @@ class RandomUtilTest {
     // --------------------------------------- randomInt
 
     @Test
+    @DisplayName("randomInt() 无界")
     void randomIntNoBound() {
         RandomUtil.randomInt();
     }
 
     @Test
+    @DisplayName("randomInt(limit) 在[0,limit)")
     void randomIntRange() {
         for (int i = 0; i < 100; i++) {
             final int v = RandomUtil.randomInt(10);
@@ -121,6 +124,7 @@ class RandomUtilTest {
     }
 
     @Test
+    @DisplayName("randomInt(min,max) 在[min,max)")
     void randomIntMinMax() {
         for (int i = 0; i < 100; i++) {
             final int v = RandomUtil.randomInt(3, 8);
@@ -158,11 +162,13 @@ class RandomUtilTest {
     // --------------------------------------- randomLong
 
     @Test
+    @DisplayName("randomLong() 无界")
     void randomLongNoBound() {
         RandomUtil.randomLong();
     }
 
     @Test
+    @DisplayName("randomLong(limit) 在[0,limit)")
     void randomLongLimit() {
         for (int i = 0; i < 50; i++) {
             long v = RandomUtil.randomLong(100L);
@@ -393,6 +399,7 @@ class RandomUtilTest {
     // --------------------------------------- randomString
 
     @Test
+    @DisplayName("randomString(base,length) 指定字符集")
     void randomStringFromBase() {
         final String s = RandomUtil.randomString(RandomUtil.BASE_NUMBER, 6);
         assertEquals(6, s.length());
@@ -400,11 +407,13 @@ class RandomUtilTest {
     }
 
     @Test
+    @DisplayName("randomString(base,0) 最小长度为1")
     void randomStringMinLengthOne() {
         assertEquals(1, RandomUtil.randomString(RandomUtil.BASE_NUMBER, 0).length());
     }
 
     @Test
+    @DisplayName("randomString 空base返回空串")
     void randomStringBlankBaseReturnsEmpty() {
         assertEquals("", RandomUtil.randomString("", 5));
     }
@@ -463,6 +472,7 @@ class RandomUtilTest {
     // --------------------------------------- randomChar
 
     @Test
+    @DisplayName("randomChar(base) 指定字符集")
     void randomCharFromBase() {
         final char c = RandomUtil.randomChar("AB");
         assertTrue(c == 'A' || c == 'B');
@@ -496,6 +506,7 @@ class RandomUtilTest {
     // --------------------------------------- constants
 
     @Test
+    @DisplayName("常量非空且内容正确")
     void baseConstants() {
         assertFalse(RandomUtil.BASE_NUMBER.isEmpty());
         assertFalse(RandomUtil.BASE_CHAR.isEmpty());
