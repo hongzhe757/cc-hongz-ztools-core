@@ -21,7 +21,7 @@ import java.util.Map;
  *
  * @author xiaoleilu
  */
-public class StrUtil extends CharSequenceUtil implements StrPool {
+public final class StrUtil extends CharSequenceUtil implements StrPool {
 
     // ------------------------------------------------------------------------ Blank
 
