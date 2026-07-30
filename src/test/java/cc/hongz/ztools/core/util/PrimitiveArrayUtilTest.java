@@ -1626,4 +1626,163 @@ class PrimitiveArrayUtilTest {
         assertTrue(PrimitiveArrayUtil.isSorted(new int[]{2, 2, 2}));
         assertTrue(PrimitiveArrayUtil.isSortedDESC(new int[]{2, 2, 2}));
     }
+
+    // ==================================================================== supplementary edge cases
+
+    /**
+     * sub 负数 end 索引自动修正.
+     */
+    @Test
+    void subIntNegativeEnd() {
+        // end = -1 means end = length - 1 = 3
+        assertArrayEquals(new int[]{2, 3}, PrimitiveArrayUtil.sub(new int[]{1, 2, 3, 4}, 1, -1));
+    }
+
+    /**
+     * sub end 超过长度时截断到数组末尾.
+     */
+    @Test
+    void subIntEndExceedsLength() {
+        assertArrayEquals(new int[]{3, 4}, PrimitiveArrayUtil.sub(new int[]{1, 2, 3, 4}, 2, 100));
+    }
+
+    /**
+     * sub start 和 end 都为负数时.
+     */
+    @Test
+    void subLongNegativeBoth() {
+        assertArrayEquals(new long[]{3L}, PrimitiveArrayUtil.sub(new long[]{1L, 2L, 3L, 4L}, -2, -1));
+    }
+
+    /**
+     * reverse null 数组抛出 NullPointerException.
+     */
+    @Test
+    void reverseNullThrows() {
+        assertThrows(NullPointerException.class, () -> PrimitiveArrayUtil.reverse((int[]) null));
+        assertThrows(NullPointerException.class, () -> PrimitiveArrayUtil.reverse((long[]) null));
+        assertThrows(NullPointerException.class, () -> PrimitiveArrayUtil.reverse((double[]) null));
+    }
+
+    /**
+     * reverse 指定范围反转 long 数组.
+     */
+    @Test
+    void reverseLongWithRange() {
+        long[] array = {1L, 2L, 3L, 4L, 5L};
+        PrimitiveArrayUtil.reverse(array, 1, 4);
+        assertArrayEquals(new long[]{1L, 4L, 3L, 2L, 5L}, array);
+    }
+
+    /**
+     * reverse 指定范围反转 byte 数组.
+     */
+    @Test
+    void reverseByteWithRange() {
+        byte[] array = {1, 2, 3, 4, 5};
+        PrimitiveArrayUtil.reverse(array, 0, 3);
+        assertArrayEquals(new byte[]{3, 2, 1, 4, 5}, array);
+    }
+
+    /**
+     * reverse 指定范围反转 double 数组.
+     */
+    @Test
+    void reverseDoubleWithRange() {
+        double[] array = {1.0, 2.0, 3.0, 4.0};
+        PrimitiveArrayUtil.reverse(array, 1, 3);
+        assertArrayEquals(new double[]{1.0, 3.0, 2.0, 4.0}, array, 0.001);
+    }
+
+    /**
+     * resize null 数组返回空数组.
+     */
+    @Test
+    void resizeNullReturnsEmpty() {
+        byte[] result = PrimitiveArrayUtil.resize(null, 3);
+        assertEquals(3, result.length);
+        assertEquals(0, result[0]);
+    }
+
+    /**
+     * indexOf 空数组返回 -1.
+     */
+    @Test
+    void indexOfEmptyReturnsNegOne() {
+        assertEquals(-1, PrimitiveArrayUtil.indexOf(new int[0], 1));
+        assertEquals(-1, PrimitiveArrayUtil.indexOf(new long[0], 1L));
+        assertEquals(-1, PrimitiveArrayUtil.indexOf(new byte[0], (byte) 1));
+    }
+
+    /**
+     * lastIndexOf 空数组返回 -1.
+     */
+    @Test
+    void lastIndexOfEmptyReturnsNegOne() {
+        assertEquals(-1, PrimitiveArrayUtil.lastIndexOf(new int[0], 1));
+        assertEquals(-1, PrimitiveArrayUtil.lastIndexOf(new double[0], 1.0));
+    }
+
+    /**
+     * min 单元素正常返回.
+     */
+    @Test
+    void minSingleElement() {
+        assertEquals(5, PrimitiveArrayUtil.min(5));
+        assertEquals(5L, PrimitiveArrayUtil.min(5L));
+        assertEquals(1.0, PrimitiveArrayUtil.min(1.0), 0.001);
+    }
+
+    /**
+     * max 单元素正常返回.
+     */
+    @Test
+    void maxSingleElement() {
+        assertEquals(5, PrimitiveArrayUtil.max(5));
+        assertEquals(5L, PrimitiveArrayUtil.max(5L));
+        assertEquals(1.0f, PrimitiveArrayUtil.max(1.0f), 0.001f);
+    }
+
+    /**
+     * swap null 数组抛出异常.
+     */
+    @Test
+    void swapNullThrows() {
+        assertThrows(IllegalArgumentException.class,
+                () -> PrimitiveArrayUtil.swap((int[]) null, 0, 0));
+    }
+
+    /**
+     * addAll 全部为 null 返回空数组.
+     */
+    @Test
+    void addAllAllNullsReturnsEmpty() {
+        int[] result = PrimitiveArrayUtil.addAll((int[]) null, (int[]) null);
+        assertEquals(0, result.length);
+    }
+
+    /**
+     * isSortedASC 判定更多类型.
+     */
+    @Test
+    void isSortedASCMultipleTypes() {
+        assertTrue(PrimitiveArrayUtil.isSortedASC(new long[]{1L, 2L, 3L}));
+        assertFalse(PrimitiveArrayUtil.isSortedASC(new long[]{3L, 1L}));
+        assertTrue(PrimitiveArrayUtil.isSortedASC(new double[]{1.0, 2.0, 3.0}));
+        assertTrue(PrimitiveArrayUtil.isSortedASC(new float[]{1.0f, 2.0f}));
+        assertTrue(PrimitiveArrayUtil.isSortedASC(new byte[]{1, 2, 3}));
+        assertTrue(PrimitiveArrayUtil.isSortedASC(new short[]{1, 2, 3}));
+        assertTrue(PrimitiveArrayUtil.isSortedASC(new char[]{'a', 'b', 'c'}));
+    }
+
+    /**
+     * isSorted 空数组视为有序.
+     */
+    @Test
+    void isSortedEmptyArrayReturnsTrue() {
+        assertTrue(PrimitiveArrayUtil.isSorted(new int[0]));
+        assertTrue(PrimitiveArrayUtil.isSorted(new long[0]));
+        assertTrue(PrimitiveArrayUtil.isSortedASC(new byte[0]));
+        assertTrue(PrimitiveArrayUtil.isSortedDESC(new double[0]));
+    }
 }
