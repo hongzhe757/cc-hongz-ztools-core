@@ -46,9 +46,11 @@ class ObjectUtilTest {
 	@Test
 	void equalWithNumbers() {
 		assertTrue(ObjectUtil.equal(1, 1));
-		assertTrue(ObjectUtil.equal(1L, 1));
+		assertTrue(ObjectUtil.equal(1L, 1L));
 		assertTrue(ObjectUtil.equal(new BigDecimal("2.0"), new BigDecimal("2.00")));
 		assertFalse(ObjectUtil.equal(1, 2));
+		// 不同类型（Long vs Integer）Objects.equals 返回 false
+		assertFalse(ObjectUtil.equal(1L, 1));
 	}
 
 	@Test
