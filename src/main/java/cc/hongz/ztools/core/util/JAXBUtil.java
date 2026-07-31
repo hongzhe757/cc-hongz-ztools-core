@@ -14,12 +14,11 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import java.io.File;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 
 /**
- * JAXB（Java Architecture for XML Binding），根据XML Schema产生Java对象，即实现xml和Bean互转。
+ * JAXB（Java Architecture for XML Binding），根据XML Schema产生Java对象，即实现xml和Bean互转.
  * <p>
  * 相关介绍：
  * <ul>
@@ -31,10 +30,16 @@ import java.nio.charset.Charset;
  * @see XmlUtil
  * @since 5.7.3
  */
-public class JAXBUtil {
+public final class JAXBUtil {
 
     /**
-     * JavaBean转换成xml
+     * 私有构造函数，防止实例化工具类.
+     */
+    private JAXBUtil() {
+    }
+
+    /**
+     * JavaBean转换成xml.
      * <p>
      * bean上面用的常用注解
      *
@@ -45,19 +50,19 @@ public class JAXBUtil {
      * @see XmlElementWrapper {@code @XmlElementWrapper(name="schools")}
      * @see XmlTransient JAXB "有两个名为 "**" 的属性,类的两个属性具有相同名称 "**""解决方案
      */
-    public static String beanToXml(Object bean) {
+    public static String beanToXml(final Object bean) {
         return beanToXml(bean, CharsetUtil.CHARSET_UTF_8, true);
     }
 
     /**
-     * JavaBean转换成xml
+     * JavaBean转换成xml.
      *
      * @param bean    Bean对象
      * @param charset 编码 eg: utf-8
      * @param format  是否格式化输出eg: true
      * @return 输出的XML字符串
      */
-    public static String beanToXml(Object bean, Charset charset, boolean format) {
+    public static String beanToXml(final Object bean, final Charset charset, final boolean format) {
         StringWriter writer;
         try {
             JAXBContext context = JAXBContext.newInstance(bean.getClass());
@@ -73,19 +78,19 @@ public class JAXBUtil {
     }
 
     /**
-     * xml转换成JavaBean
+     * xml转换成JavaBean.
      *
      * @param <T> Bean类型
      * @param xml XML字符串
      * @param c   Bean类型
      * @return bean
      */
-    public static <T> T xmlToBean(String xml, Class<T> c) {
-        return xmlToBean(new StringReader(xml), c);
+    public static <T> T xmlToBean(final String xml, final Class<T> c) {
+        return xmlToBean(StrUtil.getReader(xml), c);
     }
 
     /**
-     * XML文件转Bean
+     * XML文件转Bean.
      *
      * @param file    文件
      * @param charset 编码
@@ -93,12 +98,12 @@ public class JAXBUtil {
      * @param <T>     Bean类型
      * @return Bean
      */
-    public static <T> T xmlToBean(File file, Charset charset, Class<T> c) {
-        return xmlToBean(IoUtil.getReader(FileUtil.getInputStream(file), charset), c);
+    public static <T> T xmlToBean(final File file, final Charset charset, final Class<T> c) {
+        return xmlToBean(FileUtil.getReader(file, charset), c);
     }
 
     /**
-     * 从{@link Reader}中读取XML字符串，并转换为Bean
+     * 从{@link Reader}中读取XML字符串，并转换为Bean.
      *
      * @param reader {@link Reader}
      * @param c      Bean类
@@ -106,7 +111,7 @@ public class JAXBUtil {
      * @return Bean
      */
     @SuppressWarnings("unchecked")
-    public static <T> T xmlToBean(Reader reader, Class<T> c) {
+    public static <T> T xmlToBean(final Reader reader, final Class<T> c) {
         try {
             JAXBContext context = JAXBContext.newInstance(c);
             Unmarshaller unmarshaller = context.createUnmarshaller();
