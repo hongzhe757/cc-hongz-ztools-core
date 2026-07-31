@@ -43,7 +43,7 @@ class NumberUtilTest {
         assertEquals(new BigDecimal("7"), NumberUtil.add("3", "4"));
         assertEquals(new BigDecimal("-1"), NumberUtil.sub("3", "4"));
         assertEquals(new BigDecimal("12"), NumberUtil.mul("3", "4"));
-        assertEquals(new BigDecimal("0.75"), NumberUtil.div("3", "4"));
+        assertEquals(0, new BigDecimal("0.75").compareTo(NumberUtil.div("3", "4")));
     }
 
     /**
@@ -61,8 +61,8 @@ class NumberUtilTest {
      */
     @Test
     void subNumber() {
-        assertEquals(new BigDecimal("7"), NumberUtil.sub(10, 3));
-        assertEquals(new BigDecimal("5"), NumberUtil.sub(10, 3, 2));
+        assertEquals(0, new BigDecimal("7").compareTo(NumberUtil.sub((Number) 10, (Number) 3)));
+        assertEquals(0, new BigDecimal("5").compareTo(NumberUtil.sub(new Number[]{10, 3, 2})));
     }
 
     /**
