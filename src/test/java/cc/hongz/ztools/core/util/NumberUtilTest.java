@@ -21,6 +21,7 @@ class NumberUtilTest {
      * 验证 {@link NumberUtil#toBigDecimal(String)} 对 null 与空串返回零.
      */
     @Test
+    @DisplayName("toBigDecimal：空串与null返回零")
     void toBigDecimalEmpty() {
         assertEquals(BigDecimal.ZERO, NumberUtil.toBigDecimal(""));
         assertEquals(BigDecimal.ZERO, NumberUtil.toBigDecimal((String) null));
@@ -30,6 +31,7 @@ class NumberUtilTest {
      * 验证 {@link NumberUtil#toBigDecimal(String)} 解析合法数字.
      */
     @Test
+    @DisplayName("toBigDecimal：解析合法数字")
     void toBigDecimalValidNumber() {
         assertEquals(new BigDecimal("3.14"), NumberUtil.toBigDecimal("3.14"));
     }
@@ -39,6 +41,7 @@ class NumberUtilTest {
      * {@link NumberUtil#mul(String, String)}、{@link NumberUtil#div(String, String)} 基本运算.
      */
     @Test
+    @DisplayName("add/sub/mul/div：基本四则运算")
     void addSubMulDiv() {
         assertEquals(new BigDecimal("7"), NumberUtil.add("3", "4"));
         assertEquals(new BigDecimal("-1"), NumberUtil.sub("3", "4"));
@@ -50,6 +53,7 @@ class NumberUtilTest {
      * 验证 {@link NumberUtil#mul(String...)} 可变参数连乘与空参数.
      */
     @Test
+    @DisplayName("mul：可变参数连乘")
     void mulVarargs() {
         assertEquals(new BigDecimal("24"), NumberUtil.mul("2", "3", "4"));
         assertEquals(BigDecimal.ZERO, NumberUtil.mul(new String[0]));
@@ -60,6 +64,7 @@ class NumberUtilTest {
      * 验证 {@link NumberUtil#sub(Number, Number)} 与 {@link NumberUtil#sub(Number...)}.
      */
     @Test
+    @DisplayName("sub：Number类型减法")
     void subNumber() {
         assertEquals(0, new BigDecimal("7").compareTo(NumberUtil.sub((Number) 10, (Number) 3)));
         assertEquals(0, new BigDecimal("5").compareTo(NumberUtil.sub(new Number[]{10, 3, 2})));
@@ -69,6 +74,7 @@ class NumberUtilTest {
      * 验证 {@link NumberUtil#toBigDecimal(Number)} 对 null 返回零.
      */
     @Test
+    @DisplayName("toBigDecimal：Number为null返回零")
     void toBigDecimalNumberNull() {
         assertEquals(BigDecimal.ZERO, NumberUtil.toBigDecimal((Number) null));
     }

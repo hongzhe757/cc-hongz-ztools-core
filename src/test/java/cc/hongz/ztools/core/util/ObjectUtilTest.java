@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.util;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -15,11 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link ObjectUtil} 单元测试.
  */
+@DisplayName("ObjectUtil 工具类")
 class ObjectUtilTest {
 
 	// ---- defaultIfNull ----
 
 	@Test
+	@DisplayName("defaultIfNull：空值时返回默认值")
 	void defaultIfNull() {
 		assertEquals("d", ObjectUtil.defaultIfNull((String) null, "d"));
 		assertEquals("v", ObjectUtil.defaultIfNull("v", "d"));
@@ -27,6 +30,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("defaultIfNull：Supplier提供默认值")
 	void defaultIfNullWithSupplier() {
 		java.util.function.Supplier<String> supplier = () -> "default";
 		assertEquals("default", ObjectUtil.<String>defaultIfNull(null, supplier));
@@ -34,6 +38,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("defaultIfNull：Function转换默认值")
 	void defaultIfNullWithFunction() {
 		java.util.function.Function<String, String> func = s -> "transformed";
 		assertEquals("value", ObjectUtil.<String>defaultIfNull("value", func));
@@ -44,6 +49,7 @@ class ObjectUtilTest {
 	// ---- equal / notEqual ----
 
 	@Test
+	@DisplayName("equal：数字类型相等判断")
 	void equalWithNumbers() {
 		assertTrue(ObjectUtil.equal(1, 1));
 		assertTrue(ObjectUtil.equal(1L, 1L));
@@ -54,6 +60,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("equal：字符串相等判断")
 	void equalWithStrings() {
 		assertTrue(ObjectUtil.equal("abc", "abc"));
 		assertFalse(ObjectUtil.equal("abc", "def"));
@@ -61,12 +68,14 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("equals：equal的别名方法")
 	void equalsAlias() {
 		assertTrue(ObjectUtil.equals("a", "a"));
 		assertFalse(ObjectUtil.equals("a", "b"));
 	}
 
 	@Test
+	@DisplayName("notEqual：不相等判断")
 	void notEqual() {
 		assertTrue(ObjectUtil.notEqual("a", "b"));
 		assertFalse(ObjectUtil.notEqual("a", "a"));
@@ -75,12 +84,14 @@ class ObjectUtilTest {
 	// ---- isNull / isNotNull ----
 
 	@Test
+	@DisplayName("isNull：空值判断")
 	void isNull() {
 		assertTrue(ObjectUtil.isNull(null));
 		assertFalse(ObjectUtil.isNull("abc"));
 	}
 
 	@Test
+	@DisplayName("isNotNull：非空判断")
 	void isNotNull() {
 		assertTrue(ObjectUtil.isNotNull("abc"));
 		assertFalse(ObjectUtil.isNotNull(null));
@@ -89,6 +100,7 @@ class ObjectUtilTest {
 	// ---- isEmpty / isNotEmpty ----
 
 	@Test
+	@DisplayName("isEmpty：空值或空集合判断")
 	void isEmpty() {
 		assertTrue(ObjectUtil.isEmpty(null));
 		assertTrue(ObjectUtil.isEmpty(""));
@@ -100,6 +112,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("isNotEmpty：非空判断")
 	void isNotEmpty() {
 		assertTrue(ObjectUtil.isNotEmpty("abc"));
 		assertFalse(ObjectUtil.isNotEmpty(null));
@@ -109,6 +122,7 @@ class ObjectUtilTest {
 	// ---- length ----
 
 	@Test
+	@DisplayName("length：获取对象长度")
 	void length() {
 		assertEquals(0, ObjectUtil.length(null));
 		assertEquals(3, ObjectUtil.length("abc"));
@@ -124,6 +138,7 @@ class ObjectUtilTest {
 	// ---- contains ----
 
 	@Test
+	@DisplayName("contains：是否包含元素")
 	void contains() {
 		assertFalse(ObjectUtil.contains(null, "a"));
 		assertTrue(ObjectUtil.contains("hello world", "world"));
@@ -136,6 +151,7 @@ class ObjectUtilTest {
 	// ---- defaultIfEmpty / defaultIfBlank ----
 
 	@Test
+	@DisplayName("defaultIfEmpty：空序列时返回默认值")
 	void defaultIfEmptyCharSequence() {
 		assertEquals("default", ObjectUtil.defaultIfEmpty(null, "default"));
 		assertEquals("default", ObjectUtil.defaultIfEmpty("", "default"));
@@ -143,6 +159,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("defaultIfBlank：空白时返回默认值")
 	void defaultIfBlank() {
 		assertEquals("default", ObjectUtil.defaultIfBlank(null, "default"));
 		assertEquals("default", ObjectUtil.defaultIfBlank("", "default"));
@@ -153,6 +170,7 @@ class ObjectUtilTest {
 	// ---- clone ----
 
 	@Test
+	@DisplayName("clone：克隆可克隆对象")
 	void cloneCloneable() {
 		String[] arr = {"a", "b"};
 		String[] cloned = ObjectUtil.clone(arr);
@@ -161,6 +179,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("cloneByStream：序列化流克隆")
 	void cloneByStreamSerializable() {
 		ArrayList<String> list = new ArrayList<>(Arrays.asList("a", "b", "c"));
 		ArrayList<String> cloned = ObjectUtil.clone(list);
@@ -169,6 +188,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("cloneIfPossible：尝试克隆")
 	void cloneIfPossible() {
 		String[] arr = {"x", "y"};
 		String[] cloned = ObjectUtil.cloneIfPossible(arr);
@@ -178,6 +198,7 @@ class ObjectUtilTest {
 	// ---- serialize / deserialize ----
 
 	@Test
+	@DisplayName("serialize/deserialize：序列化与反序列化")
 	void serializeAndDeserialize() {
 		String original = "hello";
 		byte[] bytes = ObjectUtil.serialize(original);
@@ -190,6 +211,7 @@ class ObjectUtilTest {
 	// ---- compare ----
 
 	@Test
+	@DisplayName("compare：对象比较")
 	void compare() {
 		assertTrue(ObjectUtil.compare(1, 2) < 0);
 		assertEquals(0, ObjectUtil.compare(1, 1));
@@ -197,6 +219,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("compare：含null的比较")
 	void compareWithNull() {
 		// 默认null排在前面（null小于任何值）
 		assertTrue(ObjectUtil.compare(null, "a") < 0);
@@ -205,6 +228,7 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("compare：null视为更大值")
 	void compareNullGreater() {
 		// nullGreater=true时null排在后面（null视为更大）
 		assertTrue(ObjectUtil.compare(null, "a", true) > 0);
@@ -214,6 +238,7 @@ class ObjectUtilTest {
 	// ---- isBasicType ----
 
 	@Test
+	@DisplayName("isBasicType：基本类型判断")
 	void isBasicType() {
 		assertTrue(ObjectUtil.isBasicType(1));
 		assertTrue(ObjectUtil.isBasicType(true));
@@ -225,6 +250,7 @@ class ObjectUtilTest {
 	// ---- isValidIfNumber ----
 
 	@Test
+	@DisplayName("isValidIfNumber：有效数字判断")
 	void isValidIfNumber() {
 		assertTrue(ObjectUtil.isValidIfNumber(123));
 		assertTrue(ObjectUtil.isValidIfNumber("abc")); // 非数字类型返回true
@@ -236,6 +262,7 @@ class ObjectUtilTest {
 	// ---- toString ----
 
 	@Test
+	@DisplayName("toString：对象转字符串")
 	void toStringTest() {
 		assertEquals("null", ObjectUtil.toString(null));
 		assertEquals("abc", ObjectUtil.toString("abc"));
@@ -245,18 +272,21 @@ class ObjectUtilTest {
 	// ---- emptyCount / hasNull / hasEmpty / isAllEmpty / isAllNotEmpty ----
 
 	@Test
+	@DisplayName("emptyCount：统计空值数量")
 	void emptyCount() {
 		assertEquals(2, ObjectUtil.emptyCount("a", null, "", "b"));
 		assertEquals(0, ObjectUtil.emptyCount("a", "b"));
 	}
 
 	@Test
+	@DisplayName("hasNull：是否包含null")
 	void hasNull() {
 		assertTrue(ObjectUtil.hasNull("a", null, "b"));
 		assertFalse(ObjectUtil.hasNull("a", "b"));
 	}
 
 	@Test
+	@DisplayName("hasEmpty：是否包含空值")
 	void hasEmpty() {
 		assertTrue(ObjectUtil.hasEmpty("a", null));
 		assertTrue(ObjectUtil.hasEmpty("a", ""));
@@ -264,12 +294,14 @@ class ObjectUtilTest {
 	}
 
 	@Test
+	@DisplayName("isAllEmpty：是否全部为空")
 	void isAllEmpty() {
 		assertTrue(ObjectUtil.isAllEmpty(null, ""));
 		assertFalse(ObjectUtil.isAllEmpty("a", null));
 	}
 
 	@Test
+	@DisplayName("isAllNotEmpty：是否全部非空")
 	void isAllNotEmpty() {
 		assertTrue(ObjectUtil.isAllNotEmpty("a", "b"));
 		assertFalse(ObjectUtil.isAllNotEmpty("a", null));
@@ -278,12 +310,14 @@ class ObjectUtilTest {
 	// ---- apply / accept ----
 
 	@Test
+	@DisplayName("apply：应用函数并返回结果")
 	void apply() {
 		assertEquals(3, ObjectUtil.apply("abc", String::length));
 		assertNull(ObjectUtil.apply(null, (String s) -> s));
 	}
 
 	@Test
+	@DisplayName("accept：消费操作")
 	void accept() {
 		StringBuilder sb = new StringBuilder();
 		ObjectUtil.accept("hello", sb::append);
@@ -297,6 +331,7 @@ class ObjectUtilTest {
 	// ---- getTypeArgument ----
 
 	@Test
+	@DisplayName("getTypeArgument：获取泛型参数类型")
 	void getTypeArgument() {
 		// ArrayList<String> 的第一个泛型参数应为 String
 		ArrayList<String> list = new ArrayList<>();
