@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.exceptions.UtilException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -9,11 +10,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * JNDIUtil 单元测试
+ * JNDIUtil 单元测试.
  */
+@DisplayName("JNDIUtil JNDI命名目录工具类")
 class JNDIUtilTest {
 
 	@Test
+	@DisplayName("createInitialDirContext - 危险协议ldap应被拦截")
 	void createInitialDirContextWithDangerousProtocolShouldThrow() {
 		Map<String, String> env = new HashMap<>();
 		env.put("java.naming.provider.url", "ldap://evil.com:1389/exploit");
@@ -26,6 +29,7 @@ class JNDIUtilTest {
 	}
 
 	@Test
+	@DisplayName("createInitialContext - 危险协议rmi应被拦截")
 	void createInitialContextWithDangerousProtocolShouldThrow() {
 		Map<String, String> env = new HashMap<>();
 		env.put("java.naming.provider.url", "rmi://evil.com:1099/exploit");
@@ -36,6 +40,7 @@ class JNDIUtilTest {
 	}
 
 	@Test
+	@DisplayName("createInitialContext - 非白名单工厂应被拦截")
 	void createInitialContextWithDangerousFactoryShouldThrow() {
 		Map<String, String> env = new HashMap<>();
 		env.put("java.naming.factory.initial", "com.evil.Factory");
@@ -46,6 +51,7 @@ class JNDIUtilTest {
 	}
 
 	@Test
+	@DisplayName("createInitialDirContext - java:安全协议不应被拦截")
 	void createInitialDirContextWithSafeProtocolShouldNotThrowProtocolError() {
 		Map<String, String> env = new HashMap<>();
 		env.put("java.naming.provider.url", "java:comp/env");
@@ -62,6 +68,7 @@ class JNDIUtilTest {
 	}
 
 	@Test
+	@DisplayName("createInitialDirContext - dns:安全协议不应被拦截")
 	void createInitialDirContextWithDnsProtocolShouldNotThrowProtocolError() {
 		Map<String, String> env = new HashMap<>();
 		env.put("java.naming.provider.url", "dns://8.8.8.8");
@@ -75,6 +82,7 @@ class JNDIUtilTest {
 	}
 
 	@Test
+	@DisplayName("createInitialContext - 白名单工厂ldap不应被拦截")
 	void createInitialContextWithAllowedFactoryShouldNotThrowFactoryError() {
 		Map<String, String> env = new HashMap<>();
 		env.put("java.naming.provider.url", "java:comp/env");
@@ -89,6 +97,7 @@ class JNDIUtilTest {
 	}
 
 	@Test
+	@DisplayName("createInitialContext - null环境不触发验证")
 	void createInitialContextWithNullEnvShouldNotThrowValidationError() {
 		// null 环境不触发验证，直接创建默认 InitialContext
 		// 在无JNDI提供者的环境中可能抛出 NamingException，但不是验证错误
@@ -101,6 +110,7 @@ class JNDIUtilTest {
 	}
 
 	@Test
+	@DisplayName("createInitialContext - 空环境不触发验证")
 	void createInitialContextWithEmptyEnvShouldNotThrowValidationError() {
 		Map<String, String> env = new HashMap<>();
 		try {
