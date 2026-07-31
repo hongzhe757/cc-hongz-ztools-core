@@ -2,400 +2,415 @@ package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.exceptions.UtilException;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
- * 淇グ绗﹀伐鍏风被
+ * 修饰符工具类.
  *
  * @author looly
  * @since 4.0.5
  */
-public class ModifierUtil {
+public final class ModifierUtil {
 
-	/**
-	 * 淇グ绗︽灇涓?
-	 *
-	 * @author looly
-	 * @since 4.0.5
-	 */
-	public enum ModifierType {
-		/**
-		 * public淇グ绗︼紝鎵€鏈夌被閮借兘璁块棶
-		 */
-		PUBLIC(Modifier.PUBLIC),
-		/**
-		 * private淇グ绗︼紝鍙兘琚嚜宸辫闂拰淇敼
-		 */
-		PRIVATE(Modifier.PRIVATE),
-		/**
-		 * protected淇グ绗︼紝鑷韩銆佸瓙绫诲強鍚屼竴涓寘涓被鍙互璁块棶
-		 */
-		PROTECTED(Modifier.PROTECTED),
-		/**
-		 * static淇グ绗︼紝锛堥潤鎬佷慨楗扮锛夋寚瀹氬彉閲忚鎵€鏈夊璞″叡浜紝鍗虫墍鏈夊疄渚嬮兘鍙互浣跨敤璇ュ彉閲忋€傚彉閲忓睘浜庤繖涓被
-		 */
-		STATIC(Modifier.STATIC),
-		/**
-		 * final淇グ绗︼紝鏈€缁堜慨楗扮锛屾寚瀹氭鍙橀噺鐨勫€间笉鑳藉彉锛屼娇鐢ㄥ湪鏂规硶涓婅〃绀轰笉鑳借閲嶈浇
-		 */
-		FINAL(Modifier.FINAL),
-		/**
-		 * synchronized锛屽悓姝ヤ慨楗扮锛屽湪澶氫釜绾跨▼涓紝璇ヤ慨楗扮鐢ㄤ簬鍦ㄨ繍琛屽墠锛屽浠栨墍灞炵殑鏂规硶鍔犻攣锛屼互闃叉鍏朵粬绾跨▼鐨勮闂紝杩愯缁撴潫鍚庤В閿併€?
-		 */
-		SYNCHRONIZED(Modifier.SYNCHRONIZED),
-		/**
-		 * 锛堟槗澶变慨楗扮锛夋寚瀹氳鍙橀噺鍙互鍚屾椂琚嚑涓嚎绋嬫帶鍒跺拰淇敼
-		 */
-		VOLATILE(Modifier.VOLATILE),
-		/**
-		 * 锛堣繃搴︿慨楗扮锛夋寚瀹氳鍙橀噺鏄郴缁熶繚鐣欙紝鏆傛棤鐗瑰埆浣滅敤鐨勪复鏃舵€у彉閲忥紝搴忓垪鍖栨椂蹇界暐
-		 */
-		TRANSIENT(Modifier.TRANSIENT),
-		/**
-		 * native锛屾湰鍦颁慨楗扮銆傛寚瀹氭鏂规硶鐨勬柟娉曚綋鏄敤鍏朵粬璇█鍦ㄧ▼搴忓閮ㄧ紪鍐欑殑銆?
-		 */
-		NATIVE(Modifier.NATIVE),
+    /**
+     * 私有构造器.
+     */
+    private ModifierUtil() {
+    }
 
-		/**
-		 * abstract锛屽皢涓€涓被澹版槑涓烘娊璞＄被锛屾病鏈夊疄鐜扮殑鏂规硶锛岄渶瑕佸瓙绫绘彁渚涙柟娉曞疄鐜般€?
-		 */
-		ABSTRACT(Modifier.ABSTRACT),
-		/**
-		 * strictfp锛屼竴鏃︿娇鐢ㄤ簡鍏抽敭瀛梥trictfp鏉ュ０鏄庢煇涓被銆佹帴鍙ｆ垨鑰呮柟娉曟椂锛岄偅涔堝湪杩欎釜鍏抽敭瀛楁墍澹版槑鐨勮寖鍥村唴鎵€鏈夋诞鐐硅繍绠楅兘鏄簿纭殑锛岀鍚圛EEE-754瑙勮寖鐨勩€?
-		 */
-		STRICT(Modifier.STRICT);
+    /**
+     * 修饰符枚举.
+     *
+     * @author looly
+     * @since 4.0.5
+     */
+    public enum ModifierType {
+        /**
+         * public修饰符，所有类都能访问.
+         */
+        PUBLIC(Modifier.PUBLIC),
+        /**
+         * private修饰符，只能被自己访问和修改.
+         */
+        PRIVATE(Modifier.PRIVATE),
+        /**
+         * protected修饰符，自身、子类及同一个包中类可以访问.
+         */
+        PROTECTED(Modifier.PROTECTED),
+        /**
+         * static修饰符，（静态修饰符）指定变量被所有对象共享，即所有实例都可以使用该变量.变量属于这个类.
+         */
+        STATIC(Modifier.STATIC),
+        /**
+         * final修饰符，最终修饰符，指定此变量的值不能变，使用在方法上表示不能被重载.
+         */
+        FINAL(Modifier.FINAL),
+        /**
+         * synchronized，同步修饰符，在多个线程中，该修饰符用于在运行前，对他所属的方法加锁，以防止其他线程的访问，运行结束后解锁。.
+         */
+        SYNCHRONIZED(Modifier.SYNCHRONIZED),
+        /**
+         * （易失修饰符）指定该变量可以同时被几个线程控制和修改.
+         */
+        VOLATILE(Modifier.VOLATILE),
+        /**
+         * （过度修饰符）指定该变量是系统保留，暂无特别作用的临时性变量，序列化时忽略.
+         */
+        TRANSIENT(Modifier.TRANSIENT),
+        /**
+         * native，本地修饰符.指定此方法的方法体是用其他语言在程序外部编写的。.
+         */
+        NATIVE(Modifier.NATIVE),
 
-		/**
-		 * 淇グ绗︽灇涓惧搴旂殑int淇グ绗﹀€?
-		 */
-		private final int value;
+        /**
+         * abstract，将一个类声明为抽象类，没有实现的方法，需要子类提供方法实现。.
+         */
+        ABSTRACT(Modifier.ABSTRACT),
+        /**
+         * strictfp，一旦使用了关键字strictfp来声明某个类、接口或者方法时，.
+         * 那么在这个关键字所声明的范围内所有浮点运算都是精确的，符合IEEE-754规范的。.
+         */
+        STRICT(Modifier.STRICT);
 
-		/**
-		 * 鏋勯€?
-		 *
-		 * @param modifier 淇グ绗nt琛ㄧず锛岃{@link Modifier}
-		 */
-		ModifierType(int modifier) {
-			this.value = modifier;
-		}
+        /**
+         * 修饰符枚举对应的int修饰符值.
+         */
+        private final int value;
 
-		/**
-		 * 鑾峰彇淇グ绗︽灇涓惧搴旂殑int淇グ绗﹀€硷紝鍊艰{@link Modifier}
-		 *
-		 * @return 淇グ绗︽灇涓惧搴旂殑int淇グ绗﹀€?
-		 */
-		public int getValue() {
-			return this.value;
-		}
-	}
+        /**
+         * 构造.
+         *
+         * @param modifier 修饰符int表示，见{@link Modifier}
+         */
+        ModifierType(final int modifier) {
+            this.value = modifier;
+        }
 
-	/**
-	 * 绫绘槸鍚﹀瓨鍦ㄧ粰瀹氫慨楗扮涓殑<b>浠绘剰涓€涓?/b><br>
-	 * 濡傚畾涔変慨楗扮涓猴細{@code public static final}锛岄偅涔堝鏋滀紶鍏ョ殑modifierTypes涓猴細
-	 * <ul>
-	 *     <li>public銆乻tatic  杩斿洖{@code true}</li>
-	 *     <li>public銆乤bstract杩斿洖{@code true}</li>
-	 *     <li>private銆乤bstract杩斿洖{@code false}</li>
-	 * </ul>
-	 *
-	 * @param clazz         绫伙紝濡傛灉涓簕@code null}杩斿洖{@code false}
-	 * @param modifierTypes 淇グ绗︽灇涓撅紝濡傛灉涓虹┖杩斿洖{@code false}
-	 * @return 鏄惁鏈夋寚瀹氫慨楗扮锛屽鏋滄湁杩斿洖true锛屽惁鍒檉alse锛屽鏋滄彁渚涘弬鏁颁负null杩斿洖false
-	 */
-	public static boolean hasModifier(Class<?> clazz, ModifierType... modifierTypes) {
-		if (null == clazz || ArrayUtil.isEmpty(modifierTypes)) {
-			return false;
-		}
-		return 0 != (clazz.getModifiers() & modifiersToInt(modifierTypes));
-	}
+        /**
+         * 获取修饰符枚举对应的int修饰符值，值见{@link Modifier}.
+         *
+         * @return 修饰符枚举对应的int修饰符值
+         */
+        public int getValue() {
+            return this.value;
+        }
+    }
 
-	/**
-	 * 鏋勯€犳槸鍚﹀瓨鍦ㄧ粰瀹氫慨楗扮涓殑<b>浠绘剰涓€涓?/b><br>
-	 * 濡傚畾涔変慨楗扮涓猴細{@code public static final}锛岄偅涔堝鏋滀紶鍏ョ殑modifierTypes涓猴細
-	 * <ul>
-	 *     <li>public銆乻tatic  杩斿洖{@code true}</li>
-	 *     <li>public銆乤bstract杩斿洖{@code true}</li>
-	 *     <li>private銆乤bstract杩斿洖{@code false}</li>
-	 * </ul>
-	 *
-	 * @param constructor        鏋勯€狅紝濡傛灉涓簕@code null}杩斿洖{@code false}
-	 * @param modifierTypes 淇グ绗︽灇涓撅紝濡傛灉涓虹┖杩斿洖{@code false}
-	 * @return 鏄惁鏈夋寚瀹氫慨楗扮锛屽鏋滄湁杩斿洖true锛屽惁鍒檉alse锛屽鏋滄彁渚涘弬鏁颁负null杩斿洖false
-	 */
-	public static boolean hasModifier(Constructor<?> constructor, ModifierType... modifierTypes) {
-		if (null == constructor || ArrayUtil.isEmpty(modifierTypes)) {
-			return false;
-		}
-		return 0 != (constructor.getModifiers() & modifiersToInt(modifierTypes));
-	}
+    /**
+     * 类是否存在给定修饰符中的<b>任意一个</b>.
+     * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+     * <ul>
+     *     <li>public、static  返回{@code true}</li>
+     *     <li>public、abstract返回{@code true}</li>
+     *     <li>private、abstract返回{@code false}</li>
+     * </ul>
+     *
+     * @param clazz         类，如果为{@code null}返回{@code false}
+     * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
+     * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
+     */
+    public static boolean hasModifier(final Class<?> clazz, final ModifierType... modifierTypes) {
+        if (null == clazz || ArrayUtil.isEmpty(modifierTypes)) {
+            return false;
+        }
+        return 0 != (clazz.getModifiers() & modifiersToInt(modifierTypes));
+    }
 
-	/**
-	 * 鏂规硶鏄惁瀛樺湪缁欏畾淇グ绗︿腑鐨?b>浠绘剰涓€涓?/b><br>
-	 * 濡傚畾涔変慨楗扮涓猴細{@code public static final}锛岄偅涔堝鏋滀紶鍏ョ殑modifierTypes涓猴細
-	 * <ul>
-	 *     <li>public銆乻tatic  杩斿洖{@code true}</li>
-	 *     <li>public銆乤bstract杩斿洖{@code true}</li>
-	 *     <li>private銆乤bstract杩斿洖{@code false}</li>
-	 * </ul>
-	 *
-	 * @param method        鏂规硶锛屽鏋滀负{@code null}杩斿洖{@code false}
-	 * @param modifierTypes 淇グ绗︽灇涓撅紝濡傛灉涓虹┖杩斿洖{@code false}
-	 * @return 鏄惁鏈夋寚瀹氫慨楗扮锛屽鏋滄湁杩斿洖true锛屽惁鍒檉alse锛屽鏋滄彁渚涘弬鏁颁负null杩斿洖false
-	 */
-	public static boolean hasModifier(Method method, ModifierType... modifierTypes) {
-		if (null == method || ArrayUtil.isEmpty(modifierTypes)) {
-			return false;
-		}
-		return 0 != (method.getModifiers() & modifiersToInt(modifierTypes));
-	}
+    /**
+     * 构造是否存在给定修饰符中的<b>任意一个</b>.
+     * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+     * <ul>
+     *     <li>public、static  返回{@code true}</li>
+     *     <li>public、abstract返回{@code true}</li>
+     *     <li>private、abstract返回{@code false}</li>
+     * </ul>
+     *
+     * @param constructor   构造，如果为{@code null}返回{@code false}
+     * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
+     * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
+     */
+    public static boolean hasModifier(final Constructor<?> constructor, final ModifierType... modifierTypes) {
+        if (null == constructor || ArrayUtil.isEmpty(modifierTypes)) {
+            return false;
+        }
+        return 0 != (constructor.getModifiers() & modifiersToInt(modifierTypes));
+    }
 
-	/**
-	 * 瀛楁鏄惁瀛樺湪缁欏畾淇グ绗︿腑鐨?b>浠绘剰涓€涓?/b><br>
-	 * 濡傚畾涔変慨楗扮涓猴細{@code public static final}锛岄偅涔堝鏋滀紶鍏ョ殑modifierTypes涓猴細
-	 * <ul>
-	 *     <li>public銆乻tatic  杩斿洖{@code true}</li>
-	 *     <li>public銆乤bstract杩斿洖{@code true}</li>
-	 *     <li>private銆乤bstract杩斿洖{@code false}</li>
-	 * </ul>
-	 *
-	 * @param field        鏋勯€犮€佸瓧娈垫垨鏂规硶锛屽鏋滀负{@code null}杩斿洖{@code false}
-	 * @param modifierTypes 淇グ绗︽灇涓撅紝濡傛灉涓虹┖杩斿洖{@code false}
-	 * @return 鏄惁鏈夋寚瀹氫慨楗扮锛屽鏋滄湁杩斿洖true锛屽惁鍒檉alse锛屽鏋滄彁渚涘弬鏁颁负null杩斿洖false
-	 */
-	public static boolean hasModifier(Field field, ModifierType... modifierTypes) {
-		if (null == field || ArrayUtil.isEmpty(modifierTypes)) {
-			return false;
-		}
-		return 0 != (field.getModifiers() & modifiersToInt(modifierTypes));
-	}
+    /**
+     * 方法是否存在给定修饰符中的<b>任意一个</b>.
+     * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+     * <ul>
+     *     <li>public、static  返回{@code true}</li>
+     *     <li>public、abstract返回{@code true}</li>
+     *     <li>private、abstract返回{@code false}</li>
+     * </ul>
+     *
+     * @param method        方法，如果为{@code null}返回{@code false}
+     * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
+     * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
+     */
+    public static boolean hasModifier(final Method method, final ModifierType... modifierTypes) {
+        if (null == method || ArrayUtil.isEmpty(modifierTypes)) {
+            return false;
+        }
+        return 0 != (method.getModifiers() & modifiersToInt(modifierTypes));
+    }
 
-	// region ----- hasAll
+    /**
+     * 字段是否存在给定修饰符中的<b>任意一个</b>.
+     * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+     * <ul>
+     *     <li>public、static  返回{@code true}</li>
+     *     <li>public、abstract返回{@code true}</li>
+     *     <li>private、abstract返回{@code false}</li>
+     * </ul>
+     *
+     * @param field         构造、字段或方法，如果为{@code null}返回{@code false}
+     * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
+     * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
+     */
+    public static boolean hasModifier(final Field field, final ModifierType... modifierTypes) {
+        if (null == field || ArrayUtil.isEmpty(modifierTypes)) {
+            return false;
+        }
+        return 0 != (field.getModifiers() & modifiersToInt(modifierTypes));
+    }
 
-	/**
-	 * 绫讳腑鏄惁鍚屾椂瀛樺湪<b>鎵€鏈?/b>缁欏畾淇グ绗?br>
-	 * 濡傚畾涔変慨楗扮涓猴細{@code public static final}锛岄偅涔堝鏋滀紶鍏ョ殑modifierTypes涓猴細
-	 * <ul>
-	 *     <li>public銆乻tatic  杩斿洖{@code true}</li>
-	 *     <li>public銆乤bstract杩斿洖{@code false}</li>
-	 *     <li>private銆乤bstract杩斿洖{@code false}</li>
-	 * </ul>
-	 *
-	 * @param clazz         绫伙紝濡傛灉涓簕@code null}杩斿洖{@code false}
-	 * @param modifierTypes 淇グ绗︽灇涓撅紝濡傛灉涓虹┖杩斿洖{@code false}
-	 * @return 鏄惁鍚屾椂瀛樺湪鎵€鏈夋寚瀹氫慨楗扮锛屽鏋滄湁杩斿洖true锛屽惁鍒檉alse锛屽鏋滄彁渚涘弬鏁颁负null杩斿洖false
-	 */
-	public static boolean hasAllModifiers(final Class<?> clazz, final ModifierType... modifierTypes) {
-		if (null == clazz || ArrayUtil.isEmpty(modifierTypes)) {
-			return false;
-		}
-		final int checkedModifiersInt = modifiersToInt(modifierTypes);
-		return checkedModifiersInt == (clazz.getModifiers() & checkedModifiersInt);
-	}
+    // region ----- hasAll
 
-	/**
-	 * 鎴愬憳涓槸鍚﹀悓鏃跺瓨鍦?b>鎵€鏈?/b>缁欏畾淇グ绗?br>
-	 * 濡傚畾涔変慨楗扮涓猴細{@code public static final}锛岄偅涔堝鏋滀紶鍏ョ殑modifierTypes涓猴細
-	 * <ul>
-	 *     <li>public銆乻tatic  杩斿洖{@code true}</li>
-	 *     <li>public銆乤bstract杩斿洖{@code false}</li>
-	 *     <li>private銆乤bstract杩斿洖{@code false}</li>
-	 * </ul>
-	 *
-	 * @param member        鏋勯€犮€佸瓧娈垫垨鏂规硶锛屽鏋滀负{@code null}杩斿洖{@code false}
-	 * @param modifierTypes 淇グ绗︽灇涓撅紝濡傛灉涓虹┖杩斿洖{@code false}
-	 * @return 鏄惁鍚屾椂瀛樺湪鎵€鏈夋寚瀹氫慨楗扮锛屽鏋滄湁杩斿洖true锛屽惁鍒檉alse锛屽鏋滄彁渚涘弬鏁颁负null杩斿洖false
-	 */
-	public static boolean hasAllModifiers(final Member member, final ModifierType... modifierTypes) {
-		if (null == member || ArrayUtil.isEmpty(modifierTypes)) {
-			return false;
-		}
-		final int checkedModifiersInt = modifiersToInt(modifierTypes);
-		return checkedModifiersInt == (member.getModifiers() & checkedModifiersInt);
-	}
-	// endregion
+    /**
+     * 类中是否同时存在<b>所有</b>给定修饰符.
+     * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+     * <ul>
+     *     <li>public、static  返回{@code true}</li>
+     *     <li>public、abstract返回{@code false}</li>
+     *     <li>private、abstract返回{@code false}</li>
+     * </ul>
+     *
+     * @param clazz         类，如果为{@code null}返回{@code false}
+     * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
+     * @return 是否同时存在所有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
+     */
+    public static boolean hasAllModifiers(final Class<?> clazz, final ModifierType... modifierTypes) {
+        if (null == clazz || ArrayUtil.isEmpty(modifierTypes)) {
+            return false;
+        }
+        final int checkedModifiersInt = modifiersToInt(modifierTypes);
+        return checkedModifiersInt == (clazz.getModifiers() & checkedModifiersInt);
+    }
 
-	/**
-	 * 鏄惁鏄疨ublic瀛楁
-	 *
-	 * @param field 瀛楁
-	 * @return 鏄惁鏄疨ublic
-	 */
-	public static boolean isPublic(Field field) {
-		return hasModifier(field, ModifierType.PUBLIC);
-	}
+    /**
+     * 成员中是否同时存在<b>所有</b>给定修饰符.
+     * 如定义修饰符为：{@code public static final}，那么如果传入的modifierTypes为：
+     * <ul>
+     *     <li>public、static  返回{@code true}</li>
+     *     <li>public、abstract返回{@code false}</li>
+     *     <li>private、abstract返回{@code false}</li>
+     * </ul>
+     *
+     * @param member        构造、字段或方法，如果为{@code null}返回{@code false}
+     * @param modifierTypes 修饰符枚举，如果为空返回{@code false}
+     * @return 是否同时存在所有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
+     */
+    public static boolean hasAllModifiers(final Member member, final ModifierType... modifierTypes) {
+        if (null == member || ArrayUtil.isEmpty(modifierTypes)) {
+            return false;
+        }
+        final int checkedModifiersInt = modifiersToInt(modifierTypes);
+        return checkedModifiersInt == (member.getModifiers() & checkedModifiersInt);
+    }
+    // endregion
 
-	/**
-	 * 鏄惁鏄疨ublic鏂规硶
-	 *
-	 * @param method 鏂规硶
-	 * @return 鏄惁鏄疨ublic
-	 */
-	public static boolean isPublic(Method method) {
-		return hasModifier(method, ModifierType.PUBLIC);
-	}
+    /**
+     * 是否是Public字段.
+     *
+     * @param field 字段
+     * @return 是否是Public
+     */
+    public static boolean isPublic(final Field field) {
+        return hasModifier(field, ModifierType.PUBLIC);
+    }
 
-	/**
-	 * 鏄惁鏄疨ublic绫?
-	 *
-	 * @param clazz 绫?
-	 * @return 鏄惁鏄疨ublic
-	 */
-	public static boolean isPublic(Class<?> clazz) {
-		return hasModifier(clazz, ModifierType.PUBLIC);
-	}
+    /**
+     * 是否是Public方法.
+     *
+     * @param method 方法
+     * @return 是否是Public
+     */
+    public static boolean isPublic(final Method method) {
+        return hasModifier(method, ModifierType.PUBLIC);
+    }
 
-	/**
-	 * 鏄惁鏄疨ublic鏋勯€?
-	 *
-	 * @param constructor 鏋勯€?
-	 * @return 鏄惁鏄疨ublic
-	 */
-	public static boolean isPublic(Constructor<?> constructor) {
-		return hasModifier(constructor, ModifierType.PUBLIC);
-	}
+    /**
+     * 是否是Public类.
+     *
+     * @param clazz 类
+     * @return 是否是Public
+     */
+    public static boolean isPublic(final Class<?> clazz) {
+        return hasModifier(clazz, ModifierType.PUBLIC);
+    }
 
-	/**
-	 * 鏄惁鏄痵tatic瀛楁
-	 *
-	 * @param field 瀛楁
-	 * @return 鏄惁鏄痵tatic
-	 * @since 4.0.8
-	 */
-	public static boolean isStatic(Field field) {
-		return hasModifier(field, ModifierType.STATIC);
-	}
+    /**
+     * 是否是Public构造.
+     *
+     * @param constructor 构造
+     * @return 是否是Public
+     */
+    public static boolean isPublic(final Constructor<?> constructor) {
+        return hasModifier(constructor, ModifierType.PUBLIC);
+    }
 
-	/**
-	 * 鏄惁鏄痵tatic鏂规硶
-	 *
-	 * @param method 鏂规硶
-	 * @return 鏄惁鏄痵tatic
-	 * @since 4.0.8
-	 */
-	public static boolean isStatic(Method method) {
-		return hasModifier(method, ModifierType.STATIC);
-	}
+    /**
+     * 是否是static字段.
+     *
+     * @param field 字段
+     * @return 是否是static
+     * @since 4.0.8
+     */
+    public static boolean isStatic(final Field field) {
+        return hasModifier(field, ModifierType.STATIC);
+    }
 
-	/**
-	 * 鏄惁鏄痵tatic绫?
-	 *
-	 * @param clazz 绫?
-	 * @return 鏄惁鏄痵tatic
-	 * @since 4.0.8
-	 */
-	public static boolean isStatic(Class<?> clazz) {
-		return hasModifier(clazz, ModifierType.STATIC);
-	}
+    /**
+     * 是否是static方法.
+     *
+     * @param method 方法
+     * @return 是否是static
+     * @since 4.0.8
+     */
+    public static boolean isStatic(final Method method) {
+        return hasModifier(method, ModifierType.STATIC);
+    }
 
-	/**
-	 * 鏄惁鏄悎鎴愬瓧娈碉紙鐢眏ava缂栬瘧鍣ㄧ敓鎴愮殑锛?
-	 *
-	 * @param field 瀛楁
-	 * @return 鏄惁鏄悎鎴愬瓧娈?
-	 * @since 5.6.3
-	 */
-	public static boolean isSynthetic(Field field) {
-		return field.isSynthetic();
-	}
+    /**
+     * 是否是static类.
+     *
+     * @param clazz 类
+     * @return 是否是static
+     * @since 4.0.8
+     */
+    public static boolean isStatic(final Class<?> clazz) {
+        return hasModifier(clazz, ModifierType.STATIC);
+    }
 
-	/**
-	 * 鏄惁鏄悎鎴愭柟娉曪紙鐢眏ava缂栬瘧鍣ㄧ敓鎴愮殑锛?
-	 *
-	 * @param method 鏂规硶
-	 * @return 鏄惁鏄悎鎴愭柟娉?
-	 * @since 5.6.3
-	 */
-	public static boolean isSynthetic(Method method) {
-		return method.isSynthetic();
-	}
+    /**
+     * 是否是合成字段（由java编译器生成的）.
+     *
+     * @param field 字段
+     * @return 是否是合成字段
+     * @since 5.6.3
+     */
+    public static boolean isSynthetic(final Field field) {
+        return field.isSynthetic();
+    }
 
-	/**
-	 * 鏄惁鏄悎鎴愮被锛堢敱java缂栬瘧鍣ㄧ敓鎴愮殑锛?
-	 *
-	 * @param clazz 绫?
-	 * @return 鏄惁鏄悎鎴?
-	 * @since 5.6.3
-	 */
-	public static boolean isSynthetic(Class<?> clazz) {
-		return clazz.isSynthetic();
-	}
+    /**
+     * 是否是合成方法（由java编译器生成的）.
+     *
+     * @param method 方法
+     * @return 是否是合成方法
+     * @since 5.6.3
+     */
+    public static boolean isSynthetic(final Method method) {
+        return method.isSynthetic();
+    }
 
-	/**
-	 * 鏄惁鎶借薄鏂规硶
-	 *
-	 * @param method 鏂规硶
-	 * @return 鏄惁鎶借薄鏂规硶
-	 * @since 5.7.23
-	 */
-	public static boolean isAbstract(Method method) {
-		return hasModifier(method, ModifierType.ABSTRACT);
-	}
+    /**
+     * 是否是合成类（由java编译器生成的）.
+     *
+     * @param clazz 类
+     * @return 是否是合成
+     * @since 5.6.3
+     */
+    public static boolean isSynthetic(final Class<?> clazz) {
+        return clazz.isSynthetic();
+    }
 
-	/**
-	 * 璁剧疆final鐨刦ield瀛楁鍙互琚慨鏀?
-	 * 鍙涓嶄細琚紪璇戝櫒鍐呰仈浼樺寲鐨?final 灞炴€у氨鍙互閫氳繃鍙嶅皠鏈夋晥鐨勮繘琛屼慨鏀?--  淇敼鍚庝唬鐮佷腑鍙娇鐢ㄥ埌鏂扮殑鍊?
-	 * <p>浠ヤ笅灞炴€э紝缂栬瘧鍣ㄤ細鍐呰仈浼樺寲锛屾棤娉曢€氳繃鍙嶅皠淇敼锛?/p>
-	 * <ul>
-	 *     <li> 鍩烘湰绫诲瀷 byte, char, short, int, long, float, double, boolean</li>
-	 *     <li> Literal String 绫诲瀷(鐩存帴鍙屽紩鍙峰瓧绗︿覆)</li>
-	 * </ul>
-	 * <p>浠ヤ笅灞炴€э紝鍙互閫氳繃鍙嶅皠淇敼锛?/p>
-	 * <ul>
-	 *     <li>鍩烘湰绫诲瀷鐨勫寘瑁呯被 Byte銆丆haracter銆丼hort銆丩ong銆丗loat銆丏ouble銆丅oolean</li>
-	 *     <li>瀛楃涓诧紝閫氳繃 new String("")瀹炰緥鍖?/li>
-	 *     <li>鑷畾涔塲ava绫?/li>
-	 * </ul>
-	 * <pre class="code">
-	 * {@code
-	 *      //绀轰緥锛岀Щ闄inal淇グ绗?
-	 *      class JdbcDialects {private static final List<Number> dialects = new ArrayList<>();}
-	 *      Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
-	 * 		ReflectUtil.removeFinalModify(field);
-	 * 		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
-	 *    }
-	 * </pre>
-	 *
-	 * @param field 琚慨鏀圭殑field锛屼笉鍙互涓虹┖
-	 * @throws UtilException IllegalAccessException绛夊紓甯稿寘瑁?
-	 * @author dazer
-	 * @since 5.8.8
-	 */
-	public static void removeFinalModify(Field field) {
-		if (field != null) {
-			if (hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
-				//灏嗗瓧娈电殑璁块棶鏉冮檺璁句负true锛氬嵆鍘婚櫎private淇グ绗︾殑褰卞搷
-				if (false == field.isAccessible()) {
-					field.setAccessible(true);
-				}
-				try {
-					//鍘婚櫎final淇グ绗︾殑褰卞搷锛屽皢瀛楁璁句负鍙慨鏀圭殑
-					final Field modifiersField = Field.class.getDeclaredField("modifiers");
-					//Field 鐨?modifiers 鏄鏈夌殑
-					modifiersField.setAccessible(true);
-					//& 锛氫綅涓庤繍绠楃锛屾寜浣嶄笌锛? 杩愮畻瑙勫垯锛氫袱涓暟閮借浆涓轰簩杩涘埗锛岀劧鍚庝粠楂樹綅寮€濮嬫瘮杈冿紝濡傛灉涓や釜鏁伴兘涓?鍒欎负1锛屽惁鍒欎负0銆?
-					//~ 锛氫綅闈炶繍绠楃锛屾寜浣嶅彇鍙嶏紱杩愮畻瑙勫垯锛氳浆鎴愪簩杩涘埗锛屽鏋滀綅涓?锛岀粨鏋滄槸1锛屽鏋滀綅涓?锛岀粨鏋滄槸0.
-					modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-				} catch (final NoSuchFieldException | IllegalAccessException e) {
-					//鍐呴儴锛屽伐鍏风被锛屽熀鏈笉鎶涘嚭寮傚父
-					throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
-				}
-			}
-		}
-	}
-	//-------------------------------------------------------------------------------------------------------- Private method start
+    /**
+     * 是否抽象方法.
+     *
+     * @param method 方法
+     * @return 是否抽象方法
+     * @since 5.7.23
+     */
+    public static boolean isAbstract(final Method method) {
+        return hasModifier(method, ModifierType.ABSTRACT);
+    }
 
-	/**
-	 * 澶氫釜淇グ绗﹀仛鈥滄垨鈥濇搷浣滐紝琛ㄧず鍚屾椂瀛樺湪澶氫釜淇グ绗?
-	 *
-	 * @param modifierTypes 淇グ绗﹀垪琛紝鍏冪礌涓嶈兘涓虹┖
-	 * @return 鈥滄垨鈥濅箣鍚庣殑淇グ绗?
-	 */
-	private static int modifiersToInt(ModifierType... modifierTypes) {
-		int modifier = modifierTypes[0].getValue();
-		for (int i = 1; i < modifierTypes.length; i++) {
-			modifier |= modifierTypes[i].getValue();
-		}
-		return modifier;
-	}
-	//-------------------------------------------------------------------------------------------------------- Private method end
+    /**
+     * 设置final的field字段可以被修改.
+     * 只要不会被编译器内联优化的 final 属性就可以通过反射有效的进行修改 -- 修改后代码中可使用到新的值;
+     * <p>以下属性，编译器会内联优化，无法通过反射修改：</p>
+     * <ul>
+     *     <li> 基本类型 byte, char, short, int, long, float, double, boolean</li>
+     *     <li> Literal String 类型(直接双引号字符串)</li>
+     * </ul>
+     * <p>以下属性，可以通过反射修改：</p>
+     * <ul>
+     *     <li>基本类型的包装类 Byte、Character、Short、Long、Float、Double、Boolean</li>
+     *     <li>字符串，通过 new String("")实例化</li>
+     *     <li>自定义java类</li>
+     * </ul>
+     * <pre class="code">
+     * {@code
+     *      //示例，移除final修饰符
+     *      class JdbcDialects {private static final List&lt;Number&gt; dialects = new ArrayList&lt;&gt;();}
+     *      Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
+     *      ReflectUtil.removeFinalModify(field);
+     *      ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
+     * }
+     * </pre>
+     *
+     * @param field 被修改的field，不可以为空
+     * @throws UtilException IllegalAccessException等异常包装
+     * @author dazer
+     * @since 5.8.8
+     */
+    public static void removeFinalModify(final Field field) {
+        if (field != null) {
+            if (hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
+                //将字段的访问权限设为true：即去除private修饰符的影响
+                if (false == field.isAccessible()) {
+                    field.setAccessible(true);
+                }
+                try {
+                    //去除final修饰符的影响，将字段设为可修改的
+                    final Field modifiersField = Field.class.getDeclaredField("modifiers");
+                    //Field 的 modifiers 是私有的
+                    modifiersField.setAccessible(true);
+                    //& ：位与运算符，按位与；
+                    //~ ：位非运算符，按位取反；
+                    modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                } catch (final NoSuchFieldException | IllegalAccessException e) {
+                    //内部，工具类，基本不抛出异常
+                    final String msg = "IllegalAccess for "
+                            + field.getDeclaringClass() + "." + field.getName();
+                    throw new UtilException(e, msg);
+                }
+            }
+        }
+    }
+
+    // ---- Private method start ----
+
+    /**
+     * 多个修饰符做"或"操作，表示同时存在多个修饰符.
+     *
+     * @param modifierTypes 修饰符列表，元素不能为空
+     * @return "或"之后的修饰符
+     */
+    private static int modifiersToInt(final ModifierType... modifierTypes) {
+        int modifier = modifierTypes[0].getValue();
+        for (int i = 1; i < modifierTypes.length; i++) {
+            modifier |= modifierTypes[i].getValue();
+        }
+        return modifier;
+    }
+
+    // ---- Private method end ----
 }
