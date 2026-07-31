@@ -1,7 +1,7 @@
 package cc.hongz.ztools.core.io;
 
 import cc.hongz.ztools.core.util.HexUtil;
-import cc.hongz.ztools.core.util.MapUtil;
+import cc.hongz.ztools.core.map.MapUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 
 import java.io.File;

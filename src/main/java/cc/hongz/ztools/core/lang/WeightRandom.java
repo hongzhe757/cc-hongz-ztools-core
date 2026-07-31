@@ -1,6 +1,6 @@
 package cc.hongz.ztools.core.lang;
 
-import cc.hongz.ztools.core.util.MapUtil;
+import cc.hongz.ztools.core.map.MapUtil;
 import cc.hongz.ztools.core.util.RandomUtil;
 
 import java.io.Serializable;

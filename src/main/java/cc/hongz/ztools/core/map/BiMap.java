@@ -1,6 +1,6 @@
 package cc.hongz.ztools.core.map;
 
-import cc.hongz.ztools.core.util.MapUtil;
+import cc.hongz.ztools.core.map.MapUtil;
 
 import java.util.Map;
 import java.util.function.BiFunction;
