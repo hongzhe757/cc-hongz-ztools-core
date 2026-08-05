@@ -15,31 +15,57 @@ public final class CharUtil {
 
     // -------- ASCII/Unicode 范围常量 --------
 
-    /** 非ASCII字符阈值. */
+    /**
+     * 非ASCII字符阈值.
+     */
     private static final int NON_ASCII_THRESHOLD = 128;
-    /** ASCII可打印起始. */
+    /**
+     * ASCII可打印起始.
+     */
     private static final int ASCII_PRINTABLE_START = 32;
-    /** ASCII可打印结束. */
+    /**
+     * ASCII可打印结束.
+     */
     private static final int ASCII_PRINTABLE_END = 127;
-    /** Unicode水平制表符. */
+    /**
+     * Unicode水平制表符.
+     */
     private static final int UNICODE_TAB = 0x9;
-    /** Unicode回车符. */
+    /**
+     * Unicode回车符.
+     */
     private static final int UNICODE_CR = 0xD;
-    /** Unicode空格. */
+    /**
+     * Unicode空格.
+     */
     private static final int UNICODE_SPACE = 0x20;
-    /** Unicode BMP平面最大码点. */
+    /**
+     * Unicode BMP平面最大码点.
+     */
     private static final int UNICODE_BMP_MAX = 0xD7FF;
-    /** Unicode私有使用区起始. */
+    /**
+     * Unicode私有使用区起始.
+     */
     private static final int UNICODE_PRIVATE_START = 0xE000;
-    /** Unicode替换字符码点. */
+    /**
+     * Unicode替换字符码点.
+     */
     private static final int UNICODE_REPLACEMENT = 0xFFFD;
-    /** Unicode增补平面起始. */
+    /**
+     * Unicode增补平面起始.
+     */
     private static final int UNICODE_SUPPLEMENTARY_START = 0x100000;
-    /** Unicode最大码点. */
+    /**
+     * Unicode最大码点.
+     */
     private static final int UNICODE_MAX = 0x10FFFF;
-    /** 十六进制基数. */
+    /**
+     * 十六进制基数.
+     */
     private static final int HEX_RADIX = 16;
-    /** 最大有效数据长度. */
+    /**
+     * 最大有效数据长度.
+     */
     private static final int MAX_VALID_LENGTH = 20;
 
     // --------------------------------------- 字符常量（来自 CharPool）
@@ -383,11 +409,7 @@ public final class CharUtil {
      * @since 4.0.10
      */
     public static boolean isBlankChar(final int c) {
-        return Character.isWhitespace(c)
-                || Character.isSpaceChar(c)
-                || c == '\ufeff'
-                || c == '\u202a'
-                || c == '\u0000'
+        return Character.isWhitespace(c) || Character.isSpaceChar(c) || c == '\ufeff' || c == '\u202a' || c == '\u0000'
                 // Hangul Filler
                 || c == '\u3164'
                 // Braille Pattern Blank
@@ -406,13 +428,7 @@ public final class CharUtil {
      * @since 4.0.8
      */
     public static boolean isEmoji(final char c) {
-        return !((c == 0) ||
-                (c == UNICODE_TAB) ||
-                (c == '\n') ||
-                (c == UNICODE_CR) ||
-                ((c >= UNICODE_SPACE) && (c <= UNICODE_BMP_MAX)) ||
-                ((c >= UNICODE_PRIVATE_START) && (c <= UNICODE_REPLACEMENT)) ||
-                ((c >= UNICODE_SUPPLEMENTARY_START) && (c <= UNICODE_MAX)));
+        return !((c == 0) || (c == UNICODE_TAB) || (c == '\n') || (c == UNICODE_CR) || ((c >= UNICODE_SPACE) && (c <= UNICODE_BMP_MAX)) || ((c >= UNICODE_PRIVATE_START) && (c <= UNICODE_REPLACEMENT)) || ((c >= UNICODE_SUPPLEMENTARY_START) && (c <= UNICODE_MAX)));
     }
 
     /**
@@ -439,8 +455,7 @@ public final class CharUtil {
     public static boolean equals(final char c1, final char c2, final boolean caseInsensitive) {
         if (caseInsensitive) {
             return Character.toLowerCase(c1) == Character.toLowerCase(c2);
-        }
-        return c1 == c2;
+        } return c1 == c2;
     }
 
     /**
@@ -481,15 +496,13 @@ public final class CharUtil {
      * @since 5.6.2
      */
     public static char toCloseChar(final char c) {
-        int result = c;
-        if (c >= '1' && c <= '9') {
+        int result = c; if (c >= '1' && c <= '9') {
             result = '\u2460' + c - '1';
         } else if (c >= 'A' && c <= 'Z') {
             result = '\u24B6' + c - 'A';
         } else if (c >= 'a' && c <= 'z') {
             result = '\u24D0' + c - 'a';
-        }
-        return (char) result;
+        } return (char) result;
     }
 
     /**
@@ -508,8 +521,7 @@ public final class CharUtil {
     public static char toCloseByNumber(final int number) {
         if (number < 1 || number > MAX_VALID_LENGTH) {
             throw new IllegalArgumentException("Number must be [1-20]");
-        }
-        return (char) ('\u2460' + number - 1);
+        } return (char) ('\u2460' + number - 1);
     }
 
     // --------------------------------------- Static method end
