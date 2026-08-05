@@ -21,16 +21,19 @@ package cc.hongz.ztools.core.util;
  */
 public final class DesensitizedUtil {
 
-    // --- magic number constants ---
-
+    /** 地址脱敏保留的尾部长度. */
     private static final int ADDRESS_SENSITIVE_SIZE = 8;
-
+    /** 普通车牌号长度. */
     private static final int CAR_LICENSE_LEN = 7;
+    /** 新能源车牌号长度. */
     private static final int CAR_LICENSE_NEW_ENERGY_LEN = 8;
+    /** 车牌号脱敏起始位置. */
     private static final int CAR_LICENSE_MASK_START = 3;
+    /** 普通车牌脱敏结束位置. */
     private static final int CAR_LICENSE_MASK_END_NORMAL = 6;
+    /** 新能源车牌脱敏结束位置. */
     private static final int CAR_LICENSE_MASK_END_NEW = 7;
-
+    /** 银行卡号最短有效长度. */
     private static final int BANK_CARD_MIN_LENGTH = 9;
 
     private DesensitizedUtil() {
