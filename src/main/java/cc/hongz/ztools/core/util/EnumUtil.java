@@ -6,7 +6,11 @@ import cc.hongz.ztools.core.lang.func.LambdaUtil;
 import cc.hongz.ztools.core.map.MapUtil;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -18,9 +22,12 @@ import java.util.function.Predicate;
  *
  * @author looly
  */
-public class EnumUtil {
+public final class EnumUtil {
 
     private static final Map<Class<?>, Enum<?>[]> CACHE = new ConcurrentHashMap<>();
+
+    private EnumUtil() {
+    }
 
     /**
      * 清空缓存，重新加载枚举类.
@@ -126,8 +133,8 @@ public class EnumUtil {
     }
 
     /**
-     * 模糊匹配转换为枚举，给定一个值，匹配枚举中定义的所有字段名（包括 name 属性），
-     * 一旦匹配到返回这个枚举对象，否则返回 null.
+     * 模糊匹配转换为枚举，给定一个值，匹配枚举中定义的所有字段名（包括 name 属性），一旦匹配到返回这个枚举对象，
+     * 否则返回 null.
      *
      * @param <E>       枚举类型
      * @param enumClass 枚举类
@@ -256,7 +263,8 @@ public class EnumUtil {
      * @param <E>         枚举类型
      * @return 对应枚举，获取不到时为 {@code defaultEnum}
      */
-    public static <E extends Enum<E>> E getBy(final Class<E> enumClass, final Predicate<? super E> predicate, final E defaultEnum) {
+    public static <E extends Enum<E>> E getBy(final Class<E> enumClass,
+            final Predicate<? super E> predicate, final E defaultEnum) {
         if (null == enumClass || null == predicate) {
             return null;
         }
@@ -293,7 +301,8 @@ public class EnumUtil {
      * @param <C>         字段类型
      * @return 对应枚举，获取不到时为 {@code defaultEnum}
      */
-    public static <E extends Enum<E>, C> E getBy(final Class<E> enumClass, final Func1<E, C> condition, final C value, final E defaultEnum) {
+    public static <E extends Enum<E>, C> E getBy(final Class<E> enumClass,
+            final Func1<E, C> condition, final C value, final E defaultEnum) {
         return ObjectUtil.defaultIfNull(getBy(enumClass, condition, value), defaultEnum);
     }
 
@@ -339,7 +348,8 @@ public class EnumUtil {
      * @param <C>       条件字段类型
      * @return 对应枚举中另一字段值，获取不到时为 {@code null}
      */
-    public static <E extends Enum<E>, F, C> F getFieldBy(final Func1<E, F> field, final Function<E, C> condition, final C value) {
+    public static <E extends Enum<E>, F, C> F getFieldBy(final Func1<E, F> field,
+            final Function<E, C> condition, final C value) {
         if (null == field || null == condition) {
             return null;
         }
