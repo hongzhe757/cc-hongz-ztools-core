@@ -13,6 +13,35 @@ package cc.hongz.ztools.core.util;
  */
 public final class CharUtil {
 
+    // -------- ASCII/Unicode 范围常量 --------
+
+    /** 非ASCII字符阈值. */
+    private static final int NON_ASCII_THRESHOLD = 128;
+    /** ASCII可打印起始. */
+    private static final int ASCII_PRINTABLE_START = 32;
+    /** ASCII可打印结束. */
+    private static final int ASCII_PRINTABLE_END = 127;
+    /** Unicode水平制表符. */
+    private static final int UNICODE_TAB = 0x9;
+    /** Unicode回车符. */
+    private static final int UNICODE_CR = 0xD;
+    /** Unicode空格. */
+    private static final int UNICODE_SPACE = 0x20;
+    /** Unicode BMP平面最大码点. */
+    private static final int UNICODE_BMP_MAX = 0xD7FF;
+    /** Unicode私有使用区起始. */
+    private static final int UNICODE_PRIVATE_START = 0xE000;
+    /** Unicode替换字符码点. */
+    private static final int UNICODE_REPLACEMENT = 0xFFFD;
+    /** Unicode增补平面起始. */
+    private static final int UNICODE_SUPPLEMENTARY_START = 0x100000;
+    /** Unicode最大码点. */
+    private static final int UNICODE_MAX = 0x10FFFF;
+    /** 十六进制基数. */
+    private static final int HEX_RADIX = 16;
+    /** 最大有效数据长度. */
+    private static final int MAX_VALID_LENGTH = 20;
+
     // --------------------------------------- 字符常量（来自 CharPool）
 
     /**
@@ -152,7 +181,7 @@ public final class CharUtil {
      * @return true 表示为 ASCII 字符
      */
     public static boolean isAscii(final char ch) {
-        return ch < 128;
+        return ch < NON_ASCII_THRESHOLD;
     }
 
     /**
@@ -171,7 +200,7 @@ public final class CharUtil {
      * @return true 表示为 ASCII 可见字符
      */
     public static boolean isAsciiPrintable(final char ch) {
-        return ch >= 32 && ch < 127;
+        return ch >= ASCII_PRINTABLE_START && ch < ASCII_PRINTABLE_END;
     }
 
     /**
@@ -190,7 +219,7 @@ public final class CharUtil {
      * @return true 表示为控制符
      */
     public static boolean isAsciiControl(final char ch) {
-        return ch < 32 || ch == 127;
+        return ch < ASCII_PRINTABLE_START || ch == ASCII_PRINTABLE_END;
     }
 
     /**
@@ -377,13 +406,13 @@ public final class CharUtil {
      * @since 4.0.8
      */
     public static boolean isEmoji(final char c) {
-        return !((c == 0x0) ||
-                (c == 0x9) ||
-                (c == 0xA) ||
-                (c == 0xD) ||
-                ((c >= 0x20) && (c <= 0xD7FF)) ||
-                ((c >= 0xE000) && (c <= 0xFFFD)) ||
-                ((c >= 0x100000) && (c <= 0x10FFFF)));
+        return !((c == 0) ||
+                (c == UNICODE_TAB) ||
+                (c == '\n') ||
+                (c == UNICODE_CR) ||
+                ((c >= UNICODE_SPACE) && (c <= UNICODE_BMP_MAX)) ||
+                ((c >= UNICODE_PRIVATE_START) && (c <= UNICODE_REPLACEMENT)) ||
+                ((c >= UNICODE_SUPPLEMENTARY_START) && (c <= UNICODE_MAX)));
     }
 
     /**
@@ -433,7 +462,7 @@ public final class CharUtil {
      * @since 5.3.1
      */
     public static int digit16(final int b) {
-        return Character.digit(b, 16);
+        return Character.digit(b, HEX_RADIX);
     }
 
     /**
@@ -477,7 +506,7 @@ public final class CharUtil {
      * @since 5.6.2
      */
     public static char toCloseByNumber(final int number) {
-        if (number < 1 || number > 20) {
+        if (number < 1 || number > MAX_VALID_LENGTH) {
             throw new IllegalArgumentException("Number must be [1-20]");
         }
         return (char) ('\u2460' + number - 1);
