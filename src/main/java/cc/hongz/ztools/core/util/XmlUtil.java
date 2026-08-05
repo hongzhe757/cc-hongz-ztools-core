@@ -108,7 +108,8 @@ public final class XmlUtil {
     /**
      * 默认的DocumentBuilderFactory实现.
      */
-    private static String defaultDocumentBuilderFactory = "com.sun.org.apache.xerces.internal.jaxp" + ".DocumentBuilderFactoryImpl";
+    private static String defaultDocumentBuilderFactory =
+            "com.sun.org.apache.xerces.internal.jaxp" + ".DocumentBuilderFactoryImpl";
     /**
      * 是否打开命名空间支持.
      */
@@ -421,7 +422,8 @@ public final class XmlUtil {
      * @param omitXmlDeclaration 是否忽略 xml Declaration
      * @return XML字符串
      */
-    public static String toStr(final Node doc, final String charset, final boolean isPretty, final boolean omitXmlDeclaration) {
+    public static String toStr(final Node doc, final String charset,
+            final boolean isPretty, final boolean omitXmlDeclaration) {
         final StringWriter writer = StrUtil.getWriter();
         try {
             final int indent = isPretty ? INDENT_DEFAULT : 0;
@@ -508,7 +510,8 @@ public final class XmlUtil {
      * @param indent             缩进量
      * @param omitXmlDeclaration 是否忽略 xml Declaration
      */
-    public static void write(final Node node, final Writer writer, final String charset, final int indent, final boolean omitXmlDeclaration) {
+    public static void write(final Node node, final Writer writer,
+            final String charset, final int indent, final boolean omitXmlDeclaration) {
         transform(new DOMSource(node), new StreamResult(writer), charset, indent, omitXmlDeclaration);
     }
 
@@ -533,7 +536,8 @@ public final class XmlUtil {
      * @param indent             缩进量
      * @param omitXmlDeclaration 是否忽略 xml Declaration
      */
-    public static void write(final Node node, final OutputStream out, final String charset, final int indent, final boolean omitXmlDeclaration) {
+    public static void write(final Node node, final OutputStream out,
+            final String charset, final int indent, final boolean omitXmlDeclaration) {
         transform(new DOMSource(node), new StreamResult(out), charset, indent, omitXmlDeclaration);
     }
 
@@ -558,7 +562,8 @@ public final class XmlUtil {
      * @param indent             缩进量
      * @param omitXmlDeclaration 是否忽略 xml Declaration
      */
-    public static void transform(final Source source, final Result result, final String charset, final int indent, final boolean omitXmlDeclaration) {
+    public static void transform(final Source source, final Result result,
+            final String charset, final int indent, final boolean omitXmlDeclaration) {
         final TransformerFactory tf = TransformerFactory.newInstance();
         try {
             final Transformer xformer = tf.newTransformer();
@@ -706,7 +711,8 @@ public final class XmlUtil {
      * @return 节点列表
      */
     public static List<Element> getElements(final Element element, final String tagName) {
-        final NodeList nodeList = StrUtil.isBlank(tagName) ? element.getChildNodes() : element.getElementsByTagName(tagName);
+        final NodeList nodeList = StrUtil.isBlank(tagName)
+                ? element.getChildNodes() : element.getElementsByTagName(tagName);
         return transElements(element, nodeList);
     }
 
@@ -877,7 +883,8 @@ public final class XmlUtil {
      * @param nsContext  {@link NamespaceContext}
      * @return 匹配返回类型的值
      */
-    public static Object getByXPath(final String expression, final Object source, final QName returnType, final NamespaceContext nsContext) {
+    public static Object getByXPath(final String expression, final Object source,
+            final QName returnType, final NamespaceContext nsContext) {
         final XPath xPath = createXPath();
         if (null != nsContext) {
             xPath.setNamespaceContext(nsContext);
@@ -1095,7 +1102,8 @@ public final class XmlUtil {
      * @return XML格式的字符串
      * @see JAXBUtil#beanToXml(Object)
      */
-    public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final boolean omitXmlDeclaration) {
+    public static String mapToXmlStr(final Map<?, ?> data,
+            final String rootName, final String namespace, final boolean omitXmlDeclaration) {
         return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, false, omitXmlDeclaration);
     }
 
@@ -1110,7 +1118,9 @@ public final class XmlUtil {
      * @return XML格式的字符串
      * @see JAXBUtil#beanToXml(Object)
      */
-    public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final boolean isPretty, final boolean omitXmlDeclaration) {
+    public static String mapToXmlStr(final Map<?, ?> data,
+            final String rootName, final String namespace,
+            final boolean isPretty, final boolean omitXmlDeclaration) {
         return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, isPretty, omitXmlDeclaration);
     }
 
@@ -1126,7 +1136,9 @@ public final class XmlUtil {
      * @return XML格式的字符串
      * @see JAXBUtil#beanToXml(Object)
      */
-    public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final String charset, final boolean isPretty, final boolean omitXmlDeclaration) {
+    public static String mapToXmlStr(final Map<?, ?> data,
+            final String rootName, final String namespace, final String charset,
+            final boolean isPretty, final boolean omitXmlDeclaration) {
         return toStr(mapToXml(data, rootName, namespace), charset, isPretty, omitXmlDeclaration);
     }
 
