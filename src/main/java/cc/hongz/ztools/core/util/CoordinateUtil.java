@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 坐标系转换相关工具类，主流坐标系包括：<br>
+ * 坐标系转换相关工具类，主流坐标系包括：.<br>
  * <ul>
  *     <li>WGS84坐标系：即地球坐标系，中国外谷歌地图</li>
  *     <li>GCJ02坐标系：即火星坐标系，高德、腾讯、阿里等使用</li>
@@ -17,61 +17,224 @@ import java.util.Objects;
  * @author hongzhe.qin(qin462328037at163.com), looly
  * @since 5.7.16
  */
-public class CoordinateUtil {
+public final class CoordinateUtil {
 
     /**
-     * 坐标转换参数：(火星坐标系与百度坐标系转换的中间量)
+     * 坐标转换参数：(火星坐标系与百度坐标系转换的中间量).
      */
-    public static final double X_PI = 3.1415926535897932384626433832795 * 3000.0 / 180.0;
+    public static final double X_PI = PI * BD09_SCALE / DEGREES;
 
     /**
-     * 坐标转换参数：π
+     * 坐标转换参数：π.
      */
     public static final double PI = 3.1415926535897932384626433832795D;
 
     /**
-     * 地球半径（Krasovsky 1940）
+     * 地球半径（Krasovsky 1940）.
      */
     public static final double RADIUS = 6378245.0D;
 
     /**
-     * 修正参数（偏率ee）
+     * 修正参数（偏率ee）.
      */
     public static final double CORRECTION_PARAM = 0.00669342162296594323D;
 
     /**
-     * 判断坐标是否在国外<br>
+     * BD-09 conversion scale factor.
+     */
+    public static final double BD09_SCALE = 3000.0;
+
+    /**
+     * Degrees constant for coordinate conversion.
+     */
+    public static final double DEGREES = 180.0;
+
+    /**
+     * Full circle in degrees.
+     */
+    public static final double FULL_CIRCLE = 360.0;
+
+    /**
+     * Right angle in degrees.
+     */
+    public static final double RIGHT_ANGLE = 90.0;
+
+    /**
+     * Mercator projection earth radius constant.
+     */
+    public static final double MERCATOR_EARTH_RADIUS = 20037508.342789244;
+
+    /**
+     * BD-09 conversion X offset.
+     */
+    public static final double BD09_OFFSET_X = 0.0065;
+
+    /**
+     * BD-09 conversion Y offset.
+     */
+    public static final double BD09_OFFSET_Y = 0.006;
+
+    /**
+     * BD-09 conversion Z term offset.
+     */
+    public static final double BD09_OFFSET_Z = 0.00002;
+
+    /**
+     * BD-09 conversion theta term offset.
+     */
+    public static final double BD09_OFFSET_THETA = 0.000003;
+
+    /**
+     * GCJ-02 reference longitude.
+     */
+    public static final double GCJ02_REF_LNG = 105.0;
+
+    /**
+     * GCJ-02 reference latitude.
+     */
+    public static final double GCJ02_REF_LAT = 35.0;
+
+    /**
+     * China boundary minimum longitude.
+     */
+    public static final double CHINA_LNG_MIN = 72.004;
+
+    /**
+     * China boundary maximum longitude.
+     */
+    public static final double CHINA_LNG_MAX = 137.8347;
+
+    /**
+     * China boundary minimum latitude.
+     */
+    public static final double CHINA_LAT_MIN = 0.8293;
+
+    /**
+     * China boundary maximum latitude.
+     */
+    public static final double CHINA_LAT_MAX = 55.8271;
+
+    // GCJ-02 transformation algorithm coefficients (transLng/transLat)
+
+    /**
+     * GCJ-02 transformation base constant for longitude.
+     */
+    private static final double TRANS_LNG_BASE = 300.0;
+
+    /**
+     * GCJ-02 transformation base constant for latitude.
+     */
+    private static final double TRANS_LAT_BASE = -100.0;
+
+    /**
+     * GCJ-02 transformation coefficient 2.0.
+     */
+    private static final double TRANS_COEFF_2 = 2.0;
+
+    /**
+     * GCJ-02 transformation coefficient 3.0.
+     */
+    private static final double TRANS_COEFF_3 = 3.0;
+
+    /**
+     * GCJ-02 transformation coefficient 0.1.
+     */
+    private static final double TRANS_COEFF_0_1 = 0.1;
+
+    /**
+     * GCJ-02 transformation coefficient 0.2.
+     */
+    private static final double TRANS_COEFF_0_2 = 0.2;
+
+    /**
+     * GCJ-02 transformation sin amplitude 20.0.
+     */
+    private static final double TRANS_SIN_AMP_20 = 20.0;
+
+    /**
+     * GCJ-02 transformation sin amplitude 40.0.
+     */
+    private static final double TRANS_SIN_AMP_40 = 40.0;
+
+    /**
+     * GCJ-02 transformation sin amplitude 150.0.
+     */
+    private static final double TRANS_SIN_AMP_150 = 150.0;
+
+    /**
+     * GCJ-02 transformation sin amplitude 300.0.
+     */
+    private static final double TRANS_SIN_AMP_300 = 300.0;
+
+    /**
+     * GCJ-02 transformation sin amplitude 160.0.
+     */
+    private static final double TRANS_SIN_AMP_160 = 160.0;
+
+    /**
+     * GCJ-02 transformation sin amplitude 320.0.
+     */
+    private static final double TRANS_SIN_AMP_320 = 320.0;
+
+    /**
+     * GCJ-02 transformation sin frequency 6.0.
+     */
+    private static final double TRANS_SIN_FREQ_6 = 6.0;
+
+    /**
+     * GCJ-02 transformation sin divisor 12.0.
+     */
+    private static final double TRANS_SIN_DIV_12 = 12.0;
+
+    /**
+     * GCJ-02 transformation sin divisor 30.0.
+     */
+    private static final double TRANS_SIN_DIV_30 = 30.0;
+
+    /**
+     * GCJ-02 transformation scale factor (2/3).
+     */
+    private static final double TRANS_SCALE = 2.0 / 3.0;
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private CoordinateUtil() {
+    }
+
+    /**
+     * 判断坐标是否在国外.<br>
      * 火星坐标系 (GCJ-02)只对国内有效，国外无需转换
      *
      * @param lng 经度
      * @param lat 纬度
      * @return 坐标是否在国外
      */
-    public static boolean outOfChina(double lng, double lat) {
-        return (lng < 72.004 || lng > 137.8347) || (lat < 0.8293 || lat > 55.8271);
+    public static boolean outOfChina(final double lng, final double lat) {
+        return (lng < CHINA_LNG_MIN || lng > CHINA_LNG_MAX) || (lat < CHINA_LAT_MIN || lat > CHINA_LAT_MAX);
     }
 
     //----------------------------------------------------------------------------------- WGS84
 
     /**
-     * WGS84 转换为 火星坐标系 (GCJ-02)
+     * WGS84 转换为 火星坐标系 (GCJ-02).
      *
      * @param lng 经度值
      * @param lat 纬度值
      * @return 火星坐标 (GCJ-02)
      */
-    public static Coordinate wgs84ToGcj02(double lng, double lat) {
+    public static Coordinate wgs84ToGcj02(final double lng, final double lat) {
         return new Coordinate(lng, lat).offset(offset(lng, lat, true));
     }
 
     /**
-     * WGS84 坐标转为 百度坐标系 (BD-09) 坐标
+     * WGS84 坐标转为 百度坐标系 (BD-09) 坐标.
      *
      * @param lng 经度值
      * @param lat 纬度值
      * @return bd09 坐标
      */
-    public static Coordinate wgs84ToBd09(double lng, double lat) {
+    public static Coordinate wgs84ToBd09(final double lng, final double lat) {
         final Coordinate gcj02 = wgs84ToGcj02(lng, lat);
         return gcj02ToBd09(gcj02.lng, gcj02.lat);
     }
@@ -79,111 +242,111 @@ public class CoordinateUtil {
     //----------------------------------------------------------------------------------- GCJ-02
 
     /**
-     * 火星坐标系 (GCJ-02) 转换为 WGS84
+     * 火星坐标系 (GCJ-02) 转换为 WGS84.
      *
      * @param lng 经度坐标
      * @param lat 纬度坐标
      * @return WGS84 坐标
      */
-    public static Coordinate gcj02ToWgs84(double lng, double lat) {
+    public static Coordinate gcj02ToWgs84(final double lng, final double lat) {
         return new Coordinate(lng, lat).offset(offset(lng, lat, false));
     }
 
     /**
-     * 火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 的转换
+     * 火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 的转换.
      *
      * @param lng 经度值
      * @param lat 纬度值
      * @return BD-09 坐标
      */
-    public static Coordinate gcj02ToBd09(double lng, double lat) {
-        double z = Math.sqrt(lng * lng + lat * lat) + 0.00002 * Math.sin(lat * X_PI);
-        double theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * X_PI);
-        double bdLng = z * Math.cos(theta) + 0.0065;
-        double bdLat = z * Math.sin(theta) + 0.006;
+    public static Coordinate gcj02ToBd09(final double lng, final double lat) {
+        double z = Math.sqrt(lng * lng + lat * lat) + BD09_OFFSET_Z * Math.sin(lat * X_PI);
+        double theta = Math.atan2(lat, lng) + BD09_OFFSET_THETA * Math.cos(lng * X_PI);
+        double bdLng = z * Math.cos(theta) + BD09_OFFSET_X;
+        double bdLat = z * Math.sin(theta) + BD09_OFFSET_Y;
         return new Coordinate(bdLng, bdLat);
     }
 
     //----------------------------------------------------------------------------------- BD-09
 
     /**
-     * 百度坐标系 (BD-09) 与 火星坐标系 (GCJ-02)的转换
-     * 即 百度 转 谷歌、高德
+     * 百度坐标系 (BD-09) 与 火星坐标系 (GCJ-02)的转换.
+     * 即 百度 转 谷歌、高德.
      *
      * @param lng 经度值
      * @param lat 纬度值
      * @return GCJ-02 坐标
      */
-    public static Coordinate bd09ToGcj02(double lng, double lat) {
-        double x = lng - 0.0065;
-        double y = lat - 0.006;
-        double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * X_PI);
-        double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * X_PI);
+    public static Coordinate bd09ToGcj02(final double lng, final double lat) {
+        double x = lng - BD09_OFFSET_X;
+        double y = lat - BD09_OFFSET_Y;
+        double z = Math.sqrt(x * x + y * y) - BD09_OFFSET_Z * Math.sin(y * X_PI);
+        double theta = Math.atan2(y, x) - BD09_OFFSET_THETA * Math.cos(x * X_PI);
         double ggLng = z * Math.cos(theta);
         double ggLat = z * Math.sin(theta);
         return new Coordinate(ggLng, ggLat);
     }
 
     /**
-     * 百度坐标系 (BD-09) 与 WGS84 的转换
+     * 百度坐标系 (BD-09) 与 WGS84 的转换.
      *
      * @param lng 经度值
      * @param lat 纬度值
      * @return WGS84坐标
      */
-    public static Coordinate bd09toWgs84(double lng, double lat) {
+    public static Coordinate bd09toWgs84(final double lng, final double lat) {
         final Coordinate gcj02 = bd09ToGcj02(lng, lat);
         return gcj02ToWgs84(gcj02.lng, gcj02.lat);
     }
 
     /**
-     * WGS84 坐标转为 墨卡托投影
+     * WGS84 坐标转为 墨卡托投影.
      *
      * @param lng 经度值
      * @param lat 纬度值
      * @return 墨卡托投影
      */
-    public static Coordinate wgs84ToMercator(double lng, double lat) {
-        double x = lng * 20037508.342789244 / 180;
-        double y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
-        y = y * 20037508.342789244 / 180;
+    public static Coordinate wgs84ToMercator(final double lng, final double lat) {
+        double x = lng * MERCATOR_EARTH_RADIUS / DEGREES;
+        double y = Math.log(Math.tan((RIGHT_ANGLE + lat) * Math.PI / FULL_CIRCLE)) / (Math.PI / DEGREES);
+        y = y * MERCATOR_EARTH_RADIUS / DEGREES;
         return new Coordinate(x, y);
     }
 
     /**
-     * 墨卡托投影 转为 WGS84 坐标
+     * 墨卡托投影 转为 WGS84 坐标.
      *
      * @param mercatorX 墨卡托X坐标
      * @param mercatorY 墨卡托Y坐标
      * @return WGS84 坐标
      */
-    public static Coordinate mercatorToWgs84(double mercatorX, double mercatorY) {
-        double x = mercatorX / 20037508.342789244 * 180;
-        double y = mercatorY / 20037508.342789244 * 180;
-        y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
+    public static Coordinate mercatorToWgs84(final double mercatorX, final double mercatorY) {
+        double x = mercatorX / MERCATOR_EARTH_RADIUS * DEGREES;
+        double y = mercatorY / MERCATOR_EARTH_RADIUS * DEGREES;
+        y = DEGREES / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / DEGREES)) - Math.PI / 2);
         return new Coordinate(x, y);
     }
 
     //----------------------------------------------------------------------------------- Private methods begin
 
     /**
-     * WGS84 与 火星坐标系 (GCJ-02)转换的偏移算法（非精确）
+     * WGS84 与 火星坐标系 (GCJ-02)转换的偏移算法（非精确）.
      *
      * @param lng    经度值
      * @param lat    纬度值
      * @param isPlus 是否正向偏移：WGS84转GCJ-02使用正向，否则使用反向
      * @return 偏移坐标
      */
-    private static Coordinate offset(double lng, double lat, boolean isPlus) {
-        double dlng = transLng(lng - 105.0, lat - 35.0);
-        double dlat = transLat(lng - 105.0, lat - 35.0);
+    private static Coordinate offset(final double lng, final double lat, final boolean isPlus) {
+        double dlng = transLng(lng - GCJ02_REF_LNG, lat - GCJ02_REF_LAT);
+        double dlat = transLat(lng - GCJ02_REF_LNG, lat - GCJ02_REF_LAT);
 
-        double magic = Math.sin(lat / 180.0 * PI);
+        double magic = Math.sin(lat / DEGREES * PI);
         magic = 1 - CORRECTION_PARAM * magic * magic;
         final double sqrtMagic = Math.sqrt(magic);
 
-        dlng = (dlng * 180.0) / (RADIUS / sqrtMagic * Math.cos(lat / 180.0 * PI) * PI);
-        dlat = (dlat * 180.0) / ((RADIUS * (1 - CORRECTION_PARAM)) / (magic * sqrtMagic) * PI);
+        dlng = (dlng * DEGREES) / (RADIUS / sqrtMagic * Math.cos(lat / DEGREES * PI) * PI);
+        dlat = (dlat * DEGREES) / ((RADIUS * (1 - CORRECTION_PARAM)) / (magic * sqrtMagic) * PI);
 
         if (false == isPlus) {
             dlng = -dlng;
@@ -194,40 +357,48 @@ public class CoordinateUtil {
     }
 
     /**
-     * 计算经度坐标
+     * 计算经度坐标.
      *
      * @param lng 经度坐标
      * @param lat 纬度坐标
      * @return ret 计算完成后的
      */
-    private static double transLng(double lng, double lat) {
-        double ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
-        ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
-        ret += (20.0 * Math.sin(lng * PI) + 40.0 * Math.sin(lng / 3.0 * PI)) * 2.0 / 3.0;
-        ret += (150.0 * Math.sin(lng / 12.0 * PI) + 300.0 * Math.sin(lng / 30.0 * PI)) * 2.0 / 3.0;
+    private static double transLng(final double lng, final double lat) {
+        double ret = TRANS_LNG_BASE + lng + TRANS_COEFF_2 * lat + TRANS_COEFF_0_1 * lng * lng
+                + TRANS_COEFF_0_1 * lng * lat + TRANS_COEFF_0_1 * Math.sqrt(Math.abs(lng));
+        ret += (TRANS_SIN_AMP_20 * Math.sin(TRANS_SIN_FREQ_6 * lng * PI)
+                + TRANS_SIN_AMP_20 * Math.sin(TRANS_COEFF_2 * lng * PI)) * TRANS_SCALE;
+        ret += (TRANS_SIN_AMP_20 * Math.sin(lng * PI)
+                + TRANS_SIN_AMP_40 * Math.sin(lng / TRANS_COEFF_3 * PI)) * TRANS_SCALE;
+        ret += (TRANS_SIN_AMP_150 * Math.sin(lng / TRANS_SIN_DIV_12 * PI)
+                + TRANS_SIN_AMP_300 * Math.sin(lng / TRANS_SIN_DIV_30 * PI)) * TRANS_SCALE;
         return ret;
     }
 
     /**
-     * 计算纬度坐标
+     * 计算纬度坐标.
      *
      * @param lng 经度
      * @param lat 纬度
      * @return ret 计算完成后的
      */
-    private static double transLat(double lng, double lat) {
-        double ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat
-                + 0.2 * Math.sqrt(Math.abs(lng));
-        ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
-        ret += (20.0 * Math.sin(lat * PI) + 40.0 * Math.sin(lat / 3.0 * PI)) * 2.0 / 3.0;
-        ret += (160.0 * Math.sin(lat / 12.0 * PI) + 320 * Math.sin(lat * PI / 30.0)) * 2.0 / 3.0;
+    private static double transLat(final double lng, final double lat) {
+        double ret = TRANS_LAT_BASE + TRANS_COEFF_2 * lng + TRANS_COEFF_3 * lat
+                + TRANS_COEFF_0_2 * lat * lat + TRANS_COEFF_0_1 * lng * lat
+                + TRANS_COEFF_0_2 * Math.sqrt(Math.abs(lng));
+        ret += (TRANS_SIN_AMP_20 * Math.sin(TRANS_SIN_FREQ_6 * lng * PI)
+                + TRANS_SIN_AMP_20 * Math.sin(TRANS_COEFF_2 * lng * PI)) * TRANS_SCALE;
+        ret += (TRANS_SIN_AMP_20 * Math.sin(lat * PI)
+                + TRANS_SIN_AMP_40 * Math.sin(lat / TRANS_COEFF_3 * PI)) * TRANS_SCALE;
+        ret += (TRANS_SIN_AMP_160 * Math.sin(lat / TRANS_SIN_DIV_12 * PI)
+                + TRANS_SIN_AMP_320 * Math.sin(lat * PI / TRANS_SIN_DIV_30)) * TRANS_SCALE;
         return ret;
     }
 
     //----------------------------------------------------------------------------------- Private methods end
 
     /**
-     * 坐标经纬度
+     * 坐标经纬度.
      *
      * @author looly
      */
@@ -235,28 +406,28 @@ public class CoordinateUtil {
         private static final long serialVersionUID = 1L;
 
         /**
-         * 经度
+         * 经度.
          */
         private double lng;
 
         /**
-         * 纬度
+         * 纬度.
          */
         private double lat;
 
         /**
-         * 构造
+         * 构造.
          *
          * @param lng 经度
          * @param lat 纬度
          */
-        public Coordinate(double lng, double lat) {
+        public Coordinate(final double lng, final double lat) {
             this.lng = lng;
             this.lat = lat;
         }
 
         /**
-         * 获取经度
+         * 获取经度.
          *
          * @return 经度
          */
@@ -265,18 +436,18 @@ public class CoordinateUtil {
         }
 
         /**
-         * 设置经度
+         * 设置经度.
          *
-         * @param lng 经度
+         * @param lngVal 经度
          * @return this
          */
-        public Coordinate setLng(double lng) {
-            this.lng = lng;
+        public Coordinate setLng(final double lngVal) {
+            this.lng = lngVal;
             return this;
         }
 
         /**
-         * 获取纬度
+         * 获取纬度.
          *
          * @return 纬度
          */
@@ -285,30 +456,30 @@ public class CoordinateUtil {
         }
 
         /**
-         * 设置纬度
+         * 设置纬度.
          *
-         * @param lat 纬度
+         * @param latVal 纬度
          * @return this
          */
-        public Coordinate setLat(double lat) {
-            this.lat = lat;
+        public Coordinate setLat(final double latVal) {
+            this.lat = latVal;
             return this;
         }
 
         /**
-         * 当前坐标偏移指定坐标
+         * 当前坐标偏移指定坐标.
          *
          * @param offset 偏移量
          * @return this
          */
-        public Coordinate offset(Coordinate offset) {
+        public Coordinate offset(final Coordinate offset) {
             this.lng += offset.lng;
             this.lat += offset.lat;
             return this;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) {
                 return true;
             }

@@ -21,19 +21,33 @@ import java.util.regex.Pattern;
  */
 public final class CreditCodeUtil {
 
-    /** 统一社会信用代码长度. */
+    /**
+     * 统一社会信用代码长度.
+     */
     private static final int CREDIT_CODE_LENGTH = 18;
-    /** 主体标识码起始位置. */
+    /**
+     * 主体标识码起始位置.
+     */
     private static final int ORG_CODE_START = 8;
-    /** 校验码位置. */
+    /**
+     * 校验码位置.
+     */
     private static final int CHECK_CODE_POS = 17;
-    /** 校验和模数. */
+    /**
+     * 校验和模数.
+     */
     private static final int CHECKSUM_MOD = 31;
-    /** 数字字符数量. */
+    /**
+     * 数字字符数量.
+     */
     private static final int DIGIT_COUNT = 10;
-    /** 登记部门代码长度. */
+    /**
+     * 登记部门代码长度.
+     */
     private static final int REG_DEPT_LEN = 2;
-    /** 行政区划码长度. */
+    /**
+     * 行政区划码长度.
+     */
     private static final int ADMIN_DIV_LEN = 6;
 
     /**
