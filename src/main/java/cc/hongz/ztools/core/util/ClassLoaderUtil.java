@@ -209,20 +209,21 @@ public final class ClassLoaderUtil {
      * @return 类名对应的类
      * @throws UtilException 包装 {@link ClassNotFoundException}
      */
-    public static Class<?> loadClass(final String name, ClassLoader classLoader, final boolean isInitialized)
+    public static Class<?> loadClass(final String name, final ClassLoader classLoader, final boolean isInitialized)
             throws UtilException {
         Assert.notNull(name, "Name must not be null");
 
         // 自动将包名中的 "/" 替换为 "."
         String resolvedName = name.replace('/', '.');
-        if (null == classLoader) {
-            classLoader = getClassLoader();
+        ClassLoader resolvedLoader = classLoader;
+        if (null == resolvedLoader) {
+            resolvedLoader = getClassLoader();
         }
 
         // 加载原始类型和缓存中的类
         Class<?> clazz = loadPrimitiveClass(resolvedName);
         if (clazz == null) {
-            clazz = doLoadClass(resolvedName, classLoader, isInitialized);
+            clazz = doLoadClass(resolvedName, resolvedLoader, isInitialized);
         }
         return clazz;
     }
@@ -313,33 +314,31 @@ public final class ClassLoaderUtil {
      * @param isInitialized 是否初始化
      * @return 类
      */
-    private static Class<?> doLoadClass(final String name, ClassLoader classLoader, final boolean isInitialized) {
+    private static Class<?> doLoadClass(final String name, final ClassLoader classLoader, final boolean isInitialized) {
+        final ClassLoader resolvedLoader = null == classLoader ? getClassLoader() : classLoader;
         Class<?> clazz;
         if (name.endsWith(ARRAY_SUFFIX)) {
             // 对象数组 "java.lang.String[]" 风格
             final String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
-            final Class<?> elementClass = loadClass(elementClassName, classLoader, isInitialized);
+            final Class<?> elementClass = loadClass(elementClassName, resolvedLoader, isInitialized);
             clazz = Array.newInstance(elementClass, 0).getClass();
         } else if (name.startsWith(NON_PRIMITIVE_ARRAY_PREFIX) && name.endsWith(";")) {
             // "[Ljava.lang.String;" 风格
             final String elementName = name.substring(NON_PRIMITIVE_ARRAY_PREFIX.length(), name.length() - 1);
-            final Class<?> elementClass = loadClass(elementName, classLoader, isInitialized);
+            final Class<?> elementClass = loadClass(elementName, resolvedLoader, isInitialized);
             clazz = Array.newInstance(elementClass, 0).getClass();
         } else if (name.startsWith(INTERNAL_ARRAY_PREFIX)) {
             // "[[I" 或 "[[Ljava.lang.String;" 风格
             final String elementName = name.substring(INTERNAL_ARRAY_PREFIX.length());
-            final Class<?> elementClass = loadClass(elementName, classLoader, isInitialized);
+            final Class<?> elementClass = loadClass(elementName, resolvedLoader, isInitialized);
             clazz = Array.newInstance(elementClass, 0).getClass();
         } else {
             // 加载普通类
-            if (null == classLoader) {
-                classLoader = getClassLoader();
-            }
             try {
-                clazz = Class.forName(name, isInitialized, classLoader);
+                clazz = Class.forName(name, isInitialized, resolvedLoader);
             } catch (ClassNotFoundException ex) {
                 // 尝试获取内部类，例如 java.lang.Thread.State → java.lang.Thread$State
-                clazz = tryLoadInnerClass(name, classLoader, isInitialized);
+                clazz = tryLoadInnerClass(name, resolvedLoader, isInitialized);
                 if (null == clazz) {
                     throw new UtilException(ex);
                 }
