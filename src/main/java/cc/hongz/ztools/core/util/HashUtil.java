@@ -6,7 +6,7 @@ import cc.hongz.ztools.core.lang.hash.MurmurHash;
 import cc.hongz.ztools.core.lang.hash.Number128;
 
 /**
- * Hash算法大全。
+ * Hash算法大全.
  * 推荐使用FNV1算法
  *
  * @author Goodzzp, Looly
@@ -15,205 +15,205 @@ public final class HashUtil {
 
     // ==================== 通用常量 ====================
 
-    /** 确保hash值为正数的掩码 */
+    /** 确保hash值为正数的掩码. */
     private static final int HASH_POSITIVE_MASK = 0x7FFFFFFF;
 
     // ==================== rotatingHash 常量 ====================
 
-    /** 旋转hash左移位数 */
+    /** 旋转hash左移位数. */
     private static final int ROTATING_SHIFT_LEFT = 4;
-    /** 旋转hash右移位数 */
+    /** 旋转hash右移位数. */
     private static final int ROTATING_SHIFT_RIGHT = 28;
 
     // ==================== oneByOneHash 常量 ====================
 
-    /** 一次一个hash左移位数10 */
+    /** 一次一个hash左移位数10. */
     private static final int ONE_BY_ONE_SHIFT_10 = 10;
-    /** 一次一个hash右移位数6 */
+    /** 一次一个hash右移位数6. */
     private static final int ONE_BY_ONE_SHIFT_6 = 6;
-    /** 一次一个hash左移位数3 */
+    /** 一次一个hash左移位数3. */
     private static final int ONE_BY_ONE_SHIFT_3 = 3;
-    /** 一次一个hash右移位数11 */
+    /** 一次一个hash右移位数11. */
     private static final int ONE_BY_ONE_SHIFT_11 = 11;
-    /** 一次一个hash左移位数15 */
+    /** 一次一个hash左移位数15. */
     private static final int ONE_BY_ONE_SHIFT_15 = 15;
 
     // ==================== bernstein 常量 ====================
 
-    /** Bernstein算法乘数 */
+    /** Bernstein算法乘数. */
     private static final int BERNSTEIN_MULTIPLIER = 33;
 
     // ==================== universal 常量 ====================
 
-    /** 每字节位数 */
+    /** 每字节位数. */
     private static final int BITS_PER_BYTE = 8;
-    /** Universal hash字节索引位移量 */
+    /** Universal hash字节索引位移量. */
     private static final int UNIVERSAL_BYTE_SHIFT = 3;
 
     // ==================== fnvHash 常量 ====================
 
-    /** FNV-1 32位质数 */
+    /** FNV-1 32位质数. */
     private static final int FNV_32_PRIME = 16777619;
-    /** FNV-1 32位初始偏移量 */
+    /** FNV-1 32位初始偏移量. */
     private static final long FNV_32_OFFSET_BASIS = 2166136261L;
-    /** FNV左移位数13 */
+    /** FNV左移位数13. */
     private static final int FNV_SHIFT_13 = 13;
-    /** FNV右移位数7 */
+    /** FNV右移位数7. */
     private static final int FNV_SHIFT_7 = 7;
-    /** FNV左移位数3 */
+    /** FNV左移位数3. */
     private static final int FNV_SHIFT_3 = 3;
-    /** FNV右移位数17 */
+    /** FNV右移位数17. */
     private static final int FNV_SHIFT_17 = 17;
-    /** FNV左移位数5 */
+    /** FNV左移位数5. */
     private static final int FNV_SHIFT_5 = 5;
 
     // ==================== intHash 常量 ====================
 
-    /** 整数hash左移位数15 */
+    /** 整数hash左移位数15. */
     private static final int INT_HASH_SHIFT_15 = 15;
-    /** 整数hash右移位数10 */
+    /** 整数hash右移位数10. */
     private static final int INT_HASH_SHIFT_10 = 10;
-    /** 整数hash左移位数3 */
+    /** 整数hash左移位数3. */
     private static final int INT_HASH_SHIFT_3 = 3;
-    /** 整数hash右移位数6 */
+    /** 整数hash右移位数6. */
     private static final int INT_HASH_SHIFT_6 = 6;
-    /** 整数hash左移位数11 */
+    /** 整数hash左移位数11. */
     private static final int INT_HASH_SHIFT_11 = 11;
-    /** 整数hash右移位数16 */
+    /** 整数hash右移位数16. */
     private static final int INT_HASH_SHIFT_16 = 16;
 
     // ==================== rsHash 常量 ====================
 
-    /** RS算法系数b */
+    /** RS算法系数b. */
     private static final int RS_B_CONSTANT = 378551;
-    /** RS算法系数a */
+    /** RS算法系数a. */
     private static final int RS_A_CONSTANT = 63689;
 
     // ==================== jsHash 常量 ====================
 
-    /** JS算法初始hash值 */
+    /** JS算法初始hash值. */
     private static final int JS_HASH_INIT = 1315423911;
-    /** JS算法左移位数 */
+    /** JS算法左移位数. */
     private static final int JS_SHIFT_LEFT = 5;
-    /** JS算法右移位数 */
+    /** JS算法右移位数. */
     private static final int JS_SHIFT_RIGHT = 2;
 
     // ==================== pjwHash 常量 ====================
 
-    /** 无符号整型的位数 */
+    /** 无符号整型的位数. */
     private static final int PJW_BITS_IN_INT = 32;
-    /** 四分之三计算分子 */
+    /** 四分之三计算分子. */
     private static final int PJW_THREE_QUARTERS_NUM = 3;
-    /** 四分之三计算分母 */
+    /** 四分之三计算分母. */
     private static final int PJW_DENOMINATOR_4 = 4;
-    /** 八分之一计算分母 */
+    /** 八分之一计算分母. */
     private static final int PJW_ONE_EIGHTH_DENOM = 8;
-    /** PJW算法高位掩码 */
+    /** PJW算法高位掩码. */
     private static final int PJW_HIGH_BITS_MASK = -1;
 
     // ==================== elfHash 常量 ====================
 
-    /** ELF算法左移位数 */
+    /** ELF算法左移位数. */
     private static final int ELF_SHIFT_LEFT = 4;
-    /** ELF算法高位半字节掩码 */
+    /** ELF算法高位半字节掩码. */
     private static final long ELF_HIGH_NIBBLE_MASK = 0xF0000000L;
-    /** ELF算法高位右移位数 */
+    /** ELF算法高位右移位数. */
     private static final int ELF_HIGH_BITS_SHIFT = 24;
 
     // ==================== bkdrHash 常量 ====================
 
-    /** BKDR算法种子值 */
+    /** BKDR算法种子值. */
     private static final int BKDR_SEED = 131;
 
     // ==================== sdbmHash 常量 ====================
 
-    /** SDBM算法左移位数6 */
+    /** SDBM算法左移位数6. */
     private static final int SDBM_SHIFT_6 = 6;
-    /** SDBM算法左移位数16 */
+    /** SDBM算法左移位数16. */
     private static final int SDBM_SHIFT_16 = 16;
 
     // ==================== djbHash 常量 ====================
 
-    /** DJB算法初始hash值 */
+    /** DJB算法初始hash值. */
     private static final int DJB_INIT = 5381;
-    /** DJB算法左移位数 */
+    /** DJB算法左移位数. */
     private static final int DJB_SHIFT_LEFT = 5;
 
     // ==================== dekHash 常量 ====================
 
-    /** DEK算法左移位数 */
+    /** DEK算法左移位数. */
     private static final int DEK_SHIFT_LEFT = 5;
-    /** DEK算法右移位数 */
+    /** DEK算法右移位数. */
     private static final int DEK_SHIFT_RIGHT = 27;
 
     // ==================== apHash 常量 ====================
 
-    /** AP算法最低有效位判断掩码 */
+    /** AP算法最低有效位判断掩码. */
     private static final int AP_PARITY_CHECK = 1;
-    /** AP算法偶数索引左移位数 */
+    /** AP算法偶数索引左移位数. */
     private static final int AP_SHIFT_EVEN_LEFT = 7;
-    /** AP算法偶数索引右移位数 */
+    /** AP算法偶数索引右移位数. */
     private static final int AP_SHIFT_EVEN_RIGHT = 3;
-    /** AP算法奇数索引左移位数 */
+    /** AP算法奇数索引左移位数. */
     private static final int AP_SHIFT_ODD_LEFT = 11;
-    /** AP算法奇数索引右移位数 */
+    /** AP算法奇数索引右移位数. */
     private static final int AP_SHIFT_ODD_RIGHT = 5;
 
     // ==================== tianlHash 常量 ====================
 
-    /** TianL算法短字符串长度阈值 */
+    /** TianL算法短字符串长度阈值. */
     private static final int TIANL_THRESHOLD = 256;
-    /** TianL算法基础乘数 */
+    /** TianL算法基础乘数. */
     private static final long TIANL_BASE_MULTIPLIER = 16777216L;
-    /** TianL算法长字符串初始值 */
+    /** TianL算法长字符串初始值. */
     private static final long TIANL_LARGE_INIT = 4278190080L;
-    /** TianL算法采样字符数阈值 */
+    /** TianL算法采样字符数阈值. */
     private static final int TIANL_CHAR_THRESHOLD = 96;
-    /** 大写字母与小写字母ASCII差值 */
+    /** 大写字母与小写字母ASCII差值. */
     private static final int CASE_DIFF = 32;
-    /** TianL算法多项式系数3 */
+    /** TianL算法多项式系数3. */
     private static final long TIANL_COEFF_3 = 3L;
-    /** TianL算法多项式系数5 */
+    /** TianL算法多项式系数5. */
     private static final long TIANL_COEFF_5 = 5L;
-    /** TianL算法多项式系数7 */
+    /** TianL算法多项式系数7. */
     private static final long TIANL_COEFF_7 = 7L;
-    /** TianL算法多项式系数11 */
+    /** TianL算法多项式系数11. */
     private static final long TIANL_COEFF_11 = 11L;
 
     // ==================== javaDefaultHash 常量 ====================
 
-    /** Java String hashCode乘数 */
+    /** Java String hashCode乘数. */
     private static final int JAVA_HASH_MULTIPLIER = 31;
 
     // ==================== mixHash 常量 ====================
 
-    /** 混合hash左移位数 */
+    /** 混合hash左移位数. */
     private static final int MIX_HASH_SHIFT = 32;
 
     // ==================== hfHash 常量 ====================
 
-    /** HF算法乘数 */
+    /** HF算法乘数. */
     private static final int HF_HASH_MULTIPLIER = 3;
 
     // ==================== hfIpHash 常量 ====================
 
-    /** HFIP算法取模值 */
+    /** HFIP算法取模值. */
     private static final int HF_IP_HASH_MOD = 4;
 
     // ==================== zobrist 常量 ====================
 
-    /** 位掩码 bit 3 */
+    /** 位掩码 bit 3. */
     private static final int ZOBRIST_BIT_3 = 0x08;
-    /** 位掩码 bit 4 */
+    /** 位掩码 bit 4. */
     private static final int ZOBRIST_BIT_4 = 0x10;
-    /** 位掩码 bit 5 */
+    /** 位掩码 bit 5. */
     private static final int ZOBRIST_BIT_5 = 0x20;
 
     private HashUtil() {
     }
 
     /**
-     * 加法hash。
+     * 加法hash.
      *
      * @param key   字符串
      * @param prime 一个质数
@@ -228,7 +228,7 @@ public final class HashUtil {
     }
 
     /**
-     * 旋转hash。
+     * 旋转hash.
      *
      * @param key   输入字符串
      * @param prime 质数
@@ -243,7 +243,7 @@ public final class HashUtil {
     }
 
     /**
-     * 一次一个hash。
+     * 一次一个hash.
      *
      * @param key 输入字符串
      * @return 输出hash值
@@ -262,7 +262,7 @@ public final class HashUtil {
     }
 
     /**
-     * Bernstein's hash。
+     * Bernstein's hash.
      *
      * @param key 输入字节数组
      * @return 结果hash
@@ -277,7 +277,7 @@ public final class HashUtil {
     }
 
     /**
-     * Universal Hashing。
+     * Universal Hashing.
      *
      * @param key  字节数组
      * @param mask 掩码
@@ -317,7 +317,7 @@ public final class HashUtil {
     }
 
     /**
-     * Zobrist Hashing。
+     * Zobrist Hashing.
      *
      * @param key  字节数组
      * @param mask 掩码
@@ -333,7 +333,7 @@ public final class HashUtil {
     }
 
     /**
-     * 改进的32位FNV算法1。
+     * 改进的32位FNV算法1.
      *
      * @param data 数组
      * @return hash结果
@@ -353,7 +353,7 @@ public final class HashUtil {
     }
 
     /**
-     * 改进的32位FNV算法1。
+     * 改进的32位FNV算法1.
      *
      * @param data 字符串
      * @return hash结果
@@ -373,7 +373,7 @@ public final class HashUtil {
     }
 
     /**
-     * Thomas Wang的算法，整数hash。
+     * Thomas Wang的算法，整数hash.
      *
      * @param key 整数
      * @return hash值
@@ -390,7 +390,7 @@ public final class HashUtil {
     }
 
     /**
-     * RS算法hash。
+     * RS算法hash.
      *
      * @param str 字符串
      * @return hash值
@@ -409,7 +409,7 @@ public final class HashUtil {
     }
 
     /**
-     * JS算法。
+     * JS算法.
      *
      * @param str 字符串
      * @return hash值
@@ -425,7 +425,7 @@ public final class HashUtil {
     }
 
     /**
-     * PJW算法。
+     * PJW算法.
      *
      * @param str 字符串
      * @return hash值
@@ -450,7 +450,7 @@ public final class HashUtil {
     }
 
     /**
-     * ELF算法。
+     * ELF算法.
      *
      * @param str 字符串
      * @return hash值
@@ -471,7 +471,7 @@ public final class HashUtil {
     }
 
     /**
-     * BKDR算法。
+     * BKDR算法.
      *
      * @param str 字符串
      * @return hash值
@@ -488,7 +488,7 @@ public final class HashUtil {
     }
 
     /**
-     * SDBM算法。
+     * SDBM算法.
      *
      * @param str 字符串
      * @return hash值
@@ -504,7 +504,7 @@ public final class HashUtil {
     }
 
     /**
-     * DJB算法。
+     * DJB算法.
      *
      * @param str 字符串
      * @return hash值
@@ -520,7 +520,7 @@ public final class HashUtil {
     }
 
     /**
-     * DEK算法。
+     * DEK算法.
      *
      * @param str 字符串
      * @return hash值
@@ -536,7 +536,7 @@ public final class HashUtil {
     }
 
     /**
-     * AP算法。
+     * AP算法.
      *
      * @param str 字符串
      * @return hash值
@@ -554,7 +554,7 @@ public final class HashUtil {
     }
 
     /**
-     * TianL Hash算法。
+     * TianL Hash算法.
      *
      * @param str 字符串
      * @return Hash值
@@ -603,7 +603,7 @@ public final class HashUtil {
     }
 
     /**
-     * JAVA自己带的算法。
+     * JAVA自己带的算法.
      *
      * @param str 字符串
      * @return hash值
@@ -619,7 +619,7 @@ public final class HashUtil {
     }
 
     /**
-     * 混合hash算法，输出64位的值。
+     * 混合hash算法，输出64位的值.
      *
      * @param str 字符串
      * @return hash值
@@ -632,7 +632,7 @@ public final class HashUtil {
     }
 
     /**
-     * 根据对象的内存地址生成相应的Hash值。
+     * 根据对象的内存地址生成相应的Hash值.
      *
      * @param obj 对象
      * @return hash值
@@ -643,7 +643,7 @@ public final class HashUtil {
     }
 
     /**
-     * MurmurHash算法32-bit实现。
+     * MurmurHash算法32-bit实现.
      *
      * @param data 数据
      * @return hash值
@@ -654,7 +654,7 @@ public final class HashUtil {
     }
 
     /**
-     * MurmurHash算法64-bit实现。
+     * MurmurHash算法64-bit实现.
      *
      * @param data 数据
      * @return hash值
@@ -665,7 +665,7 @@ public final class HashUtil {
     }
 
     /**
-     * MurmurHash算法128-bit实现。
+     * MurmurHash算法128-bit实现.
      *
      * @param data 数据
      * @return hash值
@@ -676,7 +676,7 @@ public final class HashUtil {
     }
 
     /**
-     * CityHash算法32-bit实现。
+     * CityHash算法32-bit实现.
      *
      * @param data 数据
      * @return hash值
@@ -687,7 +687,7 @@ public final class HashUtil {
     }
 
     /**
-     * CityHash算法64-bit实现，种子1使用默认的CityHash#k2。
+     * CityHash算法64-bit实现，种子1使用默认的CityHash#k2.
      *
      * @param data 数据
      * @param seed 种子2
@@ -699,7 +699,7 @@ public final class HashUtil {
     }
 
     /**
-     * CityHash算法64-bit实现，种子1使用默认的CityHash#k2。
+     * CityHash算法64-bit实现，种子1使用默认的CityHash#k2.
      *
      * @param data  数据
      * @param seed0 种子1
@@ -712,7 +712,7 @@ public final class HashUtil {
     }
 
     /**
-     * CityHash算法64-bit实现。
+     * CityHash算法64-bit实现.
      *
      * @param data 数据
      * @return hash值
@@ -723,7 +723,7 @@ public final class HashUtil {
     }
 
     /**
-     * CityHash算法128-bit实现。
+     * CityHash算法128-bit实现.
      *
      * @param data 数据
      * @return hash值
@@ -734,7 +734,7 @@ public final class HashUtil {
     }
 
     /**
-     * CityHash算法128-bit实现。
+     * CityHash算法128-bit实现.
      *
      * @param data 数据
      * @param seed 种子
@@ -746,7 +746,7 @@ public final class HashUtil {
     }
 
     /**
-     * MetroHash 算法64-bit实现。
+     * MetroHash 算法64-bit实现.
      *
      * @param data 数据
      * @param seed 种子
@@ -757,7 +757,7 @@ public final class HashUtil {
     }
 
     /**
-     * MetroHash 算法64-bit实现。
+     * MetroHash 算法64-bit实现.
      *
      * @param data 数据
      * @return hash值
@@ -767,7 +767,7 @@ public final class HashUtil {
     }
 
     /**
-     * MetroHash 算法128-bit实现。
+     * MetroHash 算法128-bit实现.
      *
      * @param data 数据
      * @param seed 种子
@@ -778,7 +778,7 @@ public final class HashUtil {
     }
 
     /**
-     * MetroHash 算法128-bit实现。
+     * MetroHash 算法128-bit实现.
      *
      * @param data 数据
      * @return hash值，long[0]：低位，long[1]：高位
@@ -788,7 +788,7 @@ public final class HashUtil {
     }
 
     /**
-     * HF Hash算法。
+     * HF Hash算法.
      *
      * @param data 字符串
      * @return hash结果
@@ -810,7 +810,7 @@ public final class HashUtil {
     }
 
     /**
-     * HFIP Hash算法。
+     * HFIP Hash算法.
      *
      * @param data 字符串
      * @return hash结果

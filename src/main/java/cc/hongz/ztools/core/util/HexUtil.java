@@ -8,8 +8,8 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 
 /**
- * 十六进制（简写为hex或下标16）在数学中是一种逢16进1的进位制，一般用数字0到9和字母A到F表示（其中:A~F即10~15）。<br>
- * 例如十进制数57，在二进制写作111001，在16进制写作39。<br>
+ * 十六进制（简写为hex或下标16）在数学中是一种逢16进1的进位制，一般用数字0到9和字母A到F表示（其中:A~F即10~15）.<br>
+ * 例如十进制数57，在二进制写作111001，在16进制写作39.<br>
  * 像java,c这样的语言为了区分十六进制和十进制数值,会在十六进制数的前面加上 0x,比如0x20是十进制的32,而不是十进制的20<br>
  * <p>
  * 参考：https://my.oschina.net/xinxingegeya/blog/287476
@@ -47,7 +47,7 @@ public final class HexUtil {
     }
 
     /**
-     * 判断给定字符串是否为16进制数。<br>
+     * 判断给定字符串是否为16进制数.<br>
      * 如果是，需要使用对应数字类型对象的{@code decode}方法解码<br>
      * 例如：{@code Integer.decode}方法解码int类型的16进制数字
      *
@@ -79,7 +79,7 @@ public final class HexUtil {
     // ---------------------------------------------------------------------------------------------------- encode
 
     /**
-     * 将字节数组转换为十六进制字符数组。
+     * 将字节数组转换为十六进制字符数组.
      *
      * @param data byte[]
      * @return 十六进制char[]
@@ -89,7 +89,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将字节数组转换为十六进制字符数组。
+     * 将字节数组转换为十六进制字符数组.
      *
      * @param str     字符串
      * @param charset 编码
@@ -100,7 +100,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将字节数组转换为十六进制字符数组。
+     * 将字节数组转换为十六进制字符数组.
      *
      * @param data        byte[]
      * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
@@ -111,7 +111,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将字节数组转换为十六进制字符串。
+     * 将字节数组转换为十六进制字符串.
      *
      * @param data byte[]
      * @return 十六进制String
@@ -121,7 +121,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将字符串转换为十六进制字符串，结果为小写。
+     * 将字符串转换为十六进制字符串，结果为小写.
      *
      * @param data    需要被编码的字符串
      * @param charset 编码
@@ -132,7 +132,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将字符串转换为十六进制字符串，结果为小写，默认编码是UTF-8。
+     * 将字符串转换为十六进制字符串，结果为小写，默认编码是UTF-8.
      *
      * @param data 被编码的字符串
      * @return 十六进制String
@@ -142,7 +142,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将字节数组转换为十六进制字符串。
+     * 将字节数组转换为十六进制字符串.
      *
      * @param data        byte[]
      * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
@@ -155,7 +155,7 @@ public final class HexUtil {
     // ---------------------------------------------------------------------------------------------------- decode
 
     /**
-     * 将十六进制字符数组转换为字符串，默认编码UTF-8。
+     * 将十六进制字符数组转换为字符串，默认编码UTF-8.
      *
      * @param hexStr 十六进制String
      * @return 字符串
@@ -165,7 +165,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将十六进制字符数组转换为字符串。
+     * 将十六进制字符数组转换为字符串.
      *
      * @param hexStr  十六进制String
      * @param charset 编码
@@ -179,7 +179,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将十六进制字符数组转换为字符串。
+     * 将十六进制字符数组转换为字符串.
      *
      * @param hexData 十六进制char[]
      * @param charset 编码
@@ -190,7 +190,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将十六进制字符串解码为byte[]。
+     * 将十六进制字符串解码为byte[].
      *
      * @param hexStr 十六进制String
      * @return byte[]
@@ -200,7 +200,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将十六进制字符数组转换为字节数组。
+     * 将十六进制字符数组转换为字节数组.
      *
      * @param hexData 十六进制char[]
      * @return byte[]
@@ -211,7 +211,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将十六进制字符数组转换为字节数组。
+     * 将十六进制字符数组转换为字节数组.
      *
      * @param hexData 十六进制字符串
      * @return byte[]
@@ -225,7 +225,7 @@ public final class HexUtil {
     // ---------------------------------------------------------------------------------------- Color
 
     /**
-     * 将{@link Color}编码为Hex形式。
+     * 将{@link Color}编码为Hex形式.
      *
      * @param color {@link Color}
      * @return Hex字符串
@@ -236,7 +236,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将{@link Color}编码为Hex形式。
+     * 将{@link Color}编码为Hex形式.
      *
      * @param color  {@link Color}
      * @param prefix 前缀字符串，可以是#、0x等
@@ -265,7 +265,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将Hex颜色值转为。
+     * 将Hex颜色值转为.
      *
      * @param hexColor 16进制颜色值，可以以#开头，也可以用0x开头
      * @return {@link Color}
@@ -276,7 +276,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将指定int值转换为Unicode字符串形式，常用于特殊字符（例如汉字）转Unicode形式。<br>
+     * 将指定int值转换为Unicode字符串形式，常用于特殊字符（例如汉字）转Unicode形式.<br>
      * 转换的字符串如果u后不足4位，则前面用0填充，例如：
      *
      * <pre>
@@ -301,7 +301,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将指定char值转换为Unicode字符串形式，常用于特殊字符（例如汉字）转Unicode形式。<br>
+     * 将指定char值转换为Unicode字符串形式，常用于特殊字符（例如汉字）转Unicode形式.<br>
      * 转换的字符串如果u后不足4位，则前面用0填充，例如：
      *
      * <pre>
@@ -317,7 +317,7 @@ public final class HexUtil {
     }
 
     /**
-     * 转为16进制字符串。
+     * 转为16进制字符串.
      *
      * @param value int值
      * @return 16进制字符串
@@ -328,7 +328,7 @@ public final class HexUtil {
     }
 
     /**
-     * 16进制字符串转为int。
+     * 16进制字符串转为int.
      *
      * @param value 16进制字符串
      * @return 16进制字符串int值
@@ -339,7 +339,7 @@ public final class HexUtil {
     }
 
     /**
-     * 转为16进制字符串。
+     * 转为16进制字符串.
      *
      * @param value int值
      * @return 16进制字符串
@@ -350,7 +350,7 @@ public final class HexUtil {
     }
 
     /**
-     * 16进制字符串转为long。
+     * 16进制字符串转为long.
      *
      * @param value 16进制字符串
      * @return long值
@@ -361,7 +361,7 @@ public final class HexUtil {
     }
 
     /**
-     * 转为16进制字符串。
+     * 转为16进制字符串.
      *
      * @param value float值
      * @return 16进制字符串
@@ -371,7 +371,7 @@ public final class HexUtil {
     }
 
     /**
-     * 16进制字符串转为float。
+     * 16进制字符串转为float.
      *
      * @param value 16进制字符串
      * @return 16进制字符串float值
@@ -381,7 +381,7 @@ public final class HexUtil {
     }
 
     /**
-     * 转为16进制字符串。
+     * 转为16进制字符串.
      *
      * @param value double值
      * @return 16进制字符串
@@ -391,7 +391,7 @@ public final class HexUtil {
     }
 
     /**
-     * 16进制字符串转为double。
+     * 16进制字符串转为double.
      *
      * @param value 16进制字符串
      * @return 16进制字符串double值
@@ -401,7 +401,7 @@ public final class HexUtil {
     }
 
     /**
-     * 将byte值转为16进制并添加到{@link StringBuilder}中。
+     * 将byte值转为16进制并添加到{@link StringBuilder}中.
      *
      * @param builder     {@link StringBuilder}
      * @param b           byte
@@ -413,7 +413,7 @@ public final class HexUtil {
     }
 
     /**
-     * Hex（16进制）字符串转为BigInteger。
+     * Hex（16进制）字符串转为BigInteger.
      *
      * @param hexStr Hex(16进制字符串)
      * @return {@link BigInteger}
@@ -427,7 +427,8 @@ public final class HexUtil {
     }
 
     /**
-     * 格式化Hex字符串，结果为每2位加一个空格。类似于：
+     * 格式化Hex字符串，结果为每2位加一个空格.
+     * <p>
      * <pre>
      *     e8 8c 67 03 80 cb 22 00 95 26 8f
      * </pre>
@@ -440,7 +441,8 @@ public final class HexUtil {
     }
 
     /**
-     * 格式化Hex字符串，结果为每2位加一个空格。类似于：
+     * 格式化Hex字符串，结果为每2位加一个空格.
+     * <p>
      * <pre>
      *     e8 8c 67 03 80 cb 22 00 95 26 8f
      * </pre>
@@ -472,7 +474,7 @@ public final class HexUtil {
     }
 
     /**
-     * 去除十六进制字符串的常见前缀 0x、0X、#。
+     * 去除十六进制字符串的常见前缀 0x、0X、#.
      *
      * @param hexStr 十六进制字符串
      * @return 去除前缀后的字符串
