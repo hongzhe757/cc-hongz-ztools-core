@@ -244,7 +244,7 @@ public final class DesensitizedUtil {
         if (StrUtil.isBlank(str)) {
             return StrUtil.EMPTY;
         }
-        return hide(str, 1, str.length());
+        return StrUtil.hide(str, 1, str.length());
     }
 
     /**
@@ -278,7 +278,7 @@ public final class DesensitizedUtil {
         if (front < 0 || end < 0) {
             return StrUtil.EMPTY;
         }
-        return hide(idCardNum, front, idCardNum.length() - end);
+        return StrUtil.hide(idCardNum, front, idCardNum.length() - end);
     }
 
     /**
@@ -291,7 +291,7 @@ public final class DesensitizedUtil {
         if (StrUtil.isBlank(num)) {
             return StrUtil.EMPTY;
         }
-        return hide(num, 4, num.length() - 2);
+        return StrUtil.hide(num, 4, num.length() - 2);
     }
 
     /**
@@ -304,7 +304,7 @@ public final class DesensitizedUtil {
         if (StrUtil.isBlank(num)) {
             return StrUtil.EMPTY;
         }
-        return hide(num, 3, num.length() - 4);
+        return StrUtil.hide(num, 3, num.length() - 4);
     }
 
     /**
@@ -319,7 +319,7 @@ public final class DesensitizedUtil {
             return StrUtil.EMPTY;
         }
         int length = address.length();
-        return hide(address, length - sensitiveSize, length);
+        return StrUtil.hide(address, length - sensitiveSize, length);
     }
 
     /**
@@ -336,7 +336,7 @@ public final class DesensitizedUtil {
         if (index <= 1) {
             return email;
         }
-        return hide(email, 1, index);
+        return StrUtil.hide(email, 1, index);
     }
 
     /**
@@ -369,9 +369,9 @@ public final class DesensitizedUtil {
         }
         String result = carLicense;
         if (result.length() == CAR_LICENSE_LEN) {
-            result = hide(result, CAR_LICENSE_MASK_START, CAR_LICENSE_MASK_END_NORMAL);
+            result = StrUtil.hide(result, CAR_LICENSE_MASK_START, CAR_LICENSE_MASK_END_NORMAL);
         } else if (result.length() == CAR_LICENSE_NEW_ENERGY_LEN) {
-            result = hide(result, CAR_LICENSE_MASK_START, CAR_LICENSE_MASK_END_NEW);
+            result = StrUtil.hide(result, CAR_LICENSE_MASK_START, CAR_LICENSE_MASK_END_NEW);
         }
         return result;
     }
@@ -448,9 +448,9 @@ public final class DesensitizedUtil {
         }
         final int length = passport.length();
         if (length <= 2) {
-            return hide(passport, 0, length);
+            return StrUtil.hide(passport, 0, length);
         }
-        return hide(passport, 2, length - 2);
+        return StrUtil.hide(passport, 2, length - 2);
     }
 
     /**
@@ -468,47 +468,9 @@ public final class DesensitizedUtil {
         }
         final int length = code.length();
         if (length <= 4) {
-            return hide(code, 0, length);
+            return StrUtil.hide(code, 0, length);
         }
-        return hide(code, 4, length - 4);
+        return StrUtil.hide(code, 4, length - 4);
     }
 
-    // ------------------------------------------------------------------------ Private methods
-
-    /**
-     * 替换指定字符串的指定区间内字符为'*'.
-     *
-     * @param str          字符串
-     * @param startInclude 开始位置（包含）
-     * @param endExclude   结束位置（不包含）
-     * @return 替换后的字符串
-     */
-    private static String hide(final CharSequence str, final int startInclude, final int endExclude) {
-        if (StrUtil.isEmpty(str)) {
-            return StrUtil.str(str);
-        }
-        final String originalStr = StrUtil.str(str);
-        int[] strCodePoints = originalStr.codePoints().toArray();
-        final int strLength = strCodePoints.length;
-        if (startInclude > strLength) {
-            return originalStr;
-        }
-        int endPos = endExclude;
-        if (endPos > strLength) {
-            endPos = strLength;
-        }
-        if (startInclude > endPos) {
-            return originalStr;
-        }
-
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < strLength; i++) {
-            if (i >= startInclude && i < endPos) {
-                stringBuilder.append('*');
-            } else {
-                stringBuilder.append(new String(strCodePoints, i, 1));
-            }
-        }
-        return stringBuilder.toString();
-    }
 }
