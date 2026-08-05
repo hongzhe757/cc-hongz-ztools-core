@@ -428,7 +428,13 @@ public final class CharUtil {
      * @since 4.0.8
      */
     public static boolean isEmoji(final char c) {
-        return !((c == 0) || (c == UNICODE_TAB) || (c == '\n') || (c == UNICODE_CR) || ((c >= UNICODE_SPACE) && (c <= UNICODE_BMP_MAX)) || ((c >= UNICODE_PRIVATE_START) && (c <= UNICODE_REPLACEMENT)) || ((c >= UNICODE_SUPPLEMENTARY_START) && (c <= UNICODE_MAX)));
+        return !((c == 0) ||
+                (c == UNICODE_TAB) ||
+                (c == '\n') ||
+                (c == UNICODE_CR) ||
+                ((c >= UNICODE_SPACE) && (c <= UNICODE_BMP_MAX)) ||
+                ((c >= UNICODE_PRIVATE_START) && (c <= UNICODE_REPLACEMENT)) ||
+                ((c >= UNICODE_SUPPLEMENTARY_START) && (c <= UNICODE_MAX)));
     }
 
     /**
@@ -455,7 +461,8 @@ public final class CharUtil {
     public static boolean equals(final char c1, final char c2, final boolean caseInsensitive) {
         if (caseInsensitive) {
             return Character.toLowerCase(c1) == Character.toLowerCase(c2);
-        } return c1 == c2;
+        }
+        return c1 == c2;
     }
 
     /**
@@ -502,7 +509,8 @@ public final class CharUtil {
             result = '\u24B6' + c - 'A';
         } else if (c >= 'a' && c <= 'z') {
             result = '\u24D0' + c - 'a';
-        } return (char) result;
+        }
+        return (char) result;
     }
 
     /**
@@ -521,7 +529,8 @@ public final class CharUtil {
     public static char toCloseByNumber(final int number) {
         if (number < 1 || number > MAX_VALID_LENGTH) {
             throw new IllegalArgumentException("Number must be [1-20]");
-        } return (char) ('\u2460' + number - 1);
+        }
+        return (char) ('\u2460' + number - 1);
     }
 
     // --------------------------------------- Static method end

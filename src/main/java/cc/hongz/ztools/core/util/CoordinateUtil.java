@@ -316,10 +316,15 @@ public final class CoordinateUtil {
      * @return ret 计算完成后的
      */
     private static double transLng(final double lng, final double lat) {
-        double ret = TRANS_LNG_BASE + lng + TRANS_COEFF_2 * lat + TRANS_COEFF_0_1 * lng * lng + TRANS_COEFF_0_1 * lng * lat + TRANS_COEFF_0_1 * Math.sqrt(Math.abs(lng));
-        ret += (TRANS_SIN_AMP_20 * Math.sin(TRANS_SIN_FREQ_6 * lng * PI) + TRANS_SIN_AMP_20 * Math.sin(TRANS_COEFF_2 * lng * PI)) * TRANS_SCALE;
-        ret += (TRANS_SIN_AMP_20 * Math.sin(lng * PI) + TRANS_SIN_AMP_40 * Math.sin(lng / TRANS_COEFF_3 * PI)) * TRANS_SCALE;
-        ret += (TRANS_SIN_AMP_150 * Math.sin(lng / TRANS_SIN_DIV_12 * PI) + TRANS_SIN_AMP_300 * Math.sin(lng / TRANS_SIN_DIV_30 * PI)) * TRANS_SCALE;
+        double ret = TRANS_LNG_BASE + lng + TRANS_COEFF_2 * lat
+                + TRANS_COEFF_0_1 * lng * lng + TRANS_COEFF_0_1 * lng * lat
+                + TRANS_COEFF_0_1 * Math.sqrt(Math.abs(lng));
+        ret += (TRANS_SIN_AMP_20 * Math.sin(TRANS_SIN_FREQ_6 * lng * PI)
+                + TRANS_SIN_AMP_20 * Math.sin(TRANS_COEFF_2 * lng * PI)) * TRANS_SCALE;
+        ret += (TRANS_SIN_AMP_20 * Math.sin(lng * PI)
+                + TRANS_SIN_AMP_40 * Math.sin(lng / TRANS_COEFF_3 * PI)) * TRANS_SCALE;
+        ret += (TRANS_SIN_AMP_150 * Math.sin(lng / TRANS_SIN_DIV_12 * PI)
+                + TRANS_SIN_AMP_300 * Math.sin(lng / TRANS_SIN_DIV_30 * PI)) * TRANS_SCALE;
         return ret;
     }
 
@@ -331,10 +336,15 @@ public final class CoordinateUtil {
      * @return ret 计算完成后的
      */
     private static double transLat(final double lng, final double lat) {
-        double ret = TRANS_LAT_BASE + TRANS_COEFF_2 * lng + TRANS_COEFF_3 * lat + TRANS_COEFF_0_2 * lat * lat + TRANS_COEFF_0_1 * lng * lat + TRANS_COEFF_0_2 * Math.sqrt(Math.abs(lng));
-        ret += (TRANS_SIN_AMP_20 * Math.sin(TRANS_SIN_FREQ_6 * lng * PI) + TRANS_SIN_AMP_20 * Math.sin(TRANS_COEFF_2 * lng * PI)) * TRANS_SCALE;
-        ret += (TRANS_SIN_AMP_20 * Math.sin(lat * PI) + TRANS_SIN_AMP_40 * Math.sin(lat / TRANS_COEFF_3 * PI)) * TRANS_SCALE;
-        ret += (TRANS_SIN_AMP_160 * Math.sin(lat / TRANS_SIN_DIV_12 * PI) + TRANS_SIN_AMP_320 * Math.sin(lat * PI / TRANS_SIN_DIV_30)) * TRANS_SCALE;
+        double ret = TRANS_LAT_BASE + TRANS_COEFF_2 * lng + TRANS_COEFF_3 * lat
+                + TRANS_COEFF_0_2 * lat * lat + TRANS_COEFF_0_1 * lng * lat
+                + TRANS_COEFF_0_2 * Math.sqrt(Math.abs(lng));
+        ret += (TRANS_SIN_AMP_20 * Math.sin(TRANS_SIN_FREQ_6 * lng * PI)
+                + TRANS_SIN_AMP_20 * Math.sin(TRANS_COEFF_2 * lng * PI)) * TRANS_SCALE;
+        ret += (TRANS_SIN_AMP_20 * Math.sin(lat * PI)
+                + TRANS_SIN_AMP_40 * Math.sin(lat / TRANS_COEFF_3 * PI)) * TRANS_SCALE;
+        ret += (TRANS_SIN_AMP_160 * Math.sin(lat / TRANS_SIN_DIV_12 * PI)
+                + TRANS_SIN_AMP_320 * Math.sin(lat * PI / TRANS_SIN_DIV_30)) * TRANS_SCALE;
         return ret;
     }
 
@@ -420,9 +430,11 @@ public final class CoordinateUtil {
         public boolean equals(final Object o) {
             if (this == o) {
                 return true;
-            } if (o == null || getClass() != o.getClass()) {
+            }
+            if (o == null || getClass() != o.getClass()) {
                 return false;
-            } Coordinate that = (Coordinate) o;
+            }
+            Coordinate that = (Coordinate) o;
             return Double.compare(that.lng, lng) == 0 && Double.compare(that.lat, lat) == 0;
         }
 

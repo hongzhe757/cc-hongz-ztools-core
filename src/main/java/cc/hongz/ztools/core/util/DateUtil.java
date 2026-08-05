@@ -18,6 +18,13 @@ import java.util.Date;
  */
 public final class DateUtil {
 
+    /** 每分钟秒数. */
+    private static final int SECONDS_PER_MINUTE = 60;
+    /** 每天小时数. */
+    private static final int HOURS_PER_DAY = 24;
+    /** 闰年整除除数. */
+    private static final int LEAP_YEAR_DIVISOR = 400;
+
     private DateUtil() {
     }
 
@@ -154,9 +161,10 @@ public final class DateUtil {
     public static String formatLongTime(final long mss) {
 
         String dateTimes = null;
-        long hours = (mss % (60 * 60 * 24)) / (60 * 60);
-        long minutes = (mss % (60 * 60)) / 60;
-        long seconds = mss % 60;
+        long hours = (mss % (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE * HOURS_PER_DAY))
+                / (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE);
+        long minutes = (mss % (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)) / SECONDS_PER_MINUTE;
+        long seconds = mss % SECONDS_PER_MINUTE;
 
         dateTimes = String.format("%05d:", hours)
                 + String.format("%02d:", minutes)
@@ -234,11 +242,11 @@ public final class DateUtil {
      * @return 时间差
      */
     public static String getDatePoor(final Date endDate, final Date nowDate) {
-        long nd = Long.valueOf(1000) * Long.valueOf(24)
-                * Long.valueOf(60) * Long.valueOf(60);
-        long nh = Long.valueOf(1000) * Long.valueOf(60)
-                * Long.valueOf(60);
-        long nm = Long.valueOf(1000) * Long.valueOf(60);
+        long nd = Long.valueOf(1000) * Long.valueOf(HOURS_PER_DAY)
+                * Long.valueOf(SECONDS_PER_MINUTE) * Long.valueOf(SECONDS_PER_MINUTE);
+        long nh = Long.valueOf(1000) * Long.valueOf(SECONDS_PER_MINUTE)
+                * Long.valueOf(SECONDS_PER_MINUTE);
+        long nm = Long.valueOf(1000) * Long.valueOf(SECONDS_PER_MINUTE);
         // 获得两个时间的毫秒时间差异
         long diff = endDate.getTime() - nowDate.getTime();
         // 计算差多少天
@@ -335,7 +343,7 @@ public final class DateUtil {
      * @return 是否闰年
      */
     public static boolean isLeapYear(final int year) {
-        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+        return (year % 4 == 0 && year % 100 != 0) || (year % LEAP_YEAR_DIVISOR == 0);
     }
 
     /**
