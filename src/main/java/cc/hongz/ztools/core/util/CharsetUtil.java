@@ -87,7 +87,7 @@ public final class CharsetUtil {
      * @return Charset，不支持时返回默认编码
      * @since 5.2.6
      */
-    public static Charset parse(String charsetName) {
+    public static Charset parse(final String charsetName) {
         return parse(charsetName, Charset.defaultCharset());
     }
 
@@ -99,7 +99,7 @@ public final class CharsetUtil {
      * @return Charset
      * @since 5.2.6
      */
-    public static Charset parse(String charsetName, Charset defaultCharset) {
+    public static Charset parse(final String charsetName, final Charset defaultCharset) {
         if (StrUtil.isBlank(charsetName)) {
             return defaultCharset;
         }
