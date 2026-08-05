@@ -51,7 +51,12 @@ public final class EscapeUtil {
      * 不转义的符号编码.
      */
     private static final String NOT_ESCAPE_CHARS = "*@-_+./";
-    private static final Filter<Character> JS_ESCAPE_FILTER = c -> !(Character.isDigit(c) || Character.isLowerCase(c) || Character.isUpperCase(c) || StrUtil.contains(NOT_ESCAPE_CHARS, c));
+    private static final Filter<Character> JS_ESCAPE_FILTER = c -> !(
+            Character.isDigit(c)
+                    || Character.isLowerCase(c)
+                    || Character.isUpperCase(c)
+                    || StrUtil.contains(NOT_ESCAPE_CHARS, c)
+    );
 
     private EscapeUtil() {
     }
@@ -71,7 +76,8 @@ public final class EscapeUtil {
      * @since 5.7.2
      */
     public static String escapeXml(final CharSequence xml) {
-        XmlEscape escape = new XmlEscape(); return escape.replace(xml).toString();
+        XmlEscape escape = new XmlEscape();
+        return escape.replace(xml).toString();
     }
 
     /**
@@ -82,7 +88,8 @@ public final class EscapeUtil {
      * @since 5.7.2
      */
     public static String unescapeXml(final CharSequence xml) {
-        XmlUnescape unescape = new XmlUnescape(); return unescape.replace(xml).toString();
+        XmlUnescape unescape = new XmlUnescape();
+        return unescape.replace(xml).toString();
     }
 
     /**
@@ -93,7 +100,8 @@ public final class EscapeUtil {
      * @since 4.1.5
      */
     public static String escapeHtml4(final CharSequence html) {
-        Html4Escape escape = new Html4Escape(); return escape.replace(html).toString();
+        Html4Escape escape = new Html4Escape();
+        return escape.replace(html).toString();
     }
 
     /**
@@ -104,7 +112,8 @@ public final class EscapeUtil {
      * @since 4.1.5
      */
     public static String unescapeHtml4(final CharSequence html) {
-        Html4Unescape unescape = new Html4Unescape(); return unescape.replace(html).toString();
+        Html4Unescape unescape = new Html4Unescape();
+        return unescape.replace(html).toString();
     }
 
     /**
@@ -143,20 +152,27 @@ public final class EscapeUtil {
             return StrUtil.str(content);
         }
 
-        final StringBuilder tmp = new StringBuilder(content.length() * MAX_BUFFER_FACTOR); char c;
+        final StringBuilder tmp = new StringBuilder(content.length() * MAX_BUFFER_FACTOR);
+        char c;
         for (int i = 0; i < content.length(); i++) {
-            c = content.charAt(i); if (!filter.accept(c)) {
+            c = content.charAt(i);
+            if (!filter.accept(c)) {
                 tmp.append(c);
             } else if (c < BYTE_MAX) {
-                tmp.append("%"); if (c < HEX_RADIX) {
+                tmp.append("%");
+                if (c < HEX_RADIX) {
                     tmp.append("0");
-                } tmp.append(Integer.toString(c, HEX_RADIX));
+                }
+                tmp.append(Integer.toString(c, HEX_RADIX));
             } else {
-                tmp.append("%u"); if (c <= UNICODE_LOW_MASK) {
+                tmp.append("%u");
+                if (c <= UNICODE_LOW_MASK) {
                     tmp.append("0");
-                } tmp.append(Integer.toString(c, HEX_RADIX));
+                }
+                tmp.append(Integer.toString(c, HEX_RADIX));
             }
-        } return tmp.toString();
+        }
+        return tmp.toString();
     }
 
     /**
@@ -189,32 +205,45 @@ public final class EscapeUtil {
             return content;
         }
 
-        final int len = content.length(); final StringBuilder tmp = new StringBuilder(len); int lastPos = 0; int pos;
-        char ch; while (lastPos < len) {
-            pos = content.indexOf("%", lastPos); if (pos == lastPos) {
+        final int len = content.length();
+        final StringBuilder tmp = new StringBuilder(len);
+        int lastPos = 0;
+        int pos;
+        char ch;
+        while (lastPos < len) {
+            pos = content.indexOf("%", lastPos);
+            if (pos == lastPos) {
                 if (pos + 1 < len && content.charAt(pos + 1) == 'u') {
                     if (pos + UNICODE_PREFIX_LEN <= len) {
-                        ch = (char) Integer.parseInt(content.substring(pos + HEX_BYTE_LEN, pos + UNICODE_PREFIX_LEN), HEX_RADIX);
-                        tmp.append(ch); lastPos = pos + UNICODE_PREFIX_LEN;
+                        ch = (char) Integer.parseInt(
+                                content.substring(pos + HEX_BYTE_LEN, pos + UNICODE_PREFIX_LEN), HEX_RADIX);
+                        tmp.append(ch);
+                        lastPos = pos + UNICODE_PREFIX_LEN;
                     } else {
-                        tmp.append(content.substring(pos)); lastPos = len;
+                        tmp.append(content.substring(pos));
+                        lastPos = len;
                     }
                 } else {
                     if (pos + HEX_UNICODE_LEN <= len) {
                         ch = (char) Integer.parseInt(content.substring(pos + 1, pos + HEX_UNICODE_LEN), HEX_RADIX);
-                        tmp.append(ch); lastPos = pos + HEX_UNICODE_LEN;
+                        tmp.append(ch);
+                        lastPos = pos + HEX_UNICODE_LEN;
                     } else {
-                        tmp.append(content.substring(pos)); lastPos = len;
+                        tmp.append(content.substring(pos));
+                        lastPos = len;
                     }
                 }
             } else {
                 if (pos == -1) {
-                    tmp.append(content.substring(lastPos)); lastPos = len;
+                    tmp.append(content.substring(lastPos));
+                    lastPos = len;
                 } else {
-                    tmp.append(content, lastPos, pos); lastPos = pos;
+                    tmp.append(content, lastPos, pos);
+                    lastPos = pos;
                 }
             }
-        } return tmp.toString();
+        }
+        return tmp.toString();
     }
 
     /**
@@ -228,6 +257,7 @@ public final class EscapeUtil {
             return unescape(content);
         } catch (Exception e) {
             // Ignore Exception
-        } return content;
+        }
+        return content;
     }
 }
