@@ -9,6 +9,12 @@
     <property name="fileExtensions" value="java"/>
     <property name="tabWidth" value="4"/>
 
+    <!-- 过滤 suppression 文件 -->
+    <module name="SuppressionFilter">
+        <property name="file" value="${checkstyle.suppressions.file}"
+                  default="checks/checkstyle-suppressions.xml"/>
+    </module>
+
     <!-- 禁止 Tab 字符 -->
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
