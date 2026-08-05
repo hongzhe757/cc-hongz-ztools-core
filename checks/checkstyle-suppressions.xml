@@ -7,4 +7,8 @@
     <suppress checks="MagicNumber" files="IdcardUtil\.java"/>
     <!-- HexUtil javadoc 含<br>和嵌套括号，中文句号检测误报 -->
     <suppress checks="JavadocStyle" files="HexUtil\.java"/>
+    <!-- HashUtil javadoc 含中文句号和字段级javadoc，检测误报 -->
+    <suppress checks="JavadocStyle" files="HashUtil\.java"/>
+    <!-- HashUtil zobrist/murmur 算法位掩码和索引偏移 -->
+    <suppress checks="MagicNumber" files="HashUtil\.java" lines="286-660"/>
 </suppressions>
