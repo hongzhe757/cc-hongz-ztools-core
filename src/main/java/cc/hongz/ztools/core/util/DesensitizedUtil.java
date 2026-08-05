@@ -1,7 +1,7 @@
 package cc.hongz.ztools.core.util;
 
 /**
- * 脱敏工具类，支持以下类型信息的脱敏自动处理：
+ * 脱敏工具类，支持以下类型信息的脱敏自动处理：.
  *
  * <ul>
  *     <li>用户ID</li>
@@ -19,97 +19,116 @@ package cc.hongz.ztools.core.util;
  * @author dazer and neusoft and qiaomu
  * @since 5.6.2
  */
-public class DesensitizedUtil {
+public final class DesensitizedUtil {
+
+    // --- magic number constants ---
+
+    private static final int ADDRESS_SENSITIVE_SIZE = 8;
+
+    private static final int CAR_LICENSE_LEN = 7;
+    private static final int CAR_LICENSE_NEW_ENERGY_LEN = 8;
+    private static final int CAR_LICENSE_MASK_START = 3;
+    private static final int CAR_LICENSE_MASK_END_NORMAL = 6;
+    private static final int CAR_LICENSE_MASK_END_NEW = 7;
+
+    private static final int BANK_CARD_MIN_LENGTH = 9;
+
+    private DesensitizedUtil() {
+    }
 
     /**
-     * 支持的脱敏类型枚举
+     * 支持的脱敏类型枚举.
      *
      * @author dazer and neusoft and qiaomu
      */
     public enum DesensitizedType {
         /**
-         * 用户id
+         * 用户id.
          */
         USER_ID,
         /**
-         * 中文名
+         * 中文名.
          */
         CHINESE_NAME,
         /**
-         * 身份证号
+         * 身份证号.
          */
         ID_CARD,
         /**
-         * 座机号
+         * 座机号.
          */
         FIXED_PHONE,
         /**
-         * 手机号
+         * 手机号.
          */
         MOBILE_PHONE,
         /**
-         * 地址
+         * 地址.
          */
         ADDRESS,
         /**
-         * 电子邮件
+         * 电子邮件.
          */
         EMAIL,
         /**
-         * 密码
+         * 密码.
          */
         PASSWORD,
         /**
-         * 中国大陆车牌，包含普通车辆、新能源车辆
+         * 中国大陆车牌，包含普通车辆、新能源车辆.
          */
         CAR_LICENSE,
         /**
-         * 银行卡
+         * 银行卡.
          */
         BANK_CARD,
         /**
-         * IPv4地址
+         * IPv4地址.
          */
         IPV4,
         /**
-         * IPv6地址
+         * IPv6地址.
          */
         IPV6,
         /**
-         * 护照号
+         * 护照号.
          */
         PASSPORT,
         /**
-         * 统一社会信用代码
+         * 统一社会信用代码.
          */
         CREDIT_CODE,
         /**
-         * 定义了一个first_mask规则，只显示第一个字符。
+         * 定义了一个first_mask规则，只显示第一个字符.
          */
         FIRST_MASK,
         /**
-         * 清空为null
+         * 清空为null.
          */
         CLEAR_TO_NULL,
         /**
-         * 清空为""
+         * 清空为"".
          */
         CLEAR_TO_EMPTY
     }
 
     /**
-     * 脱敏，使用默认的脱敏策略
+     * 脱敏，使用默认的脱敏策略.
      * <pre>
      * DesensitizedUtil.desensitized("100", DesensitizedUtil.DesensitizedType.USER_ID)) =  "0"
      * DesensitizedUtil.desensitized("段正淳", DesensitizedUtil.DesensitizedType.CHINESE_NAME)) = "段**"
-     * DesensitizedUtil.desensitized("51343620000320711X", DesensitizedUtil.DesensitizedType.ID_CARD)) = "5***************1X"
+     * DesensitizedUtil.desensitized("51343620000320711X",
+     *   DesensitizedUtil.DesensitizedType.ID_CARD)) = "5***************1X"
      * DesensitizedUtil.desensitized("09157518479", DesensitizedUtil.DesensitizedType.FIXED_PHONE)) = "0915*****79"
      * DesensitizedUtil.desensitized("18049531999", DesensitizedUtil.DesensitizedType.MOBILE_PHONE)) = "180****1999"
-     * DesensitizedUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtil.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
-     * DesensitizedUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtil.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
+     * DesensitizedUtil.desensitized("北京市海淀区马连洼街道289号",
+     *   DesensitizedUtil.DesensitizedType.ADDRESS)) = "北京市海淀区马连********"
+     * DesensitizedUtil.desensitized("duandazhi-jack@gmail.com.cn",
+     *   DesensitizedUtil.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
      * DesensitizedUtil.desensitized("1234567890", DesensitizedUtil.DesensitizedType.PASSWORD)) = "**********"
      * DesensitizedUtil.desensitized("苏D40000", DesensitizedUtil.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
-     * DesensitizedUtil.desensitized("11011111222233333256", DesensitizedUtil.DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
+     * DesensitizedUtil.desensitized("11011111222233333256",
+     *   DesensitizedUtil.DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
      * DesensitizedUtil.desensitized("192.168.1.1", DesensitizedUtil.DesensitizedType.IPV4)) = "192.*.*.*"
      * </pre>
      *
@@ -119,7 +138,8 @@ public class DesensitizedUtil {
      * @author dazer and neusoft and qiaomu
      * @since 5.6.2
      */
-    public static String desensitized(CharSequence str, DesensitizedUtil.DesensitizedType desensitizedType) {
+    public static String desensitized(final CharSequence str,
+            final DesensitizedUtil.DesensitizedType desensitizedType) {
         if (StrUtil.isBlank(str)) {
             return StrUtil.EMPTY;
         }
@@ -141,7 +161,7 @@ public class DesensitizedUtil {
                 newStr = mobilePhone(String.valueOf(str));
                 break;
             case ADDRESS:
-                newStr = address(String.valueOf(str), 8);
+                newStr = address(String.valueOf(str), ADDRESS_SENSITIVE_SIZE);
                 break;
             case EMAIL:
                 newStr = email(String.valueOf(str));
@@ -182,7 +202,7 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 清空为空字符串
+     * 清空为空字符串.
      *
      * @return 清空后的值
      * @since 5.8.22
@@ -192,7 +212,7 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 清空为{@code null}
+     * 清空为{@code null}.
      *
      * @return 清空后的值(null)
      * @since 5.8.22
@@ -202,7 +222,7 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 【用户id】不对外提供userId
+     * 【用户id】不对外提供userId.
      *
      * @return 脱敏后的主键
      */
@@ -212,12 +232,12 @@ public class DesensitizedUtil {
 
     /**
      * 定义了一个first_mask的规则，只显示第一个字符。<br>
-     * 脱敏前：123456789；脱敏后：1********。
+     * 脱敏前：123456789；脱敏后：1********.
      *
      * @param str 字符串
      * @return 脱敏后的字符串
      */
-    public static String firstMask(String str) {
+    public static String firstMask(final String str) {
         if (StrUtil.isBlank(str)) {
             return StrUtil.EMPTY;
         }
@@ -225,24 +245,24 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 【中文姓名】只显示第一个汉字，其他隐藏为2个星号，比如：李**
+     * 【中文姓名】只显示第一个汉字，其他隐藏为2个星号，比如：李**.
      *
      * @param fullName 姓名
      * @return 脱敏后的姓名
      */
-    public static String chineseName(String fullName) {
+    public static String chineseName(final String fullName) {
         return firstMask(fullName);
     }
 
     /**
-     * 【身份证号】前1位 和后2位
+     * 【身份证号】前1位 和后2位.
      *
      * @param idCardNum 身份证
      * @param front     保留：前面的front位数；从1开始
      * @param end       保留：后面的end位数；从1开始
      * @return 脱敏后的身份证
      */
-    public static String idCardNum(String idCardNum, int front, int end) {
+    public static String idCardNum(final String idCardNum, final int front, final int end) {
         //身份证不能为空
         if (StrUtil.isBlank(idCardNum)) {
             return StrUtil.EMPTY;
@@ -259,12 +279,12 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 【固定电话 前四位，后两位
+     * 【固定电话 前四位，后两位.
      *
      * @param num 固定电话
      * @return 脱敏后的固定电话；
      */
-    public static String fixedPhone(String num) {
+    public static String fixedPhone(final String num) {
         if (StrUtil.isBlank(num)) {
             return StrUtil.EMPTY;
         }
@@ -272,12 +292,12 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 【手机号码】前三位，后4位，其他隐藏，比如135****2210
+     * 【手机号码】前三位，后4位，其他隐藏，比如135****2210.
      *
      * @param num 移动电话；
      * @return 脱敏后的移动电话；
      */
-    public static String mobilePhone(String num) {
+    public static String mobilePhone(final String num) {
         if (StrUtil.isBlank(num)) {
             return StrUtil.EMPTY;
         }
@@ -285,13 +305,13 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 【地址】只显示到地区，不显示详细地址，比如：北京市海淀区****
+     * 【地址】只显示到地区，不显示详细地址，比如：北京市海淀区****.
      *
      * @param address       家庭住址
      * @param sensitiveSize 敏感信息长度
      * @return 脱敏后的家庭地址
      */
-    public static String address(String address, int sensitiveSize) {
+    public static String address(final String address, final int sensitiveSize) {
         if (StrUtil.isBlank(address)) {
             return StrUtil.EMPTY;
         }
@@ -300,12 +320,12 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 【电子邮箱】邮箱前缀仅显示第一个字母，前缀其他隐藏，用星号代替，@及后面的地址显示，比如：d**@126.com
+     * 【电子邮箱】邮箱前缀仅显示第一个字母，前缀其他隐藏，用星号代替，@及后面的地址显示，比如：d**@126.com.
      *
      * @param email 邮箱
      * @return 脱敏后的邮箱
      */
-    public static String email(String email) {
+    public static String email(final String email) {
         if (StrUtil.isBlank(email)) {
             return StrUtil.EMPTY;
         }
@@ -317,12 +337,12 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 【密码】密码的全部字符都用*代替，比如：******
+     * 【密码】密码的全部字符都用*代替，比如：******.
      *
      * @param password 密码
      * @return 脱敏后的密码
      */
-    public static String password(String password) {
+    public static String password(final String password) {
         if (StrUtil.isBlank(password)) {
             return StrUtil.EMPTY;
         }
@@ -330,7 +350,7 @@ public class DesensitizedUtil {
     }
 
     /**
-     * 【中国车牌】车牌中间用*代替
+     * 【中国车牌】车牌中间用*代替.
      * eg1：null       -》 ""
      * eg1：""         -》 ""
      * eg3：苏D40000   -》 苏D4***0
@@ -340,22 +360,21 @@ public class DesensitizedUtil {
      * @param carLicense 完整的车牌号
      * @return 脱敏后的车牌
      */
-    public static String carLicense(String carLicense) {
+    public static String carLicense(final String carLicense) {
         if (StrUtil.isBlank(carLicense)) {
             return StrUtil.EMPTY;
         }
-        // 普通车牌
-        if (carLicense.length() == 7) {
-            carLicense = hide(carLicense, 3, 6);
-        } else if (carLicense.length() == 8) {
-            // 新能源车牌
-            carLicense = hide(carLicense, 3, 7);
+        String result = carLicense;
+        if (result.length() == CAR_LICENSE_LEN) {
+            result = hide(result, CAR_LICENSE_MASK_START, CAR_LICENSE_MASK_END_NORMAL);
+        } else if (result.length() == CAR_LICENSE_NEW_ENERGY_LEN) {
+            result = hide(result, CAR_LICENSE_MASK_START, CAR_LICENSE_MASK_END_NEW);
         }
-        return carLicense;
+        return result;
     }
 
     /**
-     * 【银行卡号脱敏】由于银行卡号长度不定，所以只展示前4位，后面的位数根据卡号决定展示1-4位
+     * 【银行卡号脱敏】由于银行卡号长度不定，所以只展示前4位，后面的位数根据卡号决定展示1-4位.
      * 例如：
      * <pre>{@code
      *      1. "1234 2222 3333 4444 6789 9"    ->   "1234 **** **** **** **** 9"
@@ -367,68 +386,72 @@ public class DesensitizedUtil {
      * @param bankCardNo 银行卡号
      * @return 脱敏之后的银行卡号
      */
-    public static String bankCard(String bankCardNo) {
+    public static String bankCard(final String bankCardNo) {
         if (StrUtil.isBlank(bankCardNo)) {
             return bankCardNo;
         }
-        bankCardNo = StrUtil.cleanBlank(bankCardNo);
-        if (bankCardNo.length() < 9) {
-            return bankCardNo;
+        final String cleaned = StrUtil.cleanBlank(bankCardNo);
+        if (cleaned.length() < BANK_CARD_MIN_LENGTH) {
+            return cleaned;
         }
 
-        final int length = bankCardNo.length();
+        final int length = cleaned.length();
         final int endLength = length % 4 == 0 ? 4 : length % 4;
         final int midLength = length - 4 - endLength;
 
         final StringBuilder buf = new StringBuilder();
-        buf.append(bankCardNo, 0, 4);
+        buf.append(cleaned, 0, 4);
         for (int i = 0; i < midLength; ++i) {
             if (i % 4 == 0) {
                 buf.append(CharUtil.SPACE);
             }
             buf.append('*');
         }
-        buf.append(CharUtil.SPACE).append(bankCardNo, length - endLength, length);
+        buf.append(CharUtil.SPACE).append(cleaned, length - endLength, length);
         return buf.toString();
     }
 
     /**
-     * IPv4脱敏，如：脱敏前：192.0.2.1；脱敏后：192.*.*.*。
+     * IPv4脱敏，如：脱敏前：192.0.2.1；脱敏后：192.*.*.*.
      *
      * @param ipv4 IPv4地址
      * @return 脱敏后的地址
      */
-    public static String ipv4(String ipv4) {
+    public static String ipv4(final String ipv4) {
         return StrUtil.subBefore(ipv4, '.', false) + ".*.*.*";
     }
 
     /**
-     * IPv6脱敏，如：脱敏前：2001:0db8:86a3:08d3:1319:8a2e:0370:7344；脱敏后：2001:*:*:*:*:*:*:*
+     * IPv6脱敏，如：脱敏前：2001:0db8:86a3:08d3:1319:8a2e:0370:7344；脱敏后：2001:*:*:*:*:*:*:*.
      *
      * @param ipv6 IPv6地址
      * @return 脱敏后的地址
      */
-    public static String ipv6(String ipv6) {
+    public static String ipv6(final String ipv6) {
         return StrUtil.subBefore(ipv6, ':', false) + ":*:*:*:*:*:*:*";
     }
 
     /**
-     * 护照号脱敏
+     * 护照号脱敏.
      * 规则：前2后2，长度不足时保留最小有效信息
      * 示例：PJ1234567 → PJ*****67
      *
      * @param passport 护照号
      * @return 脱敏后的护照号
      */
-    public static String passport(String passport) {
-        if (StrUtil.isBlank(passport)) return passport;
+    public static String passport(final String passport) {
+        if (StrUtil.isBlank(passport)) {
+            return passport;
+        }
         final int length = passport.length();
-        if (length <= 2) return hide(passport, 0, length);
+        if (length <= 2) {
+            return hide(passport, 0, length);
+        }
         return hide(passport, 2, length - 2);
     }
 
     /**
-     * 统一社会信用代码脱敏
+     * 统一社会信用代码脱敏.
      * 规则：前4后4，长度不足时保留最小有效信息
      * 统一社会信用代码由18位数字或大写英文字母组成
      * 示例：91110108MA01ABCDE7   → 9111**********CDE7
@@ -436,24 +459,28 @@ public class DesensitizedUtil {
      * @param code 统一社会信用代码
      * @return 脱敏后的统一社会信用代码
      */
-    public static String creditCode(String code) {
-        if (StrUtil.isBlank(code)) return code;
+    public static String creditCode(final String code) {
+        if (StrUtil.isBlank(code)) {
+            return code;
+        }
         final int length = code.length();
-        if (length <= 4) return hide(code, 0, length);
+        if (length <= 4) {
+            return hide(code, 0, length);
+        }
         return hide(code, 4, length - 4);
     }
 
     // ------------------------------------------------------------------------ Private methods
 
     /**
-     * 替换指定字符串的指定区间内字符为'*'
+     * 替换指定字符串的指定区间内字符为'*'.
      *
      * @param str          字符串
      * @param startInclude 开始位置（包含）
      * @param endExclude   结束位置（不包含）
      * @return 替换后的字符串
      */
-    private static String hide(CharSequence str, int startInclude, int endExclude) {
+    private static String hide(final CharSequence str, final int startInclude, final int endExclude) {
         if (StrUtil.isEmpty(str)) {
             return StrUtil.str(str);
         }
@@ -463,16 +490,17 @@ public class DesensitizedUtil {
         if (startInclude > strLength) {
             return originalStr;
         }
-        if (endExclude > strLength) {
-            endExclude = strLength;
+        int endPos = endExclude;
+        if (endPos > strLength) {
+            endPos = strLength;
         }
-        if (startInclude > endExclude) {
+        if (startInclude > endPos) {
             return originalStr;
         }
 
         final StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < strLength; i++) {
-            if (i >= startInclude && i < endExclude) {
+            if (i >= startInclude && i < endPos) {
                 stringBuilder.append('*');
             } else {
                 stringBuilder.append(new String(strCodePoints, i, 1));
