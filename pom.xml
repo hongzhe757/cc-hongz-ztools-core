@@ -55,6 +55,15 @@
                             <goal>check</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>checkstyle-util-report</id>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                        <configuration>
+                            <includes>**/util/*.java</includes>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
