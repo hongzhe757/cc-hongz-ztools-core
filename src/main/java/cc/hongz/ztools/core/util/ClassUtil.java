@@ -10,7 +10,6 @@ import cc.hongz.ztools.core.lang.Singleton;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -224,7 +223,8 @@ public final class ClassUtil {
      * @return 类集合
      * @see ClassScanner#scanPackageByAnnotation(String, Class)
      */
-    public static Set<Class<?>> scanPackageByAnnotation(final String packageName, final Class<? extends Annotation> annotationClass) {
+    public static Set<Class<?>> scanPackageByAnnotation(final String packageName,
+            final Class<? extends Annotation> annotationClass) {
         return ClassScanner.scanPackageByAnnotation(packageName, annotationClass);
     }
 
@@ -336,7 +336,8 @@ public final class ClassUtil {
      * @return 方法
      * @throws SecurityException 无权访问抛出异常
      */
-    public static Method getPublicMethod(final Class<?> clazz, final String methodName, final Class<?>... paramTypes) throws SecurityException {
+    public static Method getPublicMethod(final Class<?> clazz, final String methodName,
+            final Class<?>... paramTypes) throws SecurityException {
         return ReflectUtil.getPublicMethod(clazz, methodName, paramTypes);
     }
 
@@ -369,7 +370,8 @@ public final class ClassUtil {
      * @return 方法
      * @throws SecurityException 无访问权限抛出异常
      */
-    public static Method getDeclaredMethodOfObj(final Object obj, final String methodName, final Object... args) throws SecurityException {
+    public static Method getDeclaredMethodOfObj(final Object obj, final String methodName,
+            final Object... args) throws SecurityException {
         return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
     }
 
@@ -382,7 +384,8 @@ public final class ClassUtil {
      * @return 方法
      * @throws SecurityException 无访问权限抛出异常
      */
-    public static Method getDeclaredMethod(final Class<?> clazz, final String methodName, final Class<?>... parameterTypes) throws SecurityException {
+    public static Method getDeclaredMethod(final Class<?> clazz, final String methodName,
+            final Class<?>... parameterTypes) throws SecurityException {
         return ReflectUtil.getMethod(clazz, methodName, parameterTypes);
     }
 
@@ -561,7 +564,8 @@ public final class ClassUtil {
      * 获得资源相对路径对应的 URL.
      *
      * @param resource  资源相对路径
-     * @param baseClass 基准 Class，获得的相对路径相对于此 Class 所在路径，如果为 {@code null} 则相对 ClassPath
+     * @param baseClass 基准 Class，获得的相对路径相对于此 Class 所在路径，
+     *                  如果为 {@code null} 则相对 ClassPath
      * @return {@link URL}
      */
     public static URL getResourceUrl(final String resource, final Class<?> baseClass) {
@@ -729,7 +733,8 @@ public final class ClassUtil {
      * @return 返回结果
      */
     @SuppressWarnings("unchecked")
-    public static <T> T invoke(final String className, final String methodName, final boolean isSingleton, final Object... args) {
+    public static <T> T invoke(final String className, final String methodName,
+            final boolean isSingleton, final Object... args) {
         final Class<Object> clazz = loadClass(className);
         try {
             final Method method = getDeclaredMethod(clazz, methodName, getClasses(args));
@@ -739,7 +744,8 @@ public final class ClassUtil {
             if (isStatic(method)) {
                 return ReflectUtil.invoke(null, method, args);
             } else {
-                return ReflectUtil.invoke(isSingleton ? Singleton.get(clazz) : ReflectUtil.newInstance(clazz), method, args);
+                return ReflectUtil.invoke(
+                        isSingleton ? Singleton.get(clazz) : ReflectUtil.newInstance(clazz), method, args);
             }
         } catch (Exception e) {
             throw new UtilException(e);
@@ -778,7 +784,8 @@ public final class ClassUtil {
 
     /**
      * 是否简单值类型或简单值类型的数组.
-     * <p>包括：原始类型、String、other CharSequence、a Number、a Date、a URI、a URL、a Locale 或 a Class 及其数组.
+     * <p>包括：原始类型、String、other CharSequence、a Number、a Date、a URI、a URL、a Locale
+     * 或 a Class 及其数组.
      *
      * @param clazz 属性类
      * @return 是否简单值类型或简单值类型的数组
