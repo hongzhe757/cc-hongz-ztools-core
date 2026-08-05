@@ -303,10 +303,11 @@ public final class ReUtil {
 
         final Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
+            String result = template;
             for (final Integer group : varNums) {
-                template = template.replace("$" + group, matcher.group(group));
+                result = result.replace("$" + group, matcher.group(group));
             }
-            return template;
+            return result;
         }
         return null;
     }
@@ -355,12 +356,13 @@ public final class ReUtil {
         final CharSequence content = contentHolder.get();
         final Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
+            String result = template;
             for (final String var : varNums) {
                 final int group = Integer.parseInt(var);
-                template = template.replace("$" + var, matcher.group(group));
+                result = result.replace("$" + var, matcher.group(group));
             }
             contentHolder.set(StrUtil.sub(content, matcher.end(), content.length()));
-            return template;
+            return result;
         }
         return null;
     }
