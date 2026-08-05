@@ -102,6 +102,7 @@ public final class ClassLoaderUtil {
      * @return 当前线程的 class loader
      * @see Thread#getContextClassLoader()
      */
+    @SuppressWarnings("removal")
     public static ClassLoader getContextClassLoader() {
         if (System.getSecurityManager() == null) {
             return Thread.currentThread().getContextClassLoader();
@@ -119,6 +120,7 @@ public final class ClassLoaderUtil {
      * @see ClassLoader#getSystemClassLoader()
      * @since 5.7.0
      */
+    @SuppressWarnings("removal")
     public static ClassLoader getSystemClassLoader() {
         if (System.getSecurityManager() == null) {
             return ClassLoader.getSystemClassLoader();
