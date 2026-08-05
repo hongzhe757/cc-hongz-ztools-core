@@ -350,9 +350,11 @@ public final class HashUtil {
      * @return hash结果
      */
     public static int additiveHash(final String key, final int prime) {
-        int hash, i; for (hash = key.length(), i = 0; i < key.length(); i++) {
+        int hash, i;
+        for (hash = key.length(), i = 0; i < key.length(); i++) {
             hash += key.charAt(i);
-        } return hash % prime;
+        }
+        return hash % prime;
     }
 
     /**
@@ -363,9 +365,11 @@ public final class HashUtil {
      * @return hash值
      */
     public static int rotatingHash(final String key, final int prime) {
-        int hash, i; for (hash = key.length(), i = 0; i < key.length(); ++i) {
+        int hash, i;
+        for (hash = key.length(), i = 0; i < key.length(); ++i) {
             hash = (hash << ROTATING_SHIFT_LEFT) ^ (hash >> ROTATING_SHIFT_RIGHT) ^ key.charAt(i);
-        } return hash % prime;
+        }
+        return hash % prime;
     }
 
     /**
@@ -375,10 +379,16 @@ public final class HashUtil {
      * @return 输出hash值
      */
     public static int oneByOneHash(final String key) {
-        int hash, i; for (hash = 0, i = 0; i < key.length(); ++i) {
-            hash += key.charAt(i); hash += (hash << ONE_BY_ONE_SHIFT_10); hash ^= (hash >> ONE_BY_ONE_SHIFT_6);
-        } hash += (hash << ONE_BY_ONE_SHIFT_3); hash ^= (hash >> ONE_BY_ONE_SHIFT_11);
-        hash += (hash << ONE_BY_ONE_SHIFT_15); return hash;
+        int hash, i;
+        for (hash = 0, i = 0; i < key.length(); ++i) {
+            hash += key.charAt(i);
+            hash += (hash << ONE_BY_ONE_SHIFT_10);
+            hash ^= (hash >> ONE_BY_ONE_SHIFT_6);
+        }
+        hash += (hash << ONE_BY_ONE_SHIFT_3);
+        hash ^= (hash >> ONE_BY_ONE_SHIFT_11);
+        hash += (hash << ONE_BY_ONE_SHIFT_15);
+        return hash;
     }
 
     /**
@@ -388,9 +398,12 @@ public final class HashUtil {
      * @return 结果hash
      */
     public static int bernstein(final String key) {
-        int hash = 0; int i; for (i = 0; i < key.length(); ++i) {
+        int hash = 0;
+        int i;
+        for (i = 0; i < key.length(); ++i) {
             hash = BERNSTEIN_MULTIPLIER * hash + key.charAt(i);
-        } return hash;
+        }
+        return hash;
     }
 
     /**
@@ -402,25 +415,35 @@ public final class HashUtil {
      * @return hash值
      */
     public static int universal(final char[] key, final int mask, final int[] tab) {
-        int hash = key.length, i, len = key.length; for (i = 0; i < (len << UNIVERSAL_BYTE_SHIFT); i += BITS_PER_BYTE) {
-            char k = key[i >> UNIVERSAL_BYTE_SHIFT]; if ((k & 0x01) == 0) {
+        int hash = key.length, i, len = key.length;
+        for (i = 0; i < (len << UNIVERSAL_BYTE_SHIFT); i += BITS_PER_BYTE) {
+            char k = key[i >> UNIVERSAL_BYTE_SHIFT];
+            if ((k & 0x01) == 0) {
                 hash ^= tab[i];
-            } if ((k & 0x02) == 0) {
+            }
+            if ((k & 0x02) == 0) {
                 hash ^= tab[i + 1];
-            } if ((k & 0x04) == 0) {
+            }
+            if ((k & 0x04) == 0) {
                 hash ^= tab[i + 2];
-            } if ((k & ZOBRIST_BIT_3) == 0) {
+            }
+            if ((k & ZOBRIST_BIT_3) == 0) {
                 hash ^= tab[i + 3];
-            } if ((k & ZOBRIST_BIT_4) == 0) {
+            }
+            if ((k & ZOBRIST_BIT_4) == 0) {
                 hash ^= tab[i + 4];
-            } if ((k & ZOBRIST_BIT_5) == 0) {
+            }
+            if ((k & ZOBRIST_BIT_5) == 0) {
                 hash ^= tab[i + 5];
-            } if ((k & 0x40) == 0) {
+            }
+            if ((k & 0x40) == 0) {
                 hash ^= tab[i + 6];
-            } if ((k & 0x80) == 0) {
+            }
+            if ((k & 0x80) == 0) {
                 hash ^= tab[i + 7];
             }
-        } return (hash & mask);
+        }
+        return (hash & mask);
     }
 
     /**
@@ -432,9 +455,11 @@ public final class HashUtil {
      * @return hash值
      */
     public static int zobrist(final char[] key, final int mask, final int[][] tab) {
-        int hash, i; for (hash = key.length, i = 0; i < key.length; ++i) {
+        int hash, i;
+        for (hash = key.length, i = 0; i < key.length; ++i) {
             hash ^= tab[i][key[i]];
-        } return (hash & mask);
+        }
+        return (hash & mask);
     }
 
     /**
@@ -444,10 +469,17 @@ public final class HashUtil {
      * @return hash结果
      */
     public static int fnvHash(final byte[] data) {
-        final int p = FNV_32_PRIME; int hash = (int) FNV_32_OFFSET_BASIS; for (byte b : data) {
+        final int p = FNV_32_PRIME;
+        int hash = (int) FNV_32_OFFSET_BASIS;
+        for (byte b : data) {
             hash = (hash ^ b) * p;
-        } hash += hash << FNV_SHIFT_13; hash ^= hash >> FNV_SHIFT_7; hash += hash << FNV_SHIFT_3;
-        hash ^= hash >> FNV_SHIFT_17; hash += hash << FNV_SHIFT_5; return Math.abs(hash);
+        }
+        hash += hash << FNV_SHIFT_13;
+        hash ^= hash >> FNV_SHIFT_7;
+        hash += hash << FNV_SHIFT_3;
+        hash ^= hash >> FNV_SHIFT_17;
+        hash += hash << FNV_SHIFT_5;
+        return Math.abs(hash);
     }
 
     /**
@@ -457,10 +489,17 @@ public final class HashUtil {
      * @return hash结果
      */
     public static int fnvHash(final String data) {
-        final int p = FNV_32_PRIME; int hash = (int) FNV_32_OFFSET_BASIS; for (int i = 0; i < data.length(); i++) {
+        final int p = FNV_32_PRIME;
+        int hash = (int) FNV_32_OFFSET_BASIS;
+        for (int i = 0; i < data.length(); i++) {
             hash = (hash ^ data.charAt(i)) * p;
-        } hash += hash << FNV_SHIFT_13; hash ^= hash >> FNV_SHIFT_7; hash += hash << FNV_SHIFT_3;
-        hash ^= hash >> FNV_SHIFT_17; hash += hash << FNV_SHIFT_5; return Math.abs(hash);
+        }
+        hash += hash << FNV_SHIFT_13;
+        hash ^= hash >> FNV_SHIFT_7;
+        hash += hash << FNV_SHIFT_3;
+        hash ^= hash >> FNV_SHIFT_17;
+        hash += hash << FNV_SHIFT_5;
+        return Math.abs(hash);
     }
 
     /**
@@ -470,9 +509,14 @@ public final class HashUtil {
      * @return hash值
      */
     public static int intHash(final int key) {
-        int hash = key; hash += ~(hash << INT_HASH_SHIFT_15); hash ^= (hash >>> INT_HASH_SHIFT_10);
-        hash += (hash << INT_HASH_SHIFT_3); hash ^= (hash >>> INT_HASH_SHIFT_6); hash += ~(hash << INT_HASH_SHIFT_11);
-        hash ^= (hash >>> INT_HASH_SHIFT_16); return hash;
+        int hash = key;
+        hash += ~(hash << INT_HASH_SHIFT_15);
+        hash ^= (hash >>> INT_HASH_SHIFT_10);
+        hash += (hash << INT_HASH_SHIFT_3);
+        hash ^= (hash >>> INT_HASH_SHIFT_6);
+        hash += ~(hash << INT_HASH_SHIFT_11);
+        hash ^= (hash >>> INT_HASH_SHIFT_16);
+        return hash;
     }
 
     /**
@@ -482,10 +526,13 @@ public final class HashUtil {
      * @return hash值
      */
     public static int rsHash(final String str) {
-        int b = RS_B_CONSTANT; int a = RS_A_CONSTANT; int hash = 0;
+        int b = RS_B_CONSTANT;
+        int a = RS_A_CONSTANT;
+        int hash = 0;
 
         for (int i = 0; i < str.length(); i++) {
-            hash = hash * a + str.charAt(i); a = a * b;
+            hash = hash * a + str.charAt(i);
+            a = a * b;
         }
 
         return hash & HASH_POSITIVE_MASK;
@@ -517,7 +564,9 @@ public final class HashUtil {
         int bitsInUnsignedInt = PJW_BITS_IN_INT;
         int threeQuarters = (bitsInUnsignedInt * PJW_THREE_QUARTERS_NUM) / PJW_DENOMINATOR_4;
         int oneEighth = bitsInUnsignedInt / PJW_ONE_EIGHTH_DENOM;
-        int highBits = PJW_HIGH_BITS_MASK << (bitsInUnsignedInt - oneEighth); int hash = 0; int test;
+        int highBits = PJW_HIGH_BITS_MASK << (bitsInUnsignedInt - oneEighth);
+        int hash = 0;
+        int test;
 
         for (int i = 0; i < str.length(); i++) {
             hash = (hash << oneEighth) + str.charAt(i);
@@ -537,11 +586,14 @@ public final class HashUtil {
      * @return hash值
      */
     public static int elfHash(final String str) {
-        int hash = 0; int x;
+        int hash = 0;
+        int x;
 
         for (int i = 0; i < str.length(); i++) {
-            hash = (hash << ELF_SHIFT_LEFT) + str.charAt(i); if ((x = (int) (hash & ELF_HIGH_NIBBLE_MASK)) != 0) {
-                hash ^= (x >> ELF_HIGH_BITS_SHIFT); hash &= ~x;
+            hash = (hash << ELF_SHIFT_LEFT) + str.charAt(i);
+            if ((x = (int) (hash & ELF_HIGH_NIBBLE_MASK)) != 0) {
+                hash ^= (x >> ELF_HIGH_BITS_SHIFT);
+                hash &= ~x;
             }
         }
 
@@ -555,7 +607,8 @@ public final class HashUtil {
      * @return hash值
      */
     public static int bkdrHash(final String str) {
-        int seed = BKDR_SEED; int hash = 0;
+        int seed = BKDR_SEED;
+        int hash = 0;
 
         for (int i = 0; i < str.length(); i++) {
             hash = (hash * seed) + str.charAt(i);
@@ -622,7 +675,11 @@ public final class HashUtil {
         int hash = 0;
 
         for (int i = 0; i < str.length(); i++) {
-            hash ^= ((i & AP_PARITY_CHECK) == 0) ? ((hash << AP_SHIFT_EVEN_LEFT) ^ str.charAt(i) ^ (hash >> AP_SHIFT_EVEN_RIGHT)) : (~((hash << AP_SHIFT_ODD_LEFT) ^ str.charAt(i) ^ (hash >> AP_SHIFT_ODD_RIGHT)));
+            if ((i & AP_PARITY_CHECK) == 0) {
+                hash ^= (hash << AP_SHIFT_EVEN_LEFT) ^ str.charAt(i) ^ (hash >> AP_SHIFT_EVEN_RIGHT);
+            } else {
+                hash ^= ~((hash << AP_SHIFT_ODD_LEFT) ^ str.charAt(i) ^ (hash >> AP_SHIFT_ODD_RIGHT));
+            }
         }
 
         return hash;
@@ -637,7 +694,8 @@ public final class HashUtil {
     public static long tianlHash(final String str) {
         long hash;
 
-        int iLength = str.length(); if (iLength == 0) {
+        int iLength = str.length();
+        if (iLength == 0) {
             return 0;
         }
 
@@ -653,21 +711,27 @@ public final class HashUtil {
 
         if (iLength <= TIANL_CHAR_THRESHOLD) {
             for (i = 1; i <= iLength; i++) {
-                ucChar = str.charAt(i - 1); if (ucChar <= 'Z' && ucChar >= 'A') {
+                ucChar = str.charAt(i - 1);
+                if (ucChar <= 'Z' && ucChar >= 'A') {
                     ucChar = (char) (ucChar + CASE_DIFF);
                 }
-                hash += (TIANL_COEFF_3 * i * ucChar * ucChar + TIANL_COEFF_5 * i * ucChar + TIANL_COEFF_7 * i + TIANL_COEFF_11 * ucChar) % TIANL_BASE_MULTIPLIER;
+                hash += (TIANL_COEFF_3 * i * ucChar * ucChar + TIANL_COEFF_5 * i * ucChar
+                        + TIANL_COEFF_7 * i + TIANL_COEFF_11 * ucChar) % TIANL_BASE_MULTIPLIER;
             }
         } else {
             for (i = 1; i <= TIANL_CHAR_THRESHOLD; i++) {
-                ucChar = str.charAt(i + iLength - TIANL_CHAR_THRESHOLD - 1); if (ucChar <= 'Z' && ucChar >= 'A') {
+                ucChar = str.charAt(i + iLength - TIANL_CHAR_THRESHOLD - 1);
+                if (ucChar <= 'Z' && ucChar >= 'A') {
                     ucChar = (char) (ucChar + CASE_DIFF);
                 }
-                hash += (TIANL_COEFF_3 * i * ucChar * ucChar + TIANL_COEFF_5 * i * ucChar + TIANL_COEFF_7 * i + TIANL_COEFF_11 * ucChar) % TIANL_BASE_MULTIPLIER;
+                hash += (TIANL_COEFF_3 * i * ucChar * ucChar + TIANL_COEFF_5 * i * ucChar
+                        + TIANL_COEFF_7 * i + TIANL_COEFF_11 * ucChar) % TIANL_BASE_MULTIPLIER;
             }
-        } if (hash < 0) {
+        }
+        if (hash < 0) {
             hash = -hash;
-        } return hash;
+        }
+        return hash;
     }
 
     /**
@@ -677,9 +741,13 @@ public final class HashUtil {
      * @return hash值
      */
     public static int javaDefaultHash(final String str) {
-        int h = 0; int off = 0; int len = str.length(); for (int i = 0; i < len; i++) {
+        int h = 0;
+        int off = 0;
+        int len = str.length();
+        for (int i = 0; i < len; i++) {
             h = JAVA_HASH_MULTIPLIER * h + str.charAt(off++);
-        } return h;
+        }
+        return h;
     }
 
     /**
@@ -689,7 +757,10 @@ public final class HashUtil {
      * @return hash值
      */
     public static long mixHash(final String str) {
-        long hash = str.hashCode(); hash <<= MIX_HASH_SHIFT; hash |= fnvHash(str); return hash;
+        long hash = str.hashCode();
+        hash <<= MIX_HASH_SHIFT;
+        hash |= fnvHash(str);
+        return hash;
     }
 
     /**
@@ -856,7 +927,8 @@ public final class HashUtil {
      * @since 5.8.0
      */
     public static long hfHash(final String data) {
-        int length = data.length(); long hash = 0;
+        int length = data.length();
+        long hash = 0;
 
         for (int i = 0; i < length; i++) {
             hash += (long) data.charAt(i) * HF_HASH_MULTIPLIER * i;
@@ -877,8 +949,11 @@ public final class HashUtil {
      * @since 5.8.0
      */
     public static long hfIpHash(final String data) {
-        int length = data.length(); long hash = 0; for (int i = 0; i < length; i++) {
+        int length = data.length();
+        long hash = 0;
+        for (int i = 0; i < length; i++) {
             hash += data.charAt(i % HF_IP_HASH_MOD) ^ data.charAt(i);
-        } return hash;
+        }
+        return hash;
     }
 }
