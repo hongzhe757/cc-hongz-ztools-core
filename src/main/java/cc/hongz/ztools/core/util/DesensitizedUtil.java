@@ -21,19 +21,33 @@ package cc.hongz.ztools.core.util;
  */
 public final class DesensitizedUtil {
 
-    /** 地址脱敏保留的尾部长度. */
+    /**
+     * 地址脱敏保留的尾部长度.
+     */
     private static final int ADDRESS_SENSITIVE_SIZE = 8;
-    /** 普通车牌号长度. */
+    /**
+     * 普通车牌号长度.
+     */
     private static final int CAR_LICENSE_LEN = 7;
-    /** 新能源车牌号长度. */
+    /**
+     * 新能源车牌号长度.
+     */
     private static final int CAR_LICENSE_NEW_ENERGY_LEN = 8;
-    /** 车牌号脱敏起始位置. */
+    /**
+     * 车牌号脱敏起始位置.
+     */
     private static final int CAR_LICENSE_MASK_START = 3;
-    /** 普通车牌脱敏结束位置. */
+    /**
+     * 普通车牌脱敏结束位置.
+     */
     private static final int CAR_LICENSE_MASK_END_NORMAL = 6;
-    /** 新能源车牌脱敏结束位置. */
+    /**
+     * 新能源车牌脱敏结束位置.
+     */
     private static final int CAR_LICENSE_MASK_END_NEW = 7;
-    /** 银行卡号最短有效长度. */
+    /**
+     * 银行卡号最短有效长度.
+     */
     private static final int BANK_CARD_MIN_LENGTH = 9;
 
     private DesensitizedUtil() {
@@ -141,67 +155,46 @@ public final class DesensitizedUtil {
      * @author dazer and neusoft and qiaomu
      * @since 5.6.2
      */
-    public static String desensitized(final CharSequence str,
-            final DesensitizedUtil.DesensitizedType desensitizedType) {
+    public static String desensitized(final CharSequence str, final DesensitizedUtil.DesensitizedType desensitizedType) {
         if (StrUtil.isBlank(str)) {
             return StrUtil.EMPTY;
-        }
-        String newStr = String.valueOf(str);
-        switch (desensitizedType) {
+        } String newStr = String.valueOf(str); switch (desensitizedType) {
             case USER_ID:
-                newStr = String.valueOf(userId());
-                break;
+                newStr = String.valueOf(userId()); break;
             case CHINESE_NAME:
-                newStr = chineseName(String.valueOf(str));
-                break;
+                newStr = chineseName(String.valueOf(str)); break;
             case ID_CARD:
-                newStr = idCardNum(String.valueOf(str), 1, 2);
-                break;
+                newStr = idCardNum(String.valueOf(str), 1, 2); break;
             case FIXED_PHONE:
-                newStr = fixedPhone(String.valueOf(str));
-                break;
+                newStr = fixedPhone(String.valueOf(str)); break;
             case MOBILE_PHONE:
-                newStr = mobilePhone(String.valueOf(str));
-                break;
+                newStr = mobilePhone(String.valueOf(str)); break;
             case ADDRESS:
-                newStr = address(String.valueOf(str), ADDRESS_SENSITIVE_SIZE);
-                break;
+                newStr = address(String.valueOf(str), ADDRESS_SENSITIVE_SIZE); break;
             case EMAIL:
-                newStr = email(String.valueOf(str));
-                break;
+                newStr = email(String.valueOf(str)); break;
             case PASSWORD:
-                newStr = password(String.valueOf(str));
-                break;
+                newStr = password(String.valueOf(str)); break;
             case CAR_LICENSE:
-                newStr = carLicense(String.valueOf(str));
-                break;
+                newStr = carLicense(String.valueOf(str)); break;
             case BANK_CARD:
-                newStr = bankCard(String.valueOf(str));
-                break;
+                newStr = bankCard(String.valueOf(str)); break;
             case IPV4:
-                newStr = ipv4(String.valueOf(str));
-                break;
+                newStr = ipv4(String.valueOf(str)); break;
             case IPV6:
-                newStr = ipv6(String.valueOf(str));
-                break;
+                newStr = ipv6(String.valueOf(str)); break;
             case PASSPORT:
-                newStr = passport(String.valueOf(str));
-                break;
+                newStr = passport(String.valueOf(str)); break;
             case CREDIT_CODE:
-                newStr = creditCode(String.valueOf(str));
-                break;
+                newStr = creditCode(String.valueOf(str)); break;
             case FIRST_MASK:
-                newStr = firstMask(String.valueOf(str));
-                break;
+                newStr = firstMask(String.valueOf(str)); break;
             case CLEAR_TO_EMPTY:
-                newStr = clear();
-                break;
+                newStr = clear(); break;
             case CLEAR_TO_NULL:
-                newStr = clearToNull();
-                break;
+                newStr = clearToNull(); break;
             default:
-        }
-        return newStr;
+        } return newStr;
     }
 
     /**
@@ -243,8 +236,7 @@ public final class DesensitizedUtil {
     public static String firstMask(final String str) {
         if (StrUtil.isBlank(str)) {
             return StrUtil.EMPTY;
-        }
-        return StrUtil.hide(str, 1, str.length());
+        } return StrUtil.hide(str, 1, str.length());
     }
 
     /**
@@ -266,19 +258,18 @@ public final class DesensitizedUtil {
      * @return 脱敏后的身份证
      */
     public static String idCardNum(final String idCardNum, final int front, final int end) {
-        //身份证不能为空
+        // 身份证不能为空
         if (StrUtil.isBlank(idCardNum)) {
             return StrUtil.EMPTY;
         }
-        //需要截取的长度不能大于身份证号长度
+        // 需要截取的长度不能大于身份证号长度
         if ((front + end) > idCardNum.length()) {
             return StrUtil.EMPTY;
         }
-        //需要截取的不能小于0
+        // 需要截取的不能小于0
         if (front < 0 || end < 0) {
             return StrUtil.EMPTY;
-        }
-        return StrUtil.hide(idCardNum, front, idCardNum.length() - end);
+        } return StrUtil.hide(idCardNum, front, idCardNum.length() - end);
     }
 
     /**
@@ -290,8 +281,7 @@ public final class DesensitizedUtil {
     public static String fixedPhone(final String num) {
         if (StrUtil.isBlank(num)) {
             return StrUtil.EMPTY;
-        }
-        return StrUtil.hide(num, 4, num.length() - 2);
+        } return StrUtil.hide(num, 4, num.length() - 2);
     }
 
     /**
@@ -303,8 +293,7 @@ public final class DesensitizedUtil {
     public static String mobilePhone(final String num) {
         if (StrUtil.isBlank(num)) {
             return StrUtil.EMPTY;
-        }
-        return StrUtil.hide(num, 3, num.length() - 4);
+        } return StrUtil.hide(num, 3, num.length() - 4);
     }
 
     /**
@@ -317,9 +306,7 @@ public final class DesensitizedUtil {
     public static String address(final String address, final int sensitiveSize) {
         if (StrUtil.isBlank(address)) {
             return StrUtil.EMPTY;
-        }
-        int length = address.length();
-        return StrUtil.hide(address, length - sensitiveSize, length);
+        } int length = address.length(); return StrUtil.hide(address, length - sensitiveSize, length);
     }
 
     /**
@@ -331,12 +318,9 @@ public final class DesensitizedUtil {
     public static String email(final String email) {
         if (StrUtil.isBlank(email)) {
             return StrUtil.EMPTY;
-        }
-        int index = StrUtil.indexOf(email, '@');
-        if (index <= 1) {
+        } int index = StrUtil.indexOf(email, '@'); if (index <= 1) {
             return email;
-        }
-        return StrUtil.hide(email, 1, index);
+        } return StrUtil.hide(email, 1, index);
     }
 
     /**
@@ -348,8 +332,7 @@ public final class DesensitizedUtil {
     public static String password(final String password) {
         if (StrUtil.isBlank(password)) {
             return StrUtil.EMPTY;
-        }
-        return StrUtil.repeat('*', password.length());
+        } return StrUtil.repeat('*', password.length());
     }
 
     /**
@@ -366,14 +349,11 @@ public final class DesensitizedUtil {
     public static String carLicense(final String carLicense) {
         if (StrUtil.isBlank(carLicense)) {
             return StrUtil.EMPTY;
-        }
-        String result = carLicense;
-        if (result.length() == CAR_LICENSE_LEN) {
+        } String result = carLicense; if (result.length() == CAR_LICENSE_LEN) {
             result = StrUtil.hide(result, CAR_LICENSE_MASK_START, CAR_LICENSE_MASK_END_NORMAL);
         } else if (result.length() == CAR_LICENSE_NEW_ENERGY_LEN) {
             result = StrUtil.hide(result, CAR_LICENSE_MASK_START, CAR_LICENSE_MASK_END_NEW);
-        }
-        return result;
+        } return result;
     }
 
     /**
@@ -392,26 +372,18 @@ public final class DesensitizedUtil {
     public static String bankCard(final String bankCardNo) {
         if (StrUtil.isBlank(bankCardNo)) {
             return bankCardNo;
-        }
-        final String cleaned = StrUtil.cleanBlank(bankCardNo);
-        if (cleaned.length() < BANK_CARD_MIN_LENGTH) {
+        } final String cleaned = StrUtil.cleanBlank(bankCardNo); if (cleaned.length() < BANK_CARD_MIN_LENGTH) {
             return cleaned;
         }
 
-        final int length = cleaned.length();
-        final int endLength = length % 4 == 0 ? 4 : length % 4;
+        final int length = cleaned.length(); final int endLength = length % 4 == 0 ? 4 : length % 4;
         final int midLength = length - 4 - endLength;
 
-        final StringBuilder buf = new StringBuilder();
-        buf.append(cleaned, 0, 4);
-        for (int i = 0; i < midLength; ++i) {
+        final StringBuilder buf = new StringBuilder(); buf.append(cleaned, 0, 4); for (int i = 0; i < midLength; ++i) {
             if (i % 4 == 0) {
                 buf.append(CharUtil.SPACE);
-            }
-            buf.append('*');
-        }
-        buf.append(CharUtil.SPACE).append(cleaned, length - endLength, length);
-        return buf.toString();
+            } buf.append('*');
+        } buf.append(CharUtil.SPACE).append(cleaned, length - endLength, length); return buf.toString();
     }
 
     /**
@@ -445,12 +417,9 @@ public final class DesensitizedUtil {
     public static String passport(final String passport) {
         if (StrUtil.isBlank(passport)) {
             return passport;
-        }
-        final int length = passport.length();
-        if (length <= 2) {
+        } final int length = passport.length(); if (length <= 2) {
             return StrUtil.hide(passport, 0, length);
-        }
-        return StrUtil.hide(passport, 2, length - 2);
+        } return StrUtil.hide(passport, 2, length - 2);
     }
 
     /**
@@ -465,12 +434,9 @@ public final class DesensitizedUtil {
     public static String creditCode(final String code) {
         if (StrUtil.isBlank(code)) {
             return code;
-        }
-        final int length = code.length();
-        if (length <= 4) {
+        } final int length = code.length(); if (length <= 4) {
             return StrUtil.hide(code, 0, length);
-        }
-        return StrUtil.hide(code, 4, length - 4);
+        } return StrUtil.hide(code, 4, length - 4);
     }
 
 }
