@@ -3,4 +3,6 @@
     "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
     "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
+    <!-- IdcardUtil 移植自 hutool，静态数据初始化和算法常量不提取 -->
+    <suppress checks="MagicNumber" files="IdcardUtil\.java"/>
 </suppressions>

@@ -24,23 +24,23 @@ import cc.hongz.ztools.core.net.NetUtil;
 public final class IdUtil {
 
     /**
-     * 低位字节掩码
+     * 低位字节掩码.
      */
     private static final int MASK_BYTE = 0x000000FF;
     /**
-     * 高位字节掩码
+     * 高位字节掩码.
      */
     private static final int MASK_HIGH_BYTE = 0x0000FF00;
     /**
-     * 16位掩码
+     * 16位掩码.
      */
     private static final int MASK_16BIT = 0xffff;
     /**
-     * 字节左移位数
+     * 字节左移位数.
      */
     private static final int BYTE_SHIFT = 8;
     /**
-     * MAC地址右移位数
+     * MAC地址右移位数.
      */
     private static final int MAC_SHIFT = 6;
 
@@ -151,17 +151,24 @@ public final class IdUtil {
      * @return 数据中心ID
      */
     public static long getDataCenterId(final long maxDatacenterId) {
-        Assert.isTrue(maxDatacenterId > 0, "maxDatacenterId must be > 0"); long maxDcId = maxDatacenterId;
+        Assert.isTrue(maxDatacenterId > 0, "maxDatacenterId must be > 0");
+        long maxDcId = maxDatacenterId;
         if (maxDcId == Long.MAX_VALUE) {
             maxDcId -= 1;
-        } long id = 1L; byte[] mac = null; try {
+        }
+        long id = 1L;
+        byte[] mac = null;
+        try {
             mac = NetUtil.getLocalHardwareAddress();
         } catch (final UtilException ignore) {
             // ignore
-        } if (null != mac) {
-            id = ((MASK_BYTE & (long) mac[mac.length - 2]) | (MASK_HIGH_BYTE & (((long) mac[mac.length - 1]) << BYTE_SHIFT))) >> MAC_SHIFT;
+        }
+        if (null != mac) {
+            id = ((MASK_BYTE & (long) mac[mac.length - 2])
+                    | (MASK_HIGH_BYTE & (((long) mac[mac.length - 1]) << BYTE_SHIFT))) >> MAC_SHIFT;
             id = id % (maxDcId + 1);
-        } return id;
+        }
+        return id;
     }
 
     /**
@@ -175,11 +182,14 @@ public final class IdUtil {
      * @return ID
      */
     public static long getWorkerId(final long datacenterId, final long maxWorkerId) {
-        final StringBuilder mpid = new StringBuilder(); mpid.append(datacenterId); try {
+        final StringBuilder mpid = new StringBuilder();
+        mpid.append(datacenterId);
+        try {
             mpid.append(RuntimeUtil.getPid());
         } catch (final UtilException ignore) {
             // ignore
-        } return (mpid.toString().hashCode() & MASK_16BIT) % (maxWorkerId + 1);
+        }
+        return (mpid.toString().hashCode() & MASK_16BIT) % (maxWorkerId + 1);
     }
 
     // ------------------------------------------------------------------- NanoId

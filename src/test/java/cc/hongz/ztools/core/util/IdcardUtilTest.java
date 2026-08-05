@@ -182,4 +182,74 @@ public class IdcardUtilTest {
 		assertNull(IdcardUtil.isValidCard10(idcard));
 		assertFalse(IdcardUtil.isValidCard(idcard));
 	}
+
+	@Test
+	public void isValidCard15Test() {
+		assertTrue(IdcardUtil.isValidCard15(ID_15));
+		assertFalse(IdcardUtil.isValidCard15("123456789012345"));
+	}
+
+	@Test
+	public void getYearByIdCardTest() {
+		Short year = IdcardUtil.getYearByIdCard(ID_18);
+		assertEquals(Short.valueOf((short) 1978), year);
+		assertNull(IdcardUtil.getYearByIdCard("123"));
+	}
+
+	@Test
+	public void getMonthByIdCardTest() {
+		Short month = IdcardUtil.getMonthByIdCard(ID_18);
+		assertEquals(Short.valueOf((short) 12), month);
+	}
+
+	@Test
+	public void getDayByIdCardTest() {
+		Short day = IdcardUtil.getDayByIdCard(ID_18);
+		assertEquals(Short.valueOf((short) 16), day);
+	}
+
+	@Test
+	public void getBirthTest() {
+		String birth = IdcardUtil.getBirth(ID_18);
+		assertEquals("19781216", birth);
+	}
+
+	@Test
+	public void getBirthDateTest() {
+		DateTime birthDate = IdcardUtil.getBirthDate(ID_18);
+		assertNotNull(birthDate);
+		assertEquals(1978, birthDate.year());
+		assertEquals(12, birthDate.month() + 1);
+	}
+
+	@Test
+	public void getIdcardInfoTest() {
+		IdcardUtil.Idcard info = IdcardUtil.getIdcardInfo(ID_18);
+		assertNotNull(info);
+		assertEquals("32", info.getProvinceCode());
+		assertEquals("江苏", info.getProvince());
+		assertEquals("3210", info.getCityCode());
+		assertEquals(Integer.valueOf(1), info.getGender());
+		assertTrue(info.getAge() >= 0);
+	}
+
+	@Test
+	public void hideTest() {
+		String hidden = IdcardUtil.hide(ID_18, 6, 14);
+		assertEquals("321083********2119", hidden);
+	}
+
+	@Test
+	public void isValidCard10MacauTest() {
+		String[] result = IdcardUtil.isValidCard10("1571990(8)");
+		assertNotNull(result);
+		assertEquals("澳门", result[0]);
+		assertEquals("true", result[2]);
+	}
+
+	@Test
+	public void getProvinceCodeByIdCardTest() {
+		assertEquals("32", IdcardUtil.getProvinceCodeByIdCard(ID_18));
+		assertNull(IdcardUtil.getProvinceCodeByIdCard("123"));
+	}
 }
