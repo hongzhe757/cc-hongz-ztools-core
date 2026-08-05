@@ -19,186 +19,82 @@ import java.util.Objects;
  */
 public final class CoordinateUtil {
 
-    /**
-     * 坐标转换参数：(火星坐标系与百度坐标系转换的中间量).
-     */
-    public static final double X_PI = PI * BD09_SCALE / DEGREES;
+    // -------- private implementation constants --------
 
-    /**
-     * 坐标转换参数：π.
-     */
-    public static final double PI = 3.1415926535897932384626433832795D;
-
-    /**
-     * 地球半径（Krasovsky 1940）.
-     */
-    public static final double RADIUS = 6378245.0D;
-
-    /**
-     * 修正参数（偏率ee）.
-     */
-    public static final double CORRECTION_PARAM = 0.00669342162296594323D;
-
-    /**
-     * BD-09 conversion scale factor.
-     */
-    public static final double BD09_SCALE = 3000.0;
-
-    /**
-     * Degrees constant for coordinate conversion.
-     */
-    public static final double DEGREES = 180.0;
-
-    /**
-     * Full circle in degrees.
-     */
-    public static final double FULL_CIRCLE = 360.0;
-
-    /**
-     * Right angle in degrees.
-     */
-    public static final double RIGHT_ANGLE = 90.0;
-
-    /**
-     * Mercator projection earth radius constant.
-     */
-    public static final double MERCATOR_EARTH_RADIUS = 20037508.342789244;
-
-    /**
-     * BD-09 conversion X offset.
-     */
-    public static final double BD09_OFFSET_X = 0.0065;
-
-    /**
-     * BD-09 conversion Y offset.
-     */
-    public static final double BD09_OFFSET_Y = 0.006;
-
-    /**
-     * BD-09 conversion Z term offset.
-     */
-    public static final double BD09_OFFSET_Z = 0.00002;
-
-    /**
-     * BD-09 conversion theta term offset.
-     */
-    public static final double BD09_OFFSET_THETA = 0.000003;
-
-    /**
-     * GCJ-02 reference longitude.
-     */
-    public static final double GCJ02_REF_LNG = 105.0;
-
-    /**
-     * GCJ-02 reference latitude.
-     */
-    public static final double GCJ02_REF_LAT = 35.0;
-
-    /**
-     * China boundary minimum longitude.
-     */
-    public static final double CHINA_LNG_MIN = 72.004;
-
-    /**
-     * China boundary maximum longitude.
-     */
-    public static final double CHINA_LNG_MAX = 137.8347;
-
-    /**
-     * China boundary minimum latitude.
-     */
-    public static final double CHINA_LAT_MIN = 0.8293;
-
-    /**
-     * China boundary maximum latitude.
-     */
-    public static final double CHINA_LAT_MAX = 55.8271;
-
-    // GCJ-02 transformation algorithm coefficients (transLng/transLat)
-
-    /**
-     * GCJ-02 transformation base constant for longitude.
-     */
+    /** GCJ-02 transformation base constant for longitude. */
     private static final double TRANS_LNG_BASE = 300.0;
-
-    /**
-     * GCJ-02 transformation base constant for latitude.
-     */
+    /** GCJ-02 transformation base constant for latitude. */
     private static final double TRANS_LAT_BASE = -100.0;
-
-    /**
-     * GCJ-02 transformation coefficient 2.0.
-     */
+    /** GCJ-02 transformation coefficient 2.0. */
     private static final double TRANS_COEFF_2 = 2.0;
-
-    /**
-     * GCJ-02 transformation coefficient 3.0.
-     */
+    /** GCJ-02 transformation coefficient 3.0. */
     private static final double TRANS_COEFF_3 = 3.0;
-
-    /**
-     * GCJ-02 transformation coefficient 0.1.
-     */
+    /** GCJ-02 transformation coefficient 0.1. */
     private static final double TRANS_COEFF_0_1 = 0.1;
-
-    /**
-     * GCJ-02 transformation coefficient 0.2.
-     */
+    /** GCJ-02 transformation coefficient 0.2. */
     private static final double TRANS_COEFF_0_2 = 0.2;
-
-    /**
-     * GCJ-02 transformation sin amplitude 20.0.
-     */
+    /** GCJ-02 transformation sin amplitude 20.0. */
     private static final double TRANS_SIN_AMP_20 = 20.0;
-
-    /**
-     * GCJ-02 transformation sin amplitude 40.0.
-     */
+    /** GCJ-02 transformation sin amplitude 40.0. */
     private static final double TRANS_SIN_AMP_40 = 40.0;
-
-    /**
-     * GCJ-02 transformation sin amplitude 150.0.
-     */
+    /** GCJ-02 transformation sin amplitude 150.0. */
     private static final double TRANS_SIN_AMP_150 = 150.0;
-
-    /**
-     * GCJ-02 transformation sin amplitude 300.0.
-     */
+    /** GCJ-02 transformation sin amplitude 300.0. */
     private static final double TRANS_SIN_AMP_300 = 300.0;
-
-    /**
-     * GCJ-02 transformation sin amplitude 160.0.
-     */
+    /** GCJ-02 transformation sin amplitude 160.0. */
     private static final double TRANS_SIN_AMP_160 = 160.0;
-
-    /**
-     * GCJ-02 transformation sin amplitude 320.0.
-     */
+    /** GCJ-02 transformation sin amplitude 320.0. */
     private static final double TRANS_SIN_AMP_320 = 320.0;
-
-    /**
-     * GCJ-02 transformation sin frequency 6.0.
-     */
+    /** GCJ-02 transformation sin frequency 6.0. */
     private static final double TRANS_SIN_FREQ_6 = 6.0;
-
-    /**
-     * GCJ-02 transformation sin divisor 12.0.
-     */
+    /** GCJ-02 transformation sin divisor 12.0. */
     private static final double TRANS_SIN_DIV_12 = 12.0;
-
-    /**
-     * GCJ-02 transformation sin divisor 30.0.
-     */
+    /** GCJ-02 transformation sin divisor 30.0. */
     private static final double TRANS_SIN_DIV_30 = 30.0;
-
-    /**
-     * GCJ-02 transformation scale factor (2/3).
-     */
+    /** GCJ-02 transformation scale factor (2/3). */
     private static final double TRANS_SCALE = 2.0 / 3.0;
 
-    /**
-     * Private constructor to prevent instantiation.
-     */
+    // -------- public constants (base values first, then derived) --------
+
+    /** 坐标转换参数：π. */
+    public static final double PI = 3.1415926535897932384626433832795D;
+    /** Degrees constant for coordinate conversion. */
+    public static final double DEGREES = 180.0;
+    /** BD-09 conversion scale factor. */
+    public static final double BD09_SCALE = 3000.0;
+    /** 坐标转换参数：(火星坐标系与百度坐标系转换的中间量). */
+    public static final double X_PI = PI * BD09_SCALE / DEGREES;
+    /** 地球半径（Krasovsky 1940）. */
+    public static final double RADIUS = 6378245.0D;
+    /** 修正参数（偏率ee）. */
+    public static final double CORRECTION_PARAM = 0.00669342162296594323D;
+    /** Full circle in degrees. */
+    public static final double FULL_CIRCLE = 360.0;
+    /** Right angle in degrees. */
+    public static final double RIGHT_ANGLE = 90.0;
+    /** Mercator projection earth radius constant. */
+    public static final double MERCATOR_EARTH_RADIUS = 20037508.342789244;
+    /** BD-09 conversion X offset. */
+    public static final double BD09_OFFSET_X = 0.0065;
+    /** BD-09 conversion Y offset. */
+    public static final double BD09_OFFSET_Y = 0.006;
+    /** BD-09 conversion Z term offset. */
+    public static final double BD09_OFFSET_Z = 0.00002;
+    /** BD-09 conversion theta term offset. */
+    public static final double BD09_OFFSET_THETA = 0.000003;
+    /** GCJ-02 reference longitude. */
+    public static final double GCJ02_REF_LNG = 105.0;
+    /** GCJ-02 reference latitude. */
+    public static final double GCJ02_REF_LAT = 35.0;
+    /** China boundary minimum longitude. */
+    public static final double CHINA_LNG_MIN = 72.004;
+    /** China boundary maximum longitude. */
+    public static final double CHINA_LNG_MAX = 137.8347;
+    /** China boundary minimum latitude. */
+    public static final double CHINA_LAT_MIN = 0.8293;
+    /** China boundary maximum latitude. */
+    public static final double CHINA_LAT_MAX = 55.8271;
+
     private CoordinateUtil() {
     }
 
