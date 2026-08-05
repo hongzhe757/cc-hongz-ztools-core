@@ -5,4 +5,6 @@
 <suppressions>
     <!-- IdcardUtil 移植自 hutool，静态数据初始化和算法常量不提取 -->
     <suppress checks="MagicNumber" files="IdcardUtil\.java"/>
+    <!-- HexUtil javadoc 含<br>和嵌套括号，中文句号检测误报 -->
+    <suppress checks="JavadocStyle" files="HexUtil\.java"/>
 </suppressions>
