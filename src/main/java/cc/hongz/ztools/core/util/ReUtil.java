@@ -212,7 +212,8 @@ public final class ReUtil {
      * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
      * @since 4.0.13
      */
-    public static List<String> getAllGroups(final Pattern pattern, final CharSequence content, final boolean withGroup0) {
+    public static List<String> getAllGroups(final Pattern pattern,
+            final CharSequence content, final boolean withGroup0) {
         return getAllGroups(pattern, content, withGroup0, false);
     }
 
@@ -287,7 +288,8 @@ public final class ReUtil {
      * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
      * @return 新字符串
      */
-    public static String extractMulti(final Pattern pattern, final CharSequence content, String template) {
+    public static String extractMulti(final Pattern pattern,
+            final CharSequence content, final String template) {
         if (null == content || null == pattern || null == template) {
             return null;
         }
@@ -343,7 +345,7 @@ public final class ReUtil {
      */
     public static String extractMultiAndDelPre(final Pattern pattern,
                                                final Mutable<CharSequence> contentHolder,
-                                               String template) {
+                                               final String template) {
         if (null == contentHolder || null == pattern || null == template) {
             return null;
         }
@@ -885,7 +887,8 @@ public final class ReUtil {
      * @return 处理后的文本
      * @since 3.0.4
      */
-    public static String replaceAll(final CharSequence content, final Pattern pattern, final String replacementTemplate) {
+    public static String replaceAll(final CharSequence content,
+            final Pattern pattern, final String replacementTemplate) {
         if (StrUtil.isEmpty(content)) {
             return StrUtil.str(content);
         }
@@ -926,7 +929,8 @@ public final class ReUtil {
      * @return 替换后的文本
      * @since 4.2.2
      */
-    public static String replaceAll(final CharSequence str, final String regex, final Func1<Matcher, String> replaceFun) {
+    public static String replaceAll(final CharSequence str, final String regex,
+            final Func1<Matcher, String> replaceFun) {
         return replaceAll(str, Pattern.compile(regex), replaceFun);
     }
 
@@ -945,7 +949,8 @@ public final class ReUtil {
      * @return 替换后的字符串
      * @since 4.2.2
      */
-    public static String replaceAll(final CharSequence str, final Pattern pattern, final Func1<Matcher, String> replaceFun) {
+    public static String replaceAll(final CharSequence str, final Pattern pattern,
+            final Func1<Matcher, String> replaceFun) {
         if (StrUtil.isEmpty(str)) {
             return StrUtil.str(str);
         }

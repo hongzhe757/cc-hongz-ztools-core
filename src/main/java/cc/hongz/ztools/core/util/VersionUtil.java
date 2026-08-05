@@ -136,7 +136,8 @@ public final class VersionUtil {
      * @return true  当前版本是否满足版本表达式
      */
     public static boolean matchEl(final String currentVersion, final String versionEl, final String versionsDelimiter) {
-        if (StrUtil.isBlank(versionsDelimiter) || StrUtil.equals("-", versionsDelimiter, false) || ReUtil.isMatch(COMPARE_REG, versionsDelimiter)) {
+        if (StrUtil.isBlank(versionsDelimiter) || StrUtil.equals("-", versionsDelimiter, false)
+                || ReUtil.isMatch(COMPARE_REG, versionsDelimiter)) {
             throw new UtilException("非法的版本分隔符：" + versionsDelimiter);
         }
 
