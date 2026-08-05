@@ -18,12 +18,19 @@ import cc.hongz.ztools.core.text.escape.XmlUnescape;
  */
 public final class EscapeUtil {
 
+    /** 十六进制基数. */
     private static final int HEX_RADIX = 16;
+    /** ASCII单字节最大值. */
     private static final int BYTE_MAX = 256;
+    /** Unicode低位掩码. */
     private static final int UNICODE_LOW_MASK = 0xfff;
+    /** StringBuilder最大容量因子. */
     private static final int MAX_BUFFER_FACTOR = 6;
+    /** 十六进制字节长度. */
     private static final int HEX_BYTE_LEN = 2;
+    /** 十六进制Unicode编码长度. */
     private static final int HEX_UNICODE_LEN = 3;
+    /** Unicode转义前缀长度. */
     private static final int UNICODE_PREFIX_LEN = 6;
 
     /**
