@@ -90,10 +90,25 @@ class LockUtilTest {
 		assertNotNull(lock);
 	}
 
-	@Test
-	@DisplayName("getLazySegmentLock - 根据key获取弱引用分段锁")
-	void getLazySegmentLock() {
-		Lock lock = LockUtil.getLazySegmentLock(4, "key1");
-		assertNotNull(lock);
-	}
+    @Test
+    @DisplayName("getLazySegmentLock - 根据key获取弱引用分段锁")
+    void getLazySegmentLock() {
+        Lock lock = LockUtil.getLazySegmentLock(4, "key1");
+        assertNotNull(lock);
+    }
+
+    @Test
+    @DisplayName("createLazySegmentLock - 创建弱引用分段锁")
+    void createLazySegmentLock() {
+        SegmentLock<Lock> lock = LockUtil.createLazySegmentLock(4);
+        assertNotNull(lock);
+        assertEquals(4, lock.size());
+    }
+
+    @Test
+    @DisplayName("getSegmentSemaphore - 根据key获取分段信号量")
+    void getSegmentSemaphore() {
+        Semaphore semaphore = LockUtil.getSegmentSemaphore(4, 1, "key1");
+        assertNotNull(semaphore);
+    }
 }
