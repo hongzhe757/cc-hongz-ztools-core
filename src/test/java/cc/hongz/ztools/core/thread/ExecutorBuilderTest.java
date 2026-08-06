@@ -173,4 +173,34 @@ class ExecutorBuilderTest {
             executor.shutdown();
         }
     }
+
+    @Test
+    @DisplayName("setKeepAliveTime(long) - 纳秒存活时间")
+    void setKeepAliveTimeNanos() {
+        ThreadPoolExecutor executor = ExecutorBuilder.create()
+                .setCorePoolSize(2)
+                .setMaxPoolSize(4)
+                .setKeepAliveTime(TimeUnit.SECONDS.toNanos(30))
+                .build();
+        try {
+            assertEquals(30, executor.getKeepAliveTime(TimeUnit.SECONDS));
+        } finally {
+            executor.shutdown();
+        }
+    }
+
+    @Test
+    @DisplayName("useSynchronousQueue(boolean) - 公平同步队列")
+    void useSynchronousQueueFair() {
+        ThreadPoolExecutor executor = ExecutorBuilder.create()
+                .setCorePoolSize(0)
+                .setMaxPoolSize(4)
+                .useSynchronousQueue(true)
+                .build();
+        try {
+            assertNotNull(executor);
+        } finally {
+            executor.shutdown();
+        }
+    }
 }
