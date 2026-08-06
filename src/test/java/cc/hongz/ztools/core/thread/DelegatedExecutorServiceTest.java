@@ -100,6 +100,16 @@ class DelegatedExecutorServiceTest {
     }
 
     @Test
+    @DisplayName("shutdownNow - 立即关闭并返回待执行任务")
+    void shutdownNow() {
+        ExecutorService backing = Executors.newSingleThreadExecutor();
+        DelegatedExecutorService delegated = new DelegatedExecutorService(backing);
+        List<Runnable> pending = delegated.shutdownNow();
+        assertTrue(delegated.isShutdown());
+        assertNotNull(pending);
+    }
+
+    @Test
     @DisplayName("invokeAll - 执行所有任务")
     void invokeAll() throws Exception {
         ExecutorService backing = Executors.newFixedThreadPool(2);
@@ -117,6 +127,22 @@ class DelegatedExecutorServiceTest {
     }
 
     @Test
+    @DisplayName("invokeAll(timeout) - 带超时执行所有任务")
+    void invokeAllTimeout() throws Exception {
+        ExecutorService backing = Executors.newFixedThreadPool(2);
+        DelegatedExecutorService delegated = new DelegatedExecutorService(backing);
+        try {
+            List<Callable<Integer>> tasks = Arrays.asList(() -> 1, () -> 2);
+            List<Future<Integer>> futures = delegated.invokeAll(tasks, 1, TimeUnit.SECONDS);
+            assertEquals(2, futures.size());
+            assertEquals(1, futures.get(0).get());
+            assertEquals(2, futures.get(1).get());
+        } finally {
+            backing.shutdown();
+        }
+    }
+
+    @Test
     @DisplayName("invokeAny - 执行并返回第一个完成的结果")
     void invokeAny() throws Exception {
         ExecutorService backing = Executors.newFixedThreadPool(2);
@@ -124,6 +150,20 @@ class DelegatedExecutorServiceTest {
         try {
             List<Callable<String>> tasks = Arrays.asList(() -> "first", () -> "second");
             String result = delegated.invokeAny(tasks);
+            assertNotNull(result);
+        } finally {
+            backing.shutdown();
+        }
+    }
+
+    @Test
+    @DisplayName("invokeAny(timeout) - 带超时执行并返回第一个完成的结果")
+    void invokeAnyTimeout() throws Exception {
+        ExecutorService backing = Executors.newFixedThreadPool(2);
+        DelegatedExecutorService delegated = new DelegatedExecutorService(backing);
+        try {
+            List<Callable<String>> tasks = Arrays.asList(() -> "first", () -> "second");
+            String result = delegated.invokeAny(tasks, 1, TimeUnit.SECONDS);
             assertNotNull(result);
         } finally {
             backing.shutdown();
