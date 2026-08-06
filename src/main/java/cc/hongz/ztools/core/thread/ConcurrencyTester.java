@@ -6,7 +6,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 /**
- * 高并发测试工具类
+ * 高并发测试工具类。
  *
  * <pre>
  * ps:
@@ -23,67 +23,67 @@ import java.io.IOException;
  * @author kwer
  */
 public class ConcurrencyTester implements Closeable {
-	private final SyncFinisher sf;
-	private final TimeInterval timeInterval;
-	private long interval;
+    private final SyncFinisher sf;
+    private final TimeInterval timeInterval;
+    private long interval;
 
-	/**
-	 * 构造
-	 * @param threadSize 线程数
-	 */
-	public ConcurrencyTester(int threadSize) {
-		this.sf = new SyncFinisher(threadSize);
-		this.timeInterval = new TimeInterval();
-	}
+    /**
+     * 构造。
+     * @param threadSize 线程数
+     */
+    public ConcurrencyTester(final int threadSize) {
+        this.sf = new SyncFinisher(threadSize);
+        this.timeInterval = new TimeInterval();
+    }
 
-	/**
-	 * 执行测试<br>
-	 * 执行测试后不会关闭线程池，可以调用{@link #close()}释放线程池
-	 *
-	 * @param runnable 要测试的内容
-	 * @return this
-	 */
-	public ConcurrencyTester test(Runnable runnable) {
-		this.sf.clearWorker();
+    /**
+     * 执行测试。 <br>
+     * 执行测试后不会关闭线程池，可以调用{@link #close()}释放线程池
+     *
+     * @param runnable 要测试的内容
+     * @return this
+     */
+    public ConcurrencyTester test(final Runnable runnable) {
+        this.sf.clearWorker();
 
-		timeInterval.start();
-		this.sf
-				.addRepeatWorker(runnable)
-				.setBeginAtSameTime(true)
-				.start();
+        timeInterval.start();
+        this.sf
+                .addRepeatWorker(runnable)
+                .setBeginAtSameTime(true)
+                .start();
 
-		this.interval = timeInterval.interval();
-		return this;
-	}
+        this.interval = timeInterval.interval();
+        return this;
+    }
 
-	/**
-	 * 重置测试器，重置包括：
-	 *
-	 * <ul>
-	 *     <li>清空worker</li>
-	 *     <li>重置计时器</li>
-	 * </ul>
-	 *
-	 * @return this
-	 * @since 5.7.2
-	 */
-	public ConcurrencyTester reset(){
-		this.sf.clearWorker();
-		this.timeInterval.restart();
-		return this;
-	}
+    /**
+     * 重置测试器。
+     *
+     * <ul>
+     *     <li>清空worker</li>
+     *     <li>重置计时器</li>
+     * </ul>
+     *
+     * @return this
+     * @since 5.7.2
+     */
+    public ConcurrencyTester reset() {
+        this.sf.clearWorker();
+        this.timeInterval.restart();
+        return this;
+    }
 
-	/**
-	 * 获取执行时间
-	 *
-	 * @return 执行时间，单位毫秒
-	 */
-	public long getInterval() {
-		return this.interval;
-	}
+    /**
+     * 获取执行时间。
+     *
+     * @return 执行时间，单位毫秒
+     */
+    public long getInterval() {
+        return this.interval;
+    }
 
-	@Override
-	public void close() throws IOException {
-		this.sf.close();
-	}
+    @Override
+    public void close() throws IOException {
+        this.sf.close();
+    }
 }
