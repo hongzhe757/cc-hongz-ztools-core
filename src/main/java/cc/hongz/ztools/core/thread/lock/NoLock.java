@@ -5,42 +5,45 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 /**
- * 无锁实现
+ * 无锁实现。
  *
  * @author looly
- *@since 4.3.1
+ * @since 4.3.1
  */
-public class NoLock implements Lock{
+public class NoLock implements Lock {
 
-	public static NoLock INSTANCE = new NoLock();
+    /**
+     * 单例。
+     */
+    public static NoLock INSTANCE = new NoLock();
 
-	@Override
-	public void lock() {
-	}
+    @Override
+    public void lock() {
+    }
 
-	@Override
-	public void lockInterruptibly() {
-	}
+    @Override
+    public void lockInterruptibly() {
+    }
 
-	@Override
-	public boolean tryLock() {
-		return true;
-	}
+    @Override
+    public boolean tryLock() {
+        return true;
+    }
 
-	@SuppressWarnings("NullableProblems")
-	@Override
-	public boolean tryLock(long time, TimeUnit unit) {
-		return true;
-	}
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public boolean tryLock(final long time, final TimeUnit unit) {
+        return true;
+    }
 
-	@Override
-	public void unlock() {
-	}
+    @Override
+    public void unlock() {
+    }
 
-	@SuppressWarnings("NullableProblems")
-	@Override
-	public Condition newCondition() {
-		throw new UnsupportedOperationException("NoLock`s newCondition method is unsupported");
-	}
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public Condition newCondition() {
+        throw new UnsupportedOperationException("NoLock`s newCondition method is unsupported");
+    }
 
 }
