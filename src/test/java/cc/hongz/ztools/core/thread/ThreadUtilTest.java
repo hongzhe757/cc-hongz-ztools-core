@@ -461,4 +461,143 @@ class ThreadUtilTest {
         t.join(1000);
         assertTrue(interrupted.get());
     }
+
+    @Test
+    @DisplayName("interrupt - 中断线程并等待结束")
+    void interruptWithJoin() throws Exception {
+        Thread t = new Thread(() -> {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                // expected
+            }
+        });
+        t.start();
+        ThreadUtil.sleep(50);
+        ThreadUtil.interrupt(t, true);
+        assertFalse(t.isAlive());
+    }
+
+    // ==================== newFixedExecutor 4-arg (with isBlocked) ====================
+
+    @Test
+    @DisplayName("newFixedExecutor(nThreads, queueSize, prefix, isBlocked) - 拒绝模式")
+    void newFixedExecutorWithBlockedFalse() {
+        ThreadPoolExecutor executor = ThreadUtil.newFixedExecutor(2, 50, "blocked-", false);
+        try {
+            assertNotNull(executor);
+            assertEquals(2, executor.getCorePoolSize());
+            assertEquals(2, executor.getMaximumPoolSize());
+        } finally {
+            executor.shutdown();
+        }
+    }
+
+    @Test
+    @DisplayName("newFixedExecutor(nThreads, queueSize, prefix, isBlocked) - BlockPolicy模式")
+    void newFixedExecutorWithBlockPolicy() {
+        ThreadPoolExecutor executor = ThreadUtil.newFixedExecutor(1, 5, "block-", true);
+        try {
+            assertNotNull(executor);
+            assertEquals(1, executor.getCorePoolSize());
+        } finally {
+            executor.shutdown();
+        }
+    }
+
+    // ==================== execAsync(Runnable, boolean) direct ====================
+
+    @Test
+    @DisplayName("execAsync(Runnable, boolean) - 直接测试守护线程异步执行")
+    void execAsyncRunnableWithDaemon() {
+        AtomicBoolean executed = new AtomicBoolean(false);
+        ThreadUtil.execAsync(() -> executed.set(true), true);
+        ThreadUtil.sleep(100);
+        assertTrue(executed.get());
+    }
+
+    // ==================== waitForDie ====================
+
+    @Test
+    @DisplayName("waitForDie(Thread) - 等待已结束线程")
+    void waitForDieFinished() throws Exception {
+        AtomicBoolean finished = new AtomicBoolean(false);
+        Thread t = new Thread(() -> finished.set(true));
+        t.start();
+        t.join();
+        // waitForDie on an already finished thread should return immediately
+        ThreadUtil.waitForDie(t);
+        assertTrue(finished.get());
+    }
+
+    @Test
+    @DisplayName("waitForDie(Thread) - null参数不抛异常")
+    void waitForDieNull() {
+        ThreadUtil.waitForDie((Thread) null);
+    }
+
+    // ==================== getThreads(ThreadGroup) ====================
+
+    @Test
+    @DisplayName("getThreads(ThreadGroup) - 按线程组获取线程")
+    void getThreadsByGroup() {
+        ThreadGroup group = Thread.currentThread().getThreadGroup();
+        Thread[] threads = ThreadUtil.getThreads(group);
+        assertNotNull(threads);
+        assertTrue(threads.length > 0);
+    }
+
+    // ==================== newNamedThreadFactory with handler ====================
+
+    @Test
+    @DisplayName("newNamedThreadFactory(prefix, group, isDaemon, handler) - 带异常处理器")
+    void newNamedThreadFactoryWithHandler() {
+        AtomicBoolean handlerCalled = new AtomicBoolean(false);
+        Thread.UncaughtExceptionHandler handler = (final Thread t, final Throwable e) -> handlerCalled.set(true);
+        ThreadFactory factory = ThreadUtil.newNamedThreadFactory("h-", null, false, handler);
+        Thread t = factory.newThread(() -> {
+            throw new RuntimeException("test exception");
+        });
+        assertNotNull(t);
+        assertTrue(t.getName().startsWith("h-"));
+        t.start();
+        ThreadUtil.sleep(200);
+        assertTrue(handlerCalled.get());
+    }
+
+    // ==================== sync ====================
+
+    @Test
+    @DisplayName("sync - 阻塞等待后通过notify释放")
+    void syncAndNotify() throws Exception {
+        final Object lock = new Object();
+        AtomicBoolean synced = new AtomicBoolean(false);
+        AtomicBoolean released = new AtomicBoolean(false);
+
+        Thread testThread = new Thread(() -> {
+            synced.set(true);
+            ThreadUtil.sync(lock);
+            released.set(true);
+        });
+        testThread.start();
+
+        ThreadUtil.sleep(200);
+        assertTrue(synced.get());
+        assertFalse(released.get());
+
+        synchronized (lock) {
+            lock.notifyAll();
+        }
+        testThread.join(2000);
+        assertTrue(released.get());
+    }
+
+    // ==================== getStackTraceElement with negative index ====================
+
+    @Test
+    @DisplayName("getStackTraceElement - 负数索引从末尾获取")
+    void getStackTraceElementNegative() {
+        StackTraceElement element = ThreadUtil.getStackTraceElement(-1);
+        assertNotNull(element);
+    }
 }

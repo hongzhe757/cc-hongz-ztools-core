@@ -13,7 +13,7 @@ import cc.hongz.ztools.core.exceptions.UtilException;
  * @author Looly
  *
  */
-public final class GlobalThreadPool {
+public class GlobalThreadPool {
 	private static ExecutorService executor;
 
 	private GlobalThreadPool() {

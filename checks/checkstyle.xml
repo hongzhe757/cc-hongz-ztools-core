@@ -44,6 +44,7 @@
         <module name="JavadocStyle">
             <property name="checkFirstSentence" value="true"/>
             <property name="checkEmptyJavadoc" value="true"/>
+            <property name="endOfSentenceFormat" value="([.?!。])(\s|\z|$)"/>
         </module>
 
         <module name="JavadocVariable">
