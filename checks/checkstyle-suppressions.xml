@@ -2,9 +2,14 @@
 <!DOCTYPE suppressions PUBLIC
     "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
     "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
 <suppressions>
-    <!-- IdcardUtil 移植自 hutool，静态数据初始化和算法常量不提取 -->
-    <suppress checks="MagicNumber" files="IdcardUtil\.java"/>
-    <!-- HashUtil zobrist/murmur 算法位掩码和索引偏移 -->
-    <suppress checks="MagicNumber" files="HashUtil\.java" lines="286-660"/>
+    <!-- PasswdStrength: PASSWD_LEVEL 和 CHAR_TYPE 枚举名含下划线，与算法库原名保持一致 -->
+    <suppress files="PasswdStrength.java" checks="TypeName"/>
+
+    <!-- PasswdStrength: check/getLevel/checkCharacterType 方法中的魔数是密码强度算法固有常量 -->
+    <suppress files="PasswdStrength.java" checks="MagicNumber"/>
+
+    <!-- PasswdStrength: CHAR_TYPE 枚举常量名称自解释，无需 Javadoc -->
+    <suppress files="PasswdStrength.java" checks="JavadocVariable"/>
 </suppressions>
