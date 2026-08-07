@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.thread;
 import java.util.concurrent.Semaphore;
 
 /**
- * 带有信号量控制的{@link Runnable} 接口抽象实现
+ * 带有信号量控制的{@link Runnable} 接口抽象实现。
  *
  * <p>
  * 通过设置信号量，可以限制可以访问某些资源（物理或逻辑的）线程数目。<br>
@@ -15,45 +15,49 @@ import java.util.concurrent.Semaphore;
  */
 public class SemaphoreRunnable implements Runnable {
 
-	/** 实际执行的逻辑 */
-	private final Runnable runnable;
-	/** 信号量 */
-	private final Semaphore semaphore;
+    /**
+     * 实际执行的逻辑。
+     */
+    private final Runnable runnable;
+    /**
+     * 信号量。
+     */
+    private final Semaphore semaphore;
 
-	/**
-	 * 构造
-	 *
-	 * @param runnable 实际执行的线程逻辑
-	 * @param semaphore 信号量，多个线程必须共享同一信号量
-	 */
-	public SemaphoreRunnable(Runnable runnable, Semaphore semaphore) {
-		this.runnable = runnable;
-		this.semaphore = semaphore;
-	}
+    /**
+     * 构造。
+     *
+     * @param runnable  实际执行的线程逻辑
+     * @param semaphore 信号量，多个线程必须共享同一信号量
+     */
+    public SemaphoreRunnable(final Runnable runnable, final Semaphore semaphore) {
+        this.runnable = runnable;
+        this.semaphore = semaphore;
+    }
 
-	/**
-	 * 获得信号量
-	 *
-	 * @return {@link Semaphore}
-	 * @since 5.3.6
-	 */
-	public Semaphore getSemaphore(){
-		return this.semaphore;
-	}
+    /**
+     * 获得信号量。
+     *
+     * @return {@link Semaphore}
+     * @since 5.3.6
+     */
+    public Semaphore getSemaphore() {
+        return this.semaphore;
+    }
 
-	@Override
-	public void run() {
-		if (null != this.semaphore) {
-			try{
-				semaphore.acquire();
-				try {
-					this.runnable.run();
-				} finally {
-					semaphore.release();
-				}
-			}catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-		}
-	}
+    @Override
+    public void run() {
+        if (null != this.semaphore) {
+            try {
+                semaphore.acquire();
+                try {
+                    this.runnable.run();
+                } finally {
+                    semaphore.release();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
 }
