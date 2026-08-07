@@ -1,0 +1,4 @@
+# 弱密码字典 - 第二部分
+hello123
+world123
+changeme
