@@ -72,4 +72,19 @@ class UnicodeUtilTest {
         assertNull(UnicodeUtil.toUnicode((String) null));
         assertEquals("", UnicodeUtil.toUnicode(""));
     }
+
+    @Test
+    @DisplayName("toString - 非法Unicode符跳过")
+    void toStringIllegalUnicode() {
+        // GGGG 不是合法的十六进制字符，应原样保留原始内容
+        String result = UnicodeUtil.toString("a\\" + "uGGGGb");
+        assertEquals("a\\" + "uGGGGb", result);
+    }
+
+    @Test
+    @DisplayName("toString - 不含Unicode符的普通字符串")
+    void toStringNoUnicode() {
+        assertEquals("hello", UnicodeUtil.toString("hello"));
+        assertEquals("abc123", UnicodeUtil.toString("abc123"));
+    }
 }
