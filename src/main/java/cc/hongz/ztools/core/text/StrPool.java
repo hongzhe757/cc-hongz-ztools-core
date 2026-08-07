@@ -89,7 +89,7 @@ public interface StrPool {
     /**
      * 字符串常量：制表符 {@code "\t"}.
      */
-    String TAB = "    ";
+    String TAB = "\t";
 
     /**
      * 字符串常量：点 {@code "."}.
