@@ -19,6 +19,9 @@ import java.util.Set;
  */
 public final class Convert {
 
+    /** 全角字符与半角字符的偏移量. */
+    private static final int SBC_DBC_OFFSET = 65248;
+
     private Convert() {
 
     }
@@ -68,9 +71,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为字符串.<br>
+     * 转换为字符串. <br>
      * 如果给定的值为null，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -88,9 +91,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为字符串.<br>
+     * 转换为字符串. <br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -100,9 +103,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为字符.<br>
+     * 转换为字符. <br>
      * 如果给定的值为null，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -123,9 +126,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为字符.<br>
+     * 转换为字符. <br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -135,9 +138,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为byte.<br>
+     * 转换为byte. <br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -165,9 +168,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为byte.<br>
+     * 转换为byte. <br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -177,9 +180,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为Short.<br>
+     * 转换为Short. <br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -208,9 +211,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为Short.<br>
+     * 转换为Short. <br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -220,9 +223,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为Number.<br>
+     * 转换为Number. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -248,9 +251,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为Number.<br>
+     * 转换为Number. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -260,9 +263,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为int.<br>
+     * 转换为int. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -291,9 +294,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为int.<br>
+     * 转换为int. <br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -303,7 +306,7 @@ public final class Convert {
     }
 
     /**
-     * 转换为Integer数组.<br>
+     * 转换为Integer数组. <br>
      *
      * @param str 被转换的值
      * @return 结果
@@ -313,7 +316,7 @@ public final class Convert {
     }
 
     /**
-     * 转换为Long数组.<br>
+     * 转换为Long数组. <br>
      *
      * @param str 被转换的值
      * @return 结果
@@ -323,7 +326,7 @@ public final class Convert {
     }
 
     /**
-     * 转换为Integer数组.<br>
+     * 转换为Integer数组. <br>
      *
      * @param split 分隔符
      * @param str   被转换的值
@@ -344,7 +347,7 @@ public final class Convert {
     }
 
     /**
-     * 转换为Long数组.<br>
+     * 转换为Long数组. <br>
      *
      * @param split 分隔符
      * @param str   被转换的值
@@ -365,7 +368,7 @@ public final class Convert {
     }
 
     /**
-     * 转换为String数组.<br>
+     * 转换为String数组. <br>
      *
      * @param str 被转换的值
      * @return 结果
@@ -375,7 +378,7 @@ public final class Convert {
     }
 
     /**
-     * 转换为String数组.<br>
+     * 转换为String数组. <br>
      *
      * @param split 分隔符
      * @param str   被转换的值
@@ -387,9 +390,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为long.<br>
+     * 转换为long. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -418,9 +421,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为long.<br>
+     * 转换为long. <br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -430,9 +433,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为double.<br>
+     * 转换为double. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -461,9 +464,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为double.<br>
+     * 转换为double. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -473,9 +476,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为Float.<br>
+     * 转换为Float. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -504,9 +507,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为Float.<br>
+     * 转换为Float. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -516,9 +519,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为boolean.<br>
+     * 转换为boolean. <br>
      * String支持的值为：true、false、yes、ok、no，1,0 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -558,9 +561,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为boolean.<br>
+     * 转换为boolean. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -570,7 +573,7 @@ public final class Convert {
     }
 
     /**
-     * 转换为Enum对象.<br>
+     * 转换为Enum对象. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
      *
      * @param <E>          泛型对象
@@ -602,7 +605,7 @@ public final class Convert {
     }
 
     /**
-     * 转换为Enum对象.<br>
+     * 转换为Enum对象. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
      *
      * @param <E>   泛型对象
@@ -616,9 +619,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为BigInteger.<br>
+     * 转换为BigInteger. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -647,9 +650,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为BigInteger.<br>
+     * 转换为BigInteger. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -659,9 +662,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为BigDecimal.<br>
+     * 转换为BigDecimal. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value        被转换的值
      * @param defaultValue 转换错误时的默认值
@@ -696,9 +699,9 @@ public final class Convert {
     }
 
     /**
-     * 转换为BigDecimal.<br>
+     * 转换为BigDecimal. <br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
-     * 转换失败不会报错
+     * 转换失败不会报错.
      *
      * @param value 被转换的值
      * @return 结果
@@ -708,8 +711,8 @@ public final class Convert {
     }
 
     /**
-     * 将对象转为字符串.<br>
-     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
+     * 将对象转为字符串. <br>
+     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法.
      *
      * @param obj 对象
      * @return 字符串
@@ -719,8 +722,8 @@ public final class Convert {
     }
 
     /**
-     * 将对象转为字符串.<br>
-     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
+     * 将对象转为字符串. <br>
+     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法.
      *
      * @param obj         对象
      * @param charsetName 字符集
@@ -731,8 +734,8 @@ public final class Convert {
     }
 
     /**
-     * 将对象转为字符串.<br>
-     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
+     * 将对象转为字符串. <br>
+     * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法.
      *
      * @param obj     对象
      * @param charset 字符集
@@ -855,7 +858,7 @@ public final class Convert {
             if (c[i] == ' ') {
                 c[i] = '\u3000';
             } else if (c[i] < '\177') {
-                c[i] = (char) (c[i] + 65248);
+                c[i] = (char) (c[i] + SBC_DBC_OFFSET);
 
             }
         }
@@ -890,7 +893,7 @@ public final class Convert {
             if (c[i] == '\u3000') {
                 c[i] = ' ';
             } else if (c[i] > '\uFF00' && c[i] < '\uFF5F') {
-                c[i] = (char) (c[i] - 65248);
+                c[i] = (char) (c[i] - SBC_DBC_OFFSET);
             }
         }
         return new String(c);
