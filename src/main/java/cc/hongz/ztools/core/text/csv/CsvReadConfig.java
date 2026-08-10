@@ -3,53 +3,122 @@ package cc.hongz.ztools.core.text.csv;
 import java.io.Serializable;
 
 /**
- * CSV读取配置项
+ * CSV读取配置项.
  *
  * @author looly
+ * @since 5.7.14
  */
 public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializable {
-	private static final long serialVersionUID = 5396453565371560052L;
+    private static final long serialVersionUID = 5396453565371560052L;
 
-	protected long headerLineNo = -1;
-	protected boolean skipEmptyRows = true;
-	protected boolean errorOnDifferentFieldCount;
-	protected long beginLineNo;
-	protected long endLineNo = Long.MAX_VALUE-1;
-	protected boolean trimField;
+    /**
+     * 表头行号，-1表示无表头.
+     */
+    protected long headerLineNo = -1;
+    /**
+     * 是否跳过空行.
+     */
+    protected boolean skipEmptyRows = true;
+    /**
+     * 字段数不一致时是否报错.
+     */
+    protected boolean errorOnDifferentFieldCount;
+    /**
+     * 起始行号.
+     */
+    protected long beginLineNo;
+    /**
+     * 结束行号.
+     */
+    protected long endLineNo = Long.MAX_VALUE - 1;
+    /**
+     * 是否去除字段两边空格.
+     */
+    protected boolean trimField;
 
-	public static CsvReadConfig defaultConfig() { return new CsvReadConfig(); }
+    /**
+     * 获取默认配置.
+     *
+     * @return 默认配置
+     */
+    public static CsvReadConfig defaultConfig() {
+        return new CsvReadConfig();
+    }
 
-	public CsvReadConfig setContainsHeader(boolean containsHeader) {
-		return setHeaderLineNo(containsHeader ? beginLineNo : -1);
-	}
+    /**
+     * 设置是否包含表头.
+     *
+     * @param containsHeader 是否包含表头
+     * @return this
+     */
+    public CsvReadConfig setContainsHeader(final boolean containsHeader) {
+        return setHeaderLineNo(containsHeader ? beginLineNo : -1);
+    }
 
-	public CsvReadConfig setHeaderLineNo(long headerLineNo) {
-		this.headerLineNo = headerLineNo;
-		return this;
-	}
+    /**
+     * 设置表头行号.
+     *
+     * @param headerLineNo 表头行号
+     * @return this
+     */
+    public CsvReadConfig setHeaderLineNo(final long headerLineNo) {
+        this.headerLineNo = headerLineNo;
+        return this;
+    }
 
-	public CsvReadConfig setSkipEmptyRows(boolean skipEmptyRows) {
-		this.skipEmptyRows = skipEmptyRows;
-		return this;
-	}
+    /**
+     * 设置是否跳过空行.
+     *
+     * @param skipEmptyRows 是否跳过空行
+     * @return this
+     */
+    public CsvReadConfig setSkipEmptyRows(final boolean skipEmptyRows) {
+        this.skipEmptyRows = skipEmptyRows;
+        return this;
+    }
 
-	public CsvReadConfig setErrorOnDifferentFieldCount(boolean errorOnDifferentFieldCount) {
-		this.errorOnDifferentFieldCount = errorOnDifferentFieldCount;
-		return this;
-	}
+    /**
+     * 设置字段数不一致时是否报错.
+     *
+     * @param errorOnDifferentFieldCount 是否报错
+     * @return this
+     */
+    public CsvReadConfig setErrorOnDifferentFieldCount(
+            final boolean errorOnDifferentFieldCount) {
+        this.errorOnDifferentFieldCount = errorOnDifferentFieldCount;
+        return this;
+    }
 
-	public CsvReadConfig setBeginLineNo(long beginLineNo) {
-		this.beginLineNo = beginLineNo;
-		return this;
-	}
+    /**
+     * 设置起始行号.
+     *
+     * @param beginLineNo 起始行号
+     * @return this
+     */
+    public CsvReadConfig setBeginLineNo(final long beginLineNo) {
+        this.beginLineNo = beginLineNo;
+        return this;
+    }
 
-	public CsvReadConfig setEndLineNo(long endLineNo) {
-		this.endLineNo = endLineNo;
-		return this;
-	}
+    /**
+     * 设置结束行号.
+     *
+     * @param endLineNo 结束行号
+     * @return this
+     */
+    public CsvReadConfig setEndLineNo(final long endLineNo) {
+        this.endLineNo = endLineNo;
+        return this;
+    }
 
-	public CsvReadConfig setTrimField(boolean trimField) {
-		this.trimField = trimField;
-		return this;
-	}
+    /**
+     * 设置是否去除字段两边空格.
+     *
+     * @param trimField 是否去除空格
+     * @return this
+     */
+    public CsvReadConfig setTrimField(final boolean trimField) {
+        this.trimField = trimField;
+        return this;
+    }
 }

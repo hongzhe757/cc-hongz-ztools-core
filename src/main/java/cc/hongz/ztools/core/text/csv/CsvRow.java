@@ -10,49 +10,59 @@ import java.util.ListIterator;
 import java.util.Map;
 
 /**
- * CSV中一行的表示
+ * CSV中一行的表示.
  *
- * @author Looly
+ * @author looly
+ * @since 5.7.14
  */
 public final class CsvRow implements List<String> {
 
-	/** 原始行号 */
-	private final long originalLineNumber;
+    /**
+     * 原始行号.
+     */
+    private final long originalLineNumber;
 
-	final Map<String, Integer> headerMap;
-	final List<String> fields;
+    /**
+     * 标题映射.
+     */
+    final Map<String, Integer> headerMap;
+    /**
+     * 字段列表.
+     */
+    final List<String> fields;
 
-	/**
-	 * 构造
-	 *
-	 * @param originalLineNumber 对应文件中的第几行
-	 * @param headerMap 标题Map
-	 * @param fields 数据列表
-	 */
-	public CsvRow(long originalLineNumber, Map<String, Integer> headerMap, List<String> fields) {
-		Assert.notNull(fields, "fields must be not null!");
-		this.originalLineNumber = originalLineNumber;
-		this.headerMap = headerMap;
-		this.fields = fields;
-	}
+    /**
+     * 构造.
+     *
+     * @param originalLineNumber 对应文件中的第几行
+     * @param headerMap          标题映射
+     * @param fields             数据列表
+     */
+    public CsvRow(final long originalLineNumber, final Map<String, Integer> headerMap,
+            final List<String> fields) {
+        Assert.notNull(fields, "fields must be not null!");
+        this.originalLineNumber = originalLineNumber;
+        this.headerMap = headerMap;
+        this.fields = fields;
+    }
 
-	/**
-	 * 获取原始行号，多行情况下为首行行号。忽略注释行
-	 *
-	 * @return the original line number 行号
-	 */
-	public long getOriginalLineNumber() {
-		return originalLineNumber;
-	}
+    /**
+     * 获取原始行号，多行情况下为首行行号，忽略注释行.
+     *
+     * @return 行号
+     */
+    public long getOriginalLineNumber() {
+        return originalLineNumber;
+    }
 
-	/**
-	 * 获取标题对应的字段内容
-	 *
-	 * @param name 标题名
-	 * @return 字段值，null表示无此字段值
-	 * @throws IllegalStateException CSV文件无标题行抛出此异常
-	 */
-	public String getByName(String name) {
+    /**
+     * 获取标题对应的字段内容.
+     *
+     * @param name 标题名
+     * @return 字段值，null表示无此字段值
+     * @throws IllegalStateException CSV文件无标题行抛出此异常
+     */
+    public String getByName(final String name) {
 		Assert.notNull(this.headerMap, "No header available!");
 
 		final Integer col = headerMap.get(name);
