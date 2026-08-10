@@ -161,6 +161,7 @@ public class AntPathMatcher {
         char c;
         for (int i = 0; i < length; i++) {
             c = path.charAt(i);
+            // 含有通配符
             if (c == '*' || c == '?') {
                 return true;
             }
@@ -223,6 +224,7 @@ public class AntPathMatcher {
         int pathIdxStart = 0;
         int pathIdxEnd = pathDirs.length - 1;
 
+        // 匹配直到第一个 ** 之前的所有元素
         while (pattIdxStart <= pattIdxEnd && pathIdxStart <= pathIdxEnd) {
             String pattDir = pattDirs[pattIdxStart];
             if ("**".equals(pattDir)) {
@@ -236,6 +238,7 @@ public class AntPathMatcher {
         }
 
         if (pathIdxStart > pathIdxEnd) {
+            // 路径已用完，仅当剩余表达式全部为 * 或 ** 时匹配
             if (pattIdxStart > pattIdxEnd) {
                 return (pattern.endsWith(this.pathSeparator) == path.endsWith(this.pathSeparator));
             }
@@ -253,11 +256,14 @@ public class AntPathMatcher {
             }
             return true;
         } else if (pattIdxStart > pattIdxEnd) {
+            // 路径未用完但表达式已用完，匹配失败
             return false;
         } else if (false == fullMatch && "**".equals(pattDirs[pattIdxStart])) {
+            // 表达式以 ** 开头，路径开头肯定匹配
             return true;
         }
 
+        // 从后往前匹配到最后一个 **
         while (pattIdxStart <= pattIdxEnd && pathIdxStart <= pathIdxEnd) {
             String pattDir = pattDirs[pattIdxEnd];
             if (pattDir.equals("**")) {
@@ -270,6 +276,7 @@ public class AntPathMatcher {
             pathIdxEnd--;
         }
         if (pathIdxStart > pathIdxEnd) {
+            // 路径已用完
             for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
                 if (false == pattDirs[i].equals("**")) {
                     return false;
@@ -287,9 +294,11 @@ public class AntPathMatcher {
                 }
             }
             if (patIdxTmp == pattIdxStart + 1) {
+                // '**/**' 的情况，跳过一个
                 pattIdxStart++;
                 continue;
             }
+            // 在路径中查找 patIdxStart 到 patIdxTmp 之间的表达式匹配
             int patLength = (patIdxTmp - pattIdxStart - 1);
             int strLength = (pathIdxEnd - pathIdxStart + 1);
             int foundIdx = -1;
@@ -421,6 +430,7 @@ public class AntPathMatcher {
             tokenized = tokenizePath(pattern);
             if (cachePatterns == null
                     && this.tokenizedPatternCache.size() >= CACHE_TURNOFF_THRESHOLD) {
+                // 根据运行时情况自动调整：遇到过多不同表达式时关闭缓存
                 deactivatePatternCache();
                 return tokenized;
             }
@@ -480,6 +490,7 @@ public class AntPathMatcher {
             matcher = new AntPathStringMatcher(pattern, this.caseSensitive);
             if (cachePatterns == null
                     && this.stringMatcherCache.size() >= CACHE_TURNOFF_THRESHOLD) {
+                // 根据运行时情况自动调整：遇到过多不同表达式时关闭缓存
                 deactivatePatternCache();
                 return matcher;
             }
@@ -561,13 +572,19 @@ public class AntPathMatcher {
         boolean pattern1ContainsUriVar = (pattern1.indexOf('{') != -1);
         if (!pattern1.equals(pattern2) && !pattern1ContainsUriVar
                 && match(pattern1, pattern2)) {
+            // /* + /hotel -> /hotel ; "/*.*" + "/*.html" -> /*.html
+            // 但 /user + /user -> /usr/user ; /{foo} + /bar -> /{foo}/bar
             return pattern2;
         }
 
+        // /hotels/* + /booking -> /hotels/booking
+        // /hotels/* + booking -> /hotels/booking
         if (pattern1.endsWith(this.pathSeparatorPatternCache.getEndsOnWildCard())) {
             return concat(pattern1.substring(0, pattern1.length() - 2), pattern2);
         }
 
+        // /hotels/** + /booking -> /hotels/**/booking
+        // /hotels/** + booking -> /hotels/**/booking
         if (pattern1.endsWith(this.pathSeparatorPatternCache.getEndsOnDoubleWildCard())) {
             return concat(pattern1, pattern2);
         }
@@ -575,6 +592,7 @@ public class AntPathMatcher {
         int starDotPos1 = pattern1.indexOf("*.");
         if (pattern1ContainsUriVar || starDotPos1 == -1
                 || this.pathSeparator.equals(".")) {
+            // 直接拼接两个表达式
             return concat(pattern1, pattern2);
         }
 
@@ -680,6 +698,7 @@ public class AntPathMatcher {
                 end = matcher.end();
             }
             if (end == 0) {
+                // 未找到通配符模式，这是精确字符串匹配
                 this.exactMatch = true;
                 this.pattern = null;
             } else {
