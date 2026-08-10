@@ -51,26 +51,59 @@ public class AntPathMatcher {
     /**
      * Default path separator: "/".
      */
+    /**
+     * Default path separator: "/".
+     */
     public static final String DEFAULT_PATH_SEPARATOR = StrUtil.SLASH;
 
+    /**
+     * 缓存关闭阈值，超过此数量自动关闭缓存.
+     */
     private static final int CACHE_TURNOFF_THRESHOLD = 65536;
 
+    /**
+     * 用于计算表达式长度的正则模式，匹配URI模板变量.
+     */
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{[^/]+?}");
 
+    /**
+     * 通配符字符数组.
+     */
     private static final char[] WILDCARD_CHARS = {'*', '?', '{'};
 
+    /**
+     * 路径分隔符.
+     */
     private String pathSeparator;
 
+    /**
+     * 路径分隔符模式缓存.
+     */
     private PathSeparatorPatternCache pathSeparatorPatternCache;
 
+    /**
+     * 是否大小写敏感，默认为{@code true}.
+     */
     private boolean caseSensitive = true;
 
+    /**
+     * 是否去除路径节点两边的空白符，默认为{@code false}.
+     */
     private boolean trimTokens = false;
 
+    /**
+     * 是否缓存表达式，{@code null}表示自动判断.
+     */
     private volatile Boolean cachePatterns;
 
+    /**
+     * 分词后的表达式缓存.
+     */
     private final Map<String, String[]> tokenizedPatternCache = new SafeConcurrentHashMap<>(256);
 
+    /**
+     * 表达式匹配器缓存.
+     */
     private final Map<String, AntPathStringMatcher> stringMatcherCache = new SafeConcurrentHashMap<>(256);
 
     /**
@@ -646,9 +679,15 @@ public class AntPathMatcher {
      */
     protected static class AntPathStringMatcher {
 
+        /**
+         * 通配符模式正则，匹配 ?、* 和 {var} 表达式.
+         */
         private static final Pattern GLOB_PATTERN =
                 Pattern.compile("\\?|\\*|\\{((?:\\{[^/]+?}|[^/{}]|\\\\[{}])+?)}");
 
+        /**
+         * 默认变量模式：匹配任意字符（包括换行）.
+         */
         private static final String DEFAULT_VARIABLE_PATTERN = "((?s).*)";
 
         private final String rawPattern;
@@ -904,26 +943,56 @@ public class AntPathMatcher {
                 }
             }
 
+            /**
+             * 获取URI变量数量.
+             *
+             * @return URI变量数量
+             */
             public int getUriVars() {
                 return this.uriVars;
             }
 
+            /**
+             * 获取单通配符数量.
+             *
+             * @return 单通配符数量
+             */
             public int getSingleWildcards() {
                 return this.singleWildcards;
             }
 
+            /**
+             * 获取双通配符数量.
+             *
+             * @return 双通配符数量
+             */
             public int getDoubleWildcards() {
                 return this.doubleWildcards;
             }
 
+            /**
+             * 是否最不具体（匹配所有）.
+             *
+             * @return 是否最不具体
+             */
             public boolean isLeastSpecific() {
                 return (this.pattern == null || this.catchAllPattern);
             }
 
+            /**
+             * 是否为前缀模式.
+             *
+             * @return 是否为前缀模式
+             */
             public boolean isPrefixPattern() {
                 return this.prefixPattern;
             }
 
+            /**
+             * 获取通配符总数（加权）.
+             *
+             * @return 通配符总数
+             */
             public int getTotalCount() {
                 return this.uriVars + this.singleWildcards + (2 * this.doubleWildcards);
             }
@@ -950,19 +1019,40 @@ public class AntPathMatcher {
      */
     private static class PathSeparatorPatternCache {
 
+        /**
+         * 以通配符结尾的模式.
+         */
         private final String endsOnWildCard;
 
+        /**
+         * 以双通配符结尾的模式.
+         */
         private final String endsOnDoubleWildCard;
 
+        /**
+         * 构造.
+         *
+         * @param pathSeparator 路径分隔符
+         */
         PathSeparatorPatternCache(final String pathSeparator) {
             this.endsOnWildCard = pathSeparator + "*";
             this.endsOnDoubleWildCard = pathSeparator + "**";
         }
 
+        /**
+         * 获取以单通配符结尾的模式.
+         *
+         * @return 以单通配符结尾的模式
+         */
         public String getEndsOnWildCard() {
             return this.endsOnWildCard;
         }
 
+        /**
+         * 获取以双通配符结尾的模式.
+         *
+         * @return 以双通配符结尾的模式
+         */
         public String getEndsOnDoubleWildCard() {
             return this.endsOnDoubleWildCard;
         }
