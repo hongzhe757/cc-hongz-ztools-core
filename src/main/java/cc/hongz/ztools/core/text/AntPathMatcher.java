@@ -3,6 +3,9 @@ package cc.hongz.ztools.core.text;
 import cc.hongz.ztools.core.map.SafeConcurrentHashMap;
 import cc.hongz.ztools.core.util.StrUtil;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -1017,27 +1020,14 @@ public class AntPathMatcher {
     /**
      * 路径分隔符模式缓存.
      */
+    @Getter
+    @RequiredArgsConstructor
     private static class PathSeparatorPatternCache {
 
         /**
-         * 以通配符结尾的模式.
+         * 路径分隔符.
          */
-        private final String endsOnWildCard;
-
-        /**
-         * 以双通配符结尾的模式.
-         */
-        private final String endsOnDoubleWildCard;
-
-        /**
-         * 构造.
-         *
-         * @param pathSeparator 路径分隔符
-         */
-        PathSeparatorPatternCache(final String pathSeparator) {
-            this.endsOnWildCard = pathSeparator + "*";
-            this.endsOnDoubleWildCard = pathSeparator + "**";
-        }
+        private final String pathSeparator;
 
         /**
          * 获取以单通配符结尾的模式.
@@ -1045,7 +1035,7 @@ public class AntPathMatcher {
          * @return 以单通配符结尾的模式
          */
         public String getEndsOnWildCard() {
-            return this.endsOnWildCard;
+            return this.pathSeparator + "*";
         }
 
         /**
@@ -1054,7 +1044,7 @@ public class AntPathMatcher {
          * @return 以双通配符结尾的模式
          */
         public String getEndsOnDoubleWildCard() {
-            return this.endsOnDoubleWildCard;
+            return this.pathSeparator + "**";
         }
     }
 }
