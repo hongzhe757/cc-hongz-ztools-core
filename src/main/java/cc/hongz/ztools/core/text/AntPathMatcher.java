@@ -896,10 +896,14 @@ public class AntPathMatcher {
         private static class PatternInfo {
 
             private final String pattern;
+            @Getter
             private int uriVars;
+            @Getter
             private int singleWildcards;
+            @Getter
             private int doubleWildcards;
             private boolean catchAllPattern;
+            @Getter
             private boolean prefixPattern;
             private Integer length;
 
@@ -947,48 +951,12 @@ public class AntPathMatcher {
             }
 
             /**
-             * 获取URI变量数量.
-             *
-             * @return URI变量数量
-             */
-            public int getUriVars() {
-                return this.uriVars;
-            }
-
-            /**
-             * 获取单通配符数量.
-             *
-             * @return 单通配符数量
-             */
-            public int getSingleWildcards() {
-                return this.singleWildcards;
-            }
-
-            /**
-             * 获取双通配符数量.
-             *
-             * @return 双通配符数量
-             */
-            public int getDoubleWildcards() {
-                return this.doubleWildcards;
-            }
-
-            /**
              * 是否最不具体（匹配所有）.
              *
              * @return 是否最不具体
              */
             public boolean isLeastSpecific() {
                 return (this.pattern == null || this.catchAllPattern);
-            }
-
-            /**
-             * 是否为前缀模式.
-             *
-             * @return 是否为前缀模式
-             */
-            public boolean isPrefixPattern() {
-                return this.prefixPattern;
             }
 
             /**
