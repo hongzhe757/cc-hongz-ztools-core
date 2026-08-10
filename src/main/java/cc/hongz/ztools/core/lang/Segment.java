@@ -1,6 +1,6 @@
 package cc.hongz.ztools.core.lang;
 
-import cc.hongz.ztools.core.text.Convert;
+import cc.hongz.ztools.core.convert.Convert;
 import cc.hongz.ztools.core.util.NumberUtil;
 
 import java.lang.reflect.Type;

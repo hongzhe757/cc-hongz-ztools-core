@@ -1,6 +1,6 @@
 package cc.hongz.ztools.core.util;
 
-import cc.hongz.ztools.core.text.Convert;
+import cc.hongz.ztools.core.convert.Convert;
 import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.math.Calculator;

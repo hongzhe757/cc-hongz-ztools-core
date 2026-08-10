@@ -1,7 +1,7 @@
 package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.lang.Console;
-import cc.hongz.ztools.core.text.Convert;
+import cc.hongz.ztools.core.convert.Convert;
 
 import java.util.Properties;
 
