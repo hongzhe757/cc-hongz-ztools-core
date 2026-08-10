@@ -6,16 +6,17 @@ import cc.hongz.ztools.core.util.CharUtil;
 
 /**
  * 形如&amp;#39;的反转义器.
- * <p>
- * 迁移自 hutool {@code cn.hutool.core.text.escape.NumericEntityUnescaper}.
  *
  * @author looly
+ * @since 5.7.14
  */
 public class NumericEntityUnescaper extends StrReplacer {
     private static final long serialVersionUID = 1L;
 
+    private static final int HEX_RADIX = 16;
+
     @Override
-    protected int replace(CharSequence str, int pos, StrBuilder out) {
+    protected int replace(final CharSequence str, final int pos, final StrBuilder out) {
         final int len = str.length();
         // 检查以确保以&#开头
         if (str.charAt(pos) == '&' && pos < len - 2 && str.charAt(pos + 1) == '#') {
@@ -41,7 +42,7 @@ public class NumericEntityUnescaper extends StrReplacer {
                 int entityValue;
                 try {
                     if (isHex) {
-                        entityValue = Integer.parseInt(str.subSequence(start, end).toString(), 16);
+                        entityValue = Integer.parseInt(str.subSequence(start, end).toString(), HEX_RADIX);
                     } else {
                         entityValue = Integer.parseInt(str.subSequence(start, end).toString(), 10);
                     }

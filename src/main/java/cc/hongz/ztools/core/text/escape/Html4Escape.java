@@ -5,10 +5,9 @@ import cc.hongz.ztools.core.text.replacer.ReplacerChain;
 
 /**
  * HTML4的ESCAPE.
- * <p>
- * 迁移自 hutool {@code cn.hutool.core.text.escape.Html4Escape}.
  *
  * @author looly
+ * @since 5.7.14
  */
 public class Html4Escape extends ReplacerChain {
     private static final long serialVersionUID = 1L;
@@ -97,6 +96,9 @@ public class Html4Escape extends ReplacerChain {
             {"\u20AC", "&euro;"},
     };
 
+    /**
+     * 构造，加载HTML4转义规则.
+     */
     public Html4Escape() {
         super();
         addChain(new LookupReplacer(BASIC_ESCAPE));
