@@ -60,7 +60,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
     /**
      * 设置协议，例如TLS等.
      *
-     * @param protocol 协议
+     * @param aProtocol 协议
      * @return 自身
      */
     public SSLContextBuilder setProtocol(final String aProtocol) {
@@ -73,7 +73,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
     /**
      * 设置信任信息.
      *
-     * @param trustManagers TrustManager列表
+     * @param newTrustManagers TrustManager列表
      * @return 自身
      */
     public SSLContextBuilder setTrustManagers(
@@ -87,7 +87,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
     /**
      * 设置 JSSE 密钥管理器.
      *
-     * @param keyManagers JSSE 密钥管理器
+     * @param newKeyManagers JSSE 密钥管理器
      * @return 自身
      */
     public SSLContextBuilder setKeyManagers(
@@ -101,7 +101,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
     /**
      * 设置 SecureRandom.
      *
-     * @param secureRandom SecureRandom
+     * @param newSecureRandom SecureRandom
      * @return 自己
      */
     public SSLContextBuilder setSecureRandom(
