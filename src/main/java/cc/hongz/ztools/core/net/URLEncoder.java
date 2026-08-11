@@ -27,331 +27,332 @@ import java.util.BitSet;
  */
 @Deprecated
 public class URLEncoder implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// --------------------------------------------------------------------------------------------- Static method start
-	/**
-	 * 默认URLEncoder<br>
-	 * 默认的编码器针对URI路径编码，定义如下：
-	 *
-	 * <pre>
-	 * default = pchar / "/"
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
-	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-	 * </pre>
-	 */
-	public static final URLEncoder DEFAULT = createDefault();
+    /**
+     * 安全字符位集合默认大小.
+     */
+    private static final int SAFE_BITS_SIZE = 256;
 
-	/**
-	 * URL的Path的每一个Segment URLEncoder<br>
-	 * 默认的编码器针对URI路径编码，定义如下：
-	 *
-	 * <pre>
-	 * pchar = unreserved / pct-encoded / sub-delims / ":"（非空segment不包含:） / "@"
-	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-	 * </pre>
-	 *
-	 * 定义见：https://www.rfc-editor.org/rfc/rfc3986.html#section-3.3
-	 */
-	public static final URLEncoder PATH_SEGMENT = createPathSegment();
+    /**
+     * 默认URLEncoder. 默认的编码器针对URI路径编码，定义如下：
+     *
+     * <pre>
+     * default = pchar / "/"
+     * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
+     * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+     * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+     * </pre>
+     */
+    public static final URLEncoder DEFAULT = createDefault();
 
-	/**
-	 * URL的Fragment URLEncoder<br>
-	 * 默认的编码器针对Fragment，定义如下：
-	 *
-	 * <pre>
-	 * fragment    = *( pchar / "/" / "?" )
-	 * pchar       = unreserved / pct-encoded / sub-delims / ":" / "@"
-	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims  = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-	 * </pre>
-	 *
-	 * 具体见：https://datatracker.ietf.org/doc/html/rfc3986#section-3.5
-	 * @since 5.7.13
-	 */
-	public static final URLEncoder FRAGMENT = createFragment();
+    /**
+     * URL的Path的每一个Segment URLEncoder. 默认的编码器针对URI路径编码，定义如下：
+     *
+     * <pre>
+     * pchar = unreserved / pct-encoded / sub-delims / ":"（非空segment不包含:） / "@"
+     * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+     * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+     * </pre>
+     *
+     * 定义见：https://www.rfc-editor.org/rfc/rfc3986.html#section-3.3
+     */
+    public static final URLEncoder PATH_SEGMENT = createPathSegment();
 
-	/**
-	 * 用于查询语句的URLEncoder<br>
-	 * 编码器针对URI路径编码，定义如下：
-	 *
-	 * <pre>
-	 * 0x20 ' ' =》 '+'
-	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
-	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&amp;' 不编码
-	 * 其它编码为 %nn 形式
-	 * </pre>
-	 * <p>
-	 * 详细见：https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm
-	 */
-	public static final URLEncoder QUERY = createQuery();
+    /**
+     * URL的Fragment URLEncoder. 默认的编码器针对Fragment，定义如下：
+     *
+     * <pre>
+     * fragment    = *( pchar / "/" / "?" )
+     * pchar       = unreserved / pct-encoded / sub-delims / ":" / "@"
+     * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
+     * sub-delims  = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+     * </pre>
+     *
+     * 具体见：https://datatracker.ietf.org/doc/html/rfc3986#section-3.5
+     * @since 5.7.13
+     */
+    public static final URLEncoder FRAGMENT = createFragment();
 
-	/**
-	 * 全编码的URLEncoder<br>
-	 * <pre>
-	 *  0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
-	 *  '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' 不编码
-	 *  其它编码为 %nn 形式
-	 * </pre>
-	 */
-	public static final URLEncoder ALL = createAll();
+    /**
+     * 用于查询语句的URLEncoder. 编码器针对URI路径编码，定义如下：
+     *
+     * <pre>
+     * 0x20 ' ' =》 '+'
+     * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
+     * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&amp;' 不编码
+     * 其它编码为 %nn 形式
+     * </pre>
+     * <p>
+     * 详细见：https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm
+     */
+    public static final URLEncoder QUERY = createQuery();
 
-	/**
-	 * 创建默认URLEncoder
-	 *
-	 * @return URLEncoder
-	 */
-	public static URLEncoder createDefault() {
-		final URLEncoder encoder = new URLEncoder();
-		encoder.addSafeCharacter('-');
-		encoder.addSafeCharacter('.');
-		encoder.addSafeCharacter('_');
-		encoder.addSafeCharacter('~');
+    /**
+     * 全编码的URLEncoder.
+     *
+     * <pre>
+     *  0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
+     *  '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' 不编码
+     *  其它编码为 %nn 形式
+     * </pre>
+     */
+    public static final URLEncoder ALL = createAll();
 
-		// Add the sub-delims
-		addSubDelims(encoder);
+    /**
+     * 创建默认URLEncoder.
+     *
+     * @return URLEncoder
+     */
+    public static URLEncoder createDefault() {
+        final URLEncoder encoder = new URLEncoder();
+        encoder.addSafeCharacter('-');
+        encoder.addSafeCharacter('.');
+        encoder.addSafeCharacter('_');
+        encoder.addSafeCharacter('~');
 
-		// Add the remaining literals
-		encoder.addSafeCharacter(':');
-		encoder.addSafeCharacter('@');
+        // Add the sub-delims
+        addSubDelims(encoder);
 
-		// Add '/' so it isn't encoded when we encode a path
-		encoder.addSafeCharacter('/');
+        // Add the remaining literals
+        encoder.addSafeCharacter(':');
+        encoder.addSafeCharacter('@');
 
-		return encoder;
-	}
+        // Add '/' so it isn't encoded when we encode a path
+        encoder.addSafeCharacter('/');
 
-	/**
-	 * URL的Path的每一个Segment URLEncoder
-	 *
-	 * @return URLEncoder
-	 */
-	public static URLEncoder createPathSegment() {
-		final URLEncoder encoder = new URLEncoder();
+        return encoder;
+    }
 
-		// unreserved
-		encoder.addSafeCharacter('-');
-		encoder.addSafeCharacter('.');
-		encoder.addSafeCharacter('_');
-		encoder.addSafeCharacter('~');
+    /**
+     * URL的Path的每一个Segment URLEncoder.
+     *
+     * @return URLEncoder
+     */
+    public static URLEncoder createPathSegment() {
+        final URLEncoder encoder = new URLEncoder();
 
-		// Add the sub-delims
-		addSubDelims(encoder);
+        // unreserved
+        encoder.addSafeCharacter('-');
+        encoder.addSafeCharacter('.');
+        encoder.addSafeCharacter('_');
+        encoder.addSafeCharacter('~');
 
-		// Add the remaining literals
-		encoder.addSafeCharacter('@');
+        // Add the sub-delims
+        addSubDelims(encoder);
 
-		return encoder;
-	}
+        // Add the remaining literals
+        encoder.addSafeCharacter('@');
 
-	/**
-	 * URL的Fragment URLEncoder
-	 *
-	 * @return URLEncoder
-	 * @since 5.7.13
-	 */
-	public static URLEncoder createFragment() {
-		final URLEncoder encoder = new URLEncoder();
-		encoder.addSafeCharacter('-');
-		encoder.addSafeCharacter('.');
-		encoder.addSafeCharacter('_');
-		encoder.addSafeCharacter('~');
+        return encoder;
+    }
 
-		// Add the sub-delims
-		addSubDelims(encoder);
+    /**
+     * URL的Fragment URLEncoder.
+     *
+     * @return URLEncoder
+     * @since 5.7.13
+     */
+    public static URLEncoder createFragment() {
+        final URLEncoder encoder = new URLEncoder();
+        encoder.addSafeCharacter('-');
+        encoder.addSafeCharacter('.');
+        encoder.addSafeCharacter('_');
+        encoder.addSafeCharacter('~');
 
-		// Add the remaining literals
-		encoder.addSafeCharacter(':');
-		encoder.addSafeCharacter('@');
+        // Add the sub-delims
+        addSubDelims(encoder);
 
-		encoder.addSafeCharacter('/');
-		encoder.addSafeCharacter('?');
+        // Add the remaining literals
+        encoder.addSafeCharacter(':');
+        encoder.addSafeCharacter('@');
 
-		return encoder;
-	}
+        encoder.addSafeCharacter('/');
+        encoder.addSafeCharacter('?');
 
-	/**
-	 * 创建用于查询语句的URLEncoder
-	 *
-	 * @return URLEncoder
-	 */
-	public static URLEncoder createQuery() {
-		final URLEncoder encoder = new URLEncoder();
-		// Special handling for space
-		encoder.setEncodeSpaceAsPlus(true);
-		// Alpha and digit are safe by default
-		// Add the other permitted characters
-		encoder.addSafeCharacter('*');
-		encoder.addSafeCharacter('-');
-		encoder.addSafeCharacter('.');
-		encoder.addSafeCharacter('_');
+        return encoder;
+    }
 
-		encoder.addSafeCharacter('=');
-		encoder.addSafeCharacter('&');
+    /**
+     * 创建用于查询语句的URLEncoder.
+     *
+     * @return URLEncoder
+     */
+    public static URLEncoder createQuery() {
+        final URLEncoder encoder = new URLEncoder();
+        // Special handling for space
+        encoder.setEncodeSpaceAsPlus(true);
+        // Alpha and digit are safe by default
+        // Add the other permitted characters
+        encoder.addSafeCharacter('*');
+        encoder.addSafeCharacter('-');
+        encoder.addSafeCharacter('.');
+        encoder.addSafeCharacter('_');
 
-		return encoder;
-	}
+        encoder.addSafeCharacter('=');
+        encoder.addSafeCharacter('&');
 
-	/**
-	 * 创建URLEncoder
-	 *
-	 * @return URLEncoder
-	 */
-	public static URLEncoder createAll() {
-		final URLEncoder encoder = new URLEncoder();
-		encoder.addSafeCharacter('*');
-		encoder.addSafeCharacter('-');
-		encoder.addSafeCharacter('.');
-		encoder.addSafeCharacter('_');
+        return encoder;
+    }
 
-		return encoder;
-	}
-	// --------------------------------------------------------------------------------------------- Static method end
+    /**
+     * 创建URLEncoder.
+     *
+     * @return URLEncoder
+     */
+    public static URLEncoder createAll() {
+        final URLEncoder encoder = new URLEncoder();
+        encoder.addSafeCharacter('*');
+        encoder.addSafeCharacter('-');
+        encoder.addSafeCharacter('.');
+        encoder.addSafeCharacter('_');
 
-	/**
-	 * 存放安全编码
-	 */
-	private final BitSet safeCharacters;
-	/**
-	 * 是否编码空格为+
-	 */
-	private boolean encodeSpaceAsPlus = false;
+        return encoder;
+    }
 
-	/**
-	 * 构造<br>
-	 * [a-zA-Z0-9]默认不被编码
-	 */
-	public URLEncoder() {
-		this(new BitSet(256));
+    /**
+     * 存放安全编码.
+     */
+    private final BitSet safeCharacters;
+    /**
+     * 是否编码空格为+.
+     */
+    private boolean encodeSpaceAsPlus = false;
 
-		// unreserved
-		addAlpha();
-		addDigit();
-	}
+    /**
+     * 构造.<br>
+     * [a-zA-Z0-9]默认不被编码.
+     */
+    public URLEncoder() {
+        this(new BitSet(SAFE_BITS_SIZE));
 
-	/**
-	 * 构造
-	 *
-	 * @param safeCharacters 安全字符，安全字符不被编码
-	 */
-	private URLEncoder(BitSet safeCharacters) {
-		this.safeCharacters = safeCharacters;
-	}
+        // unreserved
+        addAlpha();
+        addDigit();
+    }
 
-	/**
-	 * 增加安全字符
-	 *
-	 * @param c 字符
-	 */
-	public void addSafeCharacter(char c) {
-		safeCharacters.set(c);
-	}
+    /**
+     * 构造.
+     *
+     * @param safeCharacters 安全字符，安全字符不被编码
+     */
+    private URLEncoder(final BitSet safeCharacters) {
+        this.safeCharacters = safeCharacters;
+    }
 
-	/**
-	 * 移除安全字符
-	 *
-	 * @param c 字符
-	 */
-	public void removeSafeCharacter(char c) {
-		safeCharacters.clear(c);
-	}
+    /**
+     * 增加安全字符.
+     *
+     * @param c 字符
+     */
+    public void addSafeCharacter(final char c) {
+        safeCharacters.set(c);
+    }
 
-	/**
-	 * 是否将空格编码为+
-	 *
-	 * @param encodeSpaceAsPlus 是否将空格编码为+
-	 */
-	public void setEncodeSpaceAsPlus(boolean encodeSpaceAsPlus) {
-		this.encodeSpaceAsPlus = encodeSpaceAsPlus;
-	}
+    /**
+     * 移除安全字符.
+     *
+     * @param c 字符
+     */
+    public void removeSafeCharacter(final char c) {
+        safeCharacters.clear(c);
+    }
 
-	/**
-	 * 将URL中的字符串编码为%形式
-	 *
-	 * @param path    需要编码的字符串
-	 * @param charset 编码, {@code null}返回原字符串，表示不编码
-	 * @return 编码后的字符串
-	 */
-	public String encode(String path, Charset charset) {
-		if (null == charset || StrUtil.isEmpty(path)) {
-			return path;
-		}
+    /**
+     * 是否将空格编码为+.
+     *
+     * @param encodeSpaceAsPlus 是否将空格编码为+
+     */
+    public void setEncodeSpaceAsPlus(final boolean encodeSpaceAsPlus) {
+        this.encodeSpaceAsPlus = encodeSpaceAsPlus;
+    }
 
-		final StringBuilder rewrittenPath = new StringBuilder(path.length());
-		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		OutputStreamWriter writer = new OutputStreamWriter(buf, charset);
+    /**
+     * 将URL中的字符串编码为%形式.
+     *
+     * @param path    需要编码的字符串
+     * @param charset 编码, {@code null}返回原字符串，表示不编码
+     * @return 编码后的字符串
+     */
+    public String encode(final String path, final Charset charset) {
+        if (null == charset || StrUtil.isEmpty(path)) {
+            return path;
+        }
 
-		int c;
-		for (int i = 0; i < path.length(); i++) {
-			c = path.charAt(i);
-			if (safeCharacters.get(c)) {
-				rewrittenPath.append((char) c);
-			} else if (encodeSpaceAsPlus && c == CharUtil.SPACE) {
-				// 对于空格单独处理
-				rewrittenPath.append('+');
-			} else {
-				// convert to external encoding before hex conversion
-				try {
-					writer.write((char) c);
-					writer.flush();
-				} catch (IOException e) {
-					buf.reset();
-					continue;
-				}
+        final StringBuilder rewrittenPath = new StringBuilder(path.length());
+        final ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        final OutputStreamWriter writer = new OutputStreamWriter(buf, charset);
 
-				byte[] ba = buf.toByteArray();
-				for (byte toEncode : ba) {
-					// Converting each byte in the buffer
-					rewrittenPath.append('%');
-					HexUtil.appendHex(rewrittenPath, toEncode, false);
-				}
-				buf.reset();
-			}
-		}
-		return rewrittenPath.toString();
-	}
+        int c;
+        for (int i = 0; i < path.length(); i++) {
+            c = path.charAt(i);
+            if (safeCharacters.get(c)) {
+                rewrittenPath.append((char) c);
+            } else if (encodeSpaceAsPlus && c == CharUtil.SPACE) {
+                // 对于空格单独处理
+                rewrittenPath.append('+');
+            } else {
+                // convert to external encoding before hex conversion
+                try {
+                    writer.write((char) c);
+                    writer.flush();
+                } catch (final IOException e) {
+                    buf.reset();
+                    continue;
+                }
 
-	/**
-	 * 增加安全字符[a-z][A-Z]
-	 */
-	private void addAlpha() {
-		for (char i = 'a'; i <= 'z'; i++) {
-			addSafeCharacter(i);
-		}
-		for (char i = 'A'; i <= 'Z'; i++) {
-			addSafeCharacter(i);
-		}
-	}
+                final byte[] ba = buf.toByteArray();
+                for (final byte toEncode : ba) {
+                    // Converting each byte in the buffer
+                    rewrittenPath.append('%');
+                    HexUtil.appendHex(rewrittenPath, toEncode, false);
+                }
+                buf.reset();
+            }
+        }
+        return rewrittenPath.toString();
+    }
 
-	/**
-	 * 增加数字1-9
-	 */
-	private void addDigit() {
-		for (char i = '0'; i <= '9'; i++) {
-			addSafeCharacter(i);
-		}
-	}
+    /**
+     * 增加安全字符[a-z][A-Z].
+     */
+    private void addAlpha() {
+        for (char i = 'a'; i <= 'z'; i++) {
+            addSafeCharacter(i);
+        }
+        for (char i = 'A'; i <= 'Z'; i++) {
+            addSafeCharacter(i);
+        }
+    }
 
+    /**
+     * 增加数字0-9.
+     */
+    private void addDigit() {
+        for (char i = '0'; i <= '9'; i++) {
+            addSafeCharacter(i);
+        }
+    }
 
-	/**
-	 * 增加sub-delims
-	 * sub-delims  = "!" / "$" / "&" / "'" / "(" / ") / "*" / "+" / "," / ";" / "="
-	 * 定义见：https://datatracker.ietf.org/doc/html/rfc3986#section-2.2
-	 */
-	private static void addSubDelims(URLEncoder encoder){
-		// Add the sub-delims
-		encoder.addSafeCharacter('!');
-		encoder.addSafeCharacter('$');
-		encoder.addSafeCharacter('&');
-		encoder.addSafeCharacter('\'');
-		encoder.addSafeCharacter('(');
-		encoder.addSafeCharacter(')');
-		encoder.addSafeCharacter('*');
-		encoder.addSafeCharacter('+');
-		encoder.addSafeCharacter(',');
-		encoder.addSafeCharacter(';');
-		encoder.addSafeCharacter('=');
-	}
+    /**
+     * 增加sub-delims.
+     * sub-delims  = "!" / "$" / "&" / "'" / "(" / ") / "*" / "+" / "," / ";" / "="
+     * 定义见：https://datatracker.ietf.org/doc/html/rfc3986#section-2.2
+     *
+     * @param encoder URLEncoder
+     */
+    private static void addSubDelims(final URLEncoder encoder) {
+        // Add the sub-delims
+        encoder.addSafeCharacter('!');
+        encoder.addSafeCharacter('$');
+        encoder.addSafeCharacter('&');
+        encoder.addSafeCharacter('\'');
+        encoder.addSafeCharacter('(');
+        encoder.addSafeCharacter(')');
+        encoder.addSafeCharacter('*');
+        encoder.addSafeCharacter('+');
+        encoder.addSafeCharacter(',');
+        encoder.addSafeCharacter(';');
+        encoder.addSafeCharacter('=');
+    }
 }
