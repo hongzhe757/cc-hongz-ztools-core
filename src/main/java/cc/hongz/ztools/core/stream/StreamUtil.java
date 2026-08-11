@@ -18,153 +18,174 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * {@link Stream} 工具类
+ * {@link Stream} 工具类.
  *
  * @author looly
  * @since 5.6.7
  */
-public class StreamUtil {
+public final class StreamUtil {
 
-	@SafeVarargs
-	public static <T> Stream<T> of(T... array) {
-		Assert.notNull(array, "Array must be not null!");
-		return Stream.of(array);
-	}
+    /**
+     * 私有构造器.
+     */
+    private StreamUtil() {
+    }
 
-	/**
-	 * {@link Iterable}转换为{@link Stream}，默认非并行
-	 *
-	 * @param iterable 集合
-	 * @param <T>      集合元素类型
-	 * @return {@link Stream}
-	 */
-	public static <T> Stream<T> of(Iterable<T> iterable) {
-		return of(iterable, false);
-	}
+    /**
+     * 将数组转换为{@link Stream}.
+     *
+     * @param array 数组
+     * @param <T>   元素类型
+     * @return {@link Stream}
+     */
+    @SafeVarargs
+    public static <T> Stream<T> of(final T... array) {
+        Assert.notNull(array, "Array must be not null!");
+        return Stream.of(array);
+    }
 
-	/**
-	 * {@link Iterable}转换为{@link Stream}
-	 *
-	 * @param iterable 集合
-	 * @param parallel 是否并行
-	 * @param <T>      集合元素类型
-	 * @return {@link Stream}
-	 */
-	public static <T> Stream<T> of(Iterable<T> iterable, boolean parallel) {
-		Assert.notNull(iterable, "Iterable must be not null!");
+    /**
+     * {@link Iterable}转换为{@link Stream}，默认非并行.
+     *
+     * @param iterable 集合
+     * @param <T>      集合元素类型
+     * @return {@link Stream}
+     */
+    public static <T> Stream<T> of(final Iterable<T> iterable) {
+        return of(iterable, false);
+    }
 
-		return iterable instanceof Collection ?
-				parallel ? ((Collection<T>) iterable).parallelStream() : ((Collection<T>) iterable).stream() :
-				StreamSupport.stream(iterable.spliterator(), parallel);
-	}
+    /**
+     * {@link Iterable}转换为{@link Stream}.
+     *
+     * @param iterable 集合
+     * @param parallel 是否并行
+     * @param <T>      集合元素类型
+     * @return {@link Stream}
+     */
+    public static <T> Stream<T> of(final Iterable<T> iterable,
+            final boolean parallel) {
+        Assert.notNull(iterable, "Iterable must be not null!");
 
-	/**
-	 * {@link Iterator} 转换为 {@link Stream}
-	 * @param iterator 迭代器
-	 * @param <T> 集合元素类型
-	 * @return {@link Stream}
-	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
-	 */
-	public static <T> Stream<T> of(Iterator<T> iterator) {
-		return of(iterator, false);
-	}
+        return iterable instanceof Collection
+                ? parallel
+                    ? ((Collection<T>) iterable).parallelStream()
+                    : ((Collection<T>) iterable).stream()
+                : StreamSupport.stream(iterable.spliterator(), parallel);
+    }
 
-	/**
-	 * {@link Iterator} 转换为 {@link Stream}
-	 * @param iterator 迭代器
-	 * @param parallel 是否并行
-	 * @param <T> 集合元素类型
-	 * @return {@link Stream}
-	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
-	 */
-	public static <T> Stream<T> of(Iterator<T> iterator, boolean parallel) {
-		Assert.notNull(iterator, "iterator must not be null!");
-		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
-	}
+    /**
+     * {@link Iterator} 转换为 {@link Stream}.
+     *
+     * @param iterator 迭代器
+     * @param <T>      集合元素类型
+     * @return {@link Stream}
+     */
+    public static <T> Stream<T> of(final Iterator<T> iterator) {
+        return of(iterator, false);
+    }
 
-	/**
-	 * 按行读取文件为{@link Stream}
-	 *
-	 * @param file 文件
-	 * @return {@link Stream}
-	 */
-	public static Stream<String> of(File file) {
-		return of(file, CharsetUtil.CHARSET_UTF_8);
-	}
+    /**
+     * {@link Iterator} 转换为 {@link Stream}.
+     *
+     * @param iterator 迭代器
+     * @param parallel 是否并行
+     * @param <T>      集合元素类型
+     * @return {@link Stream}
+     */
+    public static <T> Stream<T> of(final Iterator<T> iterator,
+            final boolean parallel) {
+        Assert.notNull(iterator, "iterator must not be null!");
+        return StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
+    }
 
-	/**
-	 * 按行读取文件为{@link Stream}
-	 *
-	 * @param path 路径
-	 * @return {@link Stream}
-	 */
-	public static Stream<String> of(Path path) {
-		return of(path, CharsetUtil.CHARSET_UTF_8);
-	}
+    /**
+     * 按行读取文件为{@link Stream}.
+     *
+     * @param file 文件
+     * @return {@link Stream}
+     */
+    public static Stream<String> of(final File file) {
+        return of(file, CharsetUtil.CHARSET_UTF_8);
+    }
 
-	/**
-	 * 按行读取文件为{@link Stream}
-	 *
-	 * @param file    文件
-	 * @param charset 编码
-	 * @return {@link Stream}
-	 */
-	public static Stream<String> of(File file, Charset charset) {
-		Assert.notNull(file, "File must be not null!");
-		return of(file.toPath(), charset);
-	}
+    /**
+     * 按行读取文件为{@link Stream}.
+     *
+     * @param path 路径
+     * @return {@link Stream}
+     */
+    public static Stream<String> of(final Path path) {
+        return of(path, CharsetUtil.CHARSET_UTF_8);
+    }
 
-	/**
-	 * 按行读取文件为{@link Stream}
-	 *
-	 * @param path    路径
-	 * @param charset 编码
-	 * @return {@link Stream}
-	 */
-	public static Stream<String> of(Path path, Charset charset) {
-		try {
-			return Files.lines(path, charset);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
+    /**
+     * 按行读取文件为{@link Stream}.
+     *
+     * @param file    文件
+     * @param charset 编码
+     * @return {@link Stream}
+     */
+    public static Stream<String> of(final File file, final Charset charset) {
+        Assert.notNull(file, "File must be not null!");
+        return of(file.toPath(), charset);
+    }
 
-	/**
-	 * 通过函数创建Stream
-	 *
-	 * @param seed           初始值
-	 * @param elementCreator 递进函数，每次调用此函数获取下一个值
-	 * @param limit          限制个数
-	 * @param <T>            创建元素类型
-	 * @return {@link Stream}
-	 */
-	public static <T> Stream<T> of(T seed, UnaryOperator<T> elementCreator, int limit) {
-		return Stream.iterate(seed, elementCreator).limit(limit);
-	}
+    /**
+     * 按行读取文件为{@link Stream}.
+     *
+     * @param path    路径
+     * @param charset 编码
+     * @return {@link Stream}
+     */
+    public static Stream<String> of(final Path path, final Charset charset) {
+        try {
+            return Files.lines(path, charset);
+        } catch (final IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 
-	/**
-	 * 将Stream中所有元素以指定分隔符，合并为一个字符串，对象默认调用toString方法
-	 *
-	 * @param stream    {@link Stream}
-	 * @param delimiter 分隔符
-	 * @param <T>       元素类型
-	 * @return 字符串
-	 */
-	public static <T> String join(Stream<T> stream, CharSequence delimiter) {
-		return stream.collect(CollectorUtil.joining(delimiter));
-	}
+    /**
+     * 通过函数创建Stream.
+     *
+     * @param seed           初始值
+     * @param elementCreator 递进函数，每次调用此函数获取下一个值
+     * @param limit          限制个数
+     * @param <T>            创建元素类型
+     * @return {@link Stream}
+     */
+    public static <T> Stream<T> of(final T seed,
+            final UnaryOperator<T> elementCreator, final int limit) {
+        return Stream.iterate(seed, elementCreator).limit(limit);
+    }
 
-	/**
-	 * 将Stream中所有元素以指定分隔符，合并为一个字符串
-	 *
-	 * @param stream       {@link Stream}
-	 * @param delimiter    分隔符
-	 * @param toStringFunc 元素转换为字符串的函数
-	 * @param <T>          元素类型
-	 * @return 字符串
-	 */
-	public static <T> String join(Stream<T> stream, CharSequence delimiter,
-								  Function<T, ? extends CharSequence> toStringFunc) {
-		return stream.collect(CollectorUtil.joining(delimiter, toStringFunc));
-	}
+    /**
+     * 将Stream中所有元素以指定分隔符，合并为一个字符串，对象默认调用toString方法.
+     *
+     * @param stream    {@link Stream}
+     * @param delimiter 分隔符
+     * @param <T>       元素类型
+     * @return 字符串
+     */
+    public static <T> String join(final Stream<T> stream,
+            final CharSequence delimiter) {
+        return stream.collect(CollectorUtil.joining(delimiter));
+    }
+
+    /**
+     * 将Stream中所有元素以指定分隔符，合并为一个字符串.
+     *
+     * @param stream       {@link Stream}
+     * @param delimiter    分隔符
+     * @param toStringFunc 元素转换为字符串的函数
+     * @param <T>          元素类型
+     * @return 字符串
+     */
+    public static <T> String join(final Stream<T> stream,
+            final CharSequence delimiter,
+            final Function<T, ? extends CharSequence> toStringFunc) {
+        return stream.collect(CollectorUtil.joining(delimiter, toStringFunc));
+    }
 }
