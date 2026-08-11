@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.net;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.SSLContext;
@@ -7,28 +8,34 @@ import javax.net.ssl.SSLContext;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * SSLUtil 单元测试
+ * SSLUtil 单元测试.
  */
 class SSLUtilTest {
 
-	@Test
-	void createSSLContextTest() {
-		SSLContext sslContext = SSLUtil.createSSLContext("TLS");
-		assertNotNull(sslContext);
-		assertEquals("TLS", sslContext.getProtocol());
-	}
+    @Test
+    @DisplayName("创建默认信任全部证书的 SSLContext")
+    void createSSLContextTest() {
+        SSLContext sslContext = SSLUtil.createSSLContext("TLS");
+        assertNotNull(sslContext);
+        assertEquals("TLS", sslContext.getProtocol());
+    }
 
-	@Test
-	void createSSLContextWithManagersTest() {
-		// keyManager和trustManager都为null，需显式转型避免歧义
-		SSLContext sslContext = SSLUtil.createSSLContext("TLS", (javax.net.ssl.KeyManager) null, (javax.net.ssl.TrustManager) null);
-		assertNotNull(sslContext);
-		assertEquals("TLS", sslContext.getProtocol());
-	}
+    @Test
+    @DisplayName("创建带 KeyManager/TrustManager 的 SSLContext")
+    void createSSLContextWithManagersTest() {
+        SSLContext sslContext = SSLUtil.createSSLContext("TLS",
+                (javax.net.ssl.KeyManager) null,
+                (javax.net.ssl.TrustManager) null);
+        assertNotNull(sslContext);
+        assertEquals("TLS", sslContext.getProtocol());
+    }
 
-	@Test
-	void createSSLContextWithArraysTest() {
-		SSLContext sslContext = SSLUtil.createSSLContext("TLS", (javax.net.ssl.KeyManager[]) null, (javax.net.ssl.TrustManager[]) null);
-		assertNotNull(sslContext);
-	}
+    @Test
+    @DisplayName("创建带数组参数 SSLContext")
+    void createSSLContextWithArraysTest() {
+        SSLContext sslContext = SSLUtil.createSSLContext("TLS",
+                (javax.net.ssl.KeyManager[]) null,
+                (javax.net.ssl.TrustManager[]) null);
+        assertNotNull(sslContext);
+    }
 }
