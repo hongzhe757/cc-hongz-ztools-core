@@ -5,20 +5,20 @@ import java.io.IOException;
 import java.net.*;
 
 /**
- * 代理Socket工厂，用于创建代理Socket.<br>
- * 来自commons-net的DefaultSocketFactory
+ * 代理Socket工厂，用于创建代理Socket. 来自commons-net的DefaultSocketFactory.
  *
  * @author commons-net, looly
  * @since 5.8.23
  */
 public class ProxySocketFactory extends SocketFactory {
 
-	/**
-	 * 创建代理SocketFactory
-	 * @param proxy 代理对象
-	 * @return {@code ProxySocketFactory}
-	 */
-	public static ProxySocketFactory of(final Proxy proxy) {
+	    /**
+     * 创建代理SocketFactory.
+     *
+     * @param proxy 代理对象
+     * @return {@code ProxySocketFactory}
+     */
+    public static ProxySocketFactory of(final Proxy proxy) {
 		return new ProxySocketFactory(proxy);
 	}
 
