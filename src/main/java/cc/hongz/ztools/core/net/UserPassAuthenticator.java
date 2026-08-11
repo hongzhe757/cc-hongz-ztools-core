@@ -11,23 +11,28 @@ import java.net.PasswordAuthentication;
  */
 public class UserPassAuthenticator extends Authenticator {
 
-	private final String user;
-	private final char[] pass;
+    /**
+     * 用户名.
+     */
+    private final String user;
+    /**
+     * 密码.
+     */
+    private final char[] pass;
 
-	/**
-	 * 构造
-	 *
-	 * @param user 用户名
-	 * @param pass 密码
-	 */
-	public UserPassAuthenticator(String user, char[] pass) {
-		this.user = user;
-		this.pass = pass;
-	}
+    /**
+     * 构造.
+     *
+     * @param user 用户名
+     * @param pass 密码
+     */
+    public UserPassAuthenticator(final String user, final char[] pass) {
+        this.user = user;
+        this.pass = pass;
+    }
 
-	@Override
-	protected PasswordAuthentication getPasswordAuthentication() {
-		return new PasswordAuthentication(this.user, this.pass);
-	}
-
+    @Override
+    protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(this.user, this.pass);
+    }
 }
