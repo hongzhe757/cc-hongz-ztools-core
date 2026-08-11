@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.net;
 import cc.hongz.ztools.core.util.CharUtil;
 import cc.hongz.ztools.core.util.HexUtil;
 import cc.hongz.ztools.core.util.StrUtil;
+import lombok.Setter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -216,8 +217,14 @@ public class URLEncoder implements Serializable {
     private final BitSet safeCharacters;
     /**
      * 是否编码空格为+.
-     */
-    private boolean encodeSpaceAsPlus = false;
+	 * -- SETTER --
+	 *  是否将空格编码为+.
+	 *
+	 * @param encodeSpaceAsPlus 是否将空格编码为+
+
+	 */
+    @Setter
+	private boolean encodeSpaceAsPlus = false;
 
     /**
      * 构造.<br>
@@ -258,16 +265,7 @@ public class URLEncoder implements Serializable {
         safeCharacters.clear(c);
     }
 
-    /**
-     * 是否将空格编码为+.
-     *
-     * @param encodeSpaceAsPlus 是否将空格编码为+
-     */
-    public void setEncodeSpaceAsPlus(final boolean encodeSpaceAsPlus) {
-        this.encodeSpaceAsPlus = encodeSpaceAsPlus;
-    }
-
-    /**
+	/**
      * 将URL中的字符串编码为%形式.
      *
      * @param path    需要编码的字符串
