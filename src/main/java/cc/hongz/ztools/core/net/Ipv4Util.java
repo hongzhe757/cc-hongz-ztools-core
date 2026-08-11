@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 /**
  * IPV4地址工具类
  *
- * <p>pr自：https://gitee.com/loolly/hutool/pulls/161</p>
- *
  * @author ZhuKun
  * @since 5.4.1
  */
