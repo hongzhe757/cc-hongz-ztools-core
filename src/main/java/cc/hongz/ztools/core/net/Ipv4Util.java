@@ -28,7 +28,7 @@ public final class Ipv4Util {
     }
 
     /**
-     * IPv4正则表达式（内联自 hutool PatternPool.IPV4）.
+     * IPv4正则表达式（内联自 PatternPool.IPV4）.
      */
     private static final Pattern IPV4_PATTERN = Pattern.compile(
         "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)$");
