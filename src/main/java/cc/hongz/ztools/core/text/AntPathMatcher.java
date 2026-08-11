@@ -133,11 +133,11 @@ public class AntPathMatcher {
     /**
      * 设置路径分隔符.
      *
-     * @param aPathSeparator 分隔符，{@code null}表示使用默认分隔符
+     * @param pathSeparator 分隔符，{@code null}表示使用默认分隔符
      * @return this
      */
-    public AntPathMatcher setPathSeparator(final String aPathSeparator) {
-        String separator = aPathSeparator;
+    public AntPathMatcher setPathSeparator(final String pathSeparator) {
+        String separator = pathSeparator;
         if (null == separator) {
             separator = DEFAULT_PATH_SEPARATOR;
         }
