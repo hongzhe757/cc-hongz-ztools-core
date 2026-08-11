@@ -60,12 +60,12 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
     /**
      * 设置协议，例如TLS等.
      *
-     * @param aProtocol 协议
+     * @param protocol 协议
      * @return 自身
      */
-    public SSLContextBuilder setProtocol(final String aProtocol) {
-        if (StrUtil.isNotBlank(aProtocol)) {
-            this.protocol = aProtocol;
+    public SSLContextBuilder setProtocol(final String protocol) {
+        if (StrUtil.isNotBlank(protocol)) {
+            this.protocol = protocol;
         }
         return this;
     }
@@ -73,13 +73,13 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
     /**
      * 设置信任信息.
      *
-     * @param newTrustManagers TrustManager列表
+     * @param trustManagers TrustManager列表
      * @return 自身
      */
     public SSLContextBuilder setTrustManagers(
-            final TrustManager... newTrustManagers) {
-        if (ArrayUtil.isNotEmpty(newTrustManagers)) {
-            this.trustManagers = newTrustManagers;
+            final TrustManager... trustManagers) {
+        if (ArrayUtil.isNotEmpty(trustManagers)) {
+            this.trustManagers = trustManagers;
         }
         return this;
     }
@@ -87,13 +87,13 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
     /**
      * 设置 JSSE 密钥管理器.
      *
-     * @param newKeyManagers JSSE 密钥管理器
+     * @param keyManagers JSSE 密钥管理器
      * @return 自身
      */
     public SSLContextBuilder setKeyManagers(
-            final KeyManager... newKeyManagers) {
-        if (ArrayUtil.isNotEmpty(newKeyManagers)) {
-            this.keyManagers = newKeyManagers;
+            final KeyManager... keyManagers) {
+        if (ArrayUtil.isNotEmpty(keyManagers)) {
+            this.keyManagers = keyManagers;
         }
         return this;
     }
@@ -101,13 +101,13 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
     /**
      * 设置 SecureRandom.
      *
-     * @param newSecureRandom SecureRandom
+     * @param secureRandom SecureRandom
      * @return 自己
      */
     public SSLContextBuilder setSecureRandom(
-            final SecureRandom newSecureRandom) {
-        if (null != newSecureRandom) {
-            this.secureRandom = newSecureRandom;
+            final SecureRandom secureRandom) {
+        if (null != secureRandom) {
+            this.secureRandom = secureRandom;
         }
         return this;
     }
