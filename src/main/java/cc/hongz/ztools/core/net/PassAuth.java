@@ -11,31 +11,34 @@ import java.net.PasswordAuthentication;
  */
 public class PassAuth extends Authenticator {
 
-	/**
-	 * 创建账号密码形式的{@link Authenticator} 实现.
-	 *
-	 * @param user 用户名
-	 * @param pass 密码
-	 * @return PassAuth
-	 */
-	public static PassAuth of(String user, char[] pass) {
-		return new PassAuth(user, pass);
-	}
+    /**
+     * 创建账号密码形式的{@link Authenticator} 实现.
+     *
+     * @param user 用户名
+     * @param pass 密码
+     * @return PassAuth
+     */
+    public static PassAuth of(final String user, final char[] pass) {
+        return new PassAuth(user, pass);
+    }
 
-	private final PasswordAuthentication auth;
+    /**
+     * 密码认证信息.
+     */
+    private final PasswordAuthentication auth;
 
-	/**
-	 * 构造
-	 *
-	 * @param user 用户名
-	 * @param pass 密码
-	 */
-	public PassAuth(String user, char[] pass) {
-		auth = new PasswordAuthentication(user, pass);
-	}
+    /**
+     * 构造.
+     *
+     * @param user 用户名
+     * @param pass 密码
+     */
+    public PassAuth(final String user, final char[] pass) {
+        auth = new PasswordAuthentication(user, pass);
+    }
 
-	@Override
-	protected PasswordAuthentication getPasswordAuthentication() {
-		return auth;
-	}
+    @Override
+    protected PasswordAuthentication getPasswordAuthentication() {
+        return auth;
+    }
 }
