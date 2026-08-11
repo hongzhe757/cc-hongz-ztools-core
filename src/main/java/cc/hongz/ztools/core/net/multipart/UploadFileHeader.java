@@ -3,6 +3,8 @@ package cc.hongz.ztools.core.net.multipart;
 import cc.hongz.ztools.core.io.FileUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 
+import lombok.Getter;
+
 /**
  * 上传的文件的头部信息.<br>
  * 来自Jodd.
@@ -10,6 +12,7 @@ import cc.hongz.ztools.core.util.StrUtil;
  * @author jodd.org
  * @since 5.7.0
  */
+@Getter
 public class UploadFileHeader {
 
     /**
@@ -58,79 +61,6 @@ public class UploadFileHeader {
      */
     UploadFileHeader(final String dataHeader) {
         processHeaderString(dataHeader);
-    }
-
-    /**
-     * 是否为文件.<br>
-     * 如果头信息中包含 'filename' 字符串则为true.
-     *
-     * @return 是否为文件
-     */
-    public boolean isFile() {
-        return isFile;
-    }
-
-    /**
-     * 返回表单字段名.
-     *
-     * @return 表单字段名
-     */
-    public String getFormFieldName() {
-        return formFieldName;
-    }
-
-    /**
-     * 返回表单中的文件名，来自客户端传入.
-     *
-     * @return 表单文件名
-     */
-    public String getFormFileName() {
-        return formFileName;
-    }
-
-    /**
-     * 获取文件名，不包括路径.
-     *
-     * @return 文件名
-     */
-    public String getFileName() {
-        return fileName;
-    }
-
-    /**
-     * 返回上传的内容类型，通常格式为 mime_type/mime_subtype.
-     *
-     * @return content type
-     */
-    public String getContentType() {
-        return contentType;
-    }
-
-    /**
-     * 返回文件 MIME 类型.
-     *
-     * @return MIME 类型
-     */
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    /**
-     * 返回文件 MIME 子类型.
-     *
-     * @return MIME 子类型
-     */
-    public String getMimeSubtype() {
-        return mimeSubtype;
-    }
-
-    /**
-     * 返回内容处置方式，通常为 'form-data'.
-     *
-     * @return 内容处置方式
-     */
-    public String getContentDisposition() {
-        return contentDisposition;
     }
 
     /**
