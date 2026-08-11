@@ -24,10 +24,19 @@ import java.nio.charset.Charset;
  *
  * @author looly
  */
-public class URLDecoder implements Serializable {
+public final class URLDecoder implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 转义字符.
+     */
     private static final byte ESCAPE_CHAR = '%';
+
+    /**
+     * 私有构造器.
+     */
+    private URLDecoder() {
+    }
 
     /**
      * 解码，不对+解码.
