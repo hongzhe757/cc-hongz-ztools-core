@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * LocalPortGenerator 单元测试.
  */
-class LocalPortGeneraterTest {
+class LocalPortGeneratorTest {
 
     @Test
     @DisplayName("生成可用本地端口")
