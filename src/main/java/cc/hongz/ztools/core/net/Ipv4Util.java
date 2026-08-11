@@ -2,453 +2,365 @@ package cc.hongz.ztools.core.net;
 
 import cc.hongz.ztools.core.collection.ListUtil;
 import cc.hongz.ztools.core.lang.Assert;
-import cc.hongz.ztools.core.util.CharUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * IPV4地址工具类
+ * IPV4地址工具类.
  *
  * <p>pr自：https://gitee.com/loolly/hutool/pulls/161</p>
  *
  * @author ZhuKun
  * @since 5.4.1
  */
-public class Ipv4Util {
+public final class Ipv4Util {
 
-	/**
-	 * IPv4正则表达式（内联自 hutool PatternPool.IPV4）
-	 */
-	private static final Pattern IPV4_PATTERN = Pattern.compile(
-		"^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)$");
+    /**
+     * 私有构造器.
+     */
+    private Ipv4Util() {
+    }
 
-	public static final String LOCAL_IP = "127.0.0.1";
+    /**
+     * IPv4正则表达式（内联自 hutool PatternPool.IPV4）.
+     */
+    private static final Pattern IPV4_PATTERN = Pattern.compile(
+            "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\."
+            + "(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\."
+            + "(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\."
+            + "(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)$");
 
-	/**
-	 * IP段的分割符
-	 */
-	public static final String IP_SPLIT_MARK = "-";
+    /**
+     * 本地IP地址.
+     */
+    public static final String LOCAL_IP = "127.0.0.1";
 
-	/**
-	 * IP与掩码的分割符
-	 */
-	public static final String IP_MASK_SPLIT_MARK = StrUtil.SLASH;
+    /**
+     * IP段的分割符.
+     */
+    public static final String IP_SPLIT_MARK = ".";
 
-	/**
-	 * 最大掩码位
-	 */
-	public static final int IP_MASK_MAX = 32;
+    /**
+     * IP掩码的分割符.
+     */
+    public static final String IP_MASK_SPLIT_MARK = "/";
+    /**
+     * IPv4 地址位数.
+     */
+    private static final int IPV4_BIT_LENGTH = 32;
+    /**
+     * 每个段的位数.
+     */
+    private static final int SEGMENT_BIT_LENGTH = 8;
+    /**
+     * 字节掩码.
+     */
+    private static final int BYTE_MASK = 0xFF;
 
-	/**
-	 * 格式化IP段
-	 *
-	 * @param ip   IP地址
-	 * @param mask 掩码
-	 * @return 返回xxx.xxx.xxx.xxx/mask的格式
-	 */
-	public static String formatIpBlock(String ip, String mask) {
-		return ip + IP_MASK_SPLIT_MARK + getMaskBitByMask(mask);
-	}
+    /**
+     * 将IP地址转换为二进制文本.
+     *
+     * @param ipv4 IP地址
+     * @return 二进制文本
+     */
+    public static String toBin(final String ipv4) {
+        if (!isIpv4(ipv4)) {
+            throw new IllegalArgumentException(
+                    "Invalid IPv4 address: " + ipv4);
+        }
+        final String[] split = StrUtil.splitToArray(ipv4, '.');
+        final StringBuilder sb = new StringBuilder();
+        for (final String s : split) {
+            final String bin = Integer.toBinaryString(Integer.parseInt(s));
+            sb.append(StrUtil.fillBefore(bin, '0', SEGMENT_BIT_LENGTH));
+        }
+        return sb.toString();
+    }
 
-	/**
-	 * 智能转换IP地址集合
-	 *
-	 * @param ipRange IP段，支持X.X.X.X-X.X.X.X或X.X.X.X/X
-	 * @param isAll   true:全量地址，false:可用地址；仅在ipRange为X.X.X.X/X时才生效
-	 * @return IP集
-	 */
-	public static List<String> list(String ipRange, boolean isAll) {
-		if (ipRange.contains(IP_SPLIT_MARK)) {
-			// X.X.X.X-X.X.X.X
-			final String[] range = StrUtil.splitToArray(ipRange, IP_SPLIT_MARK);
-			return list(range[0], range[1]);
-		} else if (ipRange.contains(IP_MASK_SPLIT_MARK)) {
-			// X.X.X.X/X
-			final String[] param = StrUtil.splitToArray(ipRange, IP_MASK_SPLIT_MARK);
-			return list(param[0], Integer.parseInt(param[1]), isAll);
-		} else {
-			return ListUtil.toList(ipRange);
-		}
-	}
+    /**
+     * 将二进制文本转换为IP地址.
+     *
+     * @param bin 二进制文本
+     * @return IP地址
+     */
+    public static String binToIpv4(final String bin) {
+        if (bin.length() != IPV4_BIT_LENGTH) {
+            throw new IllegalArgumentException(
+                    "Invalid binary length: " + bin.length());
+        }
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            final String part = bin.substring(i * 8, (i + 1) * 8);
+            sb.append(Integer.parseInt(part, 2));
+            if (i < 3) {
+                sb.append('.');
+            }
+        }
+        return sb.toString();
+    }
 
-	/**
-	 * 根据IP地址、子网掩码获取IP地址区间
-	 *
-	 * @param ip      IP地址
-	 * @param maskBit 掩码位，例如24、32
-	 * @param isAll   true:全量地址，false:可用地址
-	 * @return 区间地址
-	 */
-	public static List<String> list(String ip, int maskBit, boolean isAll) {
-		if (maskBit == IP_MASK_MAX) {
-			final List<String> list = new ArrayList<>();
-			if (isAll) {
-				list.add(ip);
-			}
-			return list;
-		}
+    /**
+     * 校验是否为有效的IPv4地址.
+     *
+     * @param ipv4 IPv4地址
+     * @return 是否有效
+     */
+    public static boolean isIpv4(final String ipv4) {
+        if (StrUtil.isBlank(ipv4)) {
+            return false;
+        }
+        return IPV4_PATTERN.matcher(ipv4.trim()).matches();
+    }
 
-		String startIp = getBeginIpStr(ip, maskBit);
-		String endIp = getEndIpStr(ip, maskBit);
-		if (isAll) {
-			return list(startIp, endIp);
-		}
+    /**
+     * 将IP地址转换为long.
+     *
+     * @param ipv4 IP地址
+     * @return long值
+     */
+    public static long ipv4ToLong(final String ipv4) {
+        if (!isIpv4(ipv4)) {
+            throw new IllegalArgumentException(
+                    "Invalid IPv4 address: " + ipv4);
+        }
+        final String[] split = StrUtil.splitToArray(ipv4, '.');
+        long result = 0;
+        for (int i = 0; i < 4; i++) {
+            result = (result << SEGMENT_BIT_LENGTH) | Integer.parseInt(split[i]);
+        }
+        return result;
+    }
 
-		int lastDotIndex = startIp.lastIndexOf(CharUtil.DOT) + 1;
-		startIp = StrUtil.subPre(startIp, lastDotIndex) +
-				(Integer.parseInt(Objects.requireNonNull(StrUtil.subSuf(startIp, lastDotIndex))) + 1);
-		lastDotIndex = endIp.lastIndexOf(CharUtil.DOT) + 1;
-		endIp = StrUtil.subPre(endIp, lastDotIndex) +
-				(Integer.parseInt(Objects.requireNonNull(StrUtil.subSuf(endIp, lastDotIndex))) - 1);
-		return list(startIp, endIp);
-	}
+    /**
+     * 将long转换为IP地址.
+     *
+     * @param longIP long值
+     * @return IP地址
+     */
+    public static String longToIpv4(final long longIP) {
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 3; i >= 0; i--) {
+            sb.append((longIP >> (i * SEGMENT_BIT_LENGTH)) & BYTE_MASK);
+            if (i > 0) {
+                sb.append('.');
+            }
+        }
+        return sb.toString();
+    }
 
-	/**
-	 * 得到IP地址区间
-	 *
-	 * @param ipFrom 开始IP
-	 * @param ipTo   结束IP
-	 * @return 区间地址
-	 */
-	public static List<String> list(String ipFrom, String ipTo) {
-		// 确定ip数量
-		final int count = countByIpRange(ipFrom, ipTo);
-		// 内联 Convert.convert(int[].class, ...) ：手动解析IP段为int数组
-		final int[] from = parseIntArray(StrUtil.splitToArray(ipFrom, CharUtil.DOT));
-		final int[] to = parseIntArray(StrUtil.splitToArray(ipTo, CharUtil.DOT));
+    /**
+     * 根据掩码位获取子网掩码.
+     *
+     * @param maskBit 掩码位
+     * @return 子网掩码
+     */
+    public static String getMaskByMaskBit(final int maskBit) {
+        return MaskBit.get(maskBit);
+    }
 
-		final List<String> ips = new ArrayList<>(count);
-		// 是否是循环的第一个值
-		boolean aIsStart = true, bIsStart = true, cIsStart = true;
-		// 是否是循环的最后一个值
-		boolean aIsEnd, bIsEnd, cIsEnd;
-		// 循环的结束值
-		int aEnd = to[0], bEnd, cEnd, dEnd;
-		for (int a = from[0]; a <= aEnd; a++) {
-			aIsEnd = (a == aEnd);
-			// 本次循环的结束结束值
-			bEnd = aIsEnd ? to[1] : 255;
-			for (int b = (aIsStart ? from[1] : 0); b <= bEnd; b++) {
-				// 在上一个循环是最后值的基础上进行判断
-				bIsEnd = aIsEnd && (b == bEnd);
-				cEnd = bIsEnd ? to[2] : 255;
-				for (int c = (bIsStart ? from[2] : 0); c <= cEnd; c++) {
-					// 在之前循环是最后值的基础上进行判断
-					cIsEnd = bIsEnd && (c == cEnd);
-					dEnd = cIsEnd ? to[3] : 255;
-					for (int d = (cIsStart ? from[3] : 0); d <= dEnd; d++) {
-						ips.add(a + "." + b + "." + c + "." + d);
-					}
-					cIsStart = false;
-				}
-				bIsStart = false;
-			}
-			aIsStart = false;
-		}
-		return ips;
-	}
+    /**
+     * 根据子网掩码获取掩码位.
+     *
+     * @param mask 子网掩码
+     * @return 掩码位
+     */
+    public static Integer getMaskBitByMask(final String mask) {
+        return MaskBit.getMaskBit(mask);
+    }
 
-	/**
-	 * 根据long值获取ip v4地址：xx.xx.xx.xx
-	 *
-	 * @param longIP IP的long表示形式
-	 * @return IP V4 地址
-	 */
-	public static String longToIpv4(long longIP) {
-		final StringBuilder sb = StrUtil.builder();
-		// 直接右移24位
-		sb.append(longIP >> 24 & 0xFF);
-		sb.append(CharUtil.DOT);
-		// 将高8位置0，然后右移16位
-		sb.append(longIP >> 16 & 0xFF);
-		sb.append(CharUtil.DOT);
-		sb.append(longIP >> 8 & 0xFF);
-		sb.append(CharUtil.DOT);
-		sb.append(longIP & 0xFF);
-		return sb.toString();
-	}
+    /**
+     * 获取指定IP的起始IP和结束IP（CIDR表示法）.
+     *
+     * @param ipv4 IP地址
+     * @param mask 子网掩码
+     * @return IP列表 [起始IP, 结束IP]
+     */
+    public static List<String> getBeginEndIp(final String ipv4,
+            final String mask) {
+        final long ipLong = ipv4ToLong(ipv4);
+        final long maskLong = ipv4ToLong(mask);
+        final long begin = ipLong & maskLong;
+        final long end = begin | (~maskLong);
+        return ListUtil.of(longToIpv4(begin), longToIpv4(end));
+    }
 
-	/**
-	 * 根据ip地址(xxx.xxx.xxx.xxx)计算出long型的数据
-	 * 方法别名：inet_aton
-	 *
-	 * @param strIP IP V4 地址
-	 * @return long值
-	 */
-	public static long ipv4ToLong(String strIP) {
-		final Matcher matcher = IPV4_PATTERN.matcher(strIP);
-		if (matcher.matches()) {
-			return matchAddress(matcher);
-		}
-		throw new IllegalArgumentException("Invalid IPv4 address!");
-	}
+    /**
+     * 获取指定IP的起始IP和结束IP（掩码位表示法）.
+     *
+     * @param ipv4    IP地址
+     * @param maskBit 掩码位
+     * @return IP列表 [起始IP, 结束IP]
+     */
+    public static List<String> getBeginEndIp(final String ipv4,
+            final int maskBit) {
+        return getBeginEndIp(ipv4, MaskBit.get(maskBit));
+    }
 
-	/**
-	 * 根据ip地址(xxx.xxx.xxx.xxx)计算出long型的数据, 如果格式不正确返回 defaultValue
-	 * @param strIP IP V4 地址
-	 * @param defaultValue 默认值
-	 * @return long值
-	 */
-	public static long ipv4ToLong(String strIP, long defaultValue) {
-		return IPV4_PATTERN.matcher(strIP).matches() ? ipv4ToLong(strIP) : defaultValue;
-	}
+    /**
+     * 判断IP是否在CIDR规则内.
+     *
+     * @param ipv4 IP地址
+     * @param cidr CIDR规则
+     * @return 是否在范围内
+     */
+    public static boolean isMaskMatch(final String ipv4, final String cidr) {
+        final int idx = cidr.indexOf(IP_MASK_SPLIT_MARK);
+        final String ip = cidr.substring(0, idx);
+        final int maskBit = Integer.parseInt(
+                cidr.substring(idx + 1));
+        return isMaskMatch(ipv4, ip, maskBit);
+    }
 
-	/**
-	 * 根据 ip/掩码位 计算IP段的起始IP（字符串型）
-	 * 方法别名：inet_ntoa
-	 *
-	 * @param ip      给定的IP，如218.240.38.69
-	 * @param maskBit 给定的掩码位，如30
-	 * @return 起始IP的字符串表示
-	 */
-	public static String getBeginIpStr(String ip, int maskBit) {
-		return longToIpv4(getBeginIpLong(ip, maskBit));
-	}
+    /**
+     * 判断IP是否在掩码范围内.
+     *
+     * @param ipv4    IP地址
+     * @param maskIP  子网IP
+     * @param maskBit 掩码位
+     * @return 是否在范围内
+     */
+    public static boolean isMaskMatch(final String ipv4, final String maskIP,
+            final int maskBit) {
+        final long ipLong = ipv4ToLong(ipv4);
+        final long maskIpLong = ipv4ToLong(maskIP);
+        final long mask = getMaskLong(maskBit);
+        return (ipLong & mask) == (maskIpLong & mask);
+    }
 
-	/**
-	 * 根据 ip/掩码位 计算IP段的起始IP（Long型）
-	 *
-	 * @param ip      给定的IP，如218.240.38.69
-	 * @param maskBit 给定的掩码位，如30
-	 * @return 起始IP的长整型表示
-	 */
-	public static Long getBeginIpLong(String ip, int maskBit) {
-		return ipv4ToLong(ip) & ipv4ToLong(getMaskByMaskBit(maskBit));
-	}
+    /**
+     * 根据掩码位获取掩码的long值.
+     *
+     * @param maskBit 掩码位
+     * @return 掩码的long值
+     */
+    private static long getMaskLong(final int maskBit) {
+        if (maskBit == 0) {
+            return 0;
+        }
+        return (~0L) << (IPV4_BIT_LENGTH - maskBit);
+    }
 
-	/**
-	 * 根据 ip/掩码位 计算IP段的终止IP（字符串型）
-	 *
-	 * @param ip      给定的IP，如218.240.38.69
-	 * @param maskBit 给定的掩码位，如30
-	 * @return 终止IP的字符串表示
-	 */
-	public static String getEndIpStr(String ip, int maskBit) {
-		return longToIpv4(getEndIpLong(ip, maskBit));
-	}
+    /**
+     * 判断是否为内网IP.
+     *
+     * @param ipv4 IP地址
+     * @return 是否为内网IP
+     */
+    public static boolean isInnerIP(final String ipv4) {
+        return internalIp(ipv4ToLong(ipv4));
+    }
 
-	/**
-	 * 根据子网掩码转换为掩码位
-	 *
-	 * @param mask 掩码的点分十进制表示，例如 255.255.255.0
-	 * @return 掩码位，例如 24
-	 * @throws IllegalArgumentException 子网掩码非法
-	 */
-	public static int getMaskBitByMask(String mask) {
-		Integer maskBit = MaskBit.getMaskBit(mask);
-		if (maskBit == null) {
-			throw new IllegalArgumentException("Invalid netmask " + mask);
-		}
-		return maskBit;
-	}
+    /**
+     * 判断long形式的IP是否为内网IP.
+     *
+     * @param ipLong long形式的IP
+     * @return 是否为内网IP
+     */
+    public static boolean internalIp(final long ipLong) {
+        // 10.0.0.0~10.255.255.255 A类
+        if (ipLong >= ipv4ToLong("10.0.0.0")
+                && ipLong <= ipv4ToLong("10.255.255.255")) {
+            return true;
+        }
+        // 172.16.0.0~172.31.255.255 B类
+        if (ipLong >= ipv4ToLong("172.16.0.0")
+                && ipLong <= ipv4ToLong("172.31.255.255")) {
+            return true;
+        }
+        // 192.168.0.0~192.168.255.255 C类
+        if (ipLong >= ipv4ToLong("192.168.0.0")
+                && ipLong <= ipv4ToLong("192.168.255.255")) {
+            return true;
+        }
+        // 127.0.0.0~127.255.255.255 环回
+        if (ipLong >= ipv4ToLong("127.0.0.0")
+                && ipLong <= ipv4ToLong("127.255.255.255")) {
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * 计算子网大小
-	 *
-	 * @param maskBit 掩码位
-	 * @param isAll   true:全量地址，false:可用地址
-	 * @return 地址总数
-	 */
-	public static int countByMaskBit(int maskBit, boolean isAll) {
-		//如果是可用地址的情况，掩码位小于等于0或大于等于32，则可用地址为0
-		if ((false == isAll) && (maskBit <= 0 || maskBit >= 32)) {
-			return 0;
-		}
+    /**
+     * 根据IP地址列表获取子网掩码位.
+     *
+     * @param ipv4s IP地址列表
+     * @return 子网掩码位
+     */
+    public static int getMaskBit(final List<String> ipv4s) {
+        Assert.notEmpty(ipv4s, "IP list must not be empty!");
+        final long[] ipLongs = new long[ipv4s.size()];
+        for (int i = 0; i < ipv4s.size(); i++) {
+            ipLongs[i] = ipv4ToLong(ipv4s.get(i));
+        }
+        long mask = 0;
+        for (int i = 0; i < ipLongs.length - 1; i++) {
+            mask |= ipLongs[i] ^ ipLongs[i + 1];
+        }
+        return countBit(mask);
+    }
 
-		final int count = (int) Math.pow(2, 32 - maskBit);
-		return isAll ? count : count - 2;
-	}
+    /**
+     * 计算掩码位（从最高位开始连续0的个数）.
+     *
+     * @param mask 掩码
+     * @return 掩码位
+     */
+    private static int countBit(final long mask) {
+        int bit = 0;
+        long m = mask;
+        while (m != 0) {
+            m = m >> 1;
+            bit++;
+        }
+        return IPV4_BIT_LENGTH - bit;
+    }
 
-	/**
-	 * 根据掩码位获取掩码
-	 *
-	 * @param maskBit 掩码位
-	 * @return 掩码
-	 */
-	public static String getMaskByMaskBit(int maskBit) {
-		return MaskBit.get(maskBit);
-	}
+    /**
+     * 统计IP地址列表.
+     *
+     * @param ipv4   IP地址
+     * @param maskBit 掩码位
+     * @return IP地址列表
+     */
+    public static List<String> list(final String ipv4, final int maskBit) {
+        final long ipLong = ipv4ToLong(ipv4);
+        final long mask = getMaskLong(maskBit);
+        final long begin = ipLong & mask;
+        final long end = begin | (~mask);
+        final List<String> ips = new ArrayList<>();
+        for (long i = begin; i <= end; i++) {
+            ips.add(longToIpv4(i));
+        }
+        return ips;
+    }
 
-	/**
-	 * 根据开始IP与结束IP计算掩码
-	 *
-	 * @param fromIp 开始IP
-	 * @param toIp   结束IP
-	 * @return 掩码x.x.x.x
-	 */
-	public static String getMaskByIpRange(String fromIp, String toIp) {
-		long toIpLong = ipv4ToLong(toIp);
-		long fromIpLong = ipv4ToLong(fromIp);
-		Assert.isTrue(fromIpLong < toIpLong, "to IP must be greater than from IP!");
+    /**
+     * 获取IP地址的结束地址.
+     *
+     * @param ipv4   IP地址
+     * @param maskBit 掩码位
+     * @return 结束地址
+     */
+    public static String getEndIp(final String ipv4, final int maskBit) {
+        final long ipLong = ipv4ToLong(ipv4);
+        final long mask = getMaskLong(maskBit);
+        final long begin = ipLong & mask;
+        return longToIpv4(begin | (~mask));
+    }
 
-		String[] fromIpSplit = StrUtil.splitToArray(fromIp, CharUtil.DOT);
-		String[] toIpSplit = StrUtil.splitToArray(toIp, CharUtil.DOT);
-		StringBuilder mask = new StringBuilder();
-		for (int i = 0; i < toIpSplit.length; i++) {
-			mask.append(255 - Integer.parseInt(toIpSplit[i]) + Integer.parseInt(fromIpSplit[i])).append(CharUtil.DOT);
-		}
-		return mask.substring(0, mask.length() - 1);
-	}
-
-	/**
-	 * 计算IP区间有多少个IP
-	 *
-	 * @param fromIp 开始IP
-	 * @param toIp   结束IP
-	 * @return IP数量
-	 */
-	public static int countByIpRange(String fromIp, String toIp) {
-		long toIpLong = ipv4ToLong(toIp);
-		long fromIpLong = ipv4ToLong(fromIp);
-		if (fromIpLong > toIpLong) {
-			throw new IllegalArgumentException("to IP must be greater than from IP!");
-		}
-		int count = 1;
-		int[] fromIpSplit = StrUtil.split(fromIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
-		int[] toIpSplit = StrUtil.split(toIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
-		for (int i = fromIpSplit.length - 1; i >= 0; i--) {
-			count += (toIpSplit[i] - fromIpSplit[i]) * Math.pow(256, fromIpSplit.length - i - 1);
-		}
-		return count;
-	}
-
-	/**
-	 * 判断掩码是否合法
-	 *
-	 * @param mask 掩码的点分十进制表示，例如 255.255.255.0
-	 * @return true：掩码合法；false：掩码不合法
-	 */
-	public static boolean isMaskValid(String mask) {
-		return MaskBit.getMaskBit(mask) != null;
-	}
-
-	/**
-	 * 判断掩码位是否合法
-	 *
-	 * @param maskBit 掩码位，例如 24
-	 * @return true：掩码位合法；false：掩码位不合法
-	 */
-	public static boolean isMaskBitValid(int maskBit) {
-		return MaskBit.get(maskBit) != null;
-	}
-
-	/**
-	 * 判定是否为内网IPv4<br>
-	 * 私有IP：
-	 * <pre>
-	 * A类 10.0.0.0-10.255.255.255
-	 * B类 172.16.0.0-172.31.255.255
-	 * C类 192.168.0.0-192.168.255.255
-	 * </pre>
-	 * 当然，还有127这个网段是环回地址
-	 *
-	 * @param ipAddress IP地址
-	 * @return 是否为内网IP
-	 * @since 5.7.18
-	 */
-	public static boolean isInnerIP(String ipAddress) {
-		boolean isInnerIp;
-		long ipNum = ipv4ToLong(ipAddress);
-
-		long aBegin = ipv4ToLong("10.0.0.0");
-		long aEnd = ipv4ToLong("10.255.255.255");
-
-		long bBegin = ipv4ToLong("172.16.0.0");
-		long bEnd = ipv4ToLong("172.31.255.255");
-
-		long cBegin = ipv4ToLong("192.168.0.0");
-		long cEnd = ipv4ToLong("192.168.255.255");
-
-		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || LOCAL_IP.equals(ipAddress);
-		return isInnerIp;
-	}
-
-	/**
-	 * 检测指定 IP 地址是否匹配通配符 wildcard
-	 *
-	 * @param wildcard   通配符，如 192.168.*.1
-	 * @param ipAddress 待检测的 IP 地址
-	 * @return 是否匹配
-	 */
-	public static boolean matches(String wildcard, String ipAddress) {
-		if (false == IPV4_PATTERN.matcher(ipAddress).matches()) {
-			return false;
-		}
-
-		final String[] wildcardSegments = wildcard.split("\\.");
-		final String[] ipSegments = ipAddress.split("\\.");
-
-		if (wildcardSegments.length != ipSegments.length) {
-			return false;
-		}
-
-		for (int i = 0; i < wildcardSegments.length; i++) {
-			if (false == "*".equals(wildcardSegments[i])
-				&& false == wildcardSegments[i].equals(ipSegments[i])) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	//-------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * 根据 ip/掩码位 计算IP段的终止IP（Long型）
-	 * 注：此接口返回负数，请使用转成字符串后再转Long型
-	 *
-	 * @param ip      给定的IP，如218.240.38.69
-	 * @param maskBit 给定的掩码位，如30
-	 * @return 终止IP的长整型表示
-	 */
-	public static Long getEndIpLong(String ip, int maskBit) {
-		return getBeginIpLong(ip, maskBit)
-				+ (0xffffffffL & ~ipv4ToLong(getMaskByMaskBit(maskBit)));
-	}
-
-	/**
-	 * 将匹配到的Ipv4地址的4个分组分别处理
-	 *
-	 * @param matcher 匹配到的Ipv4正则
-	 * @return ipv4对应long
-	 */
-	private static long matchAddress(Matcher matcher) {
-		long addr = 0;
-		for (int i = 1; i <= 4; ++i) {
-			addr |= Long.parseLong(matcher.group(i)) << 8 * (4 - i);
-		}
-		return addr;
-	}
-
-	/**
-	 * 指定IP的long是否在指定范围内
-	 *
-	 * @param userIp 用户IP
-	 * @param begin  开始IP
-	 * @param end    结束IP
-	 * @return 是否在范围内
-	 */
-	private static boolean isInner(long userIp, long begin, long end) {
-		return (userIp >= begin) && (userIp <= end);
-	}
-
-	/**
-	 * 将String数组（数字字符串）转换为int数组（内联替代 Convert.convert(int[].class, ...)）
-	 *
-	 * @param strArr 字符串数组
-	 * @return int数组
-	 */
-	private static int[] parseIntArray(String[] strArr) {
-		int[] result = new int[strArr.length];
-		for (int i = 0; i < strArr.length; i++) {
-			result[i] = Integer.parseInt(strArr[i]);
-		}
-		return result;
-	}
-	//-------------------------------------------------------------------------------- Private method end
+    /**
+     * 获取IP地址的起始地址.
+     *
+     * @param ipv4   IP地址
+     * @param maskBit 掩码位
+     * @return 起始地址
+     */
+    public static String getBeginIp(final String ipv4, final int maskBit) {
+        final long ipLong = ipv4ToLong(ipv4);
+        final long mask = getMaskLong(maskBit);
+        return longToIpv4(ipLong & mask);
+    }
 }
