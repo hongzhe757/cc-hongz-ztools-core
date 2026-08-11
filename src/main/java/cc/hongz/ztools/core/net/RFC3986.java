@@ -3,8 +3,8 @@ package cc.hongz.ztools.core.net;
 import cc.hongz.ztools.core.codec.PercentCodec;
 
 /**
- * <a href="https://www.ietf.org/rfc/rfc3986.html">RFC3986</a> 编码实现.<br>
- * 定义见：<a href="https://www.ietf.org/rfc/rfc3986.html#appendix-A">https://www.ietf.org/rfc/rfc3986.html#appendix-A</a>
+ * <a href="https://www.ietf.org/rfc/rfc3986.html">RFC3986</a> 编码实现. 定义见：
+ * <a href="https://www.ietf.org/rfc/rfc3986.html#appendix-A">RFC3986 Appendix A</a>
  *
  * <pre>
  * 编码层级关系：
@@ -23,77 +23,80 @@ import cc.hongz.ztools.core.codec.PercentCodec;
 public final class RFC3986 {
 
     /**
-     * gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+     * gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@".
      */
     public static final PercentCodec GEN_DELIMS = PercentCodec.of(":/?#[]@");
 
     /**
-     * sub-delims = "!" / "$" / "{@code &}" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+     * sub-delims = "!" / "$" / "{@code &}" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "=".
      */
     public static final PercentCodec SUB_DELIMS = PercentCodec.of("!$&'()*+,;=");
 
     /**
-     * reserved = gen-delims / sub-delims<br>
-     * see：<a href="https://www.ietf.org/rfc/rfc3986.html#section-2.2">https://www.ietf.org/rfc/rfc3986.html#section-2.2</a>
+     * 保留字符（reserved） = gen-delims / sub-delims. 参考RFC3986 Section 2.2.
      */
     public static final PercentCodec RESERVED = GEN_DELIMS.orNew(SUB_DELIMS);
 
     /**
-     * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"<br>
-     * see: <a href="https://www.ietf.org/rfc/rfc3986.html#section-2.3">https://www.ietf.org/rfc/rfc3986.html#section-2.3</a>
+     * 非保留字符（unreserved） = ALPHA / DIGIT / "-" / "." / "_" / "~". 参考RFC3986 Section 2.3.
      */
     public static final PercentCodec UNRESERVED = PercentCodec.of(unreservedChars());
 
     /**
-     * pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
+     * pchar = unreserved / pct-encoded / sub-delims / ":" / "@".
      */
-    public static final PercentCodec PCHAR = UNRESERVED.orNew(SUB_DELIMS).or(PercentCodec.of(":@"));
+    public static final PercentCodec PCHAR = UNRESERVED.orNew(SUB_DELIMS)
+            .or(PercentCodec.of(":@"));
 
     /**
-     * segment  = pchar<br>
-     * see: <a href="https://www.ietf.org/rfc/rfc3986.html#section-3.3">https://www.ietf.org/rfc/rfc3986.html#section-3.3</a>
+     * segment = pchar. 参考RFC3986 Section 3.3.
      */
     public static final PercentCodec SEGMENT = PCHAR;
 
     /**
-     * segment-nz-nc  = SEGMENT ; non-zero-length segment without any colon ":"
+     * segment-nz-nc = SEGMENT（不包含冒号 ":"）.
      */
-    public static final PercentCodec SEGMENT_NZ_NC = PercentCodec.of(SEGMENT).removeSafe(':');
+    public static final PercentCodec SEGMENT_NZ_NC =
+            PercentCodec.of(SEGMENT).removeSafe(':');
 
     /**
-     * path = segment / "/"
+     * path = segment / "/".
      */
-    public static final PercentCodec PATH = SEGMENT.orNew(PercentCodec.of("/"));
+    public static final PercentCodec PATH =
+            SEGMENT.orNew(PercentCodec.of("/"));
 
     /**
-     * query = pchar / "/" / "?"
+     * query = pchar / "/" / "?".
      */
-    public static final PercentCodec QUERY = PCHAR.orNew(PercentCodec.of("/?"));
+    public static final PercentCodec QUERY =
+            PCHAR.orNew(PercentCodec.of("/?"));
 
     /**
-     * fragment     = pchar / "/" / "?"
+     * fragment = pchar / "/" / "?".
      */
     public static final PercentCodec FRAGMENT = QUERY;
 
     /**
-     * query中的value<br>
-     * value不能包含"{@code &}"，可以包含 "="
+     * query中的value.<br>
+     * value不能包含"{@code &}"，可以包含 "=".
      */
-    public static final PercentCodec QUERY_PARAM_VALUE = PercentCodec.of(QUERY).removeSafe('&');
+    public static final PercentCodec QUERY_PARAM_VALUE =
+            PercentCodec.of(QUERY).removeSafe('&');
 
     /**
-     * query中的value编码器，严格模式，value中不能包含任何分隔符。
+     * query中的value编码器，严格模式，value中不能包含任何分隔符.
      */
     public static final PercentCodec QUERY_PARAM_VALUE_STRICT = UNRESERVED;
 
     /**
-     * query中的key<br>
-     * key不能包含"{@code &}" 和 "="
+     * query中的key.<br>
+     * key不能包含"{@code &}" 和 "=".
      */
-    public static final PercentCodec QUERY_PARAM_NAME = PercentCodec.of(QUERY_PARAM_VALUE).removeSafe('=');
+    public static final PercentCodec QUERY_PARAM_NAME =
+            PercentCodec.of(QUERY_PARAM_VALUE).removeSafe('=');
 
     /**
-     * query中的key编码器，严格模式，key中不能包含任何分隔符。
+     * query中的key编码器，严格模式，key中不能包含任何分隔符.
      */
     public static final PercentCodec QUERY_PARAM_NAME_STRICT = UNRESERVED;
 
@@ -101,7 +104,7 @@ public final class RFC3986 {
     }
 
     /**
-     * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
+     * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~".
      *
      * @return unreserved字符
      */
