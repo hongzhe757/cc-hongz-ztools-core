@@ -121,8 +121,8 @@ public class MapBuilder<K, V> implements Builder<Map<K, V>> {
      * @param map 合并map
      * @return 当前类
      */
-    public MapBuilder<K, V> putAll(final Map<K, V> map) {
-        this.map.putAll(map);
+    public MapBuilder<K, V> putAll(final Map<K, V> aMap) {
+        this.map.putAll(aMap);
         return this;
     }
 
