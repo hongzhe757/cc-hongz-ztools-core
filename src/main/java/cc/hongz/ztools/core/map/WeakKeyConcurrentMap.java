@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package cc.hongz.ztools.core.map.reference;
+package cc.hongz.ztools.core.map;
 
 import cc.hongz.ztools.core.lang.ref.Ref;
+import cc.hongz.ztools.core.lang.ref.StrongObj;
 import cc.hongz.ztools.core.lang.ref.WeakObj;
 
 import java.lang.ref.ReferenceQueue;
@@ -25,20 +26,20 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 线程安全的WeakMap实现<br>
- * 键和值都为Weak引用，即，在GC时发现弱引用会回收其对象
+ * 键为Weak引用，即，在GC时发现弱引用会回收其对象
  *
  * @param <K> 键类型
  * @param <V> 值类型
  * @author Looly
  * @since 5.8.41
  */
-public class WeakKeyValueConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V> {
+public class WeakKeyConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造
 	 */
-	public WeakKeyValueConcurrentMap() {
+	public WeakKeyConcurrentMap() {
 		this(new ConcurrentHashMap<>());
 	}
 
@@ -47,7 +48,7 @@ public class WeakKeyValueConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V
 	 *
 	 * @param raw {@link ConcurrentMap}实现
 	 */
-	public WeakKeyValueConcurrentMap(final ConcurrentMap<Ref<K>, Ref<V>> raw) {
+	public WeakKeyConcurrentMap(final ConcurrentMap<Ref<K>, Ref<V>> raw) {
 		super(raw);
 	}
 
@@ -58,6 +59,6 @@ public class WeakKeyValueConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V
 
 	@Override
 	Ref<V> wrapValue(final V value, final ReferenceQueue<? super V> queue) {
-		return new WeakObj<>(value, queue);
+		return new StrongObj<>(value);
 	}
 }

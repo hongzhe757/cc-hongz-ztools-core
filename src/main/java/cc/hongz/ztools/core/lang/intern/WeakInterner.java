@@ -1,6 +1,6 @@
 package cc.hongz.ztools.core.lang.intern;
 
-import cc.hongz.ztools.core.map.reference.WeakKeyValueConcurrentMap;
+import cc.hongz.ztools.core.map.WeakKeyValueConcurrentMap;
 
 import java.lang.ref.WeakReference;
 

@@ -1,4 +1,4 @@
-package cc.hongz.ztools.core.map.reference;
+package cc.hongz.ztools.core.map;
 
 import cc.hongz.ztools.core.lang.ref.Ref;
 import cc.hongz.ztools.core.map.MapUtil;
