@@ -17,19 +17,19 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class WeakConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V> {
 
-	/**
-	 * 构造
-	 */
-	public WeakConcurrentMap() {
-		this(new SafeConcurrentHashMap<>());
-	}
+    /**
+     * 构造
+     */
+    public WeakConcurrentMap() {
+        this(new SafeConcurrentHashMap<>());
+    }
 
-	/**
-	 * 构造
-	 *
-	 * @param raw {@link ConcurrentMap}实现
-	 */
-	public WeakConcurrentMap(ConcurrentMap<Reference<K>, V> raw) {
-		super(raw, ReferenceUtil.ReferenceType.WEAK);
-	}
+    /**
+     * 构造
+     *
+     * @param raw {@link ConcurrentMap}实现
+     */
+    public WeakConcurrentMap(final ConcurrentMap<Reference<K>, V> raw) {
+        super(raw, ReferenceUtil.ReferenceType.WEAK);
+    }
 }
