@@ -159,6 +159,10 @@ public class WeightRandom<T> implements Serializable {
      */
     public static class WeightObj<T> {
         /**
+         * int 类型的位数.
+         */
+        private static final int INT_BITS = 32;
+        /**
          * 对象.
          */
         private T obj;
@@ -211,22 +215,22 @@ public class WeightRandom<T> implements Serializable {
             int result = 1;
             result = prime * result + ((obj == null) ? 0 : obj.hashCode());
             final long temp = Double.doubleToLongBits(weight);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
+            result = prime * result + (int) (temp ^ (temp >>> INT_BITS));
             return result;
         }
 
         @Override
-        public boolean equals(final Object obj) {
-            if (this == obj) {
+        public boolean equals(final Object otherObj) {
+            if (this == otherObj) {
                 return true;
             }
-            if (obj == null) {
+            if (otherObj == null) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
+            if (getClass() != otherObj.getClass()) {
                 return false;
             }
-            final WeightObj<?> other = (WeightObj<?>) obj;
+            final WeightObj<?> other = (WeightObj<?>) otherObj;
             if (this.obj == null) {
                 if (other.obj != null) {
                     return false;
