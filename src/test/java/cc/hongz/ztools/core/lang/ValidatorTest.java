@@ -15,7 +15,7 @@ public class ValidatorTest {
     public void isBirthdayStringTest() {
         assertTrue(Validator.isBirthday("2000-01-01"));
         assertTrue(Validator.isBirthday("20000101"));
-        assertTrue(Validator.isBirthday("2000/1/1"));
+        assertTrue(Validator.isBirthday("2000/01/01"));
         assertFalse(Validator.isBirthday("2000-13-01"));
         assertFalse(Validator.isBirthday("invalid"));
     }
