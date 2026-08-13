@@ -1,0 +1,20 @@
+package cc.hongz.ztools.core.lang;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import cc.hongz.ztools.core.collection.CollUtil;
+
+public class WeightRandomTest {
+
+    @Test
+    public void weightRandomTest() {
+        WeightRandom<String> random = WeightRandom.create();
+        random.add("A", 10);
+        random.add("B", 50);
+        random.add("C", 100);
+
+        String result = random.next();
+        assertTrue(CollUtil.newArrayList("A", "B", "C").contains(result));
+    }
+}
