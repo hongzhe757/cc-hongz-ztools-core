@@ -11,7 +11,7 @@ import java.util.List;
  * 字符串版本表示，用于解析版本号的不同部分并比较大小.<br>
  * 来自：java.lang.module.ModuleDescriptor.Version
  *
- * @author Looly
+ * @author looly
  */
 public class Version implements Comparable<Version>, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -240,7 +240,7 @@ public class Version implements Comparable<Version>, Serializable {
 				}
 				return c;
 			}
-			// Types differ, so convert number to string form
+			// 类型不同，将数字转为字符串形式比较
 			final int c = o1.toString().compareTo(o2.toString());
 			if (c == 0){
 				continue;
