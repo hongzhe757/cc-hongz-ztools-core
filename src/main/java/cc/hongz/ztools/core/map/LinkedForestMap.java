@@ -52,7 +52,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      *
      * @param allowOverrideParent 当指定节点已经与其他节点构成了父子关系，是否允许将该节点的父节点强制替换为指定节点
      */
-    public LinkedForestMap(boolean allowOverrideParent) {
+    public LinkedForestMap(final boolean allowOverrideParent) {
         this.allowOverrideParent = allowOverrideParent;
         this.nodes = new LinkedHashMap<>();
     }
@@ -86,7 +86,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @return 是否
      */
     @Override
-    public boolean containsKey(final final Object key) {
+    public boolean containsKey(final Object key) {
         return nodes.containsKey(key);
     }
 
@@ -97,7 +97,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @return 是否
      */
     @Override
-    public boolean containsValue(final final Object value) {
+    public boolean containsValue(final Object value) {
         return nodes.containsValue(value);
     }
 
@@ -108,7 +108,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @return 节点
      */
     @Override
-    public TreeEntry<K, V> get(final final Object key) {
+    public TreeEntry<K, V> get(final Object key) {
         return nodes.get(key);
     }
 
@@ -126,7 +126,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @return 删除的且引用关系已经改变的节点，若key没有对应节点，则返回null
      */
     @Override
-    public TreeEntry<K, V> remove(final final Object key) {
+    public TreeEntry<K, V> remove(final Object key) {
         final TreeEntryNode<K, V> target = nodes.remove(key);
         if (ObjectUtil.isNull(target)) {
             return null;
@@ -207,7 +207,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @return 节点，若key已有对应节点，则返回具有旧值的节点，否则返回null
      */
     @Override
-    public TreeEntryNode<K, V> putNode(final final K key, V value) {
+    public TreeEntryNode<K, V> putNode(final K key, final V value) {
         TreeEntryNode<K, V> target = nodes.get(key);
         if (ObjectUtil.isNotNull(target)) {
             final V oldVal = target.getValue();
@@ -238,7 +238,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @param childValue  子节点的值
      */
     @Override
-    public void putLinkedNodes(final final K parentKey, V parentValue, K childKey, V childValue) {
+    public void putLinkedNodes(final K parentKey, final V parentValue, final K childKey, final V childValue) {
         linkNodes(parentKey, childKey, (parent, child) -> {
             parent.setValue(parentValue);
             child.setValue(childValue);
@@ -257,7 +257,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @param childValue 子节点的值
      */
     @Override
-    public void putLinkedNodes(final final K parentKey, K childKey, V childValue) {
+    public void putLinkedNodes(final K parentKey, final K childKey, final V childValue) {
         linkNodes(parentKey, childKey, (parent, child) -> child.setValue(childValue));
     }
 
@@ -269,7 +269,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @param consumer  对父节点和子节点的操作，允许为null
      */
     @Override
-    public void linkNodes(final final K parentKey, K childKey, BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer) {
+    public void linkNodes(final K parentKey, final K childKey, final BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer) {
         consumer = ObjectUtil.defaultIfNull(consumer, (parent, child) -> {
         });
         final TreeEntryNode<K, V> parentNode = nodes.computeIfAbsent(parentKey, t -> new TreeEntryNode<>(null, t));
@@ -315,7 +315,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @param childKey  子节点
      */
     @Override
-    public void unlinkNode(final final K parentKey, K childKey) {
+    public void unlinkNode(final K parentKey, final K childKey) {
         final TreeEntryNode<K, V> childNode = nodes.get(childKey);
         if (ObjectUtil.isNull(childNode)) {
             return;
@@ -369,7 +369,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @param parent 节点的父节点
          * @param key    节点的key
          */
-        public TreeEntryNode(final TreeEntryNode<K, V> parent, K key) {
+        public TreeEntryNode(final TreeEntryNode<K, V> parent, final K key) {
             this(parent, key, null);
         }
 
@@ -380,7 +380,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @param key    节点的key
          * @param value  节点的value
          */
-        public TreeEntryNode(final TreeEntryNode<K, V> parent, K key, V value) {
+        public TreeEntryNode(final TreeEntryNode<K, V> parent, final K key, final V value) {
             this.parent = parent;
             this.key = key;
             this.value = value;
@@ -432,7 +432,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 节点的旧value
          */
         @Override
-        public V setValue(final final V value) {
+        public V setValue(final V value) {
             final V oldVal = getValue();
             this.value = value;
             return oldVal;
@@ -449,7 +449,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 遍历到的最后一个节点
          */
         TreeEntryNode<K, V> traverseParentNodes(
-                boolean includeCurrent, final Consumer<TreeEntryNode<K, V>> consumer, Predicate<TreeEntryNode<K, V>> breakTraverse) {
+                final boolean includeCurrent, final Consumer<TreeEntryNode<K, V>> consumer, final Predicate<TreeEntryNode<K, V>> breakTraverse) {
             breakTraverse = ObjectUtil.defaultIfNull(breakTraverse, a -> n -> false);
             TreeEntryNode<K, V> curr = includeCurrent ? this : this.parent;
             while (ObjectUtil.isNotNull(curr)) {
@@ -504,7 +504,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 指定父节点，当不存在时返回null
          */
         @Override
-        public TreeEntryNode<K, V> getParent(final final K key) {
+        public TreeEntryNode<K, V> getParent(final K key) {
             return traverseParentNodes(false, p -> {
             }, p -> p.equalsKey(key));
         }
@@ -526,7 +526,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @param key 要比较的key
          * @return 是否key一致
          */
-        public boolean equalsKey(final final K key) {
+        public boolean equalsKey(final K key) {
             return ObjectUtil.equal(getKey(), key);
         }
 
@@ -541,7 +541,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 遍历到的最后一个节点
          */
         TreeEntryNode<K, V> traverseChildNodes(
-                boolean includeCurrent, final BiConsumer<Integer, TreeEntryNode<K, V>> consumer, BiPredicate<Integer, TreeEntryNode<K, V>> breakTraverse) {
+                final boolean includeCurrent, final BiConsumer<Integer, TreeEntryNode<K, V>> consumer, final BiPredicate<Integer, TreeEntryNode<K, V>> breakTraverse) {
             breakTraverse = ObjectUtil.defaultIfNull(breakTraverse, (i, n) -> false);
             final Deque<List<TreeEntryNode<K, V>>> keyNodeDeque = new LinkedList<>();
             keyNodeDeque.addLast(Collections.singletonList(this));
@@ -630,7 +630,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 节点
          */
         @Override
-        public TreeEntryNode<K, V> getChild(final final K key) {
+        public TreeEntryNode<K, V> getChild(final K key) {
             return traverseChildNodes(false, (i, c) -> {
             }, (i, c) -> c.equalsKey(key));
         }
@@ -674,7 +674,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 是否
          */
         @Override
-        public boolean equals(final final Object o) {
+        public boolean equals(final Object o) {
             if (this == o) {
                 return true;
             }
@@ -737,7 +737,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         @Override
-        public TreeEntry<K, V> setValue(final final TreeEntry<K, V> value) {
+        public TreeEntry<K, V> setValue(final TreeEntry<K, V> value) {
             throw new UnsupportedOperationException();
         }
     }
