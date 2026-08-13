@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.map.multi;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 public class RowKeyTableTest {
 
     @Test
+    @DisplayName("put/get 基本操作")
     public void putGetTest(){
         final Table<Integer, Integer, Integer> table = new RowKeyTable<>();
         table.put(1, 2, 3);
@@ -36,6 +38,7 @@ public class RowKeyTableTest {
     }
 
     @Test
+    @DisplayName("issue 3135")
     public void issue3135Test() {
         final Table<Integer, Integer, Integer> table = new RowKeyTable<>();
         table.put(1, 2, 3);

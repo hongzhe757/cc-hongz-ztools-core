@@ -5,11 +5,13 @@ import cc.hongz.ztools.core.thread.ThreadUtil;
 import cc.hongz.ztools.core.util.ObjectUtil;
 import cc.hongz.ztools.core.util.RandomUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class WeakConcurrentMapTest {
 
     @Test
+    @DisplayName("put/get 基本操作")
     public void putAndGetTest(){
         final WeakConcurrentMap<Object, Object> map = new WeakConcurrentMap<>();
         Object
@@ -40,6 +42,7 @@ public class WeakConcurrentMapTest {
     }
 
     @Test
+    @DisplayName("并发 get 测试")
     public void getConcurrencyTest(){
         final WeakConcurrentMap<String, String> cache = new WeakConcurrentMap<>();
         final ConcurrencyTester tester = new ConcurrencyTester(9000);

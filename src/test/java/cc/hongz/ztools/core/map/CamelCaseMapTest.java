@@ -2,11 +2,13 @@ package cc.hongz.ztools.core.map;
 
 import cc.hongz.ztools.core.util.SerializeUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class CamelCaseMapTest {
 
     @Test
+    @DisplayName("忽略大小写 get/put")
     public void caseInsensitiveMapTest() {
         CamelCaseMap<String, String> map = new CamelCaseMap<>();
         map.put("customKey", "OK");
@@ -15,6 +17,7 @@ public class CamelCaseMapTest {
     }
 
     @Test
+    @DisplayName("忽略大小写 LinkedMap")
     public void caseInsensitiveLinkedMapTest() {
         CamelCaseLinkedMap<String, String> map = new CamelCaseLinkedMap<>();
         map.put("customKey", "OK");
@@ -23,6 +26,7 @@ public class CamelCaseMapTest {
     }
 
     @Test
+    @DisplayName("key 函数可序列化")
     public void serializableKeyFuncTest() {
         CamelCaseMap<String, String> map = new CamelCaseMap<>();
         map.put("serializable_key", "OK");

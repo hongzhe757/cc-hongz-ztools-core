@@ -5,6 +5,7 @@ import cc.hongz.ztools.core.collection.ListUtil;
 import cc.hongz.ztools.core.map.multi.ListValueMap;
 import cc.hongz.ztools.core.map.multi.SetValueMap;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 public class CollValueMapTest {
 
     @Test
+    @DisplayName("ListValueMap 移除值")
     public void testListValueMapRemove() {
         final ListValueMap<String, String> entries = new ListValueMap<>();
         entries.putValue("one","11");
@@ -33,6 +35,7 @@ public class CollValueMapTest {
     }
 
     @Test
+    @DisplayName("SetValueMap 移除值")
     public void testSetValueMapRemove() {
         final SetValueMap<String, String> entries = new SetValueMap<>();
         entries.putValue("one","11");

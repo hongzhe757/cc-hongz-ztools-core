@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.map;
 
 import cc.hongz.ztools.core.lang.Pair;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CaseInsensitiveMapTest {
 
     @Test
+    @DisplayName("忽略大小写 Map")
     public void caseInsensitiveMapTest() {
         CaseInsensitiveMap<String, String> map = new CaseInsensitiveMap<>();
         map.put("aAA", "OK");
@@ -19,6 +21,7 @@ public class CaseInsensitiveMapTest {
     }
 
     @Test
+    @DisplayName("忽略大小写 LinkedMap")
     public void caseInsensitiveLinkedMapTest() {
         CaseInsensitiveLinkedMap<String, String> map = new CaseInsensitiveLinkedMap<>();
         map.put("aAA", "OK");
@@ -27,6 +30,7 @@ public class CaseInsensitiveMapTest {
     }
 
     @Test
+    @DisplayName("merge 合并")
     public void mergeTest(){
         //https://github.com/dromara/hutool/issues/2086
         Pair<String, String> b = new Pair<>("a", "value");
@@ -39,6 +43,7 @@ public class CaseInsensitiveMapTest {
     }
 
     @Test
+    @DisplayName("issue IA4K4F")
     public void issueIA4K4FTest() {
         Map<String, Object> map = new CaseInsensitiveLinkedMap<>();
         map.put("b", 2);
@@ -57,6 +62,7 @@ public class CaseInsensitiveMapTest {
     }
 
     @Test
+    @DisplayName("issue IA4K4F")
     public void issueIA4K4FTest2() {
         Map<String, Object> map = new CaseInsensitiveTreeMap<>();
         map.put("b", 2);
