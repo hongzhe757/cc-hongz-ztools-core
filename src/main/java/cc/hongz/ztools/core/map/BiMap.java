@@ -1,137 +1,148 @@
 package cc.hongz.ztools.core.map;
 
-import cc.hongz.ztools.core.map.MapUtil;
-
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * 双向Map<br>
- * 互换键值对不检查值是否有重复，如果有则后加入的元素替换先加入的元素<br>
- *
- * <p>迁移自 hutool {@code cc.hongz.ztools.core.map.BiMap}.
+ * 双向Map.<br>
+ * 互换键值对不检查值是否有重复，如果有则后加入的元素替换先加入的元素.
  *
  * @param <K> 键类型
  * @param <V> 值类型
+ * @author looly
  * @since 5.2.6
  */
 public class BiMap<K, V> extends MapWrapper<K, V> {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Map<V, K> inverse;
+    /**
+     * 反向Map.
+     */
+    private Map<V, K> inverse;
 
-	/**
-	 * 构造
-	 *
-	 * @param raw 被包装的Map
-	 */
-	public BiMap(Map<K, V> raw) {
-		super(raw);
-	}
+    /**
+     * 构造.
+     *
+     * @param raw 被包装的Map
+     */
+    public BiMap(final Map<K, V> raw) {
+        super(raw);
+    }
 
-	@Override
-	public V put(K key, V value) {
-		final V oldValue = super.put(key, value);
-		if (null != this.inverse) {
-			if(null != oldValue){
-				this.inverse.remove(oldValue);
-			}
-			this.inverse.put(value, key);
-		}
-		return oldValue;
-	}
+    @Override
+    public V put(final K key, final V value) {
+        final V oldValue = super.put(key, value);
+        if (null != this.inverse) {
+            if (null != oldValue) {
+                this.inverse.remove(oldValue);
+            }
+            this.inverse.put(value, key);
+        }
+        return oldValue;
+    }
 
-	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
-		super.putAll(m);
-		if (null != this.inverse) {
-			m.forEach((key, value) -> this.inverse.put(value, key));
-		}
-	}
+    @Override
+    public void putAll(final Map<? extends K, ? extends V> m) {
+        super.putAll(m);
+        if (null != this.inverse) {
+            m.forEach((key, value) -> this.inverse.put(value, key));
+        }
+    }
 
-	@Override
-	public V remove(Object key) {
-		final V v = super.remove(key);
-		if (null != this.inverse && null != v) {
-			this.inverse.remove(v);
-		}
-		return v;
-	}
+    @Override
+    public V remove(final Object key) {
+        final V v = super.remove(key);
+        if (null != this.inverse && null != v) {
+            this.inverse.remove(v);
+        }
+        return v;
+    }
 
-	@Override
-	public boolean remove(Object key, Object value) {
-		return super.remove(key, value) && null != this.inverse && this.inverse.remove(value, key);
-	}
+    @Override
+    public boolean remove(final Object key, final Object value) {
+        return super.remove(key, value) && null != this.inverse
+                && this.inverse.remove(value, key);
+    }
 
-	@Override
-	public void clear() {
-		super.clear();
-		this.inverse = null;
-	}
+    @Override
+    public void clear() {
+        super.clear();
+        this.inverse = null;
+    }
 
-	/**
-	 * 获取反向Map
-	 *
-	 * @return 反向Map
-	 */
-	public Map<V, K> getInverse() {
-		if (null == this.inverse) {
-			inverse = MapUtil.inverse(getRaw());
-		}
-		return this.inverse;
-	}
+    /**
+     * 获取反向Map.
+     *
+     * @return 反向Map
+     */
+    public Map<V, K> getInverse() {
+        if (null == this.inverse) {
+            inverse = MapUtil.inverse(getRaw());
+        }
+        return this.inverse;
+    }
 
-	/**
-	 * 根据值获得键
-	 *
-	 * @param value 值
-	 * @return 键
-	 */
-	public K getKey(V value) {
-		return getInverse().get(value);
-	}
+    /**
+     * 根据值获得键.
+     *
+     * @param value 值
+     * @return 键
+     */
+    public K getKey(final V value) {
+        return getInverse().get(value);
+    }
 
-	@Override
-	public V putIfAbsent(K key, V value) {
-		final V oldValue = super.putIfAbsent(key, value);
-		if (null == oldValue && null != this.inverse) {
-			this.inverse.put(value, key);
-		}
-		return oldValue;
-	}
+    @Override
+    public V putIfAbsent(final K key, final V value) {
+        final V oldValue = super.putIfAbsent(key, value);
+        if (null == oldValue && null != this.inverse) {
+            this.inverse.put(value, key);
+        }
+        return oldValue;
+    }
 
-	@Override
-	public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
-		final V result = super.computeIfAbsent(key, mappingFunction);
-		resetInverseMap();
-		return result;
-	}
+    @Override
+    public V computeIfAbsent(final K key,
+            final Function<? super K, ? extends V> mappingFunction) {
+        final V result = super.computeIfAbsent(key, mappingFunction);
+        resetInverseMap();
+        return result;
+    }
 
-	@Override
-	public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-		final V result = super.computeIfPresent(key, remappingFunction);
-		resetInverseMap();
-		return result;
-	}
+    @Override
+    public V computeIfPresent(final K key,
+            final BiFunction<? super K, ? super V, ? extends V>
+                    remappingFunction) {
+        final V result = super.computeIfPresent(key, remappingFunction);
+        resetInverseMap();
+        return result;
+    }
 
-	@Override
-	public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-		final V result = super.compute(key, remappingFunction);
-		resetInverseMap();
-		return result;
-	}
+    @Override
+    public V compute(final K key,
+            final BiFunction<? super K, ? super V, ? extends V>
+                    remappingFunction) {
+        final V result = super.compute(key, remappingFunction);
+        resetInverseMap();
+        return result;
+    }
 
-	@Override
-	public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-		final V result = super.merge(key, value, remappingFunction);
-		resetInverseMap();
-		return result;
-	}
+    @Override
+    public V merge(final K key, final V value,
+            final BiFunction<? super V, ? super V, ? extends V>
+                    remappingFunction) {
+        final V result = super.merge(key, value, remappingFunction);
+        resetInverseMap();
+        return result;
+    }
 
-	private void resetInverseMap() {
-		if (null != this.inverse) {
-			inverse = null;
-		}
-	}
+    /**
+     * 重置反向Map.
+     */
+    private void resetInverseMap() {
+        if (null != this.inverse) {
+            inverse = null;
+        }
+    }
 }
