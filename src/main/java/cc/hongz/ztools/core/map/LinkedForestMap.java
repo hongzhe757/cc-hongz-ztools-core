@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
  * {@link ForestMap}的基本实现。
  *
  * <p>该集合可以被视为以{@link TreeEntryNode#getKey()}作为key，{@link TreeEntryNode}实例作为value的{@link LinkedHashMap}。<br>
- * 使用时，将每一对键与值对视为一个{@link TreeEntryNode}节点，节点的id即为{@link TreeEntryNode#getKey()}，
- * 任何情况下使用相同的key都将会访问到同一个节点。<br>
+ * 使用时，将每一对键与值对视为一个{@link TreeEntryNode}节点，节点的id即为{@link TreeEntryNode#getKey()}，.
+ * 任何情况下使用相同的key都将会访问到同一个节点。<br>.
  *
  * <p>节点通过key形成父子关系，并最终构成多叉树结构，多组平行的多叉树将在当前集合中构成森林。
- * 使用者可以通过{@link ForestMap}本身的方法来对森林进行操作或访问，
+ * 使用者可以通过{@link ForestMap}本身的方法来对森林进行操作或访问，.
  * 也可以在获取到{@link TreeEntry}后，使用节点本身的方法对数进行操作或访问。
  *
  * @param <K> key类型
@@ -38,17 +38,17 @@ import java.util.stream.Collectors;
 public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 
     /**
-     * 节点集合
+     * 节点集合.
      */
     private final Map<K, TreeEntryNode<K, V>> nodes;
 
     /**
-     * 当指定节点已经与其他节点构成了父子关系，是否允许将该节点的父节点强制替换为指定节点
+     * 当指定节点已经与其他节点构成了父子关系，是否允许将该节点的父节点强制替换为指定节点.
      */
     private final boolean allowOverrideParent;
 
     /**
-     * 构建{@link LinkedForestMap}
+     * 构建{@link LinkedForestMap}.
      *
      * @param allowOverrideParent 当指定节点已经与其他节点构成了父子关系，是否允许将该节点的父节点强制替换为指定节点
      */
@@ -60,7 +60,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     // ====================== Map接口实现 ======================
 
     /**
-     * 获取当前实例中的节点个数
+     * 获取当前实例中的节点个数.
      *
      * @return 节点个数
      */
@@ -70,7 +70,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 当前实例是否为空
+     * 当前实例是否为空.
      *
      * @return 是否
      */
@@ -80,7 +80,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 当前实例中是否存在key对应的节点
+     * 当前实例中是否存在key对应的节点.
      *
      * @param key key
      * @return 是否
@@ -91,7 +91,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 当前实例中是否存在对应的{@link TreeEntry}实例
+     * 当前实例中是否存在对应的{@link TreeEntry}实例.
      *
      * @param value {@link TreeEntry}实例
      * @return 是否
@@ -102,7 +102,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 获取key对应的节点
+     * 获取key对应的节点.
      *
      * @param key key
      * @return 节点
@@ -113,13 +113,13 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 将指定节点从当前{@link Map}中删除
+     * 将指定节点从当前{@link Map}中删除.
      * <ul>
-     *     <li>若存在父节点或子节点，则将其断开其与父节点或子节点的引用关系；</li>
-     *     <li>
-     *         若同时存在父节点或子节点，则会在删除后将让子节点直接成为父节点的子节点，比如：<br>
-     *         现有引用关系 a -&gt; b -&gt; c，删除 b 后，将有 a -&gt; c
-     *     </li>
+     *     <li>若存在父节点或子节点，则将其断开其与父节点或子节点的引用关系；</li>.
+     *     <li>.
+     *         若同时存在父节点或子节点，则会在删除后将让子节点直接成为父节点的子节点，比如：<br>.
+     *         现有引用关系 a -&gt; b -&gt; c，删除 b 后，将有 a -&gt; c.
+     *     </li>.
      * </ul>
      *
      * @param key 节点的key
@@ -145,7 +145,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 将当前集合清空，并清除全部节点间的引用关系
+     * 将当前集合清空，并清除全部节点间的引用关系.
      */
     @Override
     public void clear() {
@@ -154,7 +154,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 返回当前实例中全部的key组成的{@link Set}集合
+     * 返回当前实例中全部的key组成的{@link Set}集合.
      *
      * @return 集合
      */
@@ -164,7 +164,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 返回当前实例中全部{@link TreeEntry}组成的{@link Collection}集合
+     * 返回当前实例中全部{@link TreeEntry}组成的{@link Collection}集合.
      *
      * @return 集合
      */
@@ -187,7 +187,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 将{@link TreeEntryNode}包装为{@link EntryNodeWrapper}
+     * 将{@link TreeEntryNode}包装为{@link EntryNodeWrapper}.
      */
     private Map.Entry<K, TreeEntry<K, V>> wrap(final Map.Entry<K, TreeEntryNode<K, V>> nodeEntry) {
         return new EntryNodeWrapper<>(nodeEntry.getValue());
@@ -196,10 +196,10 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     // ====================== ForestMap接口实现 ======================
 
     /**
-     * 添加一个节点
+     * 添加一个节点.
      * <ul>
-     *     <li>若key对应节点不存在，则以传入的键值创建一个新的节点；</li>
-     *     <li>若key对应节点存在，则将该节点的值替换为{@code node}指定的值；</li>
+     *     <li>若key对应节点不存在，则以传入的键值创建一个新的节点；</li>.
+     *     <li>若key对应节点存在，则将该节点的值替换为{@code node}指定的值；</li>.
      * </ul>
      *
      * @param key   节点的key
@@ -222,14 +222,14 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     /**
      * 同时添加父子节点：
      * <ul>
-     *     <li>若{@code parentKey}或{@code childKey}对应的节点不存在，则会根据键值创建一个对应的节点；</li>
-     *     <li>若{@code parentKey}或{@code childKey}对应的节点存在，则会更新对应节点的值；</li>
+     *     <li>若{@code parentKey}或{@code childKey}对应的节点不存在，则会根据键值创建一个对应的节点；</li>.
+     *     <li>若{@code parentKey}或{@code childKey}对应的节点存在，则会更新对应节点的值；</li>.
      * </ul>
      * 该操作等同于：
      * <pre>
-     *     TreeEntry&lt;K, V&gt;  parent = putNode(parentKey, parentValue);
-     *     TreeEntry&lt;K, V&gt;  child = putNode(childKey, childValue);
-     *     linkNodes(parentKey, childKey);
+     *     TreeEntry&lt;K, V&gt;  parent = putNode(parentKey, parentValue);.
+     *     TreeEntry&lt;K, V&gt;  child = putNode(childKey, childValue);.
+     *     linkNodes(parentKey, childKey);.
      * </pre>
      *
      * @param parentKey   父节点的key
@@ -248,8 +248,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     /**
      * 添加子节点，并为子节点指定父节点：
      * <ul>
-     *     <li>若{@code parentKey}或{@code childKey}对应的节点不存在，则会根据键值创建一个对应的节点；</li>
-     *     <li>若{@code parentKey}或{@code childKey}对应的节点存在，则会更新对应节点的值；</li>
+     *     <li>若{@code parentKey}或{@code childKey}对应的节点不存在，则会根据键值创建一个对应的节点；</li>.
+     *     <li>若{@code parentKey}或{@code childKey}对应的节点存在，则会更新对应节点的值；</li>.
      * </ul>
      *
      * @param parentKey  父节点的key
@@ -262,7 +262,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 为指定的节点建立父子关系，若{@code parentKey}或{@code childKey}对应节点不存在，则会创建一个对应的值为null的空节点
+     * 为指定的节点建立父子关系，若{@code parentKey}或{@code childKey}对应节点不存在，则会创建一个对应的值为null的空节点.
      *
      * @param parentKey 父节点的key
      * @param childKey  子节点的key
@@ -309,7 +309,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 移除指定父节点与其直接关联的子节点间的引用关系，但是不会将该节点从集合中删除
+     * 移除指定父节点与其直接关联的子节点间的引用关系，但是不会将该节点从集合中删除.
      *
      * @param parentKey 父节点的key
      * @param childKey  子节点
@@ -326,7 +326,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * 树节点
+     * 树节点.
      *
      * @param <K> key类型
      * @author huangchengxing
@@ -334,27 +334,27 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     public static class TreeEntryNode<K, V> implements TreeEntry<K, V> {
 
         /**
-         * 根节点
+         * 根节点.
          */
         private TreeEntryNode<K, V> root;
 
         /**
-         * 父节点
+         * 父节点.
          */
         private TreeEntryNode<K, V> parent;
 
         /**
-         * 权重，表示到根节点的距离
+         * 权重，表示到根节点的距离.
          */
         private int weight;
 
         /**
-         * 子节点
+         * 子节点.
          */
         private final Map<K, TreeEntryNode<K, V>> children;
 
         /**
-         * key
+         * key.
          */
         private final K key;
 
@@ -364,7 +364,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         private V value;
 
         /**
-         * 创建一个节点
+         * 创建一个节点.
          *
          * @param parent 节点的父节点
          * @param key    节点的key
@@ -374,7 +374,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 创建一个节点
+         * 创建一个节点.
          *
          * @param parent 节点的父节点
          * @param key    节点的key
@@ -396,7 +396,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取当前节点的key
+         * 获取当前节点的key.
          *
          * @return 节点的key
          */
@@ -406,7 +406,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取当前节点与根节点的距离
+         * 获取当前节点与根节点的距离.
          *
          * @return 当前节点与根节点的距离
          */
@@ -416,7 +416,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取节点的value
+         * 获取节点的value.
          *
          * @return 节点的value
          */
@@ -426,7 +426,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 设置节点的value
+         * 设置节点的value.
          *
          * @param value 节点的value
          * @return 节点的旧value
@@ -441,7 +441,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         // ================== 父节点的操作 ==================
 
         /**
-         * 从当前节点开始，向上递归当前节点的父节点
+         * 从当前节点开始，向上递归当前节点的父节点.
          *
          * @param includeCurrent 是否处理当前节点
          * @param consumer       对节点的操作
@@ -463,7 +463,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 当前节点是否为根节点
+         * 当前节点是否为根节点.
          *
          * @return 当前节点是否为根节点
          */
@@ -472,7 +472,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取以当前节点作为叶子节点的树结构，然后获取该树结构的根节点
+         * 获取以当前节点作为叶子节点的树结构，然后获取该树结构的根节点.
          *
          * @return 根节点
          */
@@ -488,7 +488,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取当前节点直接关联的父节点
+         * 获取当前节点直接关联的父节点.
          *
          * @return 父节点，当节点不存在对应父节点时返回null
          */
@@ -498,7 +498,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取以当前节点作为叶子节点的树结构，然后获取该树结构中当前节点的指定父节点
+         * 获取以当前节点作为叶子节点的树结构，然后获取该树结构中当前节点的指定父节点.
          *
          * @param key 指定父节点的key
          * @return 指定父节点，当不存在时返回null
@@ -510,7 +510,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取以当前节点作为根节点的树结构，然后遍历所有节点
+         * 获取以当前节点作为根节点的树结构，然后遍历所有节点.
          *
          * @param includeSelf  是否处理当前节点
          * @param nodeConsumer 对节点的处理
@@ -521,7 +521,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 指定key与当前节点的key是否相等
+         * 指定key与当前节点的key是否相等.
          *
          * @param key 要比较的key
          * @return 是否key一致
@@ -533,7 +533,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         // ================== 子节点的操作 ==================
 
         /**
-         * 从当前节点开始，按广度优先向下遍历当前节点的所有子节点
+         * 从当前节点开始，按广度优先向下遍历当前节点的所有子节点.
          *
          * @param includeCurrent 是否包含当前节点
          * @param consumer       对节点与节点和当前节点的距离的操作，当{@code includeCurrent}为false时下标从1开始，否则从0开始
@@ -573,7 +573,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 
 
         /**
-         * 添加子节点
+         * 添加子节点.
          *
          * @param child 子节点
          * @throws IllegalArgumentException 当要添加的子节点已经是其自身父节点时抛出
@@ -602,7 +602,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 移除子节点
+         * 移除子节点.
          *
          * @param key 子节点
          */
@@ -624,7 +624,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取以当前节点作为根节点的树结构，然后获取该树结构中的当前节点的指定子节点
+         * 获取以当前节点作为根节点的树结构，然后获取该树结构中的当前节点的指定子节点.
          *
          * @param key 指定子节点的key
          * @return 节点
@@ -636,7 +636,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取当前节点直接关联的子节点
+         * 获取当前节点直接关联的子节点.
          *
          * @return 节点
          */
@@ -646,7 +646,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 获取以当前节点作为根节点的树结构，然后按广度优先获取该树结构中的当前节点的全部子节点
+         * 获取以当前节点作为根节点的树结构，然后按广度优先获取该树结构中的当前节点的全部子节点.
          *
          * @return 节点
          */
@@ -658,7 +658,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 移除对子节点、父节点与根节点的全部引用
+         * 移除对子节点、父节点与根节点的全部引用.
          */
         void clear() {
             this.root = null;
@@ -667,8 +667,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 比较目标对象与当前{@link TreeEntry}是否相等。<br>
-         * 默认只要{@link TreeEntry#getKey()}的返回值相同，即认为两者相等
+         * 比较目标对象与当前{@link TreeEntry}是否相等。<br>.
+         * 默认只要{@link TreeEntry#getKey()}的返回值相同，即认为两者相等.
          *
          * @param o 目标对象
          * @return 是否
@@ -686,7 +686,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 返回当前{@link TreeEntry}的哈希值。<br>
+         * 返回当前{@link TreeEntry}的哈希值。<br>.
          * 默认总是返回{@link TreeEntry#getKey()}的哈希值
          *
          * @return 哈希值
@@ -697,7 +697,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         }
 
         /**
-         * 复制一个当前节点
+         * 复制一个当前节点.
          *
          * @param value 复制的节点的值
          * @return 节点
@@ -711,7 +711,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
     }
 
     /**
-     * {@link java.util.Map.Entry}包装类
+     * {@link java.util.Map.Entry}包装类.
      *
      * @param <K> key类型
      * @param <V> value类型
