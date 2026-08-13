@@ -8,6 +8,7 @@ import cc.hongz.ztools.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -270,22 +271,25 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      */
     @Override
     public void linkNodes(final K parentKey, final K childKey, final BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer) {
-        consumer = ObjectUtil.defaultIfNull(consumer, (parent, child) -> {
-        });
+        final BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> op =
+                ObjectUtil.defaultIfNull(consumer,
+                        (BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>>)
+                                (parent, child) -> {
+                                });
         final TreeEntryNode<K, V> parentNode = nodes.computeIfAbsent(parentKey, t -> new TreeEntryNode<>(null, t));
         TreeEntryNode<K, V> childNode = nodes.get(childKey);
 
         // 1.子节点不存在
         if (ObjectUtil.isNull(childNode)) {
             childNode = new TreeEntryNode<>(parentNode, childKey);
-            consumer.accept(parentNode, childNode);
+            op.accept(parentNode, childNode);
             nodes.put(childKey, childNode);
             return;
         }
 
         // 2.子节点存在，且已经是该父节点的子节点了
         if (ObjectUtil.equals(parentNode, childNode.getDeclaredParent())) {
-            consumer.accept(parentNode, childNode);
+            op.accept(parentNode, childNode);
             return;
         }
 
@@ -305,7 +309,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
                     childNode.getKey(), childNode.getDeclaredParent().getKey(), parentKey
             ));
         }
-        consumer.accept(parentNode, childNode);
+        op.accept(parentNode, childNode);
     }
 
     /**
@@ -450,11 +454,13 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          */
         TreeEntryNode<K, V> traverseParentNodes(
                 final boolean includeCurrent, final Consumer<TreeEntryNode<K, V>> consumer, final Predicate<TreeEntryNode<K, V>> breakTraverse) {
-            breakTraverse = ObjectUtil.defaultIfNull(breakTraverse, a -> n -> false);
+            final Predicate<TreeEntryNode<K, V>> bt =
+                    ObjectUtil.defaultIfNull(breakTraverse,
+                            (Predicate<TreeEntryNode<K, V>>) n -> false);
             TreeEntryNode<K, V> curr = includeCurrent ? this : this.parent;
             while (ObjectUtil.isNotNull(curr)) {
                 consumer.accept(curr);
-                if (breakTraverse.test(curr)) {
+                if (bt.test(curr)) {
                     break;
                 }
                 curr = curr.parent;
@@ -542,7 +548,10 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          */
         TreeEntryNode<K, V> traverseChildNodes(
                 final boolean includeCurrent, final BiConsumer<Integer, TreeEntryNode<K, V>> consumer, final BiPredicate<Integer, TreeEntryNode<K, V>> breakTraverse) {
-            breakTraverse = ObjectUtil.defaultIfNull(breakTraverse, (i, n) -> false);
+            final BiPredicate<Integer, TreeEntryNode<K, V>> bt =
+                    ObjectUtil.defaultIfNull(breakTraverse,
+                            (BiPredicate<Integer, TreeEntryNode<K, V>>)
+                                    (i, n) -> false);
             final Deque<List<TreeEntryNode<K, V>>> keyNodeDeque = new LinkedList<>();
             keyNodeDeque.addLast(Collections.singletonList(this));
             boolean needProcess = includeCurrent;
@@ -554,7 +563,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
                 for (final TreeEntryNode<K, V> node : curr) {
                     if (needProcess) {
                         consumer.accept(index, node);
-                        if (breakTraverse.test(index, node)) {
+                        if (bt.test(index, node)) {
                             return node;
                         }
                     } else {
