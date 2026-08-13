@@ -448,8 +448,11 @@ class MapUtilTest {
         assertNull(MapUtil.getQuietly(null, "key", String.class, null));
         Map<String, Object> map = new HashMap<>();
         map.put("val", 42);
+        // Integer 转 String 是合法转换（toString）
+        assertEquals("42", MapUtil.getQuietly(map, "val", String.class, "def"));
         // 类型不匹配返回默认值
-        assertEquals("def", MapUtil.getQuietly(map, "val", String.class, "def"));
+        map.put("num", "abc");
+        assertEquals(-1, MapUtil.getQuietly(map, "num", Integer.class, -1));
         assertEquals("miss", MapUtil.getQuietly(map, "missing", String.class, "miss"));
     }
 
