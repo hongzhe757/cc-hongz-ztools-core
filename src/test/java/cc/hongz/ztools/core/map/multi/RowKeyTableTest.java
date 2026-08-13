@@ -1,7 +1,5 @@
-package cc.hongz.ztools.core.map;
+package cc.hongz.ztools.core.map.multi;
 
-import cc.hongz.ztools.core.map.multi.RowKeyTable;
-import cc.hongz.ztools.core.map.multi.Table;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
