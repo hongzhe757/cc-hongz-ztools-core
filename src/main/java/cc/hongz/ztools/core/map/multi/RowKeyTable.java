@@ -69,7 +69,7 @@ public class RowKeyTable<R, C, V> extends AbsTable<R, C, V> {
 	 * @param raw              原始Map
 	 * @param columnMapBuilder 列的map创建器
 	 */
-	public RowKeyTable(Map<R, Map<C, V>> raw, Builder<? extends Map<C, V>> columnMapBuilder) {
+	public RowKeyTable(final Map<R, Map<C, V>> raw, final Builder<? extends Map<C, V>> columnMapBuilder) {
 		this.raw = raw;
 		this.columnBuilder = null == columnMapBuilder ? HashMap::new : columnMapBuilder;
 	}

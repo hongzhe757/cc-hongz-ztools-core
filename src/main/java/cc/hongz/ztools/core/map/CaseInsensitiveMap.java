@@ -73,7 +73,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 *
 	 * @param emptyMapBuilder 被包装的自定义Map创建器
 	 */
-	CaseInsensitiveMap(MapBuilder<K, V> emptyMapBuilder) {
+	CaseInsensitiveMap(final MapBuilder<K, V> emptyMapBuilder) {
 		// issue#I5VRHW@Gitee 使Function可以被序列化
 		super(emptyMapBuilder.build(), (Function<Object, K> & Serializable)(key)->{
 			if (key instanceof CharSequence) {
