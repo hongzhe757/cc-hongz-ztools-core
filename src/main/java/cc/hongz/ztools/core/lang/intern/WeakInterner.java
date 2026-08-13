@@ -1,6 +1,6 @@
 package cc.hongz.ztools.core.lang.intern;
 
-import cc.hongz.ztools.core.map.WeakKeyValueConcurrentMap;
+import cc.hongz.ztools.core.map.WeakConcurrentMap;
 
 import java.lang.ref.WeakReference;
 
@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference;
  */
 public class WeakInterner<T> implements Interner<T>{
 
-	private final WeakKeyValueConcurrentMap<T, WeakReference<T>> cache = new WeakKeyValueConcurrentMap<>();
+	private final WeakConcurrentMap<T, WeakReference<T>> cache = new WeakConcurrentMap<>();
 
 	public T intern(T sample) {
 		if (sample == null) {

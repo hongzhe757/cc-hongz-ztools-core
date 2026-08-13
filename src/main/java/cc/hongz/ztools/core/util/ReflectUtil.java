@@ -11,7 +11,7 @@ import cc.hongz.ztools.core.lang.Filter;
 import cc.hongz.ztools.core.lang.NullWrapperBean;
 import cc.hongz.ztools.core.lang.reflect.MethodHandleUtil;
 import cc.hongz.ztools.core.map.MapUtil;
-import cc.hongz.ztools.core.map.WeakKeyValueConcurrentMap;
+import cc.hongz.ztools.core.map.WeakConcurrentMap;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
@@ -46,24 +46,24 @@ public final class ReflectUtil {
     /**
      * 构造对象缓存.
      */
-    private static final WeakKeyValueConcurrentMap<Class<?>, Constructor<?>[]>
-            CONSTRUCTORS_CACHE = new WeakKeyValueConcurrentMap<>();
+    private static final WeakConcurrentMap<Class<?>, Constructor<?>[]>
+            CONSTRUCTORS_CACHE = new WeakConcurrentMap<>();
     /**
      * 字段缓存.
      */
-    private static final WeakKeyValueConcurrentMap<Class<?>, Field[]> FIELDS_CACHE = new WeakKeyValueConcurrentMap<>();
+    private static final WeakConcurrentMap<Class<?>, Field[]> FIELDS_CACHE = new WeakConcurrentMap<>();
     /**
      * 方法缓存.
      */
-    private static final WeakKeyValueConcurrentMap<Class<?>, Method[]>
-            METHODS_CACHE = new WeakKeyValueConcurrentMap<>();
+    private static final WeakConcurrentMap<Class<?>, Method[]>
+            METHODS_CACHE = new WeakConcurrentMap<>();
     /**
      * 方法查找结果缓存（新增：细粒度缓存，避免重复遍历）.
      * key: 方法查找键（类+是否忽略大小写+方法名+参数类型）
      * value: 查找到的Method
      */
-    private static final WeakKeyValueConcurrentMap<MethodLookupKey, Method>
-            METHOD_LOOKUP_CACHE = new WeakKeyValueConcurrentMap<>();
+    private static final WeakConcurrentMap<MethodLookupKey, Method>
+            METHOD_LOOKUP_CACHE = new WeakConcurrentMap<>();
 
     // ----------------------------------------- Constructor
 

@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentMap;
  * @param <V> 值类型
  * @author looly
  * @since 5.8.0
- * @deprecated 请使用{@link cc.hongz.ztools.core.map.WeakKeyConcurrentMap}
  */
 public class WeakConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V> {
 
@@ -29,7 +28,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V> {
      *
      * @param raw {@link ConcurrentMap}实现
      */
-    public WeakConcurrentMap(final ConcurrentMap<Reference<K>, V> raw) {
+    public WeakConcurrentMap(ConcurrentMap<Reference<K>, V> raw) {
         super(raw, ReferenceUtil.ReferenceType.WEAK);
     }
 }

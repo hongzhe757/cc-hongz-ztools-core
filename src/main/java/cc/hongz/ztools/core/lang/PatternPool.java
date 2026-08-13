@@ -1,6 +1,6 @@
 package cc.hongz.ztools.core.lang;
 
-import cc.hongz.ztools.core.map.WeakKeyValueConcurrentMap;
+import cc.hongz.ztools.core.map.WeakConcurrentMap;
 
 import java.util.regex.Pattern;
 
@@ -196,7 +196,7 @@ public class PatternPool {
 	/**
 	 * Pattern池
 	 */
-	private static final WeakKeyValueConcurrentMap<RegexWithFlag, Pattern> POOL = new WeakKeyValueConcurrentMap<>();
+	private static final WeakConcurrentMap<RegexWithFlag, Pattern> POOL = new WeakConcurrentMap<>();
 
 	/**
 	 * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。

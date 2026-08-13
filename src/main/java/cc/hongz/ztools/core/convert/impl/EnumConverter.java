@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.convert.impl;
 import cc.hongz.ztools.core.convert.AbstractConverter;
 import cc.hongz.ztools.core.convert.ConvertException;
 import cc.hongz.ztools.core.map.MapUtil;
-import cc.hongz.ztools.core.map.WeakKeyValueConcurrentMap;
+import cc.hongz.ztools.core.map.WeakConcurrentMap;
 import cc.hongz.ztools.core.util.ClassUtil;
 import cc.hongz.ztools.core.util.EnumUtil;
 import cc.hongz.ztools.core.util.ModifierUtil;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class EnumConverter extends AbstractConverter<Object> {
 	private static final long serialVersionUID = 1L;
 
-	private static final WeakKeyValueConcurrentMap<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new WeakKeyValueConcurrentMap<>();
+	private static final WeakConcurrentMap<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new WeakConcurrentMap<>();
 
 	private final Class enumClass;
 

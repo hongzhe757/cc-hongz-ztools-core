@@ -1,15 +1,18 @@
 package cc.hongz.ztools.core.map;
 
-import cc.hongz.ztools.core.lang.ref.Ref;
-import cc.hongz.ztools.core.map.MapUtil;
+import cc.hongz.ztools.core.collection.CollUtil;
+import cc.hongz.ztools.core.lang.func.Func0;
+import cc.hongz.ztools.core.util.ObjectUtil;
 import cc.hongz.ztools.core.util.ReferenceUtil;
 
 import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
-import java.util.AbstractCollection;
-import java.util.AbstractSet;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -17,315 +20,187 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
- * 线程安全的ReferenceMap实现.
+ * 线程安全的ReferenceMap实现<br>
+ * 参考：jdk.management.resource.internal.WeakKeyConcurrentHashMap
  *
  * @param <K> 键类型
  * @param <V> 值类型
  * @author looly
- * @since 5.8.41
+ * @since 5.8.0
  */
-public abstract class ReferenceConcurrentMap<K, V>
-        implements ConcurrentMap<K, V>, Iterable<Map.Entry<K, V>>,
-        Serializable {
-    private static final long serialVersionUID = 1L;
+public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
 
+    final ConcurrentMap<Reference<K>, V> raw;
+    private final ReferenceQueue<K> lastQueue;
+    private final ReferenceUtil.ReferenceType keyType;
     /**
-     * 键值对引用.
+     * 回收监听
      */
-    final ConcurrentMap<Ref<K>, Ref<V>> raw;
-    /**
-     * 因无强链接而清除的键队列.
-     */
-    private final ReferenceQueue<K> lastKeyQueue;
-    /**
-     * 因无强链接而清除的值队列.
-     */
-    private final ReferenceQueue<V> lastValueQueue;
-    /**
-     * 回收监听.
-     */
-    private BiConsumer<Ref<? extends K>, Ref<? extends V>> purgeListener;
+    private BiConsumer<Reference<? extends K>, V> purgeListener;
 
     // region 构造
 
     /**
-     * 构造.
+     * 构造
      *
-     * @param raw {@link ConcurrentMap}实现
+     * @param raw           {@link ConcurrentMap}实现
+     * @param referenceType Reference类型
      */
-    public ReferenceConcurrentMap(
-            final ConcurrentMap<Ref<K>, Ref<V>> raw) {
+    public ReferenceConcurrentMap(ConcurrentMap<Reference<K>, V> raw, ReferenceUtil.ReferenceType referenceType) {
         this.raw = raw;
-        lastKeyQueue = new ReferenceQueue<>();
-        lastValueQueue = new ReferenceQueue<>();
+        this.keyType = referenceType;
+        lastQueue = new ReferenceQueue<>();
     }
     // endregion
 
     /**
-     * 设置对象回收清除监听.
+     * 设置对象回收清除监听
      *
      * @param purgeListener 监听函数
      */
-    public void setPurgeListener(
-            final BiConsumer<Ref<? extends K>, Ref<? extends V>>
-                    purgeListener) {
+    public void setPurgeListener(BiConsumer<Reference<? extends K>, V> purgeListener) {
         this.purgeListener = purgeListener;
     }
 
     @Override
     public int size() {
-        this.purgeStale();
+        this.purgeStaleKeys();
         return this.raw.size();
     }
 
     @Override
     public boolean isEmpty() {
-        this.purgeStale();
-        return this.raw.isEmpty();
+        return 0 == size();
     }
 
     @Override
-    public V get(final Object key) {
-        this.purgeStale();
-        return unwrap(this.raw.get(wrapKey(key)));
+    public V get(Object key) {
+        this.purgeStaleKeys();
+        //noinspection unchecked
+        return this.raw.get(ofKey((K) key, null));
     }
 
     @Override
-    public boolean containsKey(final Object key) {
-        this.purgeStale();
-        return this.raw.containsKey(wrapKey(key));
+    public boolean containsKey(Object key) {
+        this.purgeStaleKeys();
+        //noinspection unchecked
+        return this.raw.containsKey(ofKey((K) key, null));
     }
 
     @Override
-    public boolean containsValue(final Object value) {
-        this.purgeStale();
-        return this.raw.containsValue(wrapValue(value));
+    public boolean containsValue(Object value) {
+        this.purgeStaleKeys();
+        return this.raw.containsValue(value);
     }
 
     @Override
-    public V put(final K key, final V value) {
-        this.purgeStale();
-        final Ref<V> vReference = this.raw.put(wrapKey(key),
-                wrapValue(value));
-        return unwrap(vReference);
+    public V put(K key, V value) {
+        this.purgeStaleKeys();
+        return this.raw.put(ofKey(key, this.lastQueue), value);
     }
 
     @Override
-    public V putIfAbsent(final K key, final V value) {
-        this.purgeStale();
-        final Ref<V> vReference = this.raw.putIfAbsent(wrapKey(key),
-                wrapValue(value));
-        return unwrap(vReference);
+    public V putIfAbsent(K key, V value) {
+        this.purgeStaleKeys();
+        return this.raw.putIfAbsent(ofKey(key, this.lastQueue), value);
     }
 
     @Override
-    public void putAll(final Map<? extends K, ? extends V> m) {
+    public void putAll(Map<? extends K, ? extends V> m) {
         m.forEach(this::put);
     }
 
     @Override
-    public V replace(final K key, final V value) {
-        this.purgeStale();
-        final Ref<V> vReference = this.raw.replace(wrapKey(key),
-                wrapValue(value));
-        return unwrap(vReference);
+    public V replace(K key, V value) {
+        this.purgeStaleKeys();
+        return this.raw.replace(ofKey(key, this.lastQueue), value);
     }
 
     @Override
-    public boolean replace(final K key, final V oldValue,
-            final V newValue) {
-        this.purgeStale();
-        return this.raw.replace(wrapKey(key), wrapValue(oldValue),
-                wrapValue(newValue));
+    public boolean replace(K key, V oldValue, V newValue) {
+        this.purgeStaleKeys();
+        return this.raw.replace(ofKey(key, this.lastQueue), oldValue, newValue);
     }
 
     @Override
-    public void replaceAll(
-            final BiFunction<? super K, ? super V, ? extends V> function) {
-        this.purgeStale();
-        this.raw.replaceAll((rKey, rValue) ->
-                wrapValue(function.apply(unwrap(rKey), unwrap(rValue))));
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+        this.purgeStaleKeys();
+        this.raw.replaceAll((kWeakKey, value) -> function.apply(kWeakKey.get(), value));
     }
 
     @Override
-    public V computeIfAbsent(final K key,
-            final Function<? super K, ? extends V> mappingFunction) {
-        V result = null;
-        while (null == result) {
-            this.purgeStale();
-            final Ref<V> vReference = this.raw.computeIfAbsent(
-                    wrapKey(key),
-                    kReference -> wrapValue(mappingFunction.apply(
-                            unwrap(kReference))));
-
-            if (NullRef.NULL == vReference) {
-                return null;
-            }
-            result = unwrap(vReference);
-        }
-        return result;
+    public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+        this.purgeStaleKeys();
+        return this.raw.computeIfAbsent(ofKey(key, this.lastQueue), kWeakKey -> mappingFunction.apply(key));
     }
 
     @Override
-    public V computeIfPresent(final K key,
-            final BiFunction<? super K, ? super V, ? extends V>
-                    remappingFunction) {
-        V result = null;
-        while (null == result) {
-            this.purgeStale();
-            final Ref<V> vReference = this.raw.computeIfPresent(
-                    wrapKey(key),
-                    (kReference, vReference1) -> wrapValue(
-                            remappingFunction.apply(unwrap(kReference),
-                                    unwrap(vReference1))));
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        this.purgeStaleKeys();
+        return this.raw.computeIfPresent(ofKey(key, this.lastQueue), (kWeakKey, value) -> remappingFunction.apply(key, value));
+    }
 
-            if (NullRef.NULL == vReference) {
-                return null;
-            }
-            result = unwrap(vReference);
-        }
-        return result;
+    /**
+     * 从缓存中获得对象，当对象不在缓存中或已经过期返回Func0回调产生的对象
+     *
+     * @param key      键
+     * @param supplier 如果不存在回调方法，用于生产值对象
+     * @return 值对象
+     */
+    public V computeIfAbsent(K key, Func0<? extends V> supplier) {
+        return computeIfAbsent(key, (keyParam) -> supplier.callWithRuntimeException());
     }
 
     @Override
-    public V remove(final Object key) {
-        this.purgeStale();
-        return unwrap(this.raw.remove(wrapKey(key)));
+    public V remove(Object key) {
+        this.purgeStaleKeys();
+        //noinspection unchecked
+        return this.raw.remove(ofKey((K) key, null));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public boolean remove(final Object key, final Object value) {
-        this.purgeStale();
-        return this.raw.remove(wrapKey((K) key, null), value);
+    public boolean remove(Object key, Object value) {
+        this.purgeStaleKeys();
+        //noinspection unchecked
+        return this.raw.remove(ofKey((K) key, null), value);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public void clear() {
         this.raw.clear();
-        while (lastKeyQueue.poll() != null) {
-            // empty body
-        }
-        while (lastValueQueue.poll() != null) {
-            // empty body
-        }
+        //noinspection StatementWithEmptyBody
+        while (lastQueue.poll() != null) ;
     }
 
     @Override
     public Set<K> keySet() {
-        this.purgeStale();
-        final Set<Ref<K>> referenceSet = this.raw.keySet();
-        return new AbstractSet<K>() {
-            @Override
-            public Iterator<K> iterator() {
-                final Iterator<Ref<K>> referenceIter =
-                        referenceSet.iterator();
-                return new Iterator<K>() {
-                    @Override
-                    public boolean hasNext() {
-                        return referenceIter.hasNext();
-                    }
-
-                    @Override
-                    public K next() {
-                        return unwrap(referenceIter.next());
-                    }
-                };
-            }
-
-            @Override
-            public int size() {
-                return referenceSet.size();
-            }
-        };
+        this.purgeStaleKeys();
+        // TODO 非高效方式的set转换，应该返回一个view
+        final Collection<K> trans = CollUtil.trans(this.raw.keySet(), (reference) -> null == reference ? null : reference.get());
+        return new HashSet<>(trans);
     }
 
     @Override
     public Collection<V> values() {
-        this.purgeStale();
-        final Collection<Ref<V>> referenceValues = this.raw.values();
-        return new AbstractCollection<V>() {
-            @Override
-            public Iterator<V> iterator() {
-                final Iterator<Ref<V>> referenceIter =
-                        referenceValues.iterator();
-                return new Iterator<V>() {
-                    @Override
-                    public boolean hasNext() {
-                        return referenceIter.hasNext();
-                    }
-
-                    @Override
-                    public V next() {
-                        return unwrap(referenceIter.next());
-                    }
-                };
-            }
-
-            @Override
-            public int size() {
-                return referenceValues.size();
-            }
-        };
+        this.purgeStaleKeys();
+        return this.raw.values();
     }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        this.purgeStale();
-        final Set<Entry<Ref<K>, Ref<V>>> referenceEntrySet =
-                this.raw.entrySet();
-        return new AbstractSet<Entry<K, V>>() {
-            @Override
-            public Iterator<Entry<K, V>> iterator() {
-                final Iterator<Entry<Ref<K>, Ref<V>>> referenceIter =
-                        referenceEntrySet.iterator();
-                return new Iterator<Entry<K, V>>() {
-                    @Override
-                    public boolean hasNext() {
-                        return referenceIter.hasNext();
-                    }
-
-                    @Override
-                    public Entry<K, V> next() {
-                        final Entry<Ref<K>, Ref<V>> next =
-                                referenceIter.next();
-                        return new Entry<K, V>() {
-                            @Override
-                            public K getKey() {
-                                return unwrap(next.getKey());
-                            }
-
-                            @Override
-                            public V getValue() {
-                                return unwrap(next.getValue());
-                            }
-
-                            @Override
-                            public V setValue(final V value) {
-                                return unwrap(next.setValue(
-                                        wrapValue(value)));
-                            }
-                        };
-                    }
-                };
-            }
-
-            @Override
-            public int size() {
-                return referenceEntrySet.size();
-            }
-        };
+        this.purgeStaleKeys();
+        return this.raw.entrySet().stream()
+                .map(entry -> new AbstractMap.SimpleImmutableEntry<>(entry.getKey().get(), entry.getValue()))
+                .collect(Collectors.toSet());
     }
 
     @Override
-    public void forEach(
-            final BiConsumer<? super K, ? super V> action) {
-        this.purgeStale();
-        this.raw.forEach((key, rValue) ->
-                action.accept(key.get(), unwrap(rValue)));
+    public void forEach(BiConsumer<? super K, ? super V> action) {
+        this.purgeStaleKeys();
+        this.raw.forEach((key, value)-> action.accept(key.get(), value));
     }
 
     @Override
@@ -334,121 +209,115 @@ public abstract class ReferenceConcurrentMap<K, V>
     }
 
     @Override
-    public V compute(final K key,
-            final BiFunction<? super K, ? super V, ? extends V>
-                    remappingFunction) {
-        this.purgeStale();
-        return unwrap(this.raw.compute(wrapKey(key),
-                (kReference, vReference) -> wrapValue(
-                        remappingFunction.apply(unwrap(kReference),
-                                unwrap(vReference)))));
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        this.purgeStaleKeys();
+        return this.raw.compute(ofKey(key, this.lastQueue), (kWeakKey, value) -> remappingFunction.apply(key, value));
     }
 
     @Override
-    public V merge(final K key, final V value,
-            final BiFunction<? super V, ? super V, ? extends V>
-                    remappingFunction) {
-        this.purgeStale();
-        return unwrap(this.raw.merge(wrapKey(key), wrapValue(value),
-                (vReference, vReference2) -> wrapValue(
-                        remappingFunction.apply(unwrap(vReference),
-                                unwrap(vReference2)))));
+    public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+        this.purgeStaleKeys();
+        return this.raw.merge(ofKey(key, this.lastQueue), value, remappingFunction);
     }
 
     /**
-     * 清除被回收的键和值.
+     * 清除被回收的键
      */
-    @SuppressWarnings("unchecked")
-    private void purgeStale() {
-        Ref<? extends K> key;
-        Ref<? extends V> value;
-
-        while ((key = (Ref<? extends K>) this.lastKeyQueue.poll())
-                != null) {
-            value = this.raw.remove(key);
+    private void purgeStaleKeys() {
+        Reference<? extends K> reference;
+        V value;
+        while ((reference = this.lastQueue.poll()) != null) {
+            value = this.raw.remove(reference);
             if (null != purgeListener) {
-                purgeListener.accept(key, value);
-            }
-        }
-
-        while ((value = (Ref<? extends V>) this.lastValueQueue.poll())
-                != null) {
-            MapUtil.removeByValue(this.raw, (Ref<V>) value);
-            if (null != purgeListener) {
-                purgeListener.accept(null, value);
+                purgeListener.accept(reference, value);
             }
         }
     }
 
     /**
-     * 根据Reference类型构建key对应的{@link Reference}.
+     * 根据Reference类型构建key对应的{@link Reference}
      *
      * @param key   键
      * @param queue {@link ReferenceQueue}
      * @return {@link Reference}
      */
-    abstract Ref<K> wrapKey(final K key,
-            final ReferenceQueue<? super K> queue);
-
-    /**
-     * 根据Reference类型构建value对应的{@link Reference}.
-     *
-     * @param value 值
-     * @param queue {@link ReferenceQueue}
-     * @return {@link Reference}
-     */
-    abstract Ref<V> wrapValue(final V value,
-            final ReferenceQueue<? super V> queue);
-
-    /**
-     * 根据Reference类型构建key对应的{@link Reference}.
-     *
-     * @param key 键
-     * @return {@link Reference}
-     */
-    @SuppressWarnings("unchecked")
-    private Ref<K> wrapKey(final Object key) {
-        return wrapKey((K) key, this.lastKeyQueue);
-    }
-
-    /**
-     * 根据Reference类型构建value对应的{@link Reference}.
-     *
-     * @param value 键
-     * @return {@link Reference}
-     */
-    @SuppressWarnings("unchecked")
-    private Ref<V> wrapValue(final Object value) {
-        if (null == value) {
-            return (Ref<V>) NullRef.NULL;
+    private Reference<K> ofKey(K key, ReferenceQueue<? super K> queue) {
+        switch (keyType) {
+            case WEAK:
+                return new WeakKey<>(key, queue);
+            case SOFT:
+                return new SoftKey<>(key, queue);
         }
-        return wrapValue((V) value, this.lastValueQueue);
+        throw new IllegalArgumentException("Unsupported key type: " + keyType);
     }
 
     /**
-     * 去包装对象.
+     * 弱键
      *
-     * @param <T> 对象类型
-     * @param obj 对象
-     * @return 值
+     * @param <K> 键类型
      */
-    private static <T> T unwrap(final Ref<T> obj) {
-        return ReferenceUtil.get(obj);
-    }
+    private static class WeakKey<K> extends WeakReference<K> {
+        private final int hashCode;
 
-    /**
-     * 空引用实现.
-     */
-    @SuppressWarnings("rawtypes")
-    private static class NullRef implements Ref {
         /**
-         * 空引用的单例值.
+         * 构造
+         *
+         * @param key   原始Key，不能为{@code null}
+         * @param queue {@link ReferenceQueue}
          */
-        public static final Object NULL = new NullRef();
+        WeakKey(K key, ReferenceQueue<? super K> queue) {
+            super(key, queue);
+            hashCode = key.hashCode();
+        }
 
         @Override
-        public Object get() {
-            return null;
+        public int hashCode() {
+            return hashCode;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (other == this) {
+                return true;
+            } else if (other instanceof WeakKey) {
+                return ObjectUtil.equals(((WeakKey<?>) other).get(), get());
+            }
+            return false;
+        }
+    }
+
+    /**
+     * 弱键
+     *
+     * @param <K> 键类型
+     */
+    private static class SoftKey<K> extends SoftReference<K> {
+        private final int hashCode;
+
+        /**
+         * 构造
+         *
+         * @param key   原始Key，不能为{@code null}
+         * @param queue {@link ReferenceQueue}
+         */
+        SoftKey(K key, ReferenceQueue<? super K> queue) {
+            super(key, queue);
+            hashCode = key.hashCode();
+        }
+
+        @Override
+        public int hashCode() {
+            return hashCode;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (other == this) {
+                return true;
+            } else if (other instanceof SoftKey) {
+                return ObjectUtil.equals(((SoftKey<?>) other).get(), get());
+            }
+            return false;
         }
     }
 }
