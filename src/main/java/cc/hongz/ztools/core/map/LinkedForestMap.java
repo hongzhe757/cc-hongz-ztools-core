@@ -270,7 +270,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
      * @param consumer  对父节点和子节点的操作，允许为null
      */
     @Override
-    public void linkNodes(final K parentKey, final K childKey, final BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer) {
+    public void linkNodes(final K parentKey, final K childKey,
+            final BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer) {
         final BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> op =
                 ObjectUtil.defaultIfNull(consumer,
                         (BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>>)
@@ -296,14 +297,12 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         // 3.子节点存在，但是未与其他节点构成父子关系
         if (false == childNode.hasParent()) {
             parentNode.addChild(childNode);
-        }
-        // 4.子节点存在，且已经与其他节点构成父子关系，但是允许子节点直接修改其父节点
-        else if (allowOverrideParent) {
+        } else if (allowOverrideParent) {
+            // 4.子节点存在，且已构成父子关系，但允许子节点直接修改其父节点
             childNode.getDeclaredParent().removeDeclaredChild(childNode.getKey());
             parentNode.addChild(childNode);
-        }
-        // 5.子节点存在，且已经与其他节点构成父子关系，但是不允许子节点直接修改其父节点
-        else {
+        } else {
+            // 5.子节点存在，且已构成父子关系，但不允许子节点直接修改其父节点
             throw new IllegalArgumentException(StrUtil.format(
                     "[{}] has been used as child of [{}], can not be overwrite as child of [{}]",
                     childNode.getKey(), childNode.getDeclaredParent().getKey(), parentKey
@@ -363,7 +362,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
         private final K key;
 
         /**
-         * 值
+         * 值.
          */
         private V value;
 
@@ -453,7 +452,9 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 遍历到的最后一个节点
          */
         TreeEntryNode<K, V> traverseParentNodes(
-                final boolean includeCurrent, final Consumer<TreeEntryNode<K, V>> consumer, final Predicate<TreeEntryNode<K, V>> breakTraverse) {
+                final boolean includeCurrent,
+                final Consumer<TreeEntryNode<K, V>> consumer,
+                final Predicate<TreeEntryNode<K, V>> breakTraverse) {
             final Predicate<TreeEntryNode<K, V>> bt =
                     ObjectUtil.defaultIfNull(breakTraverse,
                             (Predicate<TreeEntryNode<K, V>>) n -> false);
@@ -547,7 +548,10 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 遍历到的最后一个节点
          */
         TreeEntryNode<K, V> traverseChildNodes(
-                final boolean includeCurrent, final BiConsumer<Integer, TreeEntryNode<K, V>> consumer, final BiPredicate<Integer, TreeEntryNode<K, V>> breakTraverse) {
+                final boolean includeCurrent,
+                final BiConsumer<Integer, TreeEntryNode<K, V>> consumer,
+                final BiPredicate<Integer, TreeEntryNode<K, V>>
+                        breakTraverse) {
             final BiPredicate<Integer, TreeEntryNode<K, V>> bt =
                     ObjectUtil.defaultIfNull(breakTraverse,
                             (BiPredicate<Integer, TreeEntryNode<K, V>>)
@@ -687,7 +691,9 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
             if (this == o) {
                 return true;
             }
-            if (o == null || this.getClass().equals(o.getClass()) || ClassUtil.isAssignable(this.getClass(), o.getClass())) {
+            if (o == null || this.getClass().equals(o.getClass())
+                    || ClassUtil.isAssignable(this.getClass(),
+                            o.getClass())) {
                 return false;
             }
             final TreeEntry<?, ?> treeEntry = (TreeEntry<?, ?>) o;
@@ -712,7 +718,9 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 节点
          */
         TreeEntryNode<K, V> copy(final V value) {
-            TreeEntryNode<K, V> copiedNode = new TreeEntryNode<>(this.parent, this.key, ObjectUtil.defaultIfNull(value, this.value));
+            TreeEntryNode<K, V> copiedNode = new TreeEntryNode<>(
+                    this.parent, this.key,
+                    ObjectUtil.defaultIfNull(value, this.value));
             copiedNode.children.putAll(children);
             return copiedNode;
         }
