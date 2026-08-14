@@ -1,37 +1,32 @@
 package cc.hongz.ztools.core.lang;
 
+import cc.hongz.ztools.core.lang.func.Func0;
+import cc.hongz.ztools.core.map.SafeConcurrentHashMap;
 import cc.hongz.ztools.core.util.ArrayUtil;
 import cc.hongz.ztools.core.util.ClassUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * 单例类.
- * <p>
- * 提供单例对象的统一管理，当调用 get 方法时，如果对象池中存在此对象，返回此对象，否则创建新对象返回。
- * <p>
- * 迁移自 hutool {@code cn.hutool.core.lang.Singleton}。
+ * 单例类。
+ * 提供单例对象的统一管理，当调用get方法时，如果对象池中存在此对象，返回此对象，否则创建新对象返回<br>
  *
  * @author loolly
- * @author hongzhe.qin (migrated &amp; enhanced)
  */
 public final class Singleton {
 
-    private static final ConcurrentHashMap<String, Object> POOL = new ConcurrentHashMap<>();
+    private static final SafeConcurrentHashMap<String, Object> POOL = new SafeConcurrentHashMap<>();
 
-    /**
-     * 私有构造，禁止实例化.
-     */
     private Singleton() {
     }
 
     /**
-     * 获得指定类的单例对象.
-     * <p>对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象。
+     * 获得指定类的单例对象。
+     * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
+     * 注意：单例针对的是类和参数，也就是说只有类、参数一致才会返回同一个对象
      *
      * @param <T>    单例对象类型
      * @param clazz  类
@@ -45,20 +40,23 @@ public final class Singleton {
     }
 
     /**
-     * 获得指定类的单例对象.
+     * 获得指定类的单例对象。
+     * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
      *
      * @param <T>      单例对象类型
      * @param key      自定义键
      * @param supplier 单例对象的创建函数
      * @return 单例对象
+     * @since 5.3.3
      */
     @SuppressWarnings("unchecked")
-    public static <T> T get(final String key, final java.util.function.Supplier<T> supplier) {
-        return (T) POOL.computeIfAbsent(key, k -> supplier.get());
+    public static <T> T get(final String key, final Func0<T> supplier) {
+        return (T) POOL.computeIfAbsent(key, (k) -> supplier.callWithRuntimeException());
     }
 
     /**
-     * 获得指定类的单例对象.
+     * 获得指定类的单例对象。
+     * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
      *
      * @param <T>       单例对象类型
      * @param className 类名
@@ -72,9 +70,10 @@ public final class Singleton {
     }
 
     /**
-     * 将已有对象放入单例中，其 Class 做为键.
+     * 将已有对象放入单例中，其Class做为键。
      *
      * @param obj 对象
+     * @since 4.0.7
      */
     public static void put(final Object obj) {
         Assert.notNull(obj, "Bean object must be not null !");
@@ -82,17 +81,18 @@ public final class Singleton {
     }
 
     /**
-     * 将已有对象放入单例中，key 做为键.
+     * 将已有对象放入单例中，key做为键。
      *
      * @param key 键
      * @param obj 对象
+     * @since 5.3.3
      */
     public static void put(final String key, final Object obj) {
         POOL.put(key, obj);
     }
 
     /**
-     * 判断某个类的对象是否存在.
+     * 判断某个类的对象是否存在。
      *
      * @param clazz  类
      * @param params 构造参数
@@ -107,7 +107,7 @@ public final class Singleton {
     }
 
     /**
-     * 获取单例池中存在的所有类.
+     * 获取单例池中存在的所有类。
      *
      * @return 非重复的类集合
      */
@@ -116,7 +116,7 @@ public final class Singleton {
     }
 
     /**
-     * 移除指定 Singleton 对象.
+     * 移除指定Singleton对象。
      *
      * @param clazz 类
      */
@@ -127,7 +127,7 @@ public final class Singleton {
     }
 
     /**
-     * 移除指定 Singleton 对象.
+     * 移除指定Singleton对象。
      *
      * @param key 键
      */
@@ -136,14 +136,16 @@ public final class Singleton {
     }
 
     /**
-     * 清除所有 Singleton 对象.
+     * 清除所有Singleton对象。
      */
     public static void destroy() {
         POOL.clear();
     }
 
+    // ------------------------------------------------------------------------------------------- Private method start
+
     /**
-     * 构建 key.
+     * 构建key。
      *
      * @param className 类名
      * @param params    参数列表
@@ -155,4 +157,5 @@ public final class Singleton {
         }
         return StrUtil.format("{}#{}", className, ArrayUtil.join(params, "_"));
     }
+    // ------------------------------------------------------------------------------------------- Private method end
 }
