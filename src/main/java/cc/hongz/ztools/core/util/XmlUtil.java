@@ -57,7 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * XML工具类<br>
+ * XML工具类。
  * 此工具使用w3c dom工具，不需要依赖第三方包。<br>
  * 工具类封装了XML文档的创建、读取、写出和部分XML操作.
  *
@@ -123,7 +123,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 禁用默认的DocumentBuilderFactory，
+     * 禁用默认的DocumentBuilderFactory，。
      * 禁用后如果有第三方的实现，将会自动加载实现.
      */
     public static synchronized void disableDefaultDocumentBuilderFactory() {
@@ -174,7 +174,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 读取解析XML文件<br>
+     * 读取解析XML文件。
      * 如果给定内容以"&lt;"开头，表示这是一个XML内容，直接读取，
      * 否则按照路径处理<br>
      * 路径可以为相对路径，也可以是绝对路径，相对路径相对于ClassPath.
@@ -190,7 +190,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 读取解析XML文件<br>
+     * 读取解析XML文件。
      * 编码在XML中定义.
      *
      * @param inputStream XML流
@@ -213,7 +213,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 读取解析XML文件<br>
+     * 读取解析XML文件。
      * 编码在XML中定义.
      *
      * @param source {@link InputSource}
@@ -229,7 +229,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 使用Sax方式读取指定的XML<br>
+     * 使用Sax方式读取指定的XML。
      * 如果用户传入的contentHandler为{@link DefaultHandler}，
      * 则其接口都会被处理.
      *
@@ -247,7 +247,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 使用Sax方式读取指定的XML<br>
+     * 使用Sax方式读取指定的XML。
      * 如果用户传入的contentHandler为{@link DefaultHandler}，
      * 则其接口都会被处理.
      *
@@ -263,7 +263,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 使用Sax方式读取指定的XML<br>
+     * 使用Sax方式读取指定的XML。
      * 如果用户传入的contentHandler为{@link DefaultHandler}，
      * 则其接口都会被处理.
      *
@@ -279,7 +279,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 使用Sax方式读取指定的XML<br>
+     * 使用Sax方式读取指定的XML。
      * 如果用户传入的contentHandler为{@link DefaultHandler}，
      * 则其接口都会被处理.
      *
@@ -339,7 +339,7 @@ public final class XmlUtil {
     // ----------------------------------------------------------------- Write
 
     /**
-     * 将XML文档转换为String<br>
+     * 将XML文档转换为String。
      * 字符编码使用XML文档中的编码，获取不到则使用UTF-8<br>
      * 默认非格式化输出，若想格式化请使用{@link #format(Document)}.
      *
@@ -351,7 +351,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 将XML文档转换为String<br>
+     * 将XML文档转换为String。
      * 字符编码使用XML文档中的编码，获取不到则使用UTF-8<br>
      * 默认非格式化输出，若想格式化请使用{@link #format(Document)}.
      *
@@ -363,7 +363,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 将XML文档转换为String<br>
+     * 将XML文档转换为String。
      * 字符编码使用XML文档中的编码，获取不到则使用UTF-8.
      *
      * @param doc      XML文档
@@ -375,7 +375,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 将XML文档转换为String<br>
+     * 将XML文档转换为String。
      * 字符编码使用XML文档中的编码，获取不到则使用UTF-8.
      *
      * @param doc      XML文档
@@ -387,7 +387,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 将XML文档转换为String<br>
+     * 将XML文档转换为String。
      * 字符编码使用XML文档中的编码，获取不到则使用UTF-8.
      *
      * @param doc      XML文档
@@ -400,7 +400,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 将XML文档转换为String<br>
+     * 将XML文档转换为String。
      * 字符编码使用XML文档中的编码，获取不到则使用UTF-8.
      *
      * @param doc      XML文档
@@ -413,7 +413,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 将XML文档转换为String<br>
+     * 将XML文档转换为String。
      * 字符编码使用XML文档中的编码，获取不到则使用UTF-8.
      *
      * @param doc                XML文档
@@ -455,7 +455,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 将XML文档写入到文件<br>
+     * 将XML文档写入到文件。
      * 使用Document中的编码.
      *
      * @param doc          XML文档
@@ -587,7 +587,7 @@ public final class XmlUtil {
     // ----------------------------------------------------------------- Create
 
     /**
-     * 创建XML文档<br>
+     * 创建XML文档。
      * 创建的XML默认是utf8编码.
      *
      * @return XML文档
@@ -626,7 +626,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 创建XML文档<br>
+     * 创建XML文档。
      * 创建的XML默认是utf8编码.
      *
      * @param rootElementName 根节点名称
@@ -637,7 +637,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 创建XML文档<br>
+     * 创建XML文档。
      * 创建的XML默认是utf8编码.
      *
      * @param rootElementName 根节点名称
@@ -774,7 +774,7 @@ public final class XmlUtil {
     }
 
     /**
-     * 将NodeList转换为Element列表<br>
+     * 将NodeList转换为Element列表。
      * 非Element节点将被忽略.
      *
      * @param parentEle 父节点
@@ -980,7 +980,7 @@ public final class XmlUtil {
     }
 
     /**
-     * XML格式字符串转换为Map<br>
+     * XML格式字符串转换为Map。
      * 只支持第一级别的XML，不支持多级XML.
      *
      * @param xmlStr XML字符串
@@ -1377,7 +1377,7 @@ public final class XmlUtil {
     // --------------------------------------------------- Private method end
 
     /**
-     * 全局命名空间上下文.<br>
+     * 全局命名空间上下文.
      * 见：https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/
      */
     public static class UniversalNamespaceCache implements NamespaceContext {

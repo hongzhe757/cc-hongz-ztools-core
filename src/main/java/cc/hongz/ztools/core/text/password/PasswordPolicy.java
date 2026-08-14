@@ -71,13 +71,18 @@ public final class PasswordPolicy implements PasswordRule {
      */
     @Override
     public RuleResult validate(final String password) {
-        final List<RuleResult> failures = validateAll(password); if (failures.isEmpty()) {
+        final List<RuleResult> failures = validateAll(password);
+        if (failures.isEmpty()) {
             return RuleResult.passed("PasswordPolicy");
-        } final StringBuilder msg = new StringBuilder(); for (final RuleResult failure : failures) {
+        }
+        final StringBuilder msg = new StringBuilder();
+        for (final RuleResult failure : failures) {
             if (msg.length() > 0) {
                 msg.append("; ");
-            } msg.append(failure.getMessage());
-        } return RuleResult.failed("PasswordPolicy", msg.toString());
+            }
+            msg.append(failure.getMessage());
+        }
+        return RuleResult.failed("PasswordPolicy", msg.toString());
     }
 
     /**

@@ -46,16 +46,22 @@ public final class CharGroupRule implements PasswordRule {
      * @param minSpecial   最少特殊字符个数
      */
     public CharGroupRule(final int minDigit, final int minLowercase, final int minUppercase, final int minSpecial) {
-        this.minDigit = minDigit; this.minLowercase = minLowercase; this.minUppercase = minUppercase;
+        this.minDigit = minDigit;
+        this.minLowercase = minLowercase;
+        this.minUppercase = minUppercase;
         this.minSpecial = minSpecial;
     }
 
     @Override
     public RuleResult validate(final String password) {
-        int digitCount = 0; int lowerCount = 0; int upperCount = 0; int specialCount = 0;
+        int digitCount = 0;
+        int lowerCount = 0;
+        int upperCount = 0;
+        int specialCount = 0;
 
         for (int i = 0; i < password.length(); i++) {
-            final char c = password.charAt(i); if (c >= '0' && c <= '9') {
+            final char c = password.charAt(i);
+            if (c >= '0' && c <= '9') {
                 digitCount++;
             } else if (c >= 'a' && c <= 'z') {
                 lowerCount++;
@@ -68,12 +74,16 @@ public final class CharGroupRule implements PasswordRule {
 
         if (digitCount < minDigit) {
             return RuleResult.failed(RULE_NAME, "至少需要" + minDigit + "个数字");
-        } if (lowerCount < minLowercase) {
+        }
+        if (lowerCount < minLowercase) {
             return RuleResult.failed(RULE_NAME, "至少需要" + minLowercase + "个小写字母");
-        } if (upperCount < minUppercase) {
+        }
+        if (upperCount < minUppercase) {
             return RuleResult.failed(RULE_NAME, "至少需要" + minUppercase + "个大写字母");
-        } if (specialCount < minSpecial) {
+        }
+        if (specialCount < minSpecial) {
             return RuleResult.failed(RULE_NAME, "至少需要" + minSpecial + "个特殊字符");
-        } return RuleResult.passed(RULE_NAME);
+        }
+        return RuleResult.passed(RULE_NAME);
     }
 }

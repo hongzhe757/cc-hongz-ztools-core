@@ -118,12 +118,12 @@ public class UploadFileHeader {
      * @param contentType content type
      * @return MIME 类型
      */
-    private String getMimeType(final String contentType) {
-        final int pos = contentType.indexOf('/');
+    private String getMimeType(final String contentTypeStr) {
+        final int pos = contentTypeStr.indexOf('/');
         if (pos == -1) {
-            return contentType;
+            return contentTypeStr;
         }
-        return contentType.substring(1, pos);
+        return contentTypeStr.substring(1, pos);
     }
 
     /**
@@ -132,12 +132,12 @@ public class UploadFileHeader {
      * @param contentType content type
      * @return MIME 子类型
      */
-    private String getMimeSubtype(final String contentType) {
-        final int start = contentType.indexOf('/');
+    private String getMimeSubtype(final String contentTypeStr) {
+        final int start = contentTypeStr.indexOf('/');
         if (start == -1) {
-            return contentType;
+            return contentTypeStr;
         }
-        return contentType.substring(start + 1);
+        return contentTypeStr.substring(start + 1);
     }
 
     /**

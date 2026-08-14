@@ -208,10 +208,10 @@ public class Calculator {
      * @param expression 表达式
      * @return 转换后的表达式
      */
-    private static String transform(String expression) {
-        expression = StrUtil.cleanBlank(expression);
-        expression = StrUtil.removeSuffix(expression, "=");
-        final char[] arr = expression.toCharArray();
+    private static String transform(final String expression) {
+        String effectiveExpression = StrUtil.cleanBlank(expression);
+        effectiveExpression = StrUtil.removeSuffix(effectiveExpression, "=");
+        final char[] arr = effectiveExpression.toCharArray();
 
         final StringBuilder out = new StringBuilder(arr.length);
         for (int i = 0; i < arr.length; i++) {

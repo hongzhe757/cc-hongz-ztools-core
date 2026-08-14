@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * 排列A(n, m).<br>
+ * 排列A(n, m).
  * 排列组合相关类，参考：http://cgs1999.iteye.com/blog/2327664
  *
  * @author looly
@@ -141,7 +141,7 @@ public class Arrangement implements Serializable {
      * @param resultIndex 选择索引，从0开始
      * @param result     最终结果
      */
-    private void select(final String[] datas, final String[] resultList,
+    private void select(final String[] dataArr, final String[] resultList,
             final int resultIndex, final List<String[]> result) {
         if (resultIndex >= resultList.length) {
             if (false == result.contains(resultList)) {
@@ -150,9 +150,9 @@ public class Arrangement implements Serializable {
             return;
         }
 
-        for (int i = 0; i < datas.length; i++) {
-            resultList[resultIndex] = datas[i];
-            select(ArrayUtil.remove(datas, i), resultList,
+        for (int i = 0; i < dataArr.length; i++) {
+            resultList[resultIndex] = dataArr[i];
+            select(ArrayUtil.remove(dataArr, i), resultList,
                     resultIndex + 1, result);
         }
     }

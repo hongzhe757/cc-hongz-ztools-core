@@ -49,8 +49,8 @@ public class UrlPath {
      * @param withEngTag 是否path的末尾加 /
      * @return this
      */
-    public UrlPath setWithEndTag(final boolean withEngTag) {
-        this.withEngTag = withEngTag;
+    public UrlPath setWithEndTag(final boolean newWithEndTag) {
+        this.withEngTag = newWithEndTag;
         return this;
     }
 

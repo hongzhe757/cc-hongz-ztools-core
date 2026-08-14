@@ -591,9 +591,9 @@ public class Money implements Serializable, Comparable<Money> {
      * @param cent 金额，以分为单位
      * @return 一个新建的货币对象
      */
-    protected Money newMoneyWithSameCurrency(final long cent) {
+    protected Money newMoneyWithSameCurrency(final long newCent) {
         final Money money = new Money(0, currency);
-        money.cent = cent;
+        money.cent = newCent;
         return money;
     }
 

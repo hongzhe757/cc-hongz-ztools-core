@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
- * 统一社会信用代码（GB32100-2015）工具类.<br>
+ * 统一社会信用代码（GB32100-2015）工具类.
  * 标准见：https://www.cods.org.cn/c/2020-10-29/12575.html
  *
  * <pre>
@@ -51,7 +51,7 @@ public final class CreditCodeUtil {
     private static final int ADMIN_DIV_LEN = 6;
 
     /**
-     * 统一社会信用代码正则.<br>
+     * 统一社会信用代码正则.
      * ^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$
      */
     public static final Pattern CREDIT_CODE_PATTERN =

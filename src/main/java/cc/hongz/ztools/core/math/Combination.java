@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 组合，即C(n, m).<br>
+ * 组合，即C(n, m).
  * 排列组合相关类，参考：http://cgs1999.iteye.com/blog/2327664
  *
  * @author looly
@@ -22,7 +22,7 @@ public class Combination implements Serializable {
     private final String[] datas;
 
     /**
-     * 组合，即C(n, m).<br>
+     * 组合，即C(n, m).
      * 排列组合相关类，参考：http://cgs1999.iteye.com/blog/2327664
      *
      * @param datas 用于组合的数据
@@ -54,7 +54,7 @@ public class Combination implements Serializable {
      * @param m 取出 m（必须大于等于 0）
      * @return C(n, m) 的 BigInteger 精确值；当 m 大于 n 时返回 BigInteger.ZERO
      */
-    public static BigInteger countBig(int n, int m) {
+    public static BigInteger countBig(final int n, final int m) {
         if (n < 0 || m < 0) {
             throw new IllegalArgumentException(
                     "n and m must be non-negative. got n=" + n + ", m=" + m);
@@ -65,10 +65,10 @@ public class Combination implements Serializable {
         if (m == 0 || n == m) {
             return BigInteger.ONE;
         }
-        m = Math.min(m, n - m);
+        final int effectiveM = Math.min(m, n - m);
         BigInteger result = BigInteger.ONE;
-        for (int i = 1; i <= m; i++) {
-            final int numerator = n - m + i;
+        for (int i = 1; i <= effectiveM; i++) {
+            final int numerator = n - effectiveM + i;
             result = result.multiply(BigInteger.valueOf(numerator))
                     .divide(BigInteger.valueOf(i));
         }

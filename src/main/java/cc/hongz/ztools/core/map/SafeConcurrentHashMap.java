@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
- * 安全的ConcurrentHashMap实现.<br>
+ * 安全的ConcurrentHashMap实现.
  * 此类用于解决在JDK8中调用{@link ConcurrentHashMap#computeIfAbsent(Object, Function)}
  * 可能造成的死循环问题.<br>
  * 方法来自Dubbo，见：issues#2349

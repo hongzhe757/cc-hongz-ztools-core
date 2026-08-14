@@ -44,7 +44,9 @@ public final class NoCommonPasswordRule implements PasswordRule {
     /**
      * 默认弱密码字典.
      */
-    private static final String[] DEFAULT_DICTIONARY = {"password", "abc123", "iloveyou", "adobe123", "123123", "sunshine", "1314520", "a1b2c3", "123qwe", "qweasd", "admin", "passwd"};
+    private static final String[] DEFAULT_DICTIONARY = {"password", "abc123", "iloveyou",
+            "adobe123", "123123", "sunshine", "1314520", "a1b2c3", "123qwe", "qweasd",
+            "admin", "passwd"};
 
     /**
      * 注释行前缀.
@@ -74,7 +76,8 @@ public final class NoCommonPasswordRule implements PasswordRule {
      * @param dictionary 自定义弱密码字典
      */
     public NoCommonPasswordRule(final String[] dictionary) {
-        this.dictionary = new HashSet<>(); for (final String s : dictionary) {
+        this.dictionary = new HashSet<>();
+        for (final String s : dictionary) {
             this.dictionary.add(s.toLowerCase());
         }
     }
@@ -86,7 +89,8 @@ public final class NoCommonPasswordRule implements PasswordRule {
      * @param file 弱密码字典文件
      */
     public NoCommonPasswordRule(final File file) {
-        this.dictionary = new HashSet<>(); loadFromFile(file, this.dictionary);
+        this.dictionary = new HashSet<>();
+        loadFromFile(file, this.dictionary);
     }
 
     /**
@@ -109,12 +113,16 @@ public final class NoCommonPasswordRule implements PasswordRule {
     public static NoCommonPasswordRule fromDirectory(final File dir) {
         if (dir == null || !dir.isDirectory()) {
             throw new IllegalArgumentException("目录不存在或不是有效目录: " + dir);
-        } final Set<String> dict = new HashSet<>(); final File[] files = dir.listFiles(
-            (f, name) -> name.toLowerCase().endsWith(TXT_EXTENSION)); if (files != null) {
+        }
+        final Set<String> dict = new HashSet<>();
+        final File[] files = dir.listFiles(
+                (f, name) -> name.toLowerCase().endsWith(TXT_EXTENSION));
+        if (files != null) {
             for (final File file : files) {
                 loadFromFile(file, dict);
             }
-        } return new NoCommonPasswordRule(dict);
+        }
+        return new NoCommonPasswordRule(dict);
     }
 
     /**
@@ -147,11 +155,15 @@ public final class NoCommonPasswordRule implements PasswordRule {
     private static void loadFromFile(final File file, final Set<String> dict) {
         if (file == null || !file.exists() || !file.isFile()) {
             throw new IllegalArgumentException("弱密码字典文件不存在: " + file);
-        } try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line; while ((line = reader.readLine()) != null) {
-                final String trimmed = line.trim(); if (trimmed.isEmpty() || trimmed.startsWith(COMMENT_PREFIX)) {
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                final String trimmed = line.trim();
+                if (trimmed.isEmpty() || trimmed.startsWith(COMMENT_PREFIX)) {
                     continue;
-                } dict.add(trimmed.toLowerCase());
+                }
+                dict.add(trimmed.toLowerCase());
             }
         } catch (final IOException e) {
             throw new UncheckedIOException("读取弱密码字典文件失败: " + file.getAbsolutePath(), e);
@@ -162,10 +174,12 @@ public final class NoCommonPasswordRule implements PasswordRule {
 
     @Override
     public RuleResult validate(final String password) {
-        final String lower = password.toLowerCase(); for (final String weak : dictionary) {
+        final String lower = password.toLowerCase();
+        for (final String weak : dictionary) {
             if (lower.equals(weak) || weak.contains(lower)) {
                 return RuleResult.failed(RULE_NAME, "密码为常见弱密码");
             }
-        } return RuleResult.passed(RULE_NAME);
+        }
+        return RuleResult.passed(RULE_NAME);
     }
 }

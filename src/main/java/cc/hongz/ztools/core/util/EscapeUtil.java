@@ -7,7 +7,7 @@ import cc.hongz.ztools.core.text.escape.XmlEscape;
 import cc.hongz.ztools.core.text.escape.XmlUnescape;
 
 /**
- * 转义和反转义工具类Escape / Unescape.<br>
+ * 转义和反转义工具类Escape / Unescape.
  * escape采用ISO Latin字符集对指定的字符串进行编码.<br>
  * 所有的空格符、标点符号、特殊字符以及其他非ASCII字符都将被转化成%xx格式的字符编码
  * (xx等于该字符在字符集表里面的编码的16进制数字).
@@ -62,7 +62,7 @@ public final class EscapeUtil {
     }
 
     /**
-     * 转义XML中的特殊字符.<br>
+     * 转义XML中的特殊字符.
      * <pre>
      *   &amp;amp; (ampersand) 替换为 &amp;amp;amp;
      *   &amp;lt; (less than) 替换为 &amp;amp;lt;
@@ -117,7 +117,7 @@ public final class EscapeUtil {
     }
 
     /**
-     * Escape编码（Unicode）（等同于JS的escape()方法）.<br>
+     * Escape编码（Unicode）（等同于JS的escape()方法）.
      * 该方法不会对 ASCII 字母和数字进行编码，也不会对下面这些 ASCII 标点符号进行编码： * @ - _ + . / <br>
      * 其他所有的字符都会被转义序列替换。
      *
@@ -129,7 +129,7 @@ public final class EscapeUtil {
     }
 
     /**
-     * Escape编码（Unicode）.<br>
+     * Escape编码（Unicode）.
      * 该方法不会对 ASCII 字母和数字进行编码。其他所有的字符都会被转义序列替换。
      *
      * @param content 被转义的内容
@@ -140,7 +140,7 @@ public final class EscapeUtil {
     }
 
     /**
-     * Escape编码（Unicode）.<br>
+     * Escape编码（Unicode）.
      * 该方法不会对 ASCII 字母和数字进行编码。其他所有的字符都会被转义序列替换。
      *
      * @param content 被转义的内容

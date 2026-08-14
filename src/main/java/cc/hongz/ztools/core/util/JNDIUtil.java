@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * JNDI工具类.<br>
+ * JNDI工具类.
  * JNDI是Java Naming and Directory Interface（JAVA命名和目录接口）的英文简写，<br>
  * 它是为JAVA应用程序提供命名和目录访问服务的API（Application Programing Interface，应用程序编程接口）。
  *
@@ -54,7 +54,7 @@ public final class JNDIUtil {
     }
 
     /**
-     * 创建{@link InitialContext}.<br>
+     * 创建{@link InitialContext}.
      * 建议在应用启动时设置系统属性（禁用远程 codebase 加载）
      * <pre>{@code
      *   System.setProperty("com.sun.jndi.rmi.object.trustURLCodebase", "false");
@@ -80,7 +80,7 @@ public final class JNDIUtil {
     }
 
     /**
-     * 获取指定容器环境的对象的属性.<br>
+     * 获取指定容器环境的对象的属性.
      * 如获取DNS属性，则URI为类似：dns:hutool.cn
      *
      * @param uri     URI字符串，格式为[scheme:][name]/[domain]

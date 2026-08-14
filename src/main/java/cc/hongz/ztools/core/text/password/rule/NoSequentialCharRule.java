@@ -57,7 +57,8 @@ public final class NoSequentialCharRule implements PasswordRule {
     public RuleResult validate(final String password) {
         if (hasSequential(password)) {
             return RuleResult.failed(RULE_NAME, "密码包含连续序列字符");
-        } return RuleResult.passed(RULE_NAME);
+        }
+        return RuleResult.passed(RULE_NAME);
     }
 
     /**
@@ -76,7 +77,8 @@ public final class NoSequentialCharRule implements PasswordRule {
             }
 
             // 检测是否为纯数字升序或降序序列
-            if (isAllDigit(sub) && (DIGITS.contains(sub) || new StringBuilder(DIGITS).reverse().toString().contains(sub))) {
+            if (isAllDigit(sub)
+                    && (DIGITS.contains(sub) || new StringBuilder(DIGITS).reverse().toString().contains(sub))) {
                 return true;
             }
         } return false;

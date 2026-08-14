@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * 序列化工具类.<br>
+ * 序列化工具类.
  * 注意！此工具类依赖于JDK的序列化机制，某些版本的JDK中可能存在远程注入漏洞。
  *
  * @author looly
@@ -26,7 +26,7 @@ public final class SerializeUtil {
     }
 
     /**
-     * 序列化后拷贝流的方式克隆.<br>
+     * 序列化后拷贝流的方式克隆.
      * 对象必须实现Serializable接口
      *
      * @param <T> 对象类型
@@ -42,7 +42,7 @@ public final class SerializeUtil {
     }
 
     /**
-     * 序列化.<br>
+     * 序列化.
      * 对象必须实现Serializable接口
      *
      * @param <T> 对象类型
@@ -59,7 +59,7 @@ public final class SerializeUtil {
     }
 
     /**
-     * 反序列化.<br>
+     * 反序列化.
      * 对象必须实现Serializable接口
      *
      * <p>

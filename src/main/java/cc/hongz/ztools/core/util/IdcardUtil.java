@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
- * 身份证相关工具类.<br>
+ * 身份证相关工具类.
  * see <a href="https://www.oschina.net/code/snippet_1611_2881">https://www.oschina.net/code/snippet_1611_2881</a>
  *
  * <p>
@@ -229,7 +229,7 @@ public final class IdcardUtil {
     }
 
     /**
-     * 是否有效身份证号，忽略X的大小写.<br>
+     * 是否有效身份证号，忽略X的大小写.
      * 如果身份证号码中含有空格始终返回{@code false}
      *
      * @param idCard 身份证号，支持18位、15位和港澳台的10位
@@ -601,7 +601,7 @@ public final class IdcardUtil {
     }
 
     /**
-     * 根据身份编号获取地市级编码，只支持15或18位身份证号码.<br>
+     * 根据身份编号获取地市级编码，只支持15或18位身份证号码.
      * 获取编码为4位
      *
      * @param idcard 身份编码
@@ -616,7 +616,7 @@ public final class IdcardUtil {
     }
 
     /**
-     * 根据身份编号获取区县级编码，只支持15或18位身份证号码.<br>
+     * 根据身份编号获取区县级编码，只支持15或18位身份证号码.
      * 获取编码为6位
      *
      * @param idcard 身份编码

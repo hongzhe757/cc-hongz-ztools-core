@@ -128,7 +128,7 @@ public class UploadSetting {
      *
      * @param isAllowFileExts 若true表示只允许列表里的扩展名，否则是禁止列表里的扩展名
      */
-    public void setAllowFileExts(final boolean isAllowFileExts) {
-        this.isAllowFileExts = isAllowFileExts;
+    public void setAllowFileExts(final boolean newIsAllowFileExts) {
+        this.isAllowFileExts = newIsAllowFileExts;
     }
 }

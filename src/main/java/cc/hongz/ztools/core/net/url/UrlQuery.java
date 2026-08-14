@@ -212,26 +212,27 @@ public class UrlQuery {
      * @return this
      * @since 5.5.8
      */
-    public UrlQuery parse(String queryStr, final Charset charset,
+    public UrlQuery parse(final String queryStr, final Charset charset,
             final boolean autoRemovePath) {
         if (StrUtil.isBlank(queryStr)) {
             return this;
         }
 
+        String effectiveQueryStr = queryStr;
         if (autoRemovePath) {
-            int pathEndPos = queryStr.indexOf('?');
+            int pathEndPos = effectiveQueryStr.indexOf('?');
             if (pathEndPos > -1) {
-                queryStr = StrUtil.subSuf(queryStr, pathEndPos + 1);
-                if (StrUtil.isBlank(queryStr)) {
+                effectiveQueryStr = StrUtil.subSuf(effectiveQueryStr, pathEndPos + 1);
+                if (StrUtil.isBlank(effectiveQueryStr)) {
                     return this;
                 }
-            } else if (StrUtil.startWith(queryStr, "http://")
-                    || StrUtil.startWith(queryStr, "https://")) {
+            } else if (StrUtil.startWith(effectiveQueryStr, "http://")
+                    || StrUtil.startWith(effectiveQueryStr, "https://")) {
                 return this;
             }
         }
 
-        return doParse(queryStr, charset);
+        return doParse(effectiveQueryStr, charset);
     }
 
     /**
@@ -352,7 +353,7 @@ public class UrlQuery {
     }
 
     /**
-     * 解析URL中的查询字符串.<br>
+     * 解析URL中的查询字符串.
      * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
      *
      * @param queryStr 查询字符串

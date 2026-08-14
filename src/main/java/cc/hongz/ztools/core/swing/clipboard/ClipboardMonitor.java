@@ -17,6 +17,9 @@ import java.util.Set;
  * @since 4.5.6
  */
 public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
+    /**
+     * 单例实例.
+     */
     INSTANCE;
 
     /**
@@ -86,8 +89,8 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
      * @param tryCount 重试次数
      * @return this
      */
-    public ClipboardMonitor setTryCount(final int tryCount) {
-        this.tryCount = tryCount;
+    public ClipboardMonitor setTryCount(final int newTryCount) {
+        this.tryCount = newTryCount;
         return this;
     }
 
@@ -97,8 +100,8 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
      * @param delay 重试等待（毫秒）
      * @return this
      */
-    public ClipboardMonitor setDelay(final long delay) {
-        this.delay = delay;
+    public ClipboardMonitor setDelay(final long newDelay) {
+        this.delay = newDelay;
         return this;
     }
 
@@ -135,11 +138,11 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
     }
 
     @Override
-    public void lostOwnership(final Clipboard clipboard,
+    public void lostOwnership(final Clipboard theClipboard,
             final Transferable contents) {
         Transferable newContents;
         try {
-            newContents = tryGetContent(clipboard);
+            newContents = tryGetContent(theClipboard);
         } catch (final InterruptedException e) {
             // 中断后结束监听
             return;
@@ -148,7 +151,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
         Transferable transferable = null;
         for (final ClipboardListener listener : listenerSet) {
             try {
-                transferable = listener.onChange(clipboard,
+                transferable = listener.onChange(theClipboard,
                         ObjectUtil.defaultIfNull(transferable, newContents));
             } catch (final Throwable e) {
                 // 忽略事件处理异常，保证所有监听正常执行
@@ -157,7 +160,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 
         if (isRunning) {
             // 继续监听
-            clipboard.setContents(ObjectUtil.defaultIfNull(transferable,
+            theClipboard.setContents(ObjectUtil.defaultIfNull(transferable,
                     ObjectUtil.defaultIfNull(newContents, contents)), this);
         }
     }
@@ -199,7 +202,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
      * @return 剪贴板内容，{@code null} 表示未获取到
      * @throws InterruptedException 线程中断
      */
-    private Transferable tryGetContent(final Clipboard clipboard)
+    private Transferable tryGetContent(final Clipboard theClipboard)
             throws InterruptedException {
         Transferable newContents = null;
         for (int i = 0; i < this.tryCount; i++) {
@@ -208,7 +211,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
             }
 
             try {
-                newContents = clipboard.getContents(null);
+                newContents = theClipboard.getContents(null);
             } catch (final IllegalStateException e) {
                 // ignore
             }

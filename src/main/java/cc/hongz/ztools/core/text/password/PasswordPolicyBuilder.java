@@ -140,7 +140,8 @@ public final class PasswordPolicyBuilder {
      * @param minSpecial   最少特殊字符个数
      * @return this
      */
-    public PasswordPolicyBuilder charGroup(final int minDigit, final int minLowercase, final int minUppercase, final int minSpecial) {
+    public PasswordPolicyBuilder charGroup(final int minDigit, final int minLowercase,
+            final int minUppercase, final int minSpecial) {
         rules.add(new CharGroupRule(minDigit, minLowercase, minUppercase, minSpecial)); return this;
     }
 

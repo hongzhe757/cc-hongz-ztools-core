@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 坐标系转换相关工具类，主流坐标系包括：.<br>
+ * 坐标系转换相关工具类，主流坐标系包括：.
  * <ul>
  *     <li>WGS84坐标系：即地球坐标系，中国外谷歌地图</li>
  *     <li>GCJ02坐标系：即火星坐标系，高德、腾讯、阿里等使用</li>
@@ -165,7 +165,7 @@ public final class CoordinateUtil {
     }
 
     /**
-     * 判断坐标是否在国外.<br>
+     * 判断坐标是否在国外.
      * 火星坐标系 (GCJ-02)只对国内有效，国外无需转换
      *
      * @param lng 经度

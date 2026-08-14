@@ -58,10 +58,14 @@ public final class LengthRule implements PasswordRule {
     public RuleResult validate(final String password) {
         if (password == null) {
             return RuleResult.failed(RULE_NAME, "密码不能为空");
-        } final int len = password.length(); if (len < minLength) {
+        }
+        final int len = password.length();
+        if (len < minLength) {
             return RuleResult.failed(RULE_NAME, "密码长度不能少于" + minLength + "位");
-        } if (len > maxLength) {
+        }
+        if (len > maxLength) {
             return RuleResult.failed(RULE_NAME, "密码长度不能超过" + maxLength + "位");
-        } return RuleResult.passed(RULE_NAME);
+        }
+        return RuleResult.passed(RULE_NAME);
     }
 }

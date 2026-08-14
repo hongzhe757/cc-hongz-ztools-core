@@ -63,9 +63,9 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
      * @param protocol 协议
      * @return 自身
      */
-    public SSLContextBuilder setProtocol(final String protocol) {
-        if (StrUtil.isNotBlank(protocol)) {
-            this.protocol = protocol;
+    public SSLContextBuilder setProtocol(final String newProtocol) {
+        if (StrUtil.isNotBlank(newProtocol)) {
+            this.protocol = newProtocol;
         }
         return this;
     }
@@ -77,9 +77,9 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
      * @return 自身
      */
     public SSLContextBuilder setTrustManagers(
-            final TrustManager... trustManagers) {
-        if (ArrayUtil.isNotEmpty(trustManagers)) {
-            this.trustManagers = trustManagers;
+            final TrustManager... newTrustManagers) {
+        if (ArrayUtil.isNotEmpty(newTrustManagers)) {
+            this.trustManagers = newTrustManagers;
         }
         return this;
     }
@@ -91,9 +91,9 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
      * @return 自身
      */
     public SSLContextBuilder setKeyManagers(
-            final KeyManager... keyManagers) {
-        if (ArrayUtil.isNotEmpty(keyManagers)) {
-            this.keyManagers = keyManagers;
+            final KeyManager... newKeyManagers) {
+        if (ArrayUtil.isNotEmpty(newKeyManagers)) {
+            this.keyManagers = newKeyManagers;
         }
         return this;
     }
@@ -105,9 +105,9 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
      * @return 自己
      */
     public SSLContextBuilder setSecureRandom(
-            final SecureRandom secureRandom) {
-        if (null != secureRandom) {
-            this.secureRandom = secureRandom;
+            final SecureRandom newSecureRandom) {
+        if (null != newSecureRandom) {
+            this.secureRandom = newSecureRandom;
         }
         return this;
     }

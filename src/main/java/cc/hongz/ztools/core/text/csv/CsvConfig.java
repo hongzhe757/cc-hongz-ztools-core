@@ -40,8 +40,8 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
      * @param fieldSeparator 字段分隔符
      * @return this
      */
-    public T setFieldSeparator(final char fieldSeparator) {
-        this.fieldSeparator = fieldSeparator;
+    public T setFieldSeparator(final char newFieldSeparator) {
+        this.fieldSeparator = newFieldSeparator;
         return (T) this;
     }
 
@@ -51,8 +51,8 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
      * @param textDelimiter 文本限定符
      * @return this
      */
-    public T setTextDelimiter(final char textDelimiter) {
-        this.textDelimiter = textDelimiter;
+    public T setTextDelimiter(final char newTextDelimiter) {
+        this.textDelimiter = newTextDelimiter;
         return (T) this;
     }
 
@@ -71,8 +71,8 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
      * @param commentCharacter 注释字符
      * @return this
      */
-    public T setCommentCharacter(final Character commentCharacter) {
-        this.commentCharacter = commentCharacter;
+    public T setCommentCharacter(final Character newCommentCharacter) {
+        this.commentCharacter = newCommentCharacter;
         return (T) this;
     }
 
@@ -82,8 +82,8 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
      * @param headerAlias 表头别名
      * @return this
      */
-    public T setHeaderAlias(final Map<String, String> headerAlias) {
-        this.headerAlias = headerAlias;
+    public T setHeaderAlias(final Map<String, String> newHeaderAlias) {
+        this.headerAlias = newHeaderAlias;
         return (T) this;
     }
 

@@ -680,7 +680,7 @@ public final class NetUtil {
     }
 
     /**
-     * 获取主机名称，一次获取会缓存名称.<br>
+     * 获取主机名称，一次获取会缓存名称.
      * 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
      *
      * @return 主机名称
@@ -806,17 +806,18 @@ public final class NetUtil {
      * @return 第一个非unknown IP地址
      * @since 4.4.1
      */
-    public static String getMultistageReverseProxyIp(String ip) {
-        if (ip != null && StrUtil.indexOf(ip, ',') > 0) {
-            final List<String> ips = StrUtil.splitTrim(ip, ',');
+    public static String getMultistageReverseProxyIp(final String ip) {
+        String effectiveIp = ip;
+        if (effectiveIp != null && StrUtil.indexOf(effectiveIp, ',') > 0) {
+            final List<String> ips = StrUtil.splitTrim(effectiveIp, ',');
             for (final String subIp : ips) {
                 if (false == isUnknown(subIp)) {
-                    ip = subIp;
+                    effectiveIp = subIp;
                     break;
                 }
             }
         }
-        return ip;
+        return effectiveIp;
     }
 
     /**
@@ -912,7 +913,7 @@ public final class NetUtil {
     }
 
     /**
-     * 获取DNS信息，如TXT信息：
+     * 获取DNS信息，如TXT信息。
      *
      * <pre class="code">
      *     NetUtil.attrNames("hutool.cn", "TXT")
