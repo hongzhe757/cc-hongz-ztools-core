@@ -12,4 +12,7 @@
 
     <!-- PasswdStrength: CHAR_TYPE 枚举常量名称自解释，无需 Javadoc -->
     <suppress files="PasswdStrength.java" checks="JavadocVariable"/>
+
+    <!-- UUID: Hutool 原版逐字拷贝，不做 checkstyle 清理 -->
+    <suppress files="UUID.java" checks=".*"/>
 </suppressions>

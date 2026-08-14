@@ -9,9 +9,8 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 /**
- * 通用唯一识别码（UUID）实现（Hutool 阶段 1 迁入）.
- * <p>
- * 拷贝自 {@link java.util.UUID}，支持生成无连字符的 fastUUID 字符串.
+ * 提供通用唯一识别码（universally unique identifier）（UUID）实现，UUID表示一个128位的值。<br>
+ * 此类拷贝自java.util.UUID，用于生成不带-的UUID字符串
  *
  * <p>
  * 这些通用标识符具有不同的变体。此类的方法用于操作 Leach-Salz 变体，不过构造方法允许创建任何 UUID 变体（将在下面进行描述）。
