@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * @author looly
  * @since 5.7.20
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public class KetamaHash implements Hash64<String>, Hash32<String> {
 
 	@Override

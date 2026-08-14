@@ -9,13 +9,18 @@ package cc.hongz.ztools.core.net.multipart;
 public class UploadSetting {
 
     /**
+     * 文件保存到内存的默认边界（8KB）.
+     */
+    private static final int DEFAULT_MEMORY_THRESHOLD = 8192;
+
+    /**
      * 最大文件大小，默认无限制.
      */
     protected long maxFileSize = -1;
     /**
      * 文件保存到内存的边界.
      */
-    protected int memoryThreshold = 8192;
+    protected int memoryThreshold = DEFAULT_MEMORY_THRESHOLD;
     /**
      * 临时文件目录.
      */

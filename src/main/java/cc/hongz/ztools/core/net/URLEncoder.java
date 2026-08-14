@@ -217,14 +217,14 @@ public class URLEncoder implements Serializable {
     private final BitSet safeCharacters;
     /**
      * 是否编码空格为+.
-	 * -- SETTER --
-	 *  是否将空格编码为+.
-	 *
-	 * @param encodeSpaceAsPlus 是否将空格编码为+
+     * -- SETTER --
+     *  是否将空格编码为+.
+     *
+     * @param encodeSpaceAsPlus 是否将空格编码为+
 
-	 */
+     */
     @Setter
-	private boolean encodeSpaceAsPlus = false;
+    private boolean encodeSpaceAsPlus = false;
 
     /**
      * 构造.<br>
@@ -265,7 +265,7 @@ public class URLEncoder implements Serializable {
         safeCharacters.clear(c);
     }
 
-	/**
+    /**
      * 将URL中的字符串编码为%形式.
      *
      * @param path    需要编码的字符串

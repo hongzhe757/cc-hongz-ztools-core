@@ -307,7 +307,7 @@ public class ClassScanner implements Serializable {
             final String fileName = file.getAbsolutePath();
             if (fileName.endsWith(FileUtil.CLASS_EXT)) {
                 final String className = fileName
-                        .substring(rootDir.length(), fileName.length() - 6)
+                        .substring(rootDir.length(), fileName.length() - FileUtil.CLASS_EXT.length())
                         .replace(File.separatorChar, CharUtil.DOT);
                 addIfAccept(className);
             } else if (fileName.endsWith(FileUtil.JAR_FILE_EXT)) {
@@ -340,7 +340,7 @@ public class ClassScanner implements Serializable {
                 if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
                     if (name.endsWith(FileUtil.CLASS_EXT) && !entry.isDirectory()) {
                         final String className = name
-                                .substring(0, name.length() - 6)
+                                .substring(0, name.length() - FileUtil.CLASS_EXT.length())
                                 .replace(CharUtil.SLASH, CharUtil.DOT);
                         addIfAccept(loadClass(className));
                     }

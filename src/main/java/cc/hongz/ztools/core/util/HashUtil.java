@@ -11,6 +11,7 @@ import cc.hongz.ztools.core.lang.hash.Number128;
  *
  * @author Goodzzp, Looly
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class HashUtil {
 
     // ==================== 通用常量 ====================

@@ -147,10 +147,10 @@ public class Calculator {
         char c = cur;
         char p = peek;
         if (c == '%') {
-            c = 47;
+            c = '/';
         }
         if (p == '%') {
-            p = 47;
+            p = '/';
         }
 
         return operatPriority[p - offset] >= operatPriority[c - offset];

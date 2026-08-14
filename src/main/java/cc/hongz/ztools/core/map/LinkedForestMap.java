@@ -435,9 +435,9 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 节点的旧value
          */
         @Override
-        public V setValue(final V value) {
+        public V setValue(final V newValue) {
             final V oldVal = getValue();
-            this.value = value;
+            this.value = newValue;
             return oldVal;
         }
 
@@ -511,9 +511,9 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 指定父节点，当不存在时返回null
          */
         @Override
-        public TreeEntryNode<K, V> getParent(final K key) {
+        public TreeEntryNode<K, V> getParent(final K parentKey) {
             return traverseParentNodes(false, p -> {
-            }, p -> p.equalsKey(key));
+            }, p -> p.equalsKey(parentKey));
         }
 
         /**
@@ -533,8 +533,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @param key 要比较的key
          * @return 是否key一致
          */
-        public boolean equalsKey(final K key) {
-            return ObjectUtil.equal(getKey(), key);
+        public boolean equalsKey(final K otherKey) {
+            return ObjectUtil.equal(getKey(), otherKey);
         }
 
         // ================== 子节点的操作 ==================
@@ -619,14 +619,14 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          *
          * @param key 子节点
          */
-        void removeDeclaredChild(final K key) {
-            final TreeEntryNode<K, V> child = children.get(key);
+        void removeDeclaredChild(final K childKey) {
+            final TreeEntryNode<K, V> child = children.get(childKey);
             if (ObjectUtil.isNull(child)) {
                 return;
             }
 
             // 断开该节点与其父节点的关系
-            this.children.remove(key);
+            this.children.remove(childKey);
 
             // 重置子节点及其下属节点的相关属性
             child.parent = null;
@@ -643,9 +643,9 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @return 节点
          */
         @Override
-        public TreeEntryNode<K, V> getChild(final K key) {
+        public TreeEntryNode<K, V> getChild(final K childKey) {
             return traverseChildNodes(false, (i, c) -> {
-            }, (i, c) -> c.equalsKey(key));
+            }, (i, c) -> c.equalsKey(childKey));
         }
 
         /**
@@ -717,10 +717,10 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
          * @param value 复制的节点的值
          * @return 节点
          */
-        TreeEntryNode<K, V> copy(final V value) {
+        TreeEntryNode<K, V> copy(final V newValue) {
             TreeEntryNode<K, V> copiedNode = new TreeEntryNode<>(
                     this.parent, this.key,
-                    ObjectUtil.defaultIfNull(value, this.value));
+                    ObjectUtil.defaultIfNull(newValue, this.value));
             copiedNode.children.putAll(children);
             return copiedNode;
         }

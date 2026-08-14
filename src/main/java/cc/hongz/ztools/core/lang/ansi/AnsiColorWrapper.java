@@ -11,6 +11,7 @@ import java.util.Objects;
  * @author TomXin
  * @since 5.8.6
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public class AnsiColorWrapper {
 
 	private final int code;

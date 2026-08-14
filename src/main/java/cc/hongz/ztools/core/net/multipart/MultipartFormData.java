@@ -19,6 +19,11 @@ import java.util.Set;
 public class MultipartFormData {
 
     /**
+     * MacBinary 文件头长度（字节）.
+     */
+    private static final int MACBINARY_HEADER_BYTES = 128;
+
+    /**
      * 请求参数.
      */
     private final Map<String, List<String>> requestParameters =
@@ -80,7 +85,7 @@ public class MultipartFormData {
                 if (fileName.length() > 0
                         && header.contentType.contains(
                                 "application/x-macbinary")) {
-                    input.skipBytes(128);
+                    input.skipBytes(MACBINARY_HEADER_BYTES);
                 }
                 final UploadFile newFile =
                         new UploadFile(header, setting);

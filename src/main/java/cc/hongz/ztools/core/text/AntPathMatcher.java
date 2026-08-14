@@ -136,8 +136,8 @@ public class AntPathMatcher {
      * @param pathSeparator 分隔符，{@code null}表示使用默认分隔符
      * @return this
      */
-    public AntPathMatcher setPathSeparator(final String pathSeparator) {
-        String separator = pathSeparator;
+    public AntPathMatcher setPathSeparator(final String newPathSeparator) {
+        String separator = newPathSeparator;
         if (null == separator) {
             separator = DEFAULT_PATH_SEPARATOR;
         }
@@ -152,8 +152,8 @@ public class AntPathMatcher {
      * @param caseSensitive 是否大小写敏感
      * @return this
      */
-    public AntPathMatcher setCaseSensitive(final boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
+    public AntPathMatcher setCaseSensitive(final boolean newCaseSensitive) {
+        this.caseSensitive = newCaseSensitive;
         return this;
     }
 
@@ -163,8 +163,8 @@ public class AntPathMatcher {
      * @param trimTokens 是否去除路径节点两边的空白符
      * @return this
      */
-    public AntPathMatcher setTrimTokens(final boolean trimTokens) {
-        this.trimTokens = trimTokens;
+    public AntPathMatcher setTrimTokens(final boolean newTrimTokens) {
+        this.trimTokens = newTrimTokens;
         return this;
     }
 
@@ -177,8 +177,8 @@ public class AntPathMatcher {
      * @param cachePatterns 是否缓存表达式
      * @return this
      */
-    public AntPathMatcher setCachePatterns(final boolean cachePatterns) {
-        this.cachePatterns = cachePatterns;
+    public AntPathMatcher setCachePatterns(final boolean newCachePatterns) {
+        this.cachePatterns = newCachePatterns;
         return this;
     }
 
@@ -458,19 +458,19 @@ public class AntPathMatcher {
      */
     protected String[] tokenizePattern(final String pattern) {
         String[] tokenized = null;
-        Boolean cachePatterns = this.cachePatterns;
-        if (cachePatterns == null || cachePatterns) {
+        Boolean cacheEnabled = this.cachePatterns;
+        if (cacheEnabled == null || cacheEnabled) {
             tokenized = this.tokenizedPatternCache.get(pattern);
         }
         if (tokenized == null) {
             tokenized = tokenizePath(pattern);
-            if (cachePatterns == null
+            if (cacheEnabled == null
                     && this.tokenizedPatternCache.size() >= CACHE_TURNOFF_THRESHOLD) {
                 // 根据运行时情况自动调整：遇到过多不同表达式时关闭缓存
                 deactivatePatternCache();
                 return tokenized;
             }
-            if (cachePatterns == null || cachePatterns) {
+            if (cacheEnabled == null || cacheEnabled) {
                 this.tokenizedPatternCache.put(pattern, tokenized);
             }
         }
@@ -518,19 +518,19 @@ public class AntPathMatcher {
      */
     protected AntPathStringMatcher getStringMatcher(final String pattern) {
         AntPathStringMatcher matcher = null;
-        Boolean cachePatterns = this.cachePatterns;
-        if (cachePatterns == null || cachePatterns) {
+        Boolean cacheEnabled = this.cachePatterns;
+        if (cacheEnabled == null || cacheEnabled) {
             matcher = this.stringMatcherCache.get(pattern);
         }
         if (matcher == null) {
             matcher = new AntPathStringMatcher(pattern, this.caseSensitive);
-            if (cachePatterns == null
+            if (cacheEnabled == null
                     && this.stringMatcherCache.size() >= CACHE_TURNOFF_THRESHOLD) {
                 // 根据运行时情况自动调整：遇到过多不同表达式时关闭缓存
                 deactivatePatternCache();
                 return matcher;
             }
-            if (cachePatterns == null || cachePatterns) {
+            if (cacheEnabled == null || cacheEnabled) {
                 this.stringMatcherCache.put(pattern, matcher);
             }
         }

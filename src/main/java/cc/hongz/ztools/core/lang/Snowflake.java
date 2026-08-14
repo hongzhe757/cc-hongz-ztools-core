@@ -30,13 +30,22 @@ public class Snowflake implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 默认起始时间戳的值，为Thu, 04 Nov 2010 01:42:54 GMT.
+     */
+    private static final long DEFAULT_TWEPOCH_VALUE = 1288834974657L;
+    /**
+     * 默认回拨时间（毫秒）的值，2S.
+     */
+    private static final long DEFAULT_TIME_OFFSET_VALUE = 2000L;
+
+    /**
      * 默认的起始时间，为Thu, 04 Nov 2010 01:42:54 GMT
      */
-    public static long DEFAULT_TWEPOCH = 1288834974657L;
+    public static long DEFAULT_TWEPOCH = DEFAULT_TWEPOCH_VALUE;
     /**
      * 默认回拨时间，2S
      */
-    public static long DEFAULT_TIME_OFFSET = 2000L;
+    public static long DEFAULT_TIME_OFFSET = DEFAULT_TIME_OFFSET_VALUE;
 
     private static final long WORKER_ID_BITS = 5L;
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
@@ -45,6 +54,7 @@ public class Snowflake implements Serializable {
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
     public static final long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
     private static final long SEQUENCE_BITS = 12L;
+    private static final long TIMESTAMP_BITS = 41L;
     private static final long WORKER_ID_SHIFT = SEQUENCE_BITS;
     private static final long DATA_CENTER_ID_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS;
     private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS + DATA_CENTER_ID_BITS;
@@ -177,7 +187,7 @@ public class Snowflake implements Serializable {
      * @return 生成的时间
      */
     public long getGenerateDateTime(final long id) {
-        return (id >> TIMESTAMP_LEFT_SHIFT & ~(-1L << 41L)) + twepoch;
+        return (id >> TIMESTAMP_LEFT_SHIFT & ~(-1L << TIMESTAMP_BITS)) + twepoch;
     }
 
     /**

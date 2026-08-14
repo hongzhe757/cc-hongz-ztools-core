@@ -14,6 +14,7 @@ import java.util.Arrays;
  * @author hexiufeng
  * @since 5.2.5
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public class CityHash {
 
 	// Some primes between 2^63 and 2^64 for various uses.

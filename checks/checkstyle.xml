@@ -15,6 +15,9 @@
                   default="checks/checkstyle-suppressions.xml"/>
     </module>
 
+    <!-- 支持 @SuppressWarnings 注解抑制 -->
+    <module name="SuppressWarningsFilter"/>
+
     <!-- 禁止 Tab 字符 -->
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
@@ -28,6 +31,9 @@
     </module>
 
     <module name="TreeWalker">
+        <!-- 收集 @SuppressWarnings 注解 -->
+        <module name="SuppressWarningsHolder"/>
+
         <!-- ============ Imports ============ -->
         <module name="AvoidStarImport"/>
         <module name="UnusedImports"/>

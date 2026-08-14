@@ -21,53 +21,53 @@ import java.util.List;
  */
 public final class PasswordChain implements PasswordRule {
 
-	/**
-	 * 有序规则列表.
-	 */
-	private final List<PasswordRule> rules;
+    /**
+     * 有序规则列表.
+     */
+    private final List<PasswordRule> rules;
 
-	/**
-	 * 构造责任链.
-	 *
-	 * @param rules 有序规则列表
-	 */
-	public PasswordChain(final List<PasswordRule> rules) {
-		this.rules = new ArrayList<>(rules);
-	}
+    /**
+     * 构造责任链.
+     *
+     * @param rules 有序规则列表
+     */
+    public PasswordChain(final List<PasswordRule> rules) {
+        this.rules = new ArrayList<>(rules);
+    }
 
-	/**
-	 * 从规则列表创建责任链.
-	 *
-	 * @param rules 规则列表
-	 * @return PasswordChain
-	 */
-	public static PasswordChain of(final List<PasswordRule> rules) {
-		return new PasswordChain(rules);
-	}
+    /**
+     * 从规则列表创建责任链.
+     *
+     * @param rules 规则列表
+     * @return PasswordChain
+     */
+    public static PasswordChain of(final List<PasswordRule> rules) {
+        return new PasswordChain(rules);
+    }
 
-	/**
-	 * 按顺序校验，第一个失败即返回.
-	 * 全部通过则返回 passed 结果.
-	 *
-	 * @param password 待校验密码
-	 * @return 第一个失败的规则结果，全部通过则返回 passed
-	 */
-	@Override
-	public RuleResult validate(final String password) {
-		for (final PasswordRule rule : rules) {
-			final RuleResult result = rule.validate(password); if (!result.isPassed()) {
-				return result;
-			}
-		} return RuleResult.passed("PasswordChain");
-	}
+    /**
+     * 按顺序校验，第一个失败即返回.
+     * 全部通过则返回 passed 结果.
+     *
+     * @param password 待校验密码
+     * @return 第一个失败的规则结果，全部通过则返回 passed
+     */
+    @Override
+    public RuleResult validate(final String password) {
+        for (final PasswordRule rule : rules) {
+            final RuleResult result = rule.validate(password); if (!result.isPassed()) {
+                return result;
+            }
+        } return RuleResult.passed("PasswordChain");
+    }
 
-	/**
-	 * 校验密码是否通过所有规则.
-	 *
-	 * @param password 待校验密码
-	 * @return true 表示通过全部规则
-	 */
-	public boolean isPassed(final String password) {
-		return validate(password).isPassed();
-	}
+    /**
+     * 校验密码是否通过所有规则.
+     *
+     * @param password 待校验密码
+     * @return true 表示通过全部规则
+     */
+    public boolean isPassed(final String password) {
+        return validate(password).isPassed();
+    }
 }

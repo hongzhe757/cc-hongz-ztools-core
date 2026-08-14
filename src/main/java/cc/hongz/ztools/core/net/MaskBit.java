@@ -9,6 +9,7 @@ import java.util.HashMap;
  * @author looly
  * @since 5.4.1
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class MaskBit {
 
     /**

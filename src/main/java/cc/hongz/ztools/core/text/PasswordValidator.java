@@ -50,6 +50,11 @@ import java.util.List;
 public final class PasswordValidator {
 
     /**
+     * 默认最小密码长度.
+     */
+    private static final int DEFAULT_MIN_LENGTH = 6;
+
+    /**
      * 私有构造器（工具类）.
      */
     private PasswordValidator() {
@@ -95,7 +100,7 @@ public final class PasswordValidator {
      */
     public static PasswordPolicy createDefaultPolicy() {
         return PasswordPolicy.builder()
-            .minLength(6)
+            .minLength(DEFAULT_MIN_LENGTH)
             .noKeyboardPattern()
             .noRepeatedPattern()
             .noDatePattern()

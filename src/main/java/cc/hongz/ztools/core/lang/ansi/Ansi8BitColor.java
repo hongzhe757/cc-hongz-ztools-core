@@ -18,6 +18,7 @@ import cc.hongz.ztools.core.lang.Assert;
  * @see #background(int)
  * @since 5.8.0
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class Ansi8BitColor implements AnsiElement {
 
 	private static final String PREFIX_FORE = "38;5;";

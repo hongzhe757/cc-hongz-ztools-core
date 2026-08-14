@@ -78,7 +78,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转short.<br>
+     * byte数组转short.
      * 默认以小端序转换
      *
      * @param bytes byte数组
@@ -89,7 +89,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转short.<br>
+     * byte数组转short.
      * 自定义端序
      *
      * @param bytes     byte数组，长度必须为2
@@ -101,7 +101,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转short.<br>
+     * byte数组转short.
      * 自定义端序
      *
      * @param bytes     byte数组，长度必须大于2
@@ -119,7 +119,7 @@ public final class ByteUtil {
     }
 
     /**
-     * short转byte数组.<br>
+     * short转byte数组.
      * 默认以小端序转换
      *
      * @param shortValue short值
@@ -130,7 +130,7 @@ public final class ByteUtil {
     }
 
     /**
-     * short转byte数组.<br>
+     * short转byte数组.
      * 自定义端序
      *
      * @param shortValue short值
@@ -150,7 +150,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte[]转int值.<br>
+     * byte[]转int值.
      * 默认以小端序转换
      *
      * @param bytes byte数组
@@ -161,7 +161,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte[]转int值.<br>
+     * byte[]转int值.
      * 自定义端序
      *
      * @param bytes     byte数组
@@ -173,7 +173,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte[]转int值.<br>
+     * byte[]转int值.
      * 自定义端序
      *
      * @param bytes     byte数组
@@ -198,7 +198,7 @@ public final class ByteUtil {
     }
 
     /**
-     * int转byte数组.<br>
+     * int转byte数组.
      * 默认以小端序转换
      *
      * @param intValue int值
@@ -209,7 +209,7 @@ public final class ByteUtil {
     }
 
     /**
-     * int转byte数组.<br>
+     * int转byte数组.
      * 自定义端序
      *
      * @param intValue  int值
@@ -238,7 +238,7 @@ public final class ByteUtil {
     }
 
     /**
-     * long转byte数组.<br>
+     * long转byte数组.
      * 默认以小端序转换<br>
      * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
      *
@@ -250,7 +250,7 @@ public final class ByteUtil {
     }
 
     /**
-     * long转byte数组.<br>
+     * long转byte数组.
      * 自定义端序<br>
      * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
      *
@@ -276,7 +276,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转long.<br>
+     * byte数组转long.
      * 默认以小端序转换<br>
      * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
      *
@@ -288,7 +288,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转long.<br>
+     * byte数组转long.
      * 自定义端序<br>
      * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
      *
@@ -301,7 +301,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转long.<br>
+     * byte数组转long.
      * 自定义端序<br>
      * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
      *
@@ -329,7 +329,7 @@ public final class ByteUtil {
     }
 
     /**
-     * float转byte数组，默认以小端序转换.<br>
+     * float转byte数组，默认以小端序转换.
      *
      * @param floatValue float值
      * @return byte数组
@@ -340,7 +340,7 @@ public final class ByteUtil {
     }
 
     /**
-     * float转byte数组，自定义端序.<br>
+     * float转byte数组，自定义端序.
      *
      * @param floatValue float值
      * @param byteOrder  端序
@@ -352,7 +352,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转float.<br>
+     * byte数组转float.
      * 默认以小端序转换<br>
      *
      * @param bytes byte数组
@@ -364,7 +364,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转float.<br>
+     * byte数组转float.
      * 自定义端序<br>
      *
      * @param bytes     byte数组
@@ -377,7 +377,7 @@ public final class ByteUtil {
     }
 
     /**
-     * double转byte数组.<br>
+     * double转byte数组.
      * 默认以小端序转换<br>
      *
      * @param doubleValue double值
@@ -388,7 +388,7 @@ public final class ByteUtil {
     }
 
     /**
-     * double转byte数组.<br>
+     * double转byte数组.
      * 自定义端序<br>
      * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
      *
@@ -401,7 +401,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转Double.<br>
+     * byte数组转Double.
      * 默认以小端序转换<br>
      *
      * @param bytes byte数组
@@ -412,7 +412,7 @@ public final class ByteUtil {
     }
 
     /**
-     * byte数组转double.<br>
+     * byte数组转double.
      * 自定义端序<br>
      *
      * @param bytes     byte数组

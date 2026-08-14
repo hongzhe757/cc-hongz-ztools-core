@@ -31,6 +31,20 @@ public class ObjectId {
     private static final AtomicInteger NEXT_INC = new AtomicInteger(RandomUtil.randomInt());
     /** 机器信息 */
     private static final int MACHINE = getMachinePiece() | getProcessPiece();
+    /** ObjectId 十六进制字符串长度. */
+    private static final int OBJECT_ID_LENGTH = 24;
+    /** ObjectId 字节数组长度. */
+    private static final int OBJECT_ID_BYTES = 12;
+    /** ObjectId 带连字符的字符串长度. */
+    private static final int OBJECT_ID_LENGTH_WITH_HYPHEN = 26;
+    /** 单字节掩码. */
+    private static final int BYTE_MASK = 0xff;
+    /** 十六进制基数. */
+    private static final int HEX_RADIX = 16;
+    /** 机器码片段左移位数. */
+    private static final int MACHINE_PIECE_SHIFT = 16;
+    /** 进程码片段掩码. */
+    private static final int PROCESS_PIECE_MASK = 0xFFFF;
 
     /**
      * 给定的字符串是否为有效的ObjectId.
@@ -44,7 +58,7 @@ public class ObjectId {
         }
         final String cleaned = s.replace("-", "");
         final int len = cleaned.length();
-        if (len != 24) {
+        if (len != OBJECT_ID_LENGTH) {
             return false;
         }
 
@@ -71,7 +85,7 @@ public class ObjectId {
      * @return objectId
      */
     public static byte[] nextBytes() {
-        final ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
+        final ByteBuffer bb = ByteBuffer.wrap(new byte[OBJECT_ID_BYTES]);
         bb.putInt((int) DateUtil.currentSeconds());// 4位
         bb.putInt(MACHINE);// 4位
         bb.putInt(NEXT_INC.getAndIncrement());// 4位
@@ -96,14 +110,14 @@ public class ObjectId {
      */
     public static String next(final boolean withHyphen) {
         final byte[] array = nextBytes();
-        final StringBuilder buf = new StringBuilder(withHyphen ? 26 : 24);
+        final StringBuilder buf = new StringBuilder(withHyphen ? OBJECT_ID_LENGTH_WITH_HYPHEN : OBJECT_ID_LENGTH);
         int t;
         for (int i = 0; i < array.length; i++) {
             if (withHyphen && i % 4 == 0 && i != 0) {
                 buf.append("-");
             }
-            t = array[i] & 0xff;
-            if (t < 16) {
+            t = array[i] & BYTE_MASK;
+            if (t < HEX_RADIX) {
                 buf.append('0');
             }
             buf.append(Integer.toHexString(t));
@@ -125,9 +139,9 @@ public class ObjectId {
                 final NetworkInterface ni = e.nextElement();
                 netSb.append(ni.toString());
             }
-            machinePiece = netSb.toString().hashCode() << 16;
+            machinePiece = netSb.toString().hashCode() << MACHINE_PIECE_SHIFT;
         } catch (final Throwable e) {
-            machinePiece = (RandomUtil.randomInt()) << 16;
+            machinePiece = (RandomUtil.randomInt()) << MACHINE_PIECE_SHIFT;
         }
         return machinePiece;
     }
@@ -150,7 +164,7 @@ public class ObjectId {
         final int loaderId = (loader != null) ? System.identityHashCode(loader) : 0;
 
         final String processSb = Integer.toHexString(processId) + Integer.toHexString(loaderId);
-        processPiece = processSb.hashCode() & 0xFFFF;
+        processPiece = processSb.hashCode() & PROCESS_PIECE_MASK;
 
         return processPiece;
     }

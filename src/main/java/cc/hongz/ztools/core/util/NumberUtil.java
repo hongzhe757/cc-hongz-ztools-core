@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * 数字工具类.<br>
+ * 数字工具类.
  * 对于精确值计算应该使用 {@link BigDecimal}.<br>
  * JDK7中<strong>BigDecimal(double val)</strong>构造方法的结果有一定的不可预知性，例如：.
  *
@@ -168,7 +168,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的加法运算.<br>
+     * 提供精确的加法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * <p>
@@ -186,7 +186,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的加法运算.<br>
+     * 提供精确的加法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * <p>
@@ -216,7 +216,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的加法运算.<br>
+     * 提供精确的加法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param values 多个被加值.
@@ -240,7 +240,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的加法运算.<br>
+     * 提供精确的加法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param values 多个被加值.
@@ -320,7 +320,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的减法运算.<br>
+     * 提供精确的减法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param v1 被减数.
@@ -332,7 +332,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的减法运算.<br>
+     * 提供精确的减法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param values 多个被减值.
@@ -356,7 +356,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的减法运算.<br>
+     * 提供精确的减法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param values 多个被减值.
@@ -380,7 +380,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的减法运算.<br>
+     * 提供精确的减法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param values 多个被减值.
@@ -448,7 +448,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的乘法运算.<br>
+     * 提供精确的乘法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param v1 被乘数.
@@ -461,7 +461,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的乘法运算.<br>
+     * 提供精确的乘法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param v1 被乘数.
@@ -473,7 +473,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的乘法运算.<br>
+     * 提供精确的乘法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param values 多个被乘值.
@@ -507,7 +507,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的乘法运算.<br>
+     * 提供精确的乘法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param values 多个被乘值.
@@ -528,7 +528,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的乘法运算.<br>
+     * 提供精确的乘法运算.
      * 如果传入多个值为null或者空，则返回0.
      *
      * @param values 多个被乘值.
@@ -844,7 +844,7 @@ public final class NumberUtil {
     // ------------------------------------------------------------------------------------------- round
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 采用四舍五入策略 {@link RoundingMode#HALF_UP}.<br>
      * 例如保留2位小数：123.456789 =》 123.46.
      *
@@ -857,7 +857,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 采用四舍五入策略 {@link RoundingMode#HALF_UP}.<br>
      * 例如保留2位小数：123.456789 =》 123.46.
      *
@@ -870,7 +870,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 采用四舍五入策略 {@link RoundingMode#HALF_UP}.<br>
      * 例如保留2位小数：123.456789 =》 123.46.
      *
@@ -883,7 +883,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 采用四舍五入策略 {@link RoundingMode#HALF_UP}.<br>
      * 例如保留2位小数：123.456789 =》 123.46.
      *
@@ -897,7 +897,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 采用四舍五入策略 {@link RoundingMode#HALF_UP}.<br>
      * 例如保留2位小数：123.456789 =》 123.46.
      *
@@ -911,7 +911,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 例如保留四位小数：123.456789 =》 123.4567.
      *
      * @param v            值.
@@ -924,7 +924,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 例如保留四位小数：123.456789 =》 123.4567.
      *
      * @param v            值.
@@ -938,7 +938,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 例如保留四位小数：123.456789 =》 123.4567.
      *
      * @param numberStr    数字值的字符串表现形式.
@@ -956,7 +956,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 例如保留四位小数：123.456789 =》 123.4567.
      *
      * @param number       数字值.
@@ -982,7 +982,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 保留固定位数小数.<br>
+     * 保留固定位数小数.
      * 例如保留四位小数：123.456789 =》 123.4567.
      *
      * @param numberStr    数字值的字符串表现形式.
@@ -1070,7 +1070,7 @@ public final class NumberUtil {
     // ------------------------------------------------------------------------------------------- decimalFormat
 
     /**
-     * 格式化double.<br>
+     * 格式化double.
      * 对 {@link DecimalFormat} 做封装.<br>
      *
      * @param pattern 格式 格式中主要以 # 和 0 两种占位符号来指定数字长度.0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置.<br>.
@@ -1093,7 +1093,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 格式化double.<br>
+     * 格式化double.
      * 对 {@link DecimalFormat} 做封装.<br>
      *
      * @param pattern 格式 格式中主要以 # 和 0 两种占位符号来指定数字长度.0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置.<br>.
@@ -1116,7 +1116,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 格式化double.<br>
+     * 格式化double.
      * 对 {@link DecimalFormat} 做封装.<br>
      *
      * @param pattern 格式 格式中主要以 # 和 0 两种占位符号来指定数字长度.0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置.<br>.
@@ -1139,7 +1139,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 格式化double.<br>
+     * 格式化double.
      * 对 {@link DecimalFormat} 做封装.<br>
      *
      * @param pattern      格式 格式中主要以 # 和 0 两种占位符号来指定数字长度.0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置.<br>.
@@ -1310,7 +1310,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 判断String是否是整数.<br>
+     * 判断String是否是整数.
      * 支持10进制.
      *
      * @param s String.
@@ -1329,7 +1329,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 判断字符串是否是Long类型.<br>
+     * 判断字符串是否是Long类型.
      * 支持10进制.
      *
      * @param s String.
@@ -1367,7 +1367,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 是否是质数（素数）.<br>
+     * 是否是质数（素数）.
      * 质数表的质数又称素数.指整数在一个大于1的自然数中,除了1和此整数自身外,没法被其他自然数整除的数.
      *
      * @param n 数字.
@@ -1679,7 +1679,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 平方根算法.<br>
+     * 平方根算法.
      * 推荐使用 {@link Math#sqrt(double)}.
      *
      * @param x 值.
@@ -1703,7 +1703,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 可以用于计算双色球、大乐透注数的方法.<br>
+     * 可以用于计算双色球、大乐透注数的方法.
      * 比如大乐透35选5可以这样调用processMultiple(7,5); 就是数学中的：C75=7*6/2*1.
      *
      * @param selectNum 选中小球个数.
@@ -1968,7 +1968,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 比较大小，值相等 返回true.<br>
+     * 比较大小，值相等 返回true.
      * 此方法通过调用{@link Double#doubleToLongBits(double)}方法来判断是否相等.<br>
      * 此方法判断值相等时忽略精度的，即0.00 == 0.
      *
@@ -1982,7 +1982,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 比较大小，值相等 返回true.<br>
+     * 比较大小，值相等 返回true.
      * 此方法通过调用{@link Float#floatToIntBits(float)}方法来判断是否相等.<br>
      * 此方法判断值相等时忽略精度的，即0.00 == 0.
      *
@@ -1996,7 +1996,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 比较大小，值相等 返回true.<br>
+     * 比较大小，值相等 返回true.
      * 此方法修复传入long型数据由于没有本类型重载方法,导致数据精度丢失.
      *
      * @param num1 数字1.
@@ -2009,7 +2009,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 比较数字值是否相等，相等返回{@code true}.<br>
+     * 比较数字值是否相等，相等返回{@code true}.
      * 需要注意的是{@link BigDecimal}需要特殊处理.<br>
      * BigDecimal使用compareTo方式判断，因为使用equals方法也判断小数位数，如2.0和2.00就不相等，<br>
      * 此方法判断值相等时忽略精度的，即0.00 == 0.
@@ -2034,7 +2034,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 比较大小，值相等 返回true.<br>
+     * 比较大小，值相等 返回true.
      * 此方法通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等.<br>
      * 此方法判断值相等时忽略精度的，即0.00 == 0.
      *
@@ -2239,7 +2239,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 数字转字符串.<br>
+     * 数字转字符串.
      * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0.
      *
      * @param number       A Number.
@@ -2252,7 +2252,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 数字转字符串.<br>
+     * 数字转字符串.
      * 调用{@link Number#toString()}或 {@link BigDecimal#toPlainString()}，并去除尾小数点儿后多余的0.
      *
      * @param number A Number.
@@ -2263,7 +2263,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 数字转字符串.<br>
+     * 数字转字符串.
      * 调用{@link Number#toString()}或 {@link BigDecimal#toPlainString()}，并去除尾小数点儿后多余的0.
      *
      * @param number               A Number.
@@ -2295,7 +2295,7 @@ public final class NumberUtil {
     }
 
     /**
-     * {@link BigDecimal}数字转字符串.<br>
+     * {@link BigDecimal}数字转字符串.
      * 调用{@link BigDecimal#toPlainString()}，并去除尾小数点儿后多余的0.
      *
      * @param bigDecimal A {@link BigDecimal}.
@@ -2307,7 +2307,7 @@ public final class NumberUtil {
     }
 
     /**
-     * {@link BigDecimal}数字转字符串.<br>
+     * {@link BigDecimal}数字转字符串.
      * 调用{@link BigDecimal#toPlainString()}，可选去除尾小数点儿后多余的0.
      *
      * @param bigDecimal           A {@link BigDecimal}.
@@ -2325,7 +2325,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 数字转{@link BigDecimal}.<br>
+     * 数字转{@link BigDecimal}.
      * Float、Double等有精度问题，转换为字符串后再转换.<br>
      * null转换为0.
      *
@@ -2355,7 +2355,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 数字转{@link BigDecimal}.<br>
+     * 数字转{@link BigDecimal}.
      * null或""或空白符转换为0.
      *
      * @param numberStr 数字字符串.
@@ -2379,7 +2379,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 数字转{@link BigInteger}.<br>
+     * 数字转{@link BigInteger}.
      * null转换为0.
      *
      * @param number 数字.
@@ -2402,7 +2402,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 数字转{@link BigInteger}.<br>
+     * 数字转{@link BigInteger}.
      * null或""或空白符转换为0.
      *
      * @param number 数字字符串.
@@ -2530,7 +2530,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 创建{@link BigInteger}，支持16进制、10进制和8进制，如果传入空白串返回null.<br>
+     * 创建{@link BigInteger}，支持16进制、10进制和8进制，如果传入空白串返回null.
      * from Apache Common Lang.
      *
      * @param str 数字字符串.
@@ -2572,7 +2572,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 判断两个数字是否相邻，例如1和2相邻，1和3不相邻.<br>
+     * 判断两个数字是否相邻，例如1和2相邻，1和3不相邻.
      * 判断方法为做差取绝对值判断是否为1.
      *
      * @param number1 数字1.
@@ -2585,7 +2585,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 判断两个数字是否相邻，例如1和2相邻，1和3不相邻.<br>
+     * 判断两个数字是否相邻，例如1和2相邻，1和3不相邻.
      * 判断方法为做差取绝对值判断是否为1.
      *
      * @param number1 数字1.
@@ -2598,7 +2598,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 把给定的总数平均分成N份，返回每份的个数.<br>
+     * 把给定的总数平均分成N份，返回每份的个数.
      * 当除以分数有余数时每份+1.
      *
      * @param total     总数.
@@ -2611,7 +2611,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 把给定的总数平均分成N份，返回每份的个数.<br>
+     * 把给定的总数平均分成N份，返回每份的个数.
      * 如果isPlusOneWhenHasRem为true，则当除以分数有余数时每份+1，否则丢弃余数部分.
      *
      * @param total               总数.
@@ -2641,7 +2641,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 提供精确的幂运算.<br>
+     * 提供精确的幂运算.
      * 如果n为负数，则返回1/a的-n次方，默认四舍五入，保留两位小数.
      *
      * @param number 底数.
@@ -2655,7 +2655,7 @@ public final class NumberUtil {
 
 
     /**
-     * 提供精确的幂运算.<br>
+     * 提供精确的幂运算.
      * 如果n为负数，则返回1/a的-n次方，默认四舍五入.
      *
      * @param number       底数.
@@ -2810,7 +2810,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 将指定字符串转换为{@link Number} 对象.<br>
+     * 将指定字符串转换为{@link Number} 对象.
      * 此方法不支持科学计数法.
      *
      * <p>
@@ -3003,7 +3003,7 @@ public final class NumberUtil {
     }
 
     /**
-     * int值转byte数组，使用大端字节序（高位字节在前，低位字节在后）.<br>
+     * int值转byte数组，使用大端字节序（高位字节在前，低位字节在后）.
      * 见：<a href="http://www.ruanyifeng.com/blog/2016/11/byte-order.html">http://www.ruanyifeng.com/blog/2016/11/byte-order.html</a>
      *
      * @param value 值.
@@ -3022,7 +3022,7 @@ public final class NumberUtil {
     }
 
     /**
-     * byte数组转int，使用大端字节序（高位字节在前，低位字节在后）.<br>
+     * byte数组转int，使用大端字节序（高位字节在前，低位字节在后）.
      * 见：<a href="http://www.ruanyifeng.com/blog/2016/11/byte-order.html">http://www.ruanyifeng.com/blog/2016/11/byte-order.html</a>
      *
      * @param bytes byte数组.
@@ -3111,7 +3111,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 检查是否为有效的数字.<br>
+     * 检查是否为有效的数字.
      * 检查Double和Float是否为无限大，或者Not a Number.<br>
      * 非数字类型和Null将返回false.
      *
@@ -3132,7 +3132,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 检查是否为有效的数字.<br>
+     * 检查是否为有效的数字.
      * 检查double否为无限大，或者Not a Number（NaN）.<br>
      *
      * @param number 被检查double.
@@ -3144,7 +3144,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 检查是否为有效的数字.<br>
+     * 检查是否为有效的数字.
      * 检查double否为无限大，或者Not a Number（NaN）.<br>
      *
      * @param number 被检查double.
@@ -3156,7 +3156,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 计算数学表达式的值，只支持加减乘除和取余.<br>
+     * 计算数学表达式的值，只支持加减乘除和取余.
      * 如：.
      * <pre class="code">
      *   calculate("(0*1--3)-5/-4-(3*(-2.13))") -》 10.64.
@@ -3171,7 +3171,7 @@ public final class NumberUtil {
     }
 
     /**
-     * Number值转换为double.<br>
+     * Number值转换为double.
      * float强制转换存在精度问题，此方法避免精度丢失.
      *
      * @param value 被转换的float值.
@@ -3187,7 +3187,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 检查是否为奇数.<br>
+     * 检查是否为奇数.
      *
      * @param num 被判断的数值.
      * @return 是否是奇数.
@@ -3199,7 +3199,7 @@ public final class NumberUtil {
     }
 
     /**
-     * 检查是否为偶数.<br>
+     * 检查是否为偶数.
      *
      * @param num 被判断的数值.
      * @return 是否是偶数.

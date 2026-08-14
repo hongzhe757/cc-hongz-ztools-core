@@ -10,11 +10,11 @@ package cc.hongz.ztools.core.text.password;
 @FunctionalInterface
 public interface PasswordRule {
 
-	/**
-	 * 校验密码是否满足当前规则.
-	 *
-	 * @param password 待校验的密码
-	 * @return 校验结果，包含是否通过及失败原因
-	 */
-	RuleResult validate(final String password);
+    /**
+     * 校验密码是否满足当前规则.
+     *
+     * @param password 待校验的密码
+     * @return 校验结果，包含是否通过及失败原因
+     */
+    RuleResult validate(final String password);
 }

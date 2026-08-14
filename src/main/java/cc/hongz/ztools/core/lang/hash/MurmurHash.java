@@ -19,6 +19,7 @@ import java.nio.charset.Charset;
  * @author looly, Simhash4J
  * @since 4.3.3
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public class MurmurHash implements Serializable {
 	private static final long serialVersionUID = 1L;
 

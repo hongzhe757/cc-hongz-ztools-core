@@ -105,14 +105,14 @@ public final class UrlBuilder implements Builder<String> {
      * @param charset 编码，用于URLEncode和URLDecode
      * @return UrlBuilder
      */
-    public static UrlBuilder ofHttp(String httpUrl, final Charset charset) {
+    public static UrlBuilder ofHttp(final String httpUrl, final Charset charset) {
         Assert.notBlank(httpUrl, "Http url must be not blank!");
-        httpUrl = StrUtil.trimStart(httpUrl);
-        if (false == StrUtil.startWithAnyIgnoreCase(httpUrl,
+        String trimmedUrl = StrUtil.trimStart(httpUrl);
+        if (false == StrUtil.startWithAnyIgnoreCase(trimmedUrl,
                 "http://", "https://")) {
-            httpUrl = "http://" + httpUrl;
+            trimmedUrl = "http://" + trimmedUrl;
         }
-        return of(URLUtil.toUrlForHttp(httpUrl), charset);
+        return of(URLUtil.toUrlForHttp(trimmedUrl), charset);
     }
 
     /**
@@ -263,8 +263,8 @@ public final class UrlBuilder implements Builder<String> {
      * @param scheme 协议，例如http
      * @return this
      */
-    public UrlBuilder setScheme(final String scheme) {
-        this.scheme = scheme;
+    public UrlBuilder setScheme(final String newScheme) {
+        this.scheme = newScheme;
         return this;
     }
 
@@ -283,8 +283,8 @@ public final class UrlBuilder implements Builder<String> {
      * @param host 主机，例如127.0.0.1
      * @return this
      */
-    public UrlBuilder setHost(final String host) {
-        this.host = host;
+    public UrlBuilder setHost(final String newHost) {
+        this.host = newHost;
         return this;
     }
 
@@ -317,8 +317,8 @@ public final class UrlBuilder implements Builder<String> {
      * @param port 端口，默认-1
      * @return this
      */
-    public UrlBuilder setPort(final int port) {
-        this.port = port;
+    public UrlBuilder setPort(final int newPort) {
+        this.port = newPort;
         return this;
     }
 
@@ -371,8 +371,8 @@ public final class UrlBuilder implements Builder<String> {
      * @param path 路径，例如/aa/bb/cc
      * @return this
      */
-    public UrlBuilder setPath(final UrlPath path) {
-        this.path = path;
+    public UrlBuilder setPath(final UrlPath newPath) {
+        this.path = newPath;
         return this;
     }
 
@@ -382,8 +382,8 @@ public final class UrlBuilder implements Builder<String> {
      * @param path 路径，例如aaa/bbb/ccc
      * @return this
      */
-    public UrlBuilder addPath(final CharSequence path) {
-        UrlPath.of(path, this.charset).getSegments()
+    public UrlBuilder addPath(final CharSequence newPath) {
+        UrlPath.of(newPath, this.charset).getSegments()
                 .forEach(this::addPathSegment);
         return this;
     }
@@ -414,8 +414,8 @@ public final class UrlBuilder implements Builder<String> {
      * @deprecated 方法重复，请使用{@link #addPath(CharSequence)}
      */
     @Deprecated
-    public UrlBuilder appendPath(final CharSequence path) {
-        return addPath(path);
+    public UrlBuilder appendPath(final CharSequence newPath) {
+        return addPath(newPath);
     }
 
     /**
@@ -444,8 +444,8 @@ public final class UrlBuilder implements Builder<String> {
      * @param query 查询语句，例如a=1&amp;b=2
      * @return this
      */
-    public UrlBuilder setQuery(final UrlQuery query) {
-        this.query = query;
+    public UrlBuilder setQuery(final UrlQuery newQuery) {
+        this.query = newQuery;
         return this;
     }
 
@@ -494,11 +494,11 @@ public final class UrlBuilder implements Builder<String> {
      * @param fragment 标识符，例如#后边的部分
      * @return this
      */
-    public UrlBuilder setFragment(final String fragment) {
-        if (StrUtil.isEmpty(fragment)) {
+    public UrlBuilder setFragment(final String newFragment) {
+        if (StrUtil.isEmpty(newFragment)) {
             this.fragment = null;
         }
-        this.fragment = StrUtil.removePrefix(fragment, "#");
+        this.fragment = StrUtil.removePrefix(newFragment, "#");
         return this;
     }
 
@@ -517,8 +517,8 @@ public final class UrlBuilder implements Builder<String> {
      * @param charset 编码
      * @return this
      */
-    public UrlBuilder setCharset(final Charset charset) {
-        this.charset = charset;
+    public UrlBuilder setCharset(final Charset newCharset) {
+        this.charset = newCharset;
         return this;
     }
 
@@ -552,9 +552,9 @@ public final class UrlBuilder implements Builder<String> {
 
         fileBuilder.append(getPathStr());
 
-        final String query = getQueryStr();
-        if (StrUtil.isNotBlank(query)) {
-            fileBuilder.append('?').append(query);
+        final String queryStr = getQueryStr();
+        if (StrUtil.isNotBlank(queryStr)) {
+            fileBuilder.append('?').append(queryStr);
         }
 
         if (StrUtil.isNotBlank(this.fragment)) {

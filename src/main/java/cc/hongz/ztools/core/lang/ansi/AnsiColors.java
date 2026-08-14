@@ -15,6 +15,7 @@ import java.util.Map;
  * @author Craig Burke,Ruben Dijkstra,Phillip Webb,Michael Simons,Tom Xin
  * @since 5.8.6
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class AnsiColors {
 
 	private static final Map<AnsiColorWrapper, LabColor> ANSI_COLOR_MAP;

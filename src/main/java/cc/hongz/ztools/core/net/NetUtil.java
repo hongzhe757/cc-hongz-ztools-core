@@ -68,6 +68,7 @@ public final class NetUtil {
      * IPv6 地址字节长度.
      */
     private static final int IPV6_BYTE_LENGTH = 16;
+    private static final int HEX_RADIX = 16;
     /**
      * MAC 地址字节掩码.
      */
@@ -150,7 +151,7 @@ public final class NetUtil {
         if (bigInteger.compareTo(BigInteger.ZERO) < 0
                 || bigInteger.compareTo(
                         new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-                                16)) > 0) {
+                                HEX_RADIX)) > 0) {
             throw new IllegalArgumentException(
                     "BigInteger value is out of IPv6 range");
         }
@@ -159,11 +160,11 @@ public final class NetUtil {
         if (bytes.length > IPV6_BYTE_LENGTH) {
             final int offset = bytes[0] == 0 ? 1 : 0;
             final byte[] newBytes = new byte[IPV6_BYTE_LENGTH];
-            System.arraycopy(bytes, offset, newBytes, 0, 16);
+            System.arraycopy(bytes, offset, newBytes, 0, IPV6_BYTE_LENGTH);
             bytes = newBytes;
-        } else if (bytes.length < 16) {
+        } else if (bytes.length < IPV6_BYTE_LENGTH) {
             final byte[] paddedBytes = new byte[IPV6_BYTE_LENGTH];
-            System.arraycopy(bytes, 0, paddedBytes, 16 - bytes.length,
+            System.arraycopy(bytes, 0, paddedBytes, IPV6_BYTE_LENGTH - bytes.length,
                     bytes.length);
             bytes = paddedBytes;
         }
@@ -779,7 +780,7 @@ public final class NetUtil {
             throw new IllegalArgumentException("Invalid cidr: " + cidr);
         }
 
-        final long mask = (-1L << 32
+        final long mask = (-1L << Integer.SIZE
                 - Integer.parseInt(cidr.substring(maskSplitMarkIndex + 1)));
         final long cidrIpAddr =
                 ipv4ToLong(cidr.substring(0, maskSplitMarkIndex));

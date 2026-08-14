@@ -95,11 +95,11 @@ public class Combination implements Serializable {
      * @return 组合数
      */
     public static long countAll(final int n) {
-        if (n < 0 || n > 63) {
+        if (n < 0 || n > Long.SIZE - 1) {
             throw new IllegalArgumentException(String.format(
                     "countAll must have n >= 0 and n <= 63, but got n=%d", n));
         }
-        return n == 63 ? Long.MAX_VALUE : (1L << n) - 1;
+        return n == Long.SIZE - 1 ? Long.MAX_VALUE : (1L << n) - 1;
     }
 
     /**

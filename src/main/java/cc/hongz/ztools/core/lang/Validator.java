@@ -773,6 +773,25 @@ public class Validator {
         return value;
     }
 
+    /** 年份基准（从1900年开始计算）. */
+    private static final int YEAR_BASE = 1900;
+    /** 一年的月数. */
+    private static final int MONTHS_PER_YEAR = 12;
+    /** 每月最大天数. */
+    private static final int MAX_DAYS_PER_MONTH = 31;
+    /** 二月最大天数（闰年）. */
+    private static final int FEBRUARY_MAX_DAYS = 29;
+    /** 30 天的月份：4 月. */
+    private static final int APRIL = 4;
+    /** 30 天的月份：6 月. */
+    private static final int JUNE = 6;
+    /** 30 天的月份：9 月. */
+    private static final int SEPTEMBER = 9;
+    /** 30 天的月份：11 月. */
+    private static final int NOVEMBER = 11;
+    /** 生日正则中“日”分组的下标. */
+    private static final int BIRTHDAY_DAY_GROUP = 5;
+
     /**
      * 验证是否为生日
      *
@@ -784,26 +803,26 @@ public class Validator {
     public static boolean isBirthday(int year, int month, int day) {
         // 验证年
         int thisYear = DateUtil.thisYear();
-        if (year < 1900 || year > thisYear) {
+        if (year < YEAR_BASE || year > thisYear) {
             return false;
         }
 
         // 验证月
-        if (month < 1 || month > 12) {
+        if (month < 1 || month > MONTHS_PER_YEAR) {
             return false;
         }
 
         // 验证日
-        if (day < 1 || day > 31) {
+        if (day < 1 || day > MAX_DAYS_PER_MONTH) {
             return false;
         }
         // 检查几个特殊月的最大天数
-        if (day == 31 && (month == 4 || month == 6 || month == 9 || month == 11)) {
+        if (day == MAX_DAYS_PER_MONTH && (month == APRIL || month == JUNE || month == SEPTEMBER || month == NOVEMBER)) {
             return false;
         }
         if (month == 2) {
             // 在2月，非闰年最大28，闰年最大29
-            return day < 29 || (day == 29 && DateUtil.isLeapYear(year));
+            return day < FEBRUARY_MAX_DAYS || (day == FEBRUARY_MAX_DAYS && DateUtil.isLeapYear(year));
         }
         return true;
     }
@@ -827,7 +846,7 @@ public class Validator {
         if (matcher.find()) {
             int year = Integer.parseInt(matcher.group(1));
             int month = Integer.parseInt(matcher.group(3));
-            int day = Integer.parseInt(matcher.group(5));
+            int day = Integer.parseInt(matcher.group(BIRTHDAY_DAY_GROUP));
             return isBirthday(year, month, day);
         }
         return false;

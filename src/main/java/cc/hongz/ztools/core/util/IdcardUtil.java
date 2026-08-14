@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
  * @author Looly
  * @since 3.0.4
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class IdcardUtil {
 
     /**

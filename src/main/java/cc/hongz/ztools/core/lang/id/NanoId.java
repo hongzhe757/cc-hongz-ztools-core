@@ -28,6 +28,11 @@ public class NanoId {
             "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
     /**
+     * 字母表最大长度（随机字节按 8 位掩码映射到字母表，故上限为 256）.
+     */
+    private static final int MAX_ALPHABET_SIZE = 256;
+
+    /**
      * 默认长度.
      */
     public static final int DEFAULT_SIZE = 21;
@@ -68,7 +73,7 @@ public class NanoId {
             alphabet = DEFAULT_ALPHABET;
         }
 
-        if (alphabet.length == 0 || alphabet.length >= 256) {
+        if (alphabet.length == 0 || alphabet.length >= MAX_ALPHABET_SIZE) {
             throw new IllegalArgumentException("Alphabet must contain between 1 and 255 symbols.");
         }
 

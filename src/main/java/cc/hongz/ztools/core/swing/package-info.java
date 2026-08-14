@@ -1,5 +1,5 @@
 /**
- * Swing和awt相关封装
+ * Swing和awt相关封装。
  *
  * @author looly
  *

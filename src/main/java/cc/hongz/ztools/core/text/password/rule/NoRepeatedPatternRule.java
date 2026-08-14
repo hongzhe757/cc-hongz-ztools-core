@@ -12,61 +12,61 @@ import cc.hongz.ztools.core.text.password.RuleResult;
  */
 public final class NoRepeatedPatternRule implements PasswordRule {
 
-	/**
-	 * 规则名称.
-	 */
-	private static final String RULE_NAME = "NoRepeatedPatternRule";
+    /**
+     * 规则名称.
+     */
+    private static final String RULE_NAME = "NoRepeatedPatternRule";
 
-	/**
-	 * 默认最小重复段数.
-	 */
-	public static final int DEFAULT_MIN_SEGMENTS = 2;
+    /**
+     * 默认最小重复段数.
+     */
+    public static final int DEFAULT_MIN_SEGMENTS = 2;
 
-	/**
-	 * 最小重复段数.
-	 */
-	private final int minSegments;
+    /**
+     * 最小重复段数.
+     */
+    private final int minSegments;
 
-	/**
-	 * 构造规则，使用默认值.
-	 */
-	public NoRepeatedPatternRule() {
-		this(DEFAULT_MIN_SEGMENTS);
-	}
+    /**
+     * 构造规则，使用默认值.
+     */
+    public NoRepeatedPatternRule() {
+        this(DEFAULT_MIN_SEGMENTS);
+    }
 
-	/**
-	 * 构造规则.
-	 *
-	 * @param minSegments 触发告警的最小重复段数
-	 */
-	public NoRepeatedPatternRule(final int minSegments) {
-		this.minSegments = minSegments;
-	}
+    /**
+     * 构造规则.
+     *
+     * @param minSegments 触发告警的最小重复段数
+     */
+    public NoRepeatedPatternRule(final int minSegments) {
+        this.minSegments = minSegments;
+    }
 
-	@Override
-	public RuleResult validate(final String password) {
-		final int len = password.length(); for (int segments = minSegments; segments <= 3; segments++) {
-			if (len % segments == 0) {
-				final int partLen = len / segments; if (isRepeatedPattern(password, segments, partLen)) {
-					return RuleResult.failed(RULE_NAME, "密码包含重复模式");
-				}
-			}
-		} return RuleResult.passed(RULE_NAME);
-	}
+    @Override
+    public RuleResult validate(final String password) {
+        final int len = password.length(); for (int segments = minSegments; segments <= 3; segments++) {
+            if (len % segments == 0) {
+                final int partLen = len / segments; if (isRepeatedPattern(password, segments, partLen)) {
+                    return RuleResult.failed(RULE_NAME, "密码包含重复模式");
+                }
+            }
+        } return RuleResult.passed(RULE_NAME);
+    }
 
-	/**
-	 * 检测密码是否由 segments 个相同片段组成.
-	 *
-	 * @param password 密码
-	 * @param segments 段数
-	 * @param partLen  每段长度
-	 * @return 是否为重复模式
-	 */
-	private boolean isRepeatedPattern(final String password, final int segments, final int partLen) {
-		final String first = password.substring(0, partLen); for (int i = 1; i < segments; i++) {
-			final String part = password.substring(i * partLen, (i + 1) * partLen); if (!first.equals(part)) {
-				return false;
-			}
-		} return true;
-	}
+    /**
+     * 检测密码是否由 segments 个相同片段组成.
+     *
+     * @param password 密码
+     * @param segments 段数
+     * @param partLen  每段长度
+     * @return 是否为重复模式
+     */
+    private boolean isRepeatedPattern(final String password, final int segments, final int partLen) {
+        final String first = password.substring(0, partLen); for (int i = 1; i < segments; i++) {
+            final String part = password.substring(i * partLen, (i + 1) * partLen); if (!first.equals(part)) {
+                return false;
+            }
+        } return true;
+    }
 }

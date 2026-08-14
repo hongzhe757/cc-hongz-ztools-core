@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 正则相关工具类.<br>
+ * 正则相关工具类.
  * 常用正则请见 {@link Validator}
  *
  * @author xiaoleilu
@@ -173,7 +173,7 @@ public final class ReUtil {
     }
 
     /**
-     * 在给定字符串中查找给定规则的字符，如果找到则使用{@link Consumer}处理之.<br>
+     * 在给定字符串中查找给定规则的字符，如果找到则使用{@link Consumer}处理之.
      * 如果内容中有多个匹配项，则只处理找到的第一个结果。
      *
      * @param pattern  匹配的正则
@@ -250,7 +250,7 @@ public final class ReUtil {
     }
 
     /**
-     * 根据给定正则查找字符串中的匹配项，返回所有匹配的分组名对应分组值.<br>
+     * 根据给定正则查找字符串中的匹配项，返回所有匹配的分组名对应分组值.
      * <pre>
      * pattern: (?&lt;year&gt;\\d+)-(?&lt;month&gt;\\d+)-(?&lt;day&gt;\\d+)
      * content: 2021-10-11
@@ -279,7 +279,7 @@ public final class ReUtil {
     }
 
     /**
-     * 从content中匹配出多个值并根据template生成新的字符串.<br>
+     * 从content中匹配出多个值并根据template生成新的字符串.
      * 例如：<br>
      * content 2013年5月 pattern (.*?)年(.*?)月 template： $1-$2 return 2013-5
      *
@@ -313,7 +313,7 @@ public final class ReUtil {
     }
 
     /**
-     * 从content中匹配出多个值并根据template生成新的字符串.<br>
+     * 从content中匹配出多个值并根据template生成新的字符串.
      * 匹配结束后会删除匹配内容之前的内容（包括匹配内容）<br>
      * 例如：<br>
      * content 2013年5月 pattern (.*?)年(.*?)月 template： $1-$2 return 2013-5
@@ -333,7 +333,7 @@ public final class ReUtil {
     }
 
     /**
-     * 从content中匹配出多个值并根据template生成新的字符串.<br>
+     * 从content中匹配出多个值并根据template生成新的字符串.
      * 匹配结束后会删除匹配内容之前的内容（包括匹配内容）<br>
      * 例如：<br>
      * content 2013年5月 pattern (.*?)年(.*?)月 template： $1-$2 return 2013-5
@@ -368,7 +368,7 @@ public final class ReUtil {
     }
 
     /**
-     * 从content中匹配出多个值并根据template生成新的字符串.<br>
+     * 从content中匹配出多个值并根据template生成新的字符串.
      * 例如：<br>
      * content 2013年5月 pattern (.*?)年(.*?)月 template： $1-$2 return 2013-5
      *
@@ -857,7 +857,7 @@ public final class ReUtil {
     }
 
     /**
-     * 正则替换指定值.<br>
+     * 正则替换指定值.
      * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
      *
      * <p>
@@ -880,7 +880,7 @@ public final class ReUtil {
     }
 
     /**
-     * 正则替换指定值.<br>
+     * 正则替换指定值.
      * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
      *
      * @param content             文本
@@ -917,7 +917,7 @@ public final class ReUtil {
     }
 
     /**
-     * 替换所有正则匹配的文本，并使用自定义函数决定如何替换.<br>
+     * 替换所有正则匹配的文本，并使用自定义函数决定如何替换.
      * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
      *
      * <pre class="code">
@@ -937,7 +937,7 @@ public final class ReUtil {
     }
 
     /**
-     * 替换所有正则匹配的文本，并使用自定义函数决定如何替换.<br>
+     * 替换所有正则匹配的文本，并使用自定义函数决定如何替换.
      * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
      *
      * <pre class="code">

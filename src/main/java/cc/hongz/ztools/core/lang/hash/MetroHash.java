@@ -15,6 +15,7 @@ import java.util.Arrays;
  *
  * @author li
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public class MetroHash {
 
 	/**

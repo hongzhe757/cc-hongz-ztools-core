@@ -1,5 +1,5 @@
 /**
- * Java8的stream相关封装
+ * Java8的stream相关封装。
  *
  * @author looly
  *

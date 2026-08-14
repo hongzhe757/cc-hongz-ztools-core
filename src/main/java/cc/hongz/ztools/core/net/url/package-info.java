@@ -1,5 +1,5 @@
 /**
- * URL相关工具类
+ * URL相关工具类。
  *
  * @author looly
  * @since 5.3.1

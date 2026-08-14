@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 表格数据结构定义<br>
+ * 表格数据结构定义。
  * 此结构类似于Guava的Table接口，使用两个键映射到一个值，类似于表格结构。
  *
  * @param <R> 行键类型
@@ -23,7 +23,7 @@ import java.util.Set;
 public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 
     /**
-     * 是否包含指定行列的映射<br>
+     * 是否包含指定行列的映射。
      * 行和列任意一个不存在都会返回{@code false}，如果行和列都存在，值为{@code null}，也会返回{@code true}
      *
      * @param rowKey    行键
@@ -38,7 +38,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     //region Row
 
     /**
-     * 行是否存在
+     * 行是否存在。
      *
      * @param rowKey 行键
      * @return 行是否存在
@@ -48,7 +48,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 获取行
+     * 获取行。
      *
      * @param rowKey 行键
      * @return 行映射，返回的键为列键，值为表格的值
@@ -58,7 +58,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 返回所有行的key，行的key不可重复
+     * 返回所有行的key，行的key不可重复。
      *
      * @return 行键
      */
@@ -67,7 +67,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 返回行列对应的Map
+     * 返回行列对应的Map。
      *
      * @return map，键为行键，值为列和值的对应map
      */
@@ -77,7 +77,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     //region Column
 
     /**
-     * 列是否存在
+     * 列是否存在。
      *
      * @param columnKey 列键
      * @return 列是否存在
@@ -87,7 +87,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 获取列
+     * 获取列。
      *
      * @param columnKey 列键
      * @return 列映射，返回的键为行键，值为表格的值
@@ -97,7 +97,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 返回所有列的key，列的key不可重复
+     * 返回所有列的key，列的key不可重复。
      *
      * @return 列set
      */
@@ -113,7 +113,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
      */
     default List<C> columnKeys() {
         final Map<C, Map<R, V>> columnMap = columnMap();
-        if(MapUtil.isEmpty(columnMap)){
+        if (MapUtil.isEmpty(columnMap)) {
             return ListUtil.empty();
         }
 
@@ -125,7 +125,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 返回列-行对应的map
+     * 返回列-行对应的map。
      *
      * @return map，键为列键，值为行和值的对应map
      */
@@ -135,14 +135,14 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     //region value
 
     /**
-     * 指定值是否存在
+     * 指定值是否存在。
      *
      * @param value 值
      * @return 值
      */
-    default boolean containsValue(V value){
+    default boolean containsValue(V value) {
         final Collection<Map<C, V>> rows = Opt.ofNullable(rowMap()).map(Map::values).get();
-        if(null != rows){
+        if (null != rows) {
             for (Map<C, V> row : rows) {
                 if (row.containsValue(value)) {
                     return true;
@@ -153,7 +153,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 获取指定值
+     * 获取指定值。
      *
      * @param rowKey    行键
      * @param columnKey 列键
@@ -164,7 +164,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 所有行列值的集合
+     * 所有行列值的集合。
      *
      * @return 值的集合
      */
@@ -172,14 +172,14 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     //endregion
 
     /**
-     * 所有单元格集合
+     * 所有单元格集合。
      *
      * @return 单元格集合
      */
     Set<Cell<R, C, V>> cellSet();
 
     /**
-     * 为表格指定行列赋值，如果不存在，创建之，存在则替换之，返回原值
+     * 为表格指定行列赋值，如果不存在，创建之，存在则替换之，返回原值。
      *
      * @param rowKey    行键
      * @param columnKey 列键
@@ -189,11 +189,11 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     V put(R rowKey, C columnKey, V value);
 
     /**
-     * 批量加入
+     * 批量加入。
      *
      * @param table 其他table
      */
-    default void putAll(Table<? extends R, ? extends C, ? extends V> table){
+    default void putAll(Table<? extends R, ? extends C, ? extends V> table) {
         if (null != table) {
             for (Table.Cell<? extends R, ? extends C, ? extends V> cell : table.cellSet()) {
                 put(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
@@ -202,7 +202,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 移除指定值
+     * 移除指定值。
      *
      * @param rowKey    行键
      * @param columnKey 列键
@@ -211,20 +211,20 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     V remove(R rowKey, C columnKey);
 
     /**
-     * 表格是否为空
+     * 表格是否为空。
      *
      * @return 是否为空
      */
     boolean isEmpty();
 
     /**
-     * 表格大小，一般为单元格的个数
+     * 表格大小，一般为单元格的个数。
      *
      * @return 表格大小
      */
-    default int size(){
+    default int size() {
         final Map<R, Map<C, V>> rowMap = rowMap();
-        if(MapUtil.isEmpty(rowMap)){
+        if (MapUtil.isEmpty(rowMap)) {
             return 0;
         }
         int size = 0;
@@ -235,12 +235,12 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 清空表格
+     * 清空表格。
      */
     void clear();
 
     /**
-     * 遍历表格的单元格，处理值
+     * 遍历表格的单元格，处理值。
      *
      * @param consumer 单元格值处理器
      */
@@ -251,7 +251,7 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
     }
 
     /**
-     * 单元格，用于表示一个单元格的行、列和值
+     * 单元格，用于表示一个单元格的行、列和值。
      *
      * @param <R> 行键类型
      * @param <C> 列键类型
@@ -259,21 +259,21 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
      */
     interface Cell<R, C, V> {
         /**
-         * 获取行键
+         * 获取行键。
          *
          * @return 行键
          */
         R getRowKey();
 
         /**
-         * 获取列键
+         * 获取列键。
          *
          * @return 列键
          */
         C getColumnKey();
 
         /**
-         * 获取值
+         * 获取值。
          *
          * @return 值
          */
