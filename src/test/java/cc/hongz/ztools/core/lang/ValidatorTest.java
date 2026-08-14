@@ -284,6 +284,38 @@ public class ValidatorTest {
         assertTrue(Validator.isMatchRegex(Validator.URL_HTTP, content));
     }
 
+    @DisplayName("URL协议(scheme)验证")
+    @Test
+    public void isUrlSchemeTest() {
+        // 带 "://" 的完整 URL
+        assertTrue(Validator.isMatchRegex(Validator.URL_SCHEME, "https://example.com"));
+        assertTrue(Validator.isMatchRegex(Validator.URL_SCHEME, "ftp://example.com/file.txt"));
+        assertTrue(Validator.isMatchRegex(Validator.URL_SCHEME, "ws://example.com/socket"));
+        assertTrue(Validator.isMatchRegex(Validator.URL_SCHEME, "git://github.com/user/repo.git"));
+        assertTrue(Validator.isMatchRegex(Validator.URL_SCHEME, "rtsp://example.com/live"));
+        // 协议名不区分大小写
+        assertTrue(Validator.isMatchRegex(Validator.URL_SCHEME, "HTTPS://EXAMPLE.COM"));
+        // 不带 "://" 的协议不匹配
+        assertFalse(Validator.isMatchRegex(Validator.URL_SCHEME, "mailto:test@example.com"));
+        assertFalse(Validator.isMatchRegex(Validator.URL_SCHEME, "javascript:alert(1)"));
+    }
+
+    @DisplayName("URI协议(scheme)验证")
+    @Test
+    public void isUriSchemeTest() {
+        // 使用 ":"（不带 "//"）的协议，通过 find 检测前缀
+        assertTrue(Validator.URI_SCHEME.matcher("mailto:test@example.com").find());
+        assertTrue(Validator.URI_SCHEME.matcher("tel:13800138000").find());
+        assertTrue(Validator.URI_SCHEME.matcher("data:text/plain;base64,SGVsbG8=").find());
+        assertTrue(Validator.URI_SCHEME.matcher("geo:39.9,116.4").find());
+        assertTrue(Validator.URI_SCHEME.matcher("magnet:?xt=urn:btih:xxx").find());
+        assertTrue(Validator.URI_SCHEME.matcher("doi:10.1000/xyz123").find());
+        // 协议名不区分大小写
+        assertTrue(Validator.URI_SCHEME.matcher("MAILTO:test@example.com").find());
+        // 带 "://" 的协议不匹配
+        assertFalse(Validator.URI_SCHEME.matcher("https://example.com").find());
+    }
+
     @DisplayName("中文姓名验证")
     @Test
     public void isChineseNameTest() {

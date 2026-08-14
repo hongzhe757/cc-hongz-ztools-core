@@ -114,6 +114,14 @@ public class PatternPool {
 	 */
 	public final static Pattern URL_HTTP = Pattern.compile(RegexPool.URL_HTTP, Pattern.CASE_INSENSITIVE);
 	/**
+	 * 常见 URL 协议（scheme），覆盖网页、传输、通讯、流媒体、版本控制、远程与目录等协议
+	 */
+	public final static Pattern URL_SCHEME = Pattern.compile(RegexPool.URL_SCHEME, Pattern.CASE_INSENSITIVE);
+	/**
+	 * 使用 ":"（不带 "//"）的常见协议（scheme），覆盖邮件、电话、短信、数据、定位、磁力、语音、日历等协议
+	 */
+	public final static Pattern URI_SCHEME = Pattern.compile(RegexPool.URI_SCHEME, Pattern.CASE_INSENSITIVE);
+	/**
 	 * 中文字、英文字母、数字和下划线
 	 */
 	public final static Pattern GENERAL_WITH_CHINESE = Pattern.compile(RegexPool.GENERAL_WITH_CHINESE);
