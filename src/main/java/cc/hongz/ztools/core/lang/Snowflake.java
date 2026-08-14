@@ -39,18 +39,24 @@ public class Snowflake implements Serializable {
     private static final long DEFAULT_TIME_OFFSET_VALUE = 2000L;
 
     /**
-     * 默认的起始时间，为Thu, 04 Nov 2010 01:42:54 GMT
+     * 默认的起始时间，为Thu, 04 Nov 2010 01:42:54 GMT。
      */
     public static long DEFAULT_TWEPOCH = DEFAULT_TWEPOCH_VALUE;
     /**
-     * 默认回拨时间，2S
+     * 默认回拨时间，2S。
      */
     public static long DEFAULT_TIME_OFFSET = DEFAULT_TIME_OFFSET_VALUE;
 
     private static final long WORKER_ID_BITS = 5L;
+    /**
+     * 最大工作节点ID。
+     */
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
     public static final long MAX_WORKER_ID = -1L ^ (-1L << WORKER_ID_BITS);
     private static final long DATA_CENTER_ID_BITS = 5L;
+    /**
+     * 最大数据中心ID。
+     */
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
     public static final long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
     private static final long SEQUENCE_BITS = 12L;
@@ -60,12 +66,16 @@ public class Snowflake implements Serializable {
     private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS + DATA_CENTER_ID_BITS;
     private static final long SEQUENCE_MASK = ~(-1L << SEQUENCE_BITS);
 
-    /** 初始化时间点 */
+    /**
+     * 初始化时间点。
+     */
     private final long twepoch;
     private final long workerId;
     private final long dataCenterId;
     private final boolean useSystemClock;
-    /** 允许的时钟回拨毫秒数 */
+    /**
+     * 允许的时钟回拨毫秒数。
+     */
     private final long timeOffset;
     /**
      * 当在低频模式下时，序号始终为0，导致生成ID始终为偶数。
@@ -73,7 +83,9 @@ public class Snowflake implements Serializable {
      */
     private final long randomSequenceLimit;
 
-    /** 自增序号 */
+    /**
+     * 自增序号。
+     */
     private long sequence = 0L;
     private long lastTimestamp = -1L;
 
@@ -122,7 +134,8 @@ public class Snowflake implements Serializable {
      * @param dataCenterId     数据中心id
      * @param isUseSystemClock 是否使用 {@link SystemClock} 获取当前时间戳
      */
-    public Snowflake(final Date epochDate, final long workerId, final long dataCenterId, final boolean isUseSystemClock) {
+    public Snowflake(final Date epochDate, final long workerId, final long dataCenterId,
+                     final boolean isUseSystemClock) {
         this(epochDate, workerId, dataCenterId, isUseSystemClock, DEFAULT_TIME_OFFSET);
     }
 
@@ -217,8 +230,10 @@ public class Snowflake implements Serializable {
             final long endId = endTimeMinId | ~(-1 << TIMESTAMP_LEFT_SHIFT);
             return Pair.of(startTimeMinId, endId);
         } else {
-            final long startId = startTimeMinId | (dataCenterId << DATA_CENTER_ID_SHIFT) | (workerId << WORKER_ID_SHIFT);
-            final long endId = endTimeMinId | (dataCenterId << DATA_CENTER_ID_SHIFT) | (workerId << WORKER_ID_SHIFT) | SEQUENCE_MASK;
+            final long startId = startTimeMinId | (dataCenterId << DATA_CENTER_ID_SHIFT)
+                    | (workerId << WORKER_ID_SHIFT);
+            final long endId = endTimeMinId | (dataCenterId << DATA_CENTER_ID_SHIFT)
+                    | (workerId << WORKER_ID_SHIFT) | SEQUENCE_MASK;
             return Pair.of(startId, endId);
         }
     }
@@ -235,16 +250,17 @@ public class Snowflake implements Serializable {
                 timestamp = lastTimestamp;
             } else {
                 throw new IllegalStateException(
-                        StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
+                        StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms",
+                                lastTimestamp - timestamp));
             }
         }
 
         if (timestamp == this.lastTimestamp) {
-            final long sequence = (this.sequence + 1) & SEQUENCE_MASK;
-            if (sequence == 0) {
+            final long nextSequence = (this.sequence + 1) & SEQUENCE_MASK;
+            if (nextSequence == 0) {
                 timestamp = tilNextMillis(lastTimestamp);
             }
-            this.sequence = sequence;
+            this.sequence = nextSequence;
         } else {
             if (randomSequenceLimit > 1) {
                 sequence = RandomUtil.randomLong(randomSequenceLimit);
@@ -276,14 +292,15 @@ public class Snowflake implements Serializable {
      * @param lastTimestamp 上次记录的时间
      * @return 下一个时间
      */
-    private long tilNextMillis(final long lastTimestamp) {
+    private long tilNextMillis(final long prevTimestamp) {
         long timestamp = genTime();
-        while (timestamp == lastTimestamp) {
+        while (timestamp == prevTimestamp) {
             timestamp = genTime();
         }
-        if (timestamp < lastTimestamp) {
+        if (timestamp < prevTimestamp) {
             throw new IllegalStateException(
-                    StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
+                    StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms",
+                            prevTimestamp - timestamp));
         }
         return timestamp;
     }
