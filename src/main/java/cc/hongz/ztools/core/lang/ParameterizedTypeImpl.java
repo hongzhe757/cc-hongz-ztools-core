@@ -30,7 +30,7 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
      * @param ownerType           拥有者类型
      * @param rawType             原始类型
      */
-    public ParameterizedTypeImpl(Type[] actualTypeArguments, Type ownerType, Type rawType) {
+    public ParameterizedTypeImpl(final Type[] actualTypeArguments, final Type ownerType, final Type rawType) {
         this.actualTypeArguments = actualTypeArguments;
         this.ownerType = ownerType;
         this.rawType = rawType;
