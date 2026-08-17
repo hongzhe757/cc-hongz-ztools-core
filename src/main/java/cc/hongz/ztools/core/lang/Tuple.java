@@ -77,8 +77,8 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
      * @return this
      * @since 5.2.1
      */
-    public Tuple setCacheHash(final boolean newCacheHash) {
-        this.cacheHash = newCacheHash;
+    public Tuple setCacheHash(final boolean cacheHash) {
+        this.cacheHash = cacheHash;
         return this;
     }
 
