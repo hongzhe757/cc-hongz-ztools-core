@@ -20,16 +20,37 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 3. PID 进程ID。确保同一机器中不冲突
  * 4. INC 自增计数器。确保同一秒内产生objectId的唯一性。
  * </pre>
+ *
+ * <table border="1">
+ *     <tr>
+ *         <td>时间戳</td>
+ *         <td>机器ID</td>
+ *         <td>进程ID</td>
+ *         <td>自增计数器</td>
+ *     </tr>
+ *     <tr>
+ *         <td>4</td>
+ *         <td>3</td>
+ *         <td>2</td>
+ *         <td>3</td>
+ *     </tr>
+ * </table>
+ *
+ * 参考：http://blog.csdn.net/qxc1281/article/details/54021882
  * <p>
  * 迁移自 hutool {@code cn.hutool.core.lang.ObjectId}。
  *
  * @author looly
+ * @since 4.0.0
  */
-public class ObjectId {
+public final class ObjectId {
 
-    /** 线程安全的下一个随机数,每次生成自增+1 */
+    private ObjectId() {
+    }
+
+    /** 线程安全的下一个随机数,每次生成自增+1。 */
     private static final AtomicInteger NEXT_INC = new AtomicInteger(RandomUtil.randomInt());
-    /** 机器信息 */
+    /** 机器信息。 */
     private static final int MACHINE = getMachinePiece() | getProcessPiece();
     /** ObjectId 十六进制字符串长度. */
     private static final int OBJECT_ID_LENGTH = 24;
@@ -86,9 +107,9 @@ public class ObjectId {
      */
     public static byte[] nextBytes() {
         final ByteBuffer bb = ByteBuffer.wrap(new byte[OBJECT_ID_BYTES]);
-        bb.putInt((int) DateUtil.currentSeconds());// 4位
-        bb.putInt(MACHINE);// 4位
-        bb.putInt(NEXT_INC.getAndIncrement());// 4位
+        bb.putInt((int) DateUtil.currentSeconds()); // 4位
+        bb.putInt(MACHINE); // 4位
+        bb.putInt(NEXT_INC.getAndIncrement()); // 4位
 
         return bb.array();
     }
@@ -131,16 +152,22 @@ public class ObjectId {
      * @return 机器码片段
      */
     private static int getMachinePiece() {
+        // 机器码
         int machinePiece;
         try {
             final StringBuilder netSb = new StringBuilder();
+            // 返回机器所有的网络接口
             final Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+            // 遍历网络接口
             while (e.hasMoreElements()) {
                 final NetworkInterface ni = e.nextElement();
+                // 网络接口信息
                 netSb.append(ni.toString());
             }
+            // 保留后两位
             machinePiece = netSb.toString().hashCode() << MACHINE_PIECE_SHIFT;
         } catch (final Throwable e) {
+            // 出问题随机生成,保留后两位
             machinePiece = (RandomUtil.randomInt()) << MACHINE_PIECE_SHIFT;
         }
         return machinePiece;
@@ -152,7 +179,10 @@ public class ObjectId {
      * @return 进程码片段
      */
     private static int getProcessPiece() {
+        // 进程码
+        // 因为静态变量类加载可能相同,所以要获取进程ID + 加载对象的ID值
         final int processPiece;
+        // 进程ID初始化
         int processId;
         try {
             processId = RuntimeUtil.getPid();
@@ -161,8 +191,11 @@ public class ObjectId {
         }
 
         final ClassLoader loader = ClassLoaderUtil.getClassLoader();
+        // 返回对象哈希码,无论是否重写hashCode方法
         final int loaderId = (loader != null) ? System.identityHashCode(loader) : 0;
 
+        // 进程ID + 对象加载ID
+        // 保留前2位
         final String processSb = Integer.toHexString(processId) + Integer.toHexString(loaderId);
         processPiece = processSb.hashCode() & PROCESS_PIECE_MASK;
 
