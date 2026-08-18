@@ -4,7 +4,7 @@ import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.lang.ClassScanner;
 import cc.hongz.ztools.core.lang.Filter;
-import cc.hongz.ztools.core.lang.NullWrapperBean;
+import cc.hongz.ztools.core.bean.NullWrapperBean;
 import cc.hongz.ztools.core.lang.Singleton;
 
 import java.io.IOException;

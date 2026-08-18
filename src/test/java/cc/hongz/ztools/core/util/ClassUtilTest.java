@@ -1,7 +1,7 @@
 package cc.hongz.ztools.core.util;
 
 import cc.hongz.ztools.core.exceptions.UtilException;
-import cc.hongz.ztools.core.lang.NullWrapperBean;
+import cc.hongz.ztools.core.bean.NullWrapperBean;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

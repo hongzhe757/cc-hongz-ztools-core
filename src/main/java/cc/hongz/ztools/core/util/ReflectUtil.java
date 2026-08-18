@@ -8,7 +8,7 @@ import cc.hongz.ztools.core.exceptions.InvocationTargetRuntimeException;
 import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.lang.Filter;
-import cc.hongz.ztools.core.lang.NullWrapperBean;
+import cc.hongz.ztools.core.bean.NullWrapperBean;
 import cc.hongz.ztools.core.lang.reflect.MethodHandleUtil;
 import cc.hongz.ztools.core.map.MapUtil;
 import cc.hongz.ztools.core.map.WeakConcurrentMap;
