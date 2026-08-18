@@ -2,11 +2,8 @@ package cc.hongz.ztools.core.lang;
 
 /**
  * 过滤器接口.
- * <p>
- * 迁移自 hutool {@code cn.hutool.core.lang.Filter}.
  *
- * @param <T> 被过滤的类型
- * @author looly
+ * @author Looly
  */
 @FunctionalInterface
 public interface Filter<T> {
