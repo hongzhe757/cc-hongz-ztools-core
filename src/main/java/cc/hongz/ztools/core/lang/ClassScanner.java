@@ -73,7 +73,8 @@ public class ClassScanner implements Serializable {
      * @param annotationClass 注解类
      * @return 类集合
      */
-    public static Set<Class<?>> scanAllPackageByAnnotation(final String packageName, final Class<? extends Annotation> annotationClass) {
+    public static Set<Class<?>> scanAllPackageByAnnotation(final String packageName,
+            final Class<? extends Annotation> annotationClass) {
         return scanAllPackage(packageName, clazz -> clazz.isAnnotationPresent(annotationClass));
     }
 
@@ -84,7 +85,8 @@ public class ClassScanner implements Serializable {
      * @param annotationClass 注解类
      * @return 类集合
      */
-    public static Set<Class<?>> scanPackageByAnnotation(final String packageName, final Class<? extends Annotation> annotationClass) {
+    public static Set<Class<?>> scanPackageByAnnotation(final String packageName,
+            final Class<? extends Annotation> annotationClass) {
         return scanPackage(packageName, clazz -> clazz.isAnnotationPresent(annotationClass));
     }
 
@@ -210,11 +212,11 @@ public class ClassScanner implements Serializable {
     /**
      * 设置是否忽略 loadClass 时的错误.
      *
-     * @param ignoreLoadError 忽略 loadClass 时的错误
+     * @param newIgnoreLoadError 忽略 loadClass 时的错误
      * @return this
      */
-    public ClassScanner setIgnoreLoadError(final boolean ignoreLoadError) {
-        this.ignoreLoadError = ignoreLoadError;
+    public ClassScanner setIgnoreLoadError(final boolean newIgnoreLoadError) {
+        this.ignoreLoadError = newIgnoreLoadError;
         return this;
     }
 
