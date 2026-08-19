@@ -289,7 +289,8 @@ public final class Assert {
      * @param params           模板参数
      * @throws IllegalStateException 表达式为 false 时
      */
-    public static void state(final boolean expression, final String errorMsgTemplate, final Object... params) throws IllegalStateException {
+    public static void state(final boolean expression, final String errorMsgTemplate,
+            final Object... params) throws IllegalStateException {
         if (!expression) {
             throw new IllegalStateException(StrUtil.format(errorMsgTemplate, params));
         }
@@ -312,27 +313,28 @@ public final class Assert {
      * @param errorMsgSupplier 错误消息供应器
      * @throws IllegalStateException 表达式为 false 时
      */
-    public static void state(final boolean expression, final Supplier<String> errorMsgSupplier) throws IllegalStateException {
+    public static void state(final boolean expression,
+            final Supplier<String> errorMsgSupplier) throws IllegalStateException {
         if (!expression) {
             throw new IllegalStateException(errorMsgSupplier.get());
         }
     }
 
-    // ----------------------------------------------------------------------------------------------------------- Check not equals
+    // ------------------------------------------------ Check not equals
 
     /**
-     * 断言两个对象是否不相等,如果两个对象相等 抛出IllegalArgumentException 异常
+     * 断言两个对象是否不相等,如果两个对象相等 抛出IllegalArgumentException 异常。
      *
      * @param obj1 对象1
      * @param obj2 对象2
      * @throws IllegalArgumentException obj1 must be not equals obj2
      */
-    public static void notEquals(Object obj1, Object obj2) {
+    public static void notEquals(final Object obj1, final Object obj2) {
         notEquals(obj1, obj2, "({}) must be not equals ({})", obj1, obj2);
     }
 
     /**
-     * 断言两个对象是否不相等,如果两个对象相等 抛出IllegalArgumentException 异常
+     * 断言两个对象是否不相等,如果两个对象相等 抛出IllegalArgumentException 异常。
      *
      * @param obj1             对象1
      * @param obj2             对象2
@@ -340,12 +342,13 @@ public final class Assert {
      * @param params           异常信息参数，用于替换"{}"占位符
      * @throws IllegalArgumentException obj1 must be not equals obj2
      */
-    public static void notEquals(Object obj1, Object obj2, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+    public static void notEquals(final Object obj1, final Object obj2, final String errorMsgTemplate,
+            final Object... params) throws IllegalArgumentException {
         notEquals(obj1, obj2, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
     }
 
     /**
-     * 断言两个对象是否不相等,如果两个对象相等,抛出指定类型异常,并使用指定的函数获取错误信息返回
+     * 断言两个对象是否不相等,如果两个对象相等,抛出指定类型异常,并使用指定的函数获取错误信息返回。
      *
      * @param obj1          对象1
      * @param obj2          对象2
@@ -353,7 +356,8 @@ public final class Assert {
      * @param <X>           异常类型
      * @throws X obj1 must be not equals obj2
      */
-    public static <X extends Throwable> void notEquals(Object obj1, Object obj2, Supplier<X> errorSupplier) throws X {
+    public static <X extends Throwable> void notEquals(final Object obj1, final Object obj2,
+            final Supplier<X> errorSupplier) throws X {
         if (ObjectUtil.equals(obj1, obj2)) {
             throw errorSupplier.get();
         }
