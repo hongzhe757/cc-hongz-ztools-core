@@ -48,18 +48,18 @@ public final class Console {
     // --------------------------------------------------------------------------------- Error
 
     /**
-     * 同 System.err.println()方法，打印控制台日志
+     * 同 System.err.println()方法，打印控制台日志。
      */
     public static void error() {
         err.println();
     }
 
     /**
-     * 同 System.err.println()方法，打印控制台日志
+     * 同 System.err.println()方法，打印控制台日志。
      *
      * @param obj 要打印的对象
      */
-    public static void error(Object obj) {
+    public static void error(final Object obj) {
         if (obj instanceof Throwable) {
             Throwable e = (Throwable) obj;
             error(e, e.getMessage());
@@ -69,13 +69,13 @@ public final class Console {
     }
 
     /**
-     * 同 System.err.println()方法，打印控制台日志<br>
+     * 同 System.err.println()方法，打印控制台日志。
      * 如果传入打印对象为{@link Throwable}对象，那么同时打印堆栈
      *
      * @param obj1      第一个要打印的对象
      * @param otherObjs 其它要打印的对象
      */
-    public static void error(Object obj1, Object... otherObjs) {
+    public static void error(final Object obj1, final Object... otherObjs) {
         if (ArrayUtil.isEmpty(otherObjs)) {
             error(obj1);
         } else {
@@ -84,12 +84,12 @@ public final class Console {
     }
 
     /**
-     * 同 System.err.println()方法，打印控制台日志
+     * 同 System.err.println()方法，打印控制台日志。
      *
      * @param template 文本模板，被替换的部分用 {} 表示
      * @param values   值
      */
-    public static void error(String template, Object... values) {
+    public static void error(final String template, final Object... values) {
         if (ArrayUtil.isEmpty(values) || StrUtil.contains(template, TEMPLATE_VAR)) {
             errorInternal(template, values);
         } else {
@@ -98,13 +98,13 @@ public final class Console {
     }
 
     /**
-     * 同 System.err.println()方法，打印控制台日志
+     * 同 System.err.println()方法，打印控制台日志。
      *
      * @param t        异常对象
      * @param template 文本模板，被替换的部分用 {} 表示
      * @param values   值
      */
-    public static void error(Throwable t, String template, Object... values) {
+    public static void error(final Throwable t, final String template, final Object... values) {
         err.println(StrUtil.format(template, values));
         if (null != t) {
             //noinspection CallToPrintStackTrace
@@ -114,22 +114,22 @@ public final class Console {
     }
 
     /**
-     * 同 System.err.println()方法，打印控制台日志
+     * 同 System.err.println()方法，打印控制台日志。
      *
      * @param template 文本模板，被替换的部分用 {} 表示
      * @param values   值
      */
-    private static void errorInternal(String template, Object... values) {
+    private static void errorInternal(final String template, final Object... values) {
         error(null, template, values);
     }
 
     /**
-     * 构建空格分隔的模板，类似于"{} {} {} {}"
+     * 构建空格分隔的模板，类似于"{} {} {} {}"。
      *
      * @param count 变量数量
      * @return 模板
      */
-    private static String buildTemplateSplitBySpace(int count) {
+    private static String buildTemplateSplitBySpace(final int count) {
         return StrUtil.repeatAndJoin(TEMPLATE_VAR, count, StrUtil.SPACE);
     }
 }
