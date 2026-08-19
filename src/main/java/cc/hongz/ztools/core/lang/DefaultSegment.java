@@ -14,6 +14,7 @@ public class DefaultSegment<T extends Number> implements Segment<T> {
 
     /**
      * 构造。
+     *
      * @param startIndex 起始位置
      * @param endIndex 结束位置
      */
