@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.lang.tree;
 
 import cc.hongz.ztools.core.collection.CollUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 树工具类单元测试.
  */
-public class TreeUtilTest {
+@DisplayName("TreeUtil 树工具")
+class TreeUtilTest {
 
     // 模拟数据
     static List<TreeNode<String>> nodeList = CollUtil.newArrayList();
@@ -27,6 +29,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("构建树（默认配置）")
     public void buildWithDefaultConfig() {
         List<Tree<String>> treeList = TreeUtil.build(nodeList, "0");
         assertNotNull(treeList);
@@ -37,6 +40,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("构建单根节点树（默认配置）")
     public void buildSingleWithDefaultConfig() {
         Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         assertNotNull(tree);
@@ -46,6 +50,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("构建树（自定义配置）")
     public void buildWithCustomConfig() {
         TreeNodeConfig config = new TreeNodeConfig();
         config.setWeightKey("order");
@@ -65,6 +70,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("构建单根节点树（TreeNode 列表）")
     public void buildWithTreeNodeList() {
         List<TreeNode<Integer>> intNodes = new ArrayList<>();
         intNodes.add(new TreeNode<>(1, 0, "root", 0));
@@ -73,10 +79,14 @@ public class TreeUtilTest {
 
         Tree<Integer> tree = TreeUtil.buildSingle(intNodes);
         assertNotNull(tree);
-        assertEquals(2, tree.getChildren().size());
+        // buildSingle 会生成 id=0 的空根节点，其唯一子节点是 "root"
+        assertEquals(1, tree.getChildren().size());
+        // "root" 节点下有两个子节点
+        assertEquals(2, tree.getChildren().get(0).getChildren().size());
     }
 
     @Test
+    @DisplayName("构建树（Integer 列表）")
     public void buildWithIntegerList() {
         List<TreeNode<Integer>> intNodes = new ArrayList<>();
         intNodes.add(new TreeNode<>(1, 0, "root", 0));
@@ -89,6 +99,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("遍历树")
     public void walkTest() {
         List<String> ids = new ArrayList<>();
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
@@ -98,6 +109,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("克隆树")
     public void cloneTreeTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         final Tree<String> cloneTree = tree.cloneTree();
@@ -109,6 +121,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("过滤树")
     public void filterTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         tree.filter((t) -> {
@@ -122,6 +135,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("过滤生成新树")
     public void filterNewTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 
@@ -141,6 +155,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("获取节点")
     public void getNodeTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         Tree<String> node = tree.getNode("111");
@@ -150,6 +165,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("获取不存在的节点")
     public void getNodeNotFoundTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         Tree<String> node = tree.getNode("999");
@@ -157,6 +173,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("获取父节点名称列表")
     public void getParentsNameTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         Tree<String> node = tree.getNode("111");
@@ -172,6 +189,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("获取父节点名称（空节点）")
     public void getParentsNameWithNullNode() {
         List<CharSequence> names = TreeUtil.getParentsName(null, true);
         assertNotNull(names);
@@ -179,6 +197,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("获取父节点 ID 列表")
     public void getParentsIdTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         Tree<String> node = tree.getNode("111");
@@ -193,6 +212,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("创建空节点")
     public void createEmptyNodeTest() {
         Tree<String> node = TreeUtil.createEmptyNode("test");
         assertNotNull(node);
@@ -201,6 +221,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("判断是否有子节点")
     public void hasChildTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         assertTrue(tree.hasChild());
@@ -212,6 +233,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("树配置")
     public void treeConfigTest() {
         TreeNodeConfig config = new TreeNodeConfig();
         config.setIdKey("myId")
@@ -230,6 +252,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("TreeNode 相等判断")
     public void treeNodeEqualsTest() {
         TreeNode<String> node1 = new TreeNode<>("1", "0", "test", 0);
         TreeNode<String> node2 = new TreeNode<>("1", "0", "test2", 1);
@@ -241,6 +264,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("TreeBuilder 追加节点")
     public void treeBuilderAppendTest() {
         TreeBuilder<String> builder = TreeBuilder.of("0");
         builder.append(nodeList, (treeNode, tree) -> {
@@ -256,6 +280,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("TreeBuilder 构建列表")
     public void treeBuilderBuildListTest() {
         TreeBuilder<String> builder = TreeBuilder.of("0");
         builder.append(nodeList, (treeNode, tree) -> {
@@ -271,6 +296,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("TreeBuilder 重置")
     public void treeBuilderResetTest() {
         TreeBuilder<String> builder = TreeBuilder.of("0");
         builder.append(nodeList, (treeNode, tree) -> {
@@ -294,6 +320,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("TreeBuilder 重复构建检查")
     public void treeBuilderCheckBuiltTest() {
         assertThrows(IllegalArgumentException.class, () -> {
             final TreeBuilder<Integer> of = TreeBuilder.of(0);
@@ -303,6 +330,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("TreeBuilder 设置属性")
     public void treeBuilderSetPropertiesTest() {
         TreeBuilder<String> builder = TreeBuilder.of("root");
         builder.setId("newId")
@@ -318,6 +346,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("添加子节点")
     public void treeAddChildrenTest() {
         Tree<String> parent = new Tree<>();
         parent.setId("parent");
@@ -337,6 +366,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("设置子节点为 null")
     public void treeSetChildrenNullTest() {
         Tree<String> tree = new Tree<>();
         tree.setId("test");
@@ -348,6 +378,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("Tree toString")
     public void treeToStringTest() {
         final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
         String str = tree.toString();
@@ -356,6 +387,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("树深度裁剪")
     public void treeDeepCutTest() {
         TreeNodeConfig config = new TreeNodeConfig();
         config.setDeep(1);
@@ -379,6 +411,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("函数式构建树")
     public void functionalBuildTest() {
         // 函数式构建树（不依赖Tree类）
         List<TestNode> nodes = new ArrayList<>();
@@ -399,6 +432,7 @@ public class TreeUtilTest {
     }
 
     @Test
+    @DisplayName("默认节点解析器")
     public void defaultNodeParserTest() {
         TreeNode<String> treeNode = new TreeNode<>("1", "0", "test", 5);
         treeNode.setExtra(java.util.Collections.singletonMap("extraKey", "extraValue"));

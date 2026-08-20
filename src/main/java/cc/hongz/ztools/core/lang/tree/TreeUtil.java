@@ -5,7 +5,12 @@ import cc.hongz.ztools.core.lang.tree.parser.DefaultNodeParser;
 import cc.hongz.ztools.core.lang.tree.parser.NodeParser;
 import cc.hongz.ztools.core.util.ObjectUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -15,7 +20,10 @@ import java.util.stream.Collectors;
  *
  * @author liangbaikai
  */
-public class TreeUtil {
+public final class TreeUtil {
+
+    private TreeUtil() {
+    }
 
     /**
      * 构建单root节点树.
@@ -24,7 +32,7 @@ public class TreeUtil {
      * @return {@link Tree}
      * @since 5.7.2
      */
-    public static Tree<Integer> buildSingle(List<TreeNode<Integer>> list) {
+    public static Tree<Integer> buildSingle(final List<TreeNode<Integer>> list) {
         return buildSingle(list, 0);
     }
 
@@ -34,7 +42,7 @@ public class TreeUtil {
      * @param list 源数据集合
      * @return List
      */
-    public static List<Tree<Integer>> build(List<TreeNode<Integer>> list) {
+    public static List<Tree<Integer>> build(final List<TreeNode<Integer>> list) {
         return build(list, 0);
     }
 
@@ -48,7 +56,7 @@ public class TreeUtil {
      * @return {@link Tree}
      * @since 5.7.2
      */
-    public static <E> Tree<E> buildSingle(List<TreeNode<E>> list, E parentId) {
+    public static <E> Tree<E> buildSingle(final List<TreeNode<E>> list, final E parentId) {
         return buildSingle(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, new DefaultNodeParser<>());
     }
 
@@ -60,7 +68,7 @@ public class TreeUtil {
      * @param parentId 最顶层父id值 一般为 0 之类
      * @return List
      */
-    public static <E> List<Tree<E>> build(List<TreeNode<E>> list, E parentId) {
+    public static <E> List<Tree<E>> build(final List<TreeNode<E>> list, final E parentId) {
         return build(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, new DefaultNodeParser<>());
     }
 
@@ -76,7 +84,7 @@ public class TreeUtil {
      * @return {@link Tree}
      * @since 5.7.2
      */
-    public static <T, E> Tree<E> buildSingle(List<T> list, E parentId, NodeParser<T, E> nodeParser) {
+    public static <T, E> Tree<E> buildSingle(final List<T> list, final E parentId, final NodeParser<T, E> nodeParser) {
         return buildSingle(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, nodeParser);
     }
 
@@ -90,7 +98,7 @@ public class TreeUtil {
      * @param nodeParser 转换器
      * @return List
      */
-    public static <T, E> List<Tree<E>> build(List<T> list, E parentId, NodeParser<T, E> nodeParser) {
+    public static <T, E> List<Tree<E>> build(final List<T> list, final E parentId, final NodeParser<T, E> nodeParser) {
         return build(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, nodeParser);
     }
 
@@ -105,7 +113,8 @@ public class TreeUtil {
      * @param nodeParser     转换器
      * @return List
      */
-    public static <T, E> List<Tree<E>> build(List<T> list, E rootId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
+    public static <T, E> List<Tree<E>> build(final List<T> list, final E rootId, final TreeNodeConfig treeNodeConfig,
+            final NodeParser<T, E> nodeParser) {
         return buildSingle(list, rootId, treeNodeConfig, nodeParser).getChildren();
     }
 
@@ -122,7 +131,8 @@ public class TreeUtil {
      * @return {@link Tree}
      * @since 5.7.2
      */
-    public static <T, E> Tree<E> buildSingle(List<T> list, E rootId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
+    public static <T, E> Tree<E> buildSingle(final List<T> list, final E rootId, final TreeNodeConfig treeNodeConfig,
+            final NodeParser<T, E> nodeParser) {
         return TreeBuilder.of(rootId, treeNodeConfig)
                 .append(list, nodeParser).build();
     }
@@ -136,7 +146,7 @@ public class TreeUtil {
      * @return List
      * @since 5.6.7
      */
-    public static <E> List<Tree<E>> build(Map<E, Tree<E>> map, E rootId) {
+    public static <E> List<Tree<E>> build(final Map<E, Tree<E>> map, final E rootId) {
         return buildSingle(map, rootId).getChildren();
     }
 
@@ -150,7 +160,7 @@ public class TreeUtil {
      * @return {@link Tree}
      * @since 5.7.2
      */
-    public static <E> Tree<E> buildSingle(Map<E, Tree<E>> map, E rootId) {
+    public static <E> Tree<E> buildSingle(final Map<E, Tree<E>> map, final E rootId) {
         final Tree<E> tree = IterUtil.getFirstNoneNull(map.values());
         if (null != tree) {
             final TreeNodeConfig config = tree.getConfig();
@@ -172,7 +182,7 @@ public class TreeUtil {
      * @return 节点
      * @since 5.2.4
      */
-    public static <T> Tree<T> getNode(Tree<T> node, T id) {
+    public static <T> Tree<T> getNode(final Tree<T> node, final T id) {
         if (ObjectUtil.equal(id, node.getId())) {
             return node;
         }
@@ -208,7 +218,7 @@ public class TreeUtil {
      * @return 所有父节点名称列表，node为null返回空List
      * @since 5.2.4
      */
-    public static <T> List<CharSequence> getParentsName(Tree<T> node, boolean includeCurrentNode) {
+    public static <T> List<CharSequence> getParentsName(final Tree<T> node, final boolean includeCurrentNode) {
         final List<CharSequence> result = new ArrayList<>();
         if (null == node) {
             return result;
@@ -244,7 +254,7 @@ public class TreeUtil {
      * @return 所有父节点ID列表，node为null返回空List
      * @since 5.8.22
      */
-    public static <T> List<T> getParentsId(Tree<T> node, boolean includeCurrentNode) {
+    public static <T> List<T> getParentsId(final Tree<T> node, final boolean includeCurrentNode) {
         final List<T> result = new ArrayList<>();
         if (null == node) {
             return result;
@@ -275,7 +285,7 @@ public class TreeUtil {
      * @return {@link Tree}
      * @since 5.7.2
      */
-    public static <E> Tree<E> createEmptyNode(E id) {
+    public static <E> Tree<E> createEmptyNode(final E id) {
         return new Tree<E>().setId(id);
     }
 
@@ -291,12 +301,13 @@ public class TreeUtil {
      * @param <E>            节点类型
      * @return List
      */
-    public static <T, E> List<E> build(List<E> nodes, T rootId,
-                                       Function<E, T> idFunc,
-                                       Function<E, T> parentIdFunc,
-                                       BiConsumer<E, List<E>> setChildFunc) {
-        List<E> rootList = nodes.stream().filter(tree -> parentIdFunc.apply(tree).equals(rootId)).collect(Collectors.toList());
-        Set<T> filterOperated = new HashSet<>(rootList.size() + nodes.size());
+    public static <T, E> List<E> build(final List<E> nodes, final T rootId,
+                                       final Function<E, T> idFunc,
+                                       final Function<E, T> parentIdFunc,
+                                       final BiConsumer<E, List<E>> setChildFunc) {
+        List<E> rootList = nodes.stream().filter(tree -> parentIdFunc.apply(tree).equals(rootId))
+                .collect(Collectors.toList());
+        final Set<T> filterOperated = new HashSet<>(rootList.size() + nodes.size());
         // 对每个根节点都封装它的孩子节点
         rootList.forEach(root -> setChildren(root, nodes, filterOperated, idFunc, parentIdFunc, setChildFunc));
         return rootList;
@@ -314,7 +325,9 @@ public class TreeUtil {
      * @param <T>            节点ID类型
      * @param <E>            节点类型
      */
-    private static <T, E> void setChildren(E root, List<E> nodes, Set<T> filterOperated, Function<E, T> idFunc, Function<E, T> parentIdFunc, BiConsumer<E, List<E>> setChildFunc) {
+    private static <T, E> void setChildren(final E root, final List<E> nodes, final Set<T> filterOperated,
+            final Function<E, T> idFunc, final Function<E, T> parentIdFunc,
+            final BiConsumer<E, List<E>> setChildFunc) {
         List<E> children = new ArrayList<>();
         nodes.stream()
                 // 过滤出未操作过的节点
