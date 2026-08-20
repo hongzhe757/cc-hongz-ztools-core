@@ -11,6 +11,8 @@ import cc.hongz.ztools.core.lang.tree.Tree;
 @FunctionalInterface
 public interface NodeParser<T, E> {
     /**
+     * 解析实体为树节点.
+     *
      * @param object   源数据实体.
      * @param treeNode 树节点实体.
      */
