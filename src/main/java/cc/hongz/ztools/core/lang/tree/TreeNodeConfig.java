@@ -37,11 +37,11 @@ public class TreeNodeConfig implements Serializable {
     /**
      * 设置ID对应的名称.
      *
-     * @param idKey ID对应的名称
+     * @param newIdKey ID对应的名称
      * @return this
      */
-    public TreeNodeConfig setIdKey(String idKey) {
-        this.idKey = idKey;
+    public TreeNodeConfig setIdKey(final String newIdKey) {
+        this.idKey = newIdKey;
         return this;
     }
 
@@ -57,11 +57,11 @@ public class TreeNodeConfig implements Serializable {
     /**
      * 设置权重对应的名称.
      *
-     * @param weightKey 权重对应的名称
+     * @param newWeightKey 权重对应的名称
      * @return this
      */
-    public TreeNodeConfig setWeightKey(String weightKey) {
-        this.weightKey = weightKey;
+    public TreeNodeConfig setWeightKey(final String newWeightKey) {
+        this.weightKey = newWeightKey;
         return this;
     }
 
@@ -77,11 +77,11 @@ public class TreeNodeConfig implements Serializable {
     /**
      * 设置节点名对应的名称.
      *
-     * @param nameKey 节点名对应的名称
+     * @param newNameKey 节点名对应的名称
      * @return this
      */
-    public TreeNodeConfig setNameKey(String nameKey) {
-        this.nameKey = nameKey;
+    public TreeNodeConfig setNameKey(final String newNameKey) {
+        this.nameKey = newNameKey;
         return this;
     }
 
@@ -97,11 +97,11 @@ public class TreeNodeConfig implements Serializable {
     /**
      * 设置子点对应的名称.
      *
-     * @param childrenKey 子点对应的名称
+     * @param newChildrenKey 子点对应的名称
      * @return this
      */
-    public TreeNodeConfig setChildrenKey(String childrenKey) {
-        this.childrenKey = childrenKey;
+    public TreeNodeConfig setChildrenKey(final String newChildrenKey) {
+        this.childrenKey = newChildrenKey;
         return this;
     }
 
@@ -118,11 +118,11 @@ public class TreeNodeConfig implements Serializable {
     /**
      * 设置父点对应的名称.
      *
-     * @param parentIdKey 父点对应的名称
+     * @param newParentIdKey 父点对应的名称
      * @return this
      */
-    public TreeNodeConfig setParentIdKey(String parentIdKey) {
-        this.parentIdKey = parentIdKey;
+    public TreeNodeConfig setParentIdKey(final String newParentIdKey) {
+        this.parentIdKey = newParentIdKey;
         return this;
     }
 
@@ -138,11 +138,11 @@ public class TreeNodeConfig implements Serializable {
     /**
      * 设置递归深度.
      *
-     * @param deep 递归深度
+     * @param newDeep 递归深度
      * @return this
      */
-    public TreeNodeConfig setDeep(Integer deep) {
-        this.deep = deep;
+    public TreeNodeConfig setDeep(final Integer newDeep) {
+        this.deep = newDeep;
         return this;
     }
 }
