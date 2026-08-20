@@ -31,7 +31,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @param <T>    ID类型
      * @return TreeBuilder
      */
-    public static <T> TreeBuilder<T> of(T rootId) {
+    public static <T> TreeBuilder<T> of(final T rootId) {
         return of(rootId, null);
     }
 
@@ -43,7 +43,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @param <T>    ID类型
      * @return TreeBuilder
      */
-    public static <T> TreeBuilder<T> of(T rootId, TreeNodeConfig config) {
+    public static <T> TreeBuilder<T> of(final T rootId, final TreeNodeConfig config) {
         return new TreeBuilder<>(rootId, config);
     }
 
@@ -53,7 +53,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @param rootId 根节点ID
      * @param config 配置
      */
-    public TreeBuilder(E rootId, TreeNodeConfig config) {
+    public TreeBuilder(final E rootId, final TreeNodeConfig config) {
         this(new Tree<E>(config).setId(rootId));
     }
 
@@ -63,7 +63,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @param rootNode 根节点
      * @since 5.8.33
      */
-    public TreeBuilder(Tree<E> rootNode) {
+    public TreeBuilder(final Tree<E> rootNode) {
         this.root = rootNode;
         this.idTreeMap = new LinkedHashMap<>();
     }
@@ -75,7 +75,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @return this
      * @since 5.7.14
      */
-    public TreeBuilder<E> setId(E id) {
+    public TreeBuilder<E> setId(final E id) {
         this.root.setId(id);
         return this;
     }
@@ -87,7 +87,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @return this
      * @since 5.7.14
      */
-    public TreeBuilder<E> setParentId(E parentId) {
+    public TreeBuilder<E> setParentId(final E parentId) {
         this.root.setParentId(parentId);
         return this;
     }
@@ -99,7 +99,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @return this
      * @since 5.7.14
      */
-    public TreeBuilder<E> setName(CharSequence name) {
+    public TreeBuilder<E> setName(final CharSequence name) {
         this.root.setName(name);
         return this;
     }
@@ -111,7 +111,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @return this
      * @since 5.7.14
      */
-    public TreeBuilder<E> setWeight(Comparable<?> weight) {
+    public TreeBuilder<E> setWeight(final Comparable<?> weight) {
         this.root.setWeight(weight);
         return this;
     }
@@ -124,7 +124,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @return this
      * @since 5.7.14
      */
-    public TreeBuilder<E> putExtra(String key, Object value) {
+    public TreeBuilder<E> putExtra(final String key, final Object value) {
         Assert.notEmpty(key, "Key must be not empty !");
         this.root.put(key, value);
         return this;
@@ -136,7 +136,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @param map 节点列表
      * @return this
      */
-    public TreeBuilder<E> append(Map<E, Tree<E>> map) {
+    public TreeBuilder<E> append(final Map<E, Tree<E>> map) {
         checkBuilt();
 
         this.idTreeMap.putAll(map);
@@ -149,7 +149,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @param trees 节点列表
      * @return this
      */
-    public TreeBuilder<E> append(Iterable<Tree<E>> trees) {
+    public TreeBuilder<E> append(final Iterable<Tree<E>> trees) {
         checkBuilt();
 
         for (Tree<E> tree : trees) {
@@ -166,7 +166,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @param nodeParser 节点转换器，用于定义一个Bean如何转换为Tree节点
      * @return this
      */
-    public <T> TreeBuilder<E> append(List<T> list, NodeParser<T, E> nodeParser) {
+    public <T> TreeBuilder<E> append(final List<T> list, final NodeParser<T, E> nodeParser) {
         checkBuilt();
 
         final TreeNodeConfig config = this.root.getConfig();
@@ -205,7 +205,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @deprecated rootId参数可以不提供，在root节点中直接获取，请使用{@link #append(List, NodeParser)}
      */
     @Deprecated
-    public <T> TreeBuilder<E> append(List<T> list, E rootId, NodeParser<T, E> nodeParser) {
+    public <T> TreeBuilder<E> append(final List<T> list, final E rootId, final NodeParser<T, E> nodeParser) {
         checkBuilt();
 
         final TreeNodeConfig config = this.root.getConfig();
@@ -257,7 +257,8 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
     }
 
     /**
-     * 构建树列表，没有顶层节点，例如：
+     * 构建树列表，没有顶层节点。
+     * 例如：
      *
      * <pre>
      * -用户管理
@@ -324,7 +325,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
      * @param currentDepp 当前层级
      * @param maxDeep     最大层级
      */
-    private void cutTree(Tree<E> tree, int currentDepp, int maxDeep) {
+    private void cutTree(final Tree<E> tree, final int currentDepp, final int maxDeep) {
         if (null == tree) {
             return;
         }
