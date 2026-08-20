@@ -55,7 +55,7 @@ public class TreeNode<T> implements Node<T> {
      * @param name     名称
      * @param weight   权重
      */
-    public TreeNode(T id, T parentId, String name, Comparable<?> weight) {
+    public TreeNode(final T id, final T parentId, final String name, final Comparable<?> weight) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;
@@ -71,8 +71,8 @@ public class TreeNode<T> implements Node<T> {
     }
 
     @Override
-    public TreeNode<T> setId(T id) {
-        this.id = id;
+    public TreeNode<T> setId(final T newId) {
+        this.id = newId;
         return this;
     }
 
@@ -82,8 +82,8 @@ public class TreeNode<T> implements Node<T> {
     }
 
     @Override
-    public TreeNode<T> setParentId(T parentId) {
-        this.parentId = parentId;
+    public TreeNode<T> setParentId(final T newParentId) {
+        this.parentId = newParentId;
         return this;
     }
 
@@ -93,8 +93,8 @@ public class TreeNode<T> implements Node<T> {
     }
 
     @Override
-    public TreeNode<T> setName(CharSequence name) {
-        this.name = name;
+    public TreeNode<T> setName(final CharSequence newName) {
+        this.name = newName;
         return this;
     }
 
@@ -104,8 +104,8 @@ public class TreeNode<T> implements Node<T> {
     }
 
     @Override
-    public TreeNode<T> setWeight(Comparable<?> weight) {
-        this.weight = weight;
+    public TreeNode<T> setWeight(final Comparable<?> newWeight) {
+        this.weight = newWeight;
         return this;
     }
 
@@ -122,17 +122,17 @@ public class TreeNode<T> implements Node<T> {
     /**
      * 设置扩展字段.
      *
-     * @param extra 扩展字段
+     * @param newExtra 扩展字段
      * @return this
      * @since 5.2.5
      */
-    public TreeNode<T> setExtra(Map<String, Object> extra) {
-        this.extra = extra;
+    public TreeNode<T> setExtra(final Map<String, Object> newExtra) {
+        this.extra = newExtra;
         return this;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
