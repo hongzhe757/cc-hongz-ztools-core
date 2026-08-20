@@ -28,6 +28,9 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
     private final TreeNodeConfig treeNodeConfig;
     private Tree<T> parent;
 
+    /**
+     * 构造.
+     */
     public Tree() {
         this(null);
     }
@@ -37,7 +40,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      *
      * @param treeNodeConfig TreeNode配置
      */
-    public Tree(TreeNodeConfig treeNodeConfig) {
+    public Tree(final TreeNodeConfig treeNodeConfig) {
         this.treeNodeConfig = ObjectUtil.defaultIfNull(
                 treeNodeConfig, TreeNodeConfig.DEFAULT_CONFIG);
     }
@@ -70,7 +73,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @return 节点
      * @since 5.2.4
      */
-    public Tree<T> getNode(T id) {
+    public Tree<T> getNode(final T id) {
         return TreeUtil.getNode(this, id);
     }
 
@@ -86,7 +89,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @return 所有父节点名称列表
      * @since 5.2.4
      */
-    public List<CharSequence> getParentsName(T id, boolean includeCurrentNode) {
+    public List<CharSequence> getParentsName(final T id, final boolean includeCurrentNode) {
         return TreeUtil.getParentsName(getNode(id), includeCurrentNode);
     }
 
@@ -101,21 +104,21 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @return 所有父节点名称列表
      * @since 5.2.4
      */
-    public List<CharSequence> getParentsName(boolean includeCurrentNode) {
+    public List<CharSequence> getParentsName(final boolean includeCurrentNode) {
         return TreeUtil.getParentsName(this, includeCurrentNode);
     }
 
     /**
      * 设置父节点.
      *
-     * @param parent 父节点
+     * @param newParent 父节点
      * @return this
      * @since 5.2.4
      */
-    public Tree<T> setParent(Tree<T> parent) {
-        this.parent = parent;
-        if (null != parent) {
-            this.setParentId(parent.getId());
+    public Tree<T> setParent(final Tree<T> newParent) {
+        this.parent = newParent;
+        if (null != newParent) {
+            this.setParentId(newParent.getId());
         }
         return this;
     }
@@ -127,7 +130,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
     }
 
     @Override
-    public Tree<T> setId(T id) {
+    public Tree<T> setId(final T id) {
         this.put(treeNodeConfig.getIdKey(), id);
         return this;
     }
@@ -139,7 +142,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
     }
 
     @Override
-    public Tree<T> setParentId(T parentId) {
+    public Tree<T> setParentId(final T parentId) {
         this.put(treeNodeConfig.getParentIdKey(), parentId);
         return this;
     }
@@ -150,7 +153,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
     }
 
     @Override
-    public Tree<T> setName(CharSequence name) {
+    public Tree<T> setName(final CharSequence name) {
         this.put(treeNodeConfig.getNameKey(), name);
         return this;
     }
@@ -161,7 +164,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
     }
 
     @Override
-    public Tree<T> setWeight(Comparable<?> weight) {
+    public Tree<T> setWeight(final Comparable<?> weight) {
         this.put(treeNodeConfig.getWeightKey(), weight);
         return this;
     }
@@ -192,7 +195,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @param consumer 节点处理器
      * @since 5.7.16
      */
-    public void walk(Consumer<Tree<T>> consumer) {
+    public void walk(final Consumer<Tree<T>> consumer) {
         consumer.accept(this);
         final List<Tree<T>> children = getChildren();
         if (CollUtil.isNotEmpty(children)) {
@@ -209,7 +212,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @see #filter(Filter)
      * @since 5.7.17
      */
-    public Tree<T> filterNew(Filter<Tree<T>> filter) {
+    public Tree<T> filterNew(final Filter<Tree<T>> filter) {
         return cloneTree().filter(filter);
     }
 
@@ -222,7 +225,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @see #filterNew(Filter)
      * @since 5.7.17
      */
-    public Tree<T> filter(Filter<Tree<T>> filter) {
+    public Tree<T> filter(final Filter<Tree<T>> filter) {
         if (filter.accept(this)) {
             // 本节点满足，则包括所有子节点都保留
             return this;
@@ -257,7 +260,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @param children 子节点列表，如果为{@code null}表示移除子节点
      * @return this
      */
-    public Tree<T> setChildren(List<Tree<T>> children) {
+    public Tree<T> setChildren(final List<Tree<T>> children) {
         if (null == children) {
             this.remove(treeNodeConfig.getChildrenKey());
         }
@@ -273,7 +276,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @since 5.6.7
      */
     @SafeVarargs
-    public final Tree<T> addChildren(Tree<T>... children) {
+    public final Tree<T> addChildren(final Tree<T>... children) {
         if (ArrayUtil.isNotEmpty(children)) {
             List<Tree<T>> childrenList = this.getChildren();
             if (null == childrenList) {
@@ -294,7 +297,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @param key   键
      * @param value 扩展值
      */
-    public void putExtra(String key, Object value) {
+    public void putExtra(final String key, final Object value) {
         Assert.notEmpty(key, "Key must be not empty !");
         this.put(key, value);
     }
@@ -322,17 +325,17 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
     /**
      * 递归复制子节点.
      *
-     * @param parent 新的父节点
+     * @param newParent 新的父节点
      * @return 新的子节点列表
      */
-    private List<Tree<T>> cloneChildren(final Tree<T> parent) {
+    private List<Tree<T>> cloneChildren(final Tree<T> newParent) {
         final List<Tree<T>> children = getChildren();
         if (null == children) {
             return null;
         }
         final List<Tree<T>> newChildren = new ArrayList<>(children.size());
         children.forEach((t) -> {
-            newChildren.add(t.cloneTree().setParent(parent));
+            newChildren.add(t.cloneTree().setParent(newParent));
         });
         return newChildren;
     }
@@ -344,8 +347,9 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
      * @param writer Writer
      * @param intent 缩进量
      */
-    private static void printTree(Tree<?> tree, PrintWriter writer, int intent) {
-        writer.println(StrUtil.format("{}{}[{}]", StrUtil.repeat(CharUtil.SPACE, intent), tree.getName(), tree.getId()));
+    private static void printTree(final Tree<?> tree, final PrintWriter writer, final int intent) {
+        writer.println(StrUtil.format("{}{}[{}]", StrUtil.repeat(CharUtil.SPACE, intent),
+                tree.getName(), tree.getId()));
         writer.flush();
 
         final List<? extends Tree<?>> children = tree.getChildren();
