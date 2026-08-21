@@ -26,7 +26,7 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      * @param acceptClasses 白名单的类
      * @throws IOException IO异常
      */
-    public ValidateObjectInputStream(InputStream inputStream, Class<?>... acceptClasses) throws IOException {
+    public ValidateObjectInputStream(final InputStream inputStream, final Class<?>... acceptClasses) throws IOException {
         super(inputStream);
         accept(acceptClasses);
     }
@@ -36,7 +36,7 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      *
      * @param refuseClasses 禁止反序列化的类
      */
-    public void refuse(Class<?>... refuseClasses) {
+    public void refuse(final Class<?>... refuseClasses) {
         if (null == this.blackClassSet) {
             this.blackClassSet = new HashSet<>();
         }
@@ -50,7 +50,7 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      *
      * @param acceptClasses 接受反序列化的类
      */
-    public void accept(Class<?>... acceptClasses) {
+    public void accept(final Class<?>... acceptClasses) {
         if (null == this.whiteClassSet) {
             this.whiteClassSet = new HashSet<>();
         }
@@ -63,7 +63,7 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      * 只允许反序列化SerialObject class.
      */
     @Override
-    protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+    protected Class<?> resolveClass(final ObjectStreamClass desc) throws IOException, ClassNotFoundException {
         validateClassName(desc.getName());
         return super.resolveClass(desc);
     }
@@ -74,7 +74,7 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      * @param className 类名
      * @throws InvalidClassException 非法类
      */
-    private void validateClassName(String className) throws InvalidClassException {
+    private void validateClassName(final String className) throws InvalidClassException {
         // 黑名单
         if (this.blackClassSet != null && !this.blackClassSet.isEmpty()) {
             if (this.blackClassSet.contains(className)) {
