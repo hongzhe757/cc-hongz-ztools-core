@@ -126,9 +126,10 @@ public final class ActualTypeMapperPool {
     private static Map<Type, Type> createTypeMap(final Type type) {
         final Map<Type, Type> typeMap = new HashMap<>();
 
+        Type currentType = type;
         // 按继承层级寻找泛型变量和实际类型的对应关系
-        while (null != type) {
-            final ParameterizedType parameterizedType = TypeUtil.toParameterizedType(type);
+        while (null != currentType) {
+            final ParameterizedType parameterizedType = TypeUtil.toParameterizedType(currentType);
             if (null == parameterizedType) {
                 break;
             }
@@ -145,7 +146,7 @@ public final class ActualTypeMapperPool {
                 }
             }
 
-            type = rawType;
+            currentType = rawType;
         }
 
         return typeMap;
