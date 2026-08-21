@@ -9,16 +9,16 @@ package cc.hongz.ztools.core.lang.hash;
  */
 @FunctionalInterface
 public interface Hash32<T> extends Hash<T> {
-	/**
-	 * 计算Hash值.
-	 *
-	 * @param t 对象
-	 * @return hash
-	 */
-	int hash32(T t);
+    /**
+     * 计算Hash值.
+     *
+     * @param t 对象
+     * @return hash
+     */
+    int hash32(T t);
 
-	@Override
-	default Number hash(T t) {
-		return hash32(t);
-	}
+    @Override
+    default Number hash(T t) {
+        return hash32(t);
+    }
 }

@@ -9,11 +9,11 @@ package cc.hongz.ztools.core.lang.hash;
  */
 @FunctionalInterface
 public interface Hash<T> {
-	/**
-	 * 计算Hash值.
-	 *
-	 * @param t 对象
-	 * @return hash
-	 */
-	Number hash(T t);
+    /**
+     * 计算Hash值.
+     *
+     * @param t 对象
+     * @return hash
+     */
+    Number hash(T t);
 }

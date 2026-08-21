@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.lang.ansi;
 import cc.hongz.ztools.core.util.StrUtil;
 
 /**
- * ANSI背景颜色枚举
+ * ANSI背景颜色枚举.
  *
  * <p>来自Spring Boot</p>
  *
@@ -12,110 +12,110 @@ import cc.hongz.ztools.core.util.StrUtil;
  */
 public enum AnsiBackground implements AnsiElement {
 
-	/**
-	 * 默认背景色
-	 */
-	DEFAULT(49),
+    /**
+     * 默认背景色.
+     */
+    DEFAULT(49),
 
-	/**
-	 * 黑色
-	 */
-	BLACK(40),
+    /**
+     * 黑色.
+     */
+    BLACK(40),
 
-	/**
-	 * 红
-	 */
-	RED(41),
+    /**
+     * 红.
+     */
+    RED(41),
 
-	/**
-	 * 绿
-	 */
-	GREEN(42),
+    /**
+     * 绿.
+     */
+    GREEN(42),
 
-	/**
-	 * 黄
-	 */
-	YELLOW(43),
+    /**
+     * 黄.
+     */
+    YELLOW(43),
 
-	/**
-	 * 蓝
-	 */
-	BLUE(44),
+    /**
+     * 蓝.
+     */
+    BLUE(44),
 
-	/**
-	 * 品红
-	 */
-	MAGENTA(45),
+    /**
+     * 品红.
+     */
+    MAGENTA(45),
 
-	/**
-	 * 青
-	 */
-	CYAN(46),
+    /**
+     * 青.
+     */
+    CYAN(46),
 
-	/**
-	 * 白
-	 */
-	WHITE(47),
+    /**
+     * 白.
+     */
+    WHITE(47),
 
-	/**
-	 * 亮黑
-	 */
-	BRIGHT_BLACK(100),
+    /**
+     * 亮黑.
+     */
+    BRIGHT_BLACK(100),
 
-	/**
-	 * 亮红
-	 */
-	BRIGHT_RED(101),
+    /**
+     * 亮红.
+     */
+    BRIGHT_RED(101),
 
-	/**
-	 * 亮绿
-	 */
-	BRIGHT_GREEN(102),
+    /**
+     * 亮绿.
+     */
+    BRIGHT_GREEN(102),
 
-	/**
-	 * 亮黄
-	 */
-	BRIGHT_YELLOW(103),
+    /**
+     * 亮黄.
+     */
+    BRIGHT_YELLOW(103),
 
-	/**
-	 * 亮蓝
-	 */
-	BRIGHT_BLUE(104),
+    /**
+     * 亮蓝.
+     */
+    BRIGHT_BLUE(104),
 
-	/**
-	 * 亮品红
-	 */
-	BRIGHT_MAGENTA(105),
+    /**
+     * 亮品红.
+     */
+    BRIGHT_MAGENTA(105),
 
-	/**
-	 * 亮青
-	 */
-	BRIGHT_CYAN(106),
+    /**
+     * 亮青.
+     */
+    BRIGHT_CYAN(106),
 
-	/**
-	 * 亮白
-	 */
-	BRIGHT_WHITE(107);
+    /**
+     * 亮白.
+     */
+    BRIGHT_WHITE(107);
 
-	private final int code;
+    private final int code;
 
-	AnsiBackground(int code) {
-		this.code = code;
-	}
+    AnsiBackground(final int code) {
+        this.code = code;
+    }
 
-	/**
-	 * 获取ANSI颜色代码
-	 *
-	 * @return 颜色代码
-	 */
-	@Override
-	public int getCode() {
-		return this.code;
-	}
+    /**
+     * 获取ANSI颜色代码.
+     *
+     * @return 颜色代码
+     */
+    @Override
+    public int getCode() {
+        return this.code;
+    }
 
-	@Override
-	public String toString() {
-		return StrUtil.toString(this.code);
-	}
+    @Override
+    public String toString() {
+        return StrUtil.toString(this.code);
+    }
 
 }
