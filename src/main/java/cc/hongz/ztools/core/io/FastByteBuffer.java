@@ -8,10 +8,13 @@ package cc.hongz.ztools.core.io;
  */
 public class FastByteBuffer {
 
+    private static final int DEFAULT_BUFFERS_COUNT = 16;
+    private static final int DEFAULT_CHUNK_LEN = 1024;
+
     /**
      * 缓冲集.
      */
-    private byte[][] buffers = new byte[16][];
+    private byte[][] buffers = new byte[DEFAULT_BUFFERS_COUNT][];
     /**
      * 缓冲数.
      */
@@ -38,15 +41,21 @@ public class FastByteBuffer {
      */
     private final int minChunkLen;
 
+    /**
+     * 构造，默认缓冲字节数.
+     */
     public FastByteBuffer() {
-        this(1024);
+        this(DEFAULT_CHUNK_LEN);
     }
 
-    public FastByteBuffer(int size) {
-        if (size <= 0) {
-            size = 1024;
-        }
-        this.minChunkLen = Math.abs(size);
+    /**
+     * 构造.
+     *
+     * @param size 缓冲字节数
+     */
+    public FastByteBuffer(final int size) {
+        final int actualSize = size <= 0 ? DEFAULT_CHUNK_LEN : size;
+        this.minChunkLen = Math.abs(actualSize);
     }
 
     /**
@@ -54,7 +63,7 @@ public class FastByteBuffer {
      *
      * @param newSize 理想缓冲区字节数
      */
-    private void needNewBuffer(int newSize) {
+    private void needNewBuffer(final int newSize) {
         int delta = newSize - size;
         int newBufferSize = Math.max(minChunkLen, delta);
 
@@ -81,7 +90,7 @@ public class FastByteBuffer {
      * @param len   字节数
      * @return 快速缓冲自身
      */
-    public FastByteBuffer append(byte[] array, int off, int len) {
+    public FastByteBuffer append(final byte[] array, final int off, final int len) {
         int end = off + len;
         if ((off < 0) || (len < 0) || (end > array.length)) {
             throw new IndexOutOfBoundsException();
@@ -123,7 +132,7 @@ public class FastByteBuffer {
      * @param array 数据
      * @return 快速缓冲自身
      */
-    public FastByteBuffer append(byte[] array) {
+    public FastByteBuffer append(final byte[] array) {
         return append(array, 0, array.length);
     }
 
@@ -133,7 +142,7 @@ public class FastByteBuffer {
      * @param element 一个字节的数据
      * @return 快速缓冲自身
      */
-    public FastByteBuffer append(byte element) {
+    public FastByteBuffer append(final byte element) {
         if ((currentBuffer == null) || (offset == currentBuffer.length)) {
             needNewBuffer(size + 1);
         }
@@ -151,7 +160,7 @@ public class FastByteBuffer {
      * @param buff 快速缓冲
      * @return 快速缓冲自身
      */
-    public FastByteBuffer append(FastByteBuffer buff) {
+    public FastByteBuffer append(final FastByteBuffer buff) {
         if (buff.size == 0) {
             return this;
         }
@@ -162,6 +171,11 @@ public class FastByteBuffer {
         return this;
     }
 
+    /**
+     * 获取缓冲字节数.
+     *
+     * @return 缓冲字节数
+     */
     public int size() {
         return size;
     }
@@ -179,6 +193,11 @@ public class FastByteBuffer {
         return currentBufferIndex;
     }
 
+    /**
+     * 获取当前缓冲偏移量.
+     *
+     * @return 当前缓冲偏移量
+     */
     public int offset() {
         return offset;
     }
@@ -189,10 +208,13 @@ public class FastByteBuffer {
      * @param index 索引位
      * @return 缓冲
      */
-    public byte[] array(int index) {
+    public byte[] array(final int index) {
         return buffers[index];
     }
 
+    /**
+     * 重置缓冲区.
+     */
     public void reset() {
         size = 0;
         offset = 0;
@@ -232,31 +254,32 @@ public class FastByteBuffer {
      * @param len   逻辑字节长
      * @return 快速缓冲中的数据
      */
-    public byte[] toArray(int start, int len) {
+    public byte[] toArray(final int start, final int len) {
         int remaining = len;
         int pos = 0;
         byte[] array = new byte[len];
+        int start0 = start;
 
         if (len == 0) {
             return array;
         }
 
         int i = 0;
-        while (start >= buffers[i].length) {
-            start -= buffers[i].length;
+        while (start0 >= buffers[i].length) {
+            start0 -= buffers[i].length;
             i++;
         }
 
         while (i < buffersCount) {
             byte[] buf = buffers[i];
-            int c = Math.min(buf.length - start, remaining);
-            System.arraycopy(buf, start, array, pos, c);
+            int c = Math.min(buf.length - start0, remaining);
+            System.arraycopy(buf, start0, array, pos, c);
             pos += c;
             remaining -= c;
             if (remaining == 0) {
                 break;
             }
-            start = 0;
+            start0 = 0;
             i++;
         }
         return array;
@@ -268,18 +291,19 @@ public class FastByteBuffer {
      * @param index 索引位
      * @return 一个字节
      */
-    public byte get(int index) {
+    public byte get(final int index) {
         if ((index >= size) || (index < 0)) {
             throw new IndexOutOfBoundsException();
         }
+        int index0 = index;
         int ndx = 0;
         while (true) {
             byte[] b = buffers[ndx];
-            if (index < b.length) {
-                return b[index];
+            if (index0 < b.length) {
+                return b[index0];
             }
             ndx++;
-            index -= b.length;
+            index0 -= b.length;
         }
     }
 
