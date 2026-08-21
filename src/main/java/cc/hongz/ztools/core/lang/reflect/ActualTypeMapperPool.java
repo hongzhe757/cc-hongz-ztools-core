@@ -20,9 +20,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Looly
  * @since 5.4.2
  */
-public class ActualTypeMapperPool {
+public final class ActualTypeMapperPool {
 
     private static final ConcurrentHashMap<Type, Map<Type, Type>> CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * 私有构造，禁止实例化.
+     */
+    private ActualTypeMapperPool() {
+    }
 
     /**
      * 获取泛型变量和泛型实际类型的对应关系Map.
@@ -30,7 +36,7 @@ public class ActualTypeMapperPool {
      * @param type 被解析的包含泛型参数的类
      * @return 泛型对应关系Map
      */
-    public static Map<Type, Type> get(Type type) {
+    public static Map<Type, Type> get(final Type type) {
         return CACHE.computeIfAbsent(type, (key) -> createTypeMap(type));
     }
 
@@ -41,7 +47,7 @@ public class ActualTypeMapperPool {
      * @return 泛型对应关系Map
      * @since 5.7.16
      */
-    public static Map<String, Type> getStrKeyMap(Type type) {
+    public static Map<String, Type> getStrKeyMap(final Type type) {
         final Map<Type, Type> typeMap = get(type);
         final Map<String, Type> result = new HashMap<>(typeMap.size());
         for (Map.Entry<Type, Type> entry : typeMap.entrySet()) {
@@ -57,7 +63,7 @@ public class ActualTypeMapperPool {
      * @param typeVariable 泛型变量，例如T等
      * @return 实际类型，可能为Class等
      */
-    public static Type getActualType(Type type, TypeVariable<?> typeVariable) {
+    public static Type getActualType(final Type type, final TypeVariable<?> typeVariable) {
         final Map<Type, Type> typeTypeMap = get(type);
         Type result = typeTypeMap.get(typeVariable);
         while (result instanceof TypeVariable) {
@@ -74,7 +80,7 @@ public class ActualTypeMapperPool {
      * @return 实际类型，可能为Class等
      * @since 5.8.37
      */
-    public static Type getActualType(Type type, GenericArrayType genericArrayType) {
+    public static Type getActualType(final Type type, final GenericArrayType genericArrayType) {
         final Map<Type, Type> typeTypeMap = get(type);
         Type actualType = typeTypeMap.get(genericArrayType);
 
@@ -100,7 +106,7 @@ public class ActualTypeMapperPool {
      * @param typeVariables 泛型变量，需要的实际类型对应的泛型参数
      * @return 给定泛型参数对应的实际类型，如果无对应类型，对应位置返回null
      */
-    public static Type[] getActualTypes(Type type, Type... typeVariables) {
+    public static Type[] getActualTypes(final Type type, final Type... typeVariables) {
         // 查找方法定义所在类或接口中此泛型参数的位置
         final Type[] result = new Type[typeVariables.length];
         for (int i = 0; i < typeVariables.length; i++) {
@@ -117,7 +123,7 @@ public class ActualTypeMapperPool {
      * @param type 被解析的包含泛型参数的类
      * @return 泛型对应关系Map
      */
-    private static Map<Type, Type> createTypeMap(Type type) {
+    private static Map<Type, Type> createTypeMap(final Type type) {
         final Map<Type, Type> typeMap = new HashMap<>();
 
         // 按继承层级寻找泛型变量和实际类型的对应关系

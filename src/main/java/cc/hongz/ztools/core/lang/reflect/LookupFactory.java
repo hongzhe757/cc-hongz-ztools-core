@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
  * @author looly
  * @since 5.7.7
  */
-public class LookupFactory {
+public final class LookupFactory {
 
     private static final int ALLOWED_MODES = MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
             | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC;
@@ -27,12 +27,19 @@ public class LookupFactory {
     private static Constructor<MethodHandles.Lookup> java8LookupConstructor;
     private static Method privateLookupInMethod;
 
+    /**
+     * 私有构造，禁止实例化.
+     */
+    private LookupFactory() {
+    }
+
     static {
         // 先查询jdk9 开始提供的java.lang.invoke.MethodHandles.privateLookupIn方法,
         // 如果没有说明是jdk8的版本.(不考虑jdk8以下版本)
         try {
             // noinspection JavaReflectionMemberAccess
-            privateLookupInMethod = MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class);
+            privateLookupInMethod = MethodHandles.class.getMethod(
+                    "privateLookupIn", Class.class, MethodHandles.Lookup.class);
         } catch (NoSuchMethodException ignore) {
             // ignore
         }
@@ -46,7 +53,8 @@ public class LookupFactory {
             } catch (NoSuchMethodException e) {
                 // 可能是 jdk8 以下版本
                 throw new IllegalStateException(
-                        "There is neither 'privateLookupIn(Class, Lookup)' nor 'Lookup(Class, int)' method in java.lang.invoke.MethodHandles.", e);
+                        "There is neither 'privateLookupIn(Class, Lookup)' nor 'Lookup(Class, int)' method "
+                                + "in java.lang.invoke.MethodHandles.", e);
             }
         }
     }
@@ -58,11 +66,12 @@ public class LookupFactory {
      * @param callerClass 被调用的类或接口
      * @return {@link MethodHandles.Lookup}
      */
-    public static MethodHandles.Lookup lookup(Class<?> callerClass) {
+    public static MethodHandles.Lookup lookup(final Class<?> callerClass) {
         // 使用反射,因为当前jdk可能不是java9或以上版本
         if (privateLookupInMethod != null) {
             try {
-                return (MethodHandles.Lookup) privateLookupInMethod.invoke(MethodHandles.class, callerClass, MethodHandles.lookup());
+                return (MethodHandles.Lookup) privateLookupInMethod.invoke(
+                        MethodHandles.class, callerClass, MethodHandles.lookup());
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new UtilException(e);
             }
