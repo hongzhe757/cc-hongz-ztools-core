@@ -54,15 +54,15 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
     /**
      * 设置值.
      *
-     * @param value 值
+     * @param newValue 值
      */
-    public void set(final int value) {
-        this.value = value;
+    public void set(final int newValue) {
+        this.value = newValue;
     }
 
     @Override
-    public void set(final Number value) {
-        this.value = value.intValue();
+    public void set(final Number newValue) {
+        this.value = newValue.intValue();
     }
 
     /**

@@ -53,15 +53,15 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
     /**
      * 设置值.
      *
-     * @param value 值
+     * @param newValue 值
      */
-    public void set(final double value) {
-        this.value = value;
+    public void set(final double newValue) {
+        this.value = newValue;
     }
 
     @Override
-    public void set(final Number value) {
-        this.value = value.doubleValue();
+    public void set(final Number newValue) {
+        this.value = newValue.doubleValue();
     }
 
     // -----------------------------------------------------------------------
@@ -153,7 +153,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 
     // -----------------------------------------------------------------------
     /**
-     * 相等需同时满足如下条件：
+     * 相等需同时满足如下条件.
      * <ol>
      *     <li>非空</li>
      *     <li>类型为 {@code MutableDouble}</li>
