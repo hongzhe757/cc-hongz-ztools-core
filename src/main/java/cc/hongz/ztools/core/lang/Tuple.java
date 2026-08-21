@@ -73,12 +73,12 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
      * 缓存Hash值，当为true时，此对象的hash值只被计算一次，常用于Tuple中的值不变时使用。
      * 注意：当为true时，member变更对象后，hash值不会变更。
      *
-     * @param cacheHash 是否缓存hash值
+     * @param newCacheHash 是否缓存hash值
      * @return this
      * @since 5.2.1
      */
-    public Tuple setCacheHash(final boolean cacheHash) {
-        this.cacheHash = cacheHash;
+    public Tuple setCacheHash(final boolean newCacheHash) {
+        this.cacheHash = newCacheHash;
         return this;
     }
 
