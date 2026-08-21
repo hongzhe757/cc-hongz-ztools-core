@@ -38,6 +38,7 @@ class EnumItemTest {
     }
 
     @Test
+    @DisplayName("fromInt 整数转枚举")
     void fromIntTest() {
         assertEquals(TestEnum.A, TestEnum.A.fromInt(1));
         assertEquals(TestEnum.B, TestEnum.A.fromInt(2));
@@ -46,6 +47,7 @@ class EnumItemTest {
     }
 
     @Test
+    @DisplayName("fromStr 字符串转枚举")
     void fromStrTest() {
         assertEquals(TestEnum.A, TestEnum.A.fromStr("A"));
         assertNull(TestEnum.A.fromStr("C"));
@@ -53,6 +55,7 @@ class EnumItemTest {
     }
 
     @Test
+    @DisplayName("textAndItems 文本与枚举项")
     void textAndItemsTest() {
         assertEquals("甲", TestEnum.A.text());
         assertEquals(2, TestEnum.A.items().length);

@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class EditorTest {
 
     @Test
+    @DisplayName("edit 修改对象")
     void editModifyTest() {
         // 修改对象
         final Editor<String> editor = String::toUpperCase;
@@ -22,6 +23,7 @@ class EditorTest {
     }
 
     @Test
+    @DisplayName("edit 抛弃对象")
     void editDiscardTest() {
         // 返回 null 表示抛弃
         final Editor<String> editor = s -> s.startsWith("a") ? null : s;

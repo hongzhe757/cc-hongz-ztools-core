@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class OptTest {
 
     @Test
+    @DisplayName("ofBlankAble 空字符串处理")
     void ofBlankAbleTest() {
         // ofBlankAble相对于ofNullable考虑了字符串为空串的情况
         final String hutool = Opt.ofBlankAble("").orElse("hutool");
@@ -29,6 +30,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("get 获取不抛异常")
     void getTest() {
         // 和原版Optional有区别的是，get不会抛出NoSuchElementException
         // 如果想使用原版Optional中的get这样，获取一个一定不为空的值，则应该使用orElseThrow
@@ -37,6 +39,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("isEmpty 判空")
     void isEmptyTest() {
         // 这是jdk11 Optional中的新函数，直接照搬了过来
         // 判断包裹内元素是否为空，注意并没有判断空字符串的情况
@@ -46,6 +49,7 @@ class OptTest {
 
     @Test
     @Disabled
+    @DisplayName("ifPresentOrElse 消费与折叠")
     void ifPresentOrElseTest() {
         // 存在就打印对应的值，不存在则用{@code System.err.println}打印另一句字符串
         Opt.ofNullable("Hello Hutool!").ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"));
@@ -58,6 +62,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("peek 链式消费")
     void peekTest() {
         final User user = new User();
         // 相当于ifPresent的链式调用
@@ -71,6 +76,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("peeks 动态参数消费")
     void peeksTest() {
         final User user = new User();
         // 相当于上面peek的动态参数调用，更加灵活，你可以像操作数组一样去动态设置中间的步骤，也可以使用这种方式去编写你的代码
@@ -99,6 +105,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("or 替代值")
     void orTest() {
         // 这是jdk9 Optional中的新函数，直接照搬了过来
         // 给一个替代的Opt
@@ -113,6 +120,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("orElseThrow 无参异常抛出")
     void orElseThrowTest() {
         assertThrows(NoSuchElementException.class, () -> {
             // 获取一个不可能为空的值，否则抛出NoSuchElementException异常
@@ -122,6 +130,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("orElseThrow 自定义异常")
     void orElseThrowTest2() {
         assertThrows(IllegalStateException.class, () -> {
             // 获取一个不可能为空的值，否则抛出自定义异常
@@ -131,6 +140,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("orElseThrow 带消息异常")
     void orElseThrowTest3() {
         assertThrows(IllegalStateException.class, () -> {
             // 获取一个不可能为空的值，否则抛出带自定义消息的自定义异常
@@ -140,6 +150,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("flattedMap 流式 flatMap")
     void flattedMapTest() {
         // 和Optional兼容的flatMap
         final List<User> userList = new ArrayList<>();
@@ -153,6 +164,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("ofEmptyAble 空集合处理")
     void ofEmptyAbleTest() {
         // 以前，输入一个CollectionUtil感觉要命，类似前缀的类一大堆，代码补全形同虚设(在项目中起码要输入完CollectionUtil才能在第一个调出这个函数)
         // 关键它还很常用，判空和判空集合真的太常用了...
@@ -164,6 +176,7 @@ class OptTest {
     }
 
     @Test
+    @DisplayName("mapOrElse 转换或兜底")
     void mapOrElseTest() {
         // 如果值存在就转换为大写，否则打印一句字符串，支持链式调用、转换为其他类型
         final String hutool = Opt.ofBlankAble("hutool").mapOrElse(String::toUpperCase, () -> Console.log("yes")).mapOrElse(String::intern, () -> Console.log("Value is not present~")).get();
@@ -172,6 +185,7 @@ class OptTest {
 
     @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "ConstantConditions"})
     @Test
+    @DisplayName("execTry 异常捕获")
     void execTest() {
         // 有一些资深的程序员跟我说你这个lambda，双冒号语法糖看不懂...
         // 为了尊重资深程序员的意见，并且提升代码可读性，封装了一下 "try catch NPE 和 数组越界"的情况

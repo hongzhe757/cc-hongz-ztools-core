@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FilterTest {
 
     @Test
+    @DisplayName("accept 过滤条件")
     void acceptTest() {
         final Filter<String> filter = s -> s != null && s.contains("h");
         assertTrue(filter.accept("hutool"));

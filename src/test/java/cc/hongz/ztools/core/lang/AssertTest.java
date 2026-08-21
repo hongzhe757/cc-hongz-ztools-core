@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AssertTest {
 
     @Test
+    @DisplayName("isTrue/isFalse 真假断言")
     void isTrueFalseTest() {
         Assert.isTrue(true);
         assertThrows(IllegalArgumentException.class, () -> Assert.isTrue(false));
@@ -30,18 +31,21 @@ class AssertTest {
     }
 
     @Test
+    @DisplayName("isNull/notNull 空值检查")
     void isNullTest() {
         Assert.isNull(null);
         assertThrows(IllegalArgumentException.class, () -> Assert.isNull("x"));
     }
 
     @Test
+    @DisplayName("notNull 非空断言")
     void notNullTest() {
         assertEquals("a", Assert.notNull("a"));
         assertThrows(IllegalArgumentException.class, () -> Assert.notNull(null));
     }
 
     @Test
+    @DisplayName("notBlank 非空白字符串")
     void notBlankTest() {
         assertEquals("a", Assert.notBlank("a"));
         assertThrows(IllegalArgumentException.class, () -> Assert.notBlank(" "));
@@ -49,6 +53,7 @@ class AssertTest {
     }
 
     @Test
+    @DisplayName("notEmpty CharSequence")
     void notEmptyCharSequenceTest() {
         assertEquals("a", Assert.notEmpty("a"));
         assertThrows(IllegalArgumentException.class, () -> Assert.notEmpty(""));
@@ -56,12 +61,14 @@ class AssertTest {
     }
 
     @Test
+    @DisplayName("notEmpty 数组")
     void notEmptyArrayTest() {
         assertEquals(1, Assert.notEmpty(new Integer[]{1})[0]);
         assertThrows(IllegalArgumentException.class, () -> Assert.notEmpty(new Integer[]{}));
     }
 
     @Test
+    @DisplayName("notEmpty 集合")
     void notEmptyCollectionTest() {
         final List<String> list = new ArrayList<>();
         list.add("a");
@@ -70,6 +77,7 @@ class AssertTest {
     }
 
     @Test
+    @DisplayName("notEmpty Map")
     void notEmptyMapTest() {
         final Map<String, String> map = new HashMap<>();
         map.put("a", "b");
@@ -78,18 +86,21 @@ class AssertTest {
     }
 
     @Test
+    @DisplayName("notContain 不包含")
     void notContainTest() {
         assertEquals("d", Assert.notContain("abc", "d"));
         assertThrows(IllegalArgumentException.class, () -> Assert.notContain("abc", "b"));
     }
 
     @Test
+    @DisplayName("noNullElements 无 null 元素")
     void noNullElementsTest() {
         assertEquals(1, Assert.noNullElements(new Object[]{1})[0]);
         assertThrows(IllegalArgumentException.class, () -> Assert.noNullElements(new Object[]{null}));
     }
 
     @Test
+    @DisplayName("empty 空集合断言")
     void emptyCollectionTest() {
         Assert.empty(Collections.emptyList());
         final List<String> list = new ArrayList<>();
@@ -98,24 +109,28 @@ class AssertTest {
     }
 
     @Test
+    @DisplayName("isInstanceOf 类型检查")
     void isInstanceOfTest() {
         assertEquals("x", Assert.isInstanceOf(String.class, "x"));
         assertThrows(IllegalArgumentException.class, () -> Assert.isInstanceOf(Integer.class, "x"));
     }
 
     @Test
+    @DisplayName("isAssignable 赋值兼容")
     void isAssignableTest() {
         Assert.isAssignable(Number.class, Integer.class);
         assertThrows(IllegalArgumentException.class, () -> Assert.isAssignable(Integer.class, String.class));
     }
 
     @Test
+    @DisplayName("state 状态检查")
     void stateTest() {
         Assert.state(true);
         assertThrows(IllegalStateException.class, () -> Assert.state(false));
     }
 
     @Test
+    @DisplayName("checkIndex 索引检查")
     void checkIndexTest() {
         assertEquals(0, Assert.checkIndex(0, 5));
         assertThrows(IndexOutOfBoundsException.class, () -> Assert.checkIndex(5, 5));
@@ -123,6 +138,7 @@ class AssertTest {
     }
 
     @Test
+    @DisplayName("checkBetween 范围检查")
     void checkBetweenTest() {
         assertEquals(5, Assert.checkBetween(5, 1, 10));
         assertThrows(IllegalArgumentException.class, () -> Assert.checkBetween(11, 1, 10));
@@ -132,12 +148,14 @@ class AssertTest {
     }
 
     @Test
+    @DisplayName("notEquals 不相等")
     void notEqualsTest() {
         Assert.notEquals(1, 2);
         assertThrows(IllegalArgumentException.class, () -> Assert.notEquals(1, 1));
     }
 
     @Test
+    @DisplayName("equals 相等")
     void equalsTest() {
         Assert.equals(1, 1);
         assertThrows(IllegalArgumentException.class, () -> Assert.equals(1, 2));

@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MatcherTest {
 
     @Test
+    @DisplayName("match 匹配条件")
     void matchTest() {
         final Matcher<String> matcher = s -> s != null && s.startsWith("h");
         assertTrue(matcher.match("hutool"));

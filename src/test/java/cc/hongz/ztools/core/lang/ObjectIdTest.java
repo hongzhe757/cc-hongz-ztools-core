@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ObjectIdTest {
 
     @Test
+    @DisplayName("distinct 唯一性")
     void distinctTest() {
         // 生成10000个id测试是否重复
         final HashSet<String> set = new HashSet<>();
@@ -28,6 +29,7 @@ class ObjectIdTest {
 
     @Test
     @Disabled
+    @DisplayName("next 手动验证")
     void nextTest() {
         Console.log(ObjectId.next());
     }

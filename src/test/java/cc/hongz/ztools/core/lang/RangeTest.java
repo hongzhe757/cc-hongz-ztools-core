@@ -6,6 +6,7 @@ import cc.hongz.ztools.core.date.DateTime;
 import cc.hongz.ztools.core.date.DateUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,9 +17,11 @@ import java.util.NoSuchElementException;
  *
  * @author Looly
  */
+@DisplayName("Range 范围生成器")
 public class RangeTest {
 
     @Test
+    @DisplayName("dateRange 日期范围")
     public void dateRangeTest() {
         DateTime start = DateUtil.parse("2017-01-01");
         DateTime end = DateUtil.parse("2017-01-02");
@@ -38,6 +41,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("dateRangeFunc 范围函数")
     public void dateRangeFuncTest() {
         DateTime start = DateUtil.parse("2021-01-01");
         DateTime end = DateUtil.parse("2021-01-03");
@@ -50,6 +54,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("dateRangeConsume 范围消费")
     public void dateRangeConsumeTest() {
         DateTime start = DateUtil.parse("2021-01-01");
         DateTime end = DateUtil.parse("2021-01-03");
@@ -64,6 +69,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("dateRange 月范围")
     public void dateRangeTest2() {
         DateTime start = DateUtil.parse("2021-01-31");
         DateTime end = DateUtil.parse("2021-03-31");
@@ -80,6 +86,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("intRange 整数范围")
     public void intRangeTest() {
         final Range<Integer> range = new Range<>(1, 1, (current, end, index) -> current >= end ? null : current + 10);
 
@@ -89,6 +96,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("rangeByStep 步进范围")
     public void rangeByStepTest() {
         DateTime start = DateUtil.parse("2017-01-01");
         DateTime end = DateUtil.parse("2017-01-03");
@@ -111,6 +119,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("rangeDayOfYear 不含首尾")
     public void rangeDayOfYearTest() {
         DateTime start = DateUtil.parse("2017-01-01");
         DateTime end = DateUtil.parse("2017-01-05");
@@ -128,6 +137,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("rangeToList 范围转列表")
     public void rangeToListTest() {
         DateTime start = DateUtil.parse("2017-01-01");
         DateTime end = DateUtil.parse("2017-01-31");
@@ -139,6 +149,7 @@ public class RangeTest {
 
 
     @Test
+    @DisplayName("rangeContains 范围交集")
     public void rangeContains() {
         // 开始区间
         DateTime start = DateUtil.parse("2017-01-01");
@@ -155,6 +166,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("rangeNotContains 范围差集")
     public void rangeNotContains() {
         // 开始区间
         DateTime start = DateUtil.parse("2017-01-01");
@@ -172,6 +184,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("reset 重置范围")
     public void resetTest() {
         final Range<Integer> range = new Range<>(1, 3, (current, end, index) -> current >= end ? null : current + 1);
         assertEquals(Integer.valueOf(1), range.next());
@@ -186,6 +199,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("disableLock 禁用锁")
     public void disableLockTest() {
         final Range<Integer> range = new Range<>(1, 3, (current, end, index) -> current >= end ? null : current + 1);
         assertSame(range, range.disableLock());
@@ -197,12 +211,14 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("remove 不支持异常")
     public void removeThrowsTest() {
         final Range<Integer> range = new Range<>(1, 3, (current, end, index) -> current >= end ? null : current + 1);
         assertThrows(UnsupportedOperationException.class, range::remove);
     }
 
     @Test
+    @DisplayName("includeStartFalse 不含起始")
     public void includeStartFalseTest() {
         // 不包含起始元素
         final Range<Integer> range = new Range<>(1, 5, (current, end, index) -> current >= end ? null : current + 1,
@@ -215,6 +231,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("includeEndFalse 不含结束")
     public void includeEndFalseTest() {
         // 不包含结束元素
         final Range<Integer> range = new Range<>(1, 5, (current, end, index) -> current >= end ? null : current + 1,
@@ -227,6 +244,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("bothIncludeExcludeFalse 首尾皆不含")
     public void bothIncludeExcludeFalseTest() {
         // 既不包含起始也不包含结束
         final Range<Integer> range = new Range<>(1, 3, (current, end, index) -> current >= end ? null : current + 1,
@@ -236,6 +254,7 @@ public class RangeTest {
     }
 
     @Test
+    @DisplayName("nullStepperReturnsNull 步进返回 null")
     public void nullStepperReturnsNullTest() {
         // stepper 返回 null 时 hasNext 应为 false
         final Range<Integer> range = new Range<>(1, null, (current, end, index) -> null);

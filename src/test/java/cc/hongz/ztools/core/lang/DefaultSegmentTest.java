@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class DefaultSegmentTest {
 
     @Test
+    @DisplayName("getIndex 起止索引")
     void getIndexTest() {
         final DefaultSegment<Integer> segment = new DefaultSegment<>(1, 10);
         assertEquals(1, segment.getStartIndex());

@@ -28,6 +28,7 @@ class JarClassLoaderTest {
     }
 
     @Test
+    @DisplayName("constructor 构造器")
     void constructorTest() {
         final JarClassLoader loader = new JarClassLoader();
         assertNotNull(loader);
@@ -37,6 +38,7 @@ class JarClassLoaderTest {
     }
 
     @Test
+    @DisplayName("loadJar 加载jar")
     void loadJarTest() throws Exception {
         final JarClassLoader loader = JarClassLoader.loadJar(jarFile());
         final Class<?> clazz = loader.loadClass("org.junit.jupiter.api.Test");
@@ -44,6 +46,7 @@ class JarClassLoaderTest {
     }
 
     @Test
+    @DisplayName("load 加载目录")
     void loadDirTest() throws Exception {
         // 加载 jar 所在目录，应递归找到其中的 jar
         final JarClassLoader loader = JarClassLoader.load(jarFile().getParentFile());
@@ -52,6 +55,7 @@ class JarClassLoaderTest {
     }
 
     @Test
+    @DisplayName("addJar 添加jar文件")
     void addJarTest() throws Exception {
         final JarClassLoader loader = new JarClassLoader();
         loader.addJar(jarFile());
@@ -60,6 +64,7 @@ class JarClassLoaderTest {
     }
 
     @Test
+    @DisplayName("addURL 添加URL")
     void addURLTest() throws Exception {
         final JarClassLoader loader = new JarClassLoader();
         loader.addURL(jarFile());
@@ -73,6 +78,7 @@ class JarClassLoaderTest {
      */
     @Test
     @Disabled("JDK9+ 模块系统封锁反射访问 URLClassLoader.addURL")
+    @DisplayName("loadJar(URLClassLoader) 反射加载")
     void loadJarToUrlClassLoaderTest() throws Exception {
         final JarClassLoader loader = new JarClassLoader();
         JarClassLoader.loadJar(loader, jarFile());
@@ -85,6 +91,7 @@ class JarClassLoaderTest {
      */
     @Test
     @Disabled("JDK9+ ClassLoader.getSystemClassLoader() 不再是 URLClassLoader")
+    @DisplayName("loadJarToSystemClassLoader 系统类加载器")
     void loadJarToSystemClassLoaderTest() {
         JarClassLoader.loadJarToSystemClassLoader(jarFile());
     }

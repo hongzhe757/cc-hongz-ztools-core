@@ -49,6 +49,7 @@ class ConsoleTest {
      * 验证 {@link Console#log(Object...)} 多个参数以空格分隔并换行输出.
      */
     @Test
+    @DisplayName("log 多参数空格分隔")
     void logMultipleValues() {
         Console.log("a", 1);
         assertEquals("a 1" + System.lineSeparator(), outBuffer.toString(StandardCharsets.UTF_8));
@@ -58,6 +59,7 @@ class ConsoleTest {
      * 验证 {@link Console#log(Object...)} 无参数时仅输出换行.
      */
     @Test
+    @DisplayName("log 无参数换行")
     void logEmpty() {
         Console.log();
         assertEquals(System.lineSeparator(), outBuffer.toString(StandardCharsets.UTF_8));
@@ -66,18 +68,21 @@ class ConsoleTest {
     // ---- error ----
 
     @Test
+    @DisplayName("error 无参数")
     void errorNoArg() {
         Console.error();
         assertEquals(System.lineSeparator(), errBuffer.toString(StandardCharsets.UTF_8));
     }
 
     @Test
+    @DisplayName("error 对象打印")
     void errorWithObject() {
         Console.error("hello");
         assertTrue(errBuffer.toString(StandardCharsets.UTF_8).contains("hello"));
     }
 
     @Test
+    @DisplayName("error 异常打印")
     void errorWithThrowable() {
         Console.error(new RuntimeException("boom"));
         final String out = errBuffer.toString(StandardCharsets.UTF_8);
@@ -87,12 +92,14 @@ class ConsoleTest {
     }
 
     @Test
+    @DisplayName("error 模板替换")
     void errorWithTemplate() {
         Console.error("value={}", 42);
         assertTrue(errBuffer.toString(StandardCharsets.UTF_8).contains("value=42"));
     }
 
     @Test
+    @DisplayName("error 异常+模板")
     void errorWithThrowableAndTemplate() {
         Console.error(new RuntimeException("root"), "msg={}", "test");
         final String out = errBuffer.toString(StandardCharsets.UTF_8);
@@ -101,6 +108,7 @@ class ConsoleTest {
     }
 
     @Test
+    @DisplayName("error 多对象参数")
     void errorMultipleObjects() {
         Console.error("a", "b", "c");
         assertTrue(errBuffer.toString(StandardCharsets.UTF_8).contains("a"));

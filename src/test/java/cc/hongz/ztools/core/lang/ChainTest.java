@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ChainTest {
 
     @Test
+    @DisplayName("addChain 链式添加")
     void addChainTest() {
         final ListChain chain = new ListChain();
         chain.addChain("a").addChain("b").addChain("c");

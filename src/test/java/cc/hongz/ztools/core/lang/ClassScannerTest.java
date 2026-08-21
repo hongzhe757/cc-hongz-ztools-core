@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ClassScannerTest {
 
     @Test
+    @DisplayName("scanPackage 包扫描")
     void scanPackageTest() {
         final Set<Class<?>> classes = ClassScanner.scanPackage("cc.hongz.ztools.core.lang");
         assertTrue(classes.contains(Console.class));
@@ -27,6 +28,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("scanPackageFilter 过滤器扫描")
     void scanPackageFilterTest() {
         final Set<Class<?>> classes = ClassScanner.scanPackage("cc.hongz.ztools.core.lang", clazz -> clazz == Console.class);
         assertTrue(classes.contains(Console.class));
@@ -34,6 +36,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("scanPackageByAnnotation 注解扫描")
     void scanPackageByAnnotationTest() {
         // SuppressWarnings 是 JDK 自带注解，lang 包下的类有使用
         final Set<Class<?>> classes = ClassScanner.scanPackageByAnnotation(
@@ -44,6 +47,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("scanAllPackageByAnnotation 全量注解扫描")
     void scanAllPackageByAnnotationTest() {
         final Set<Class<?>> classes = ClassScanner.scanAllPackageByAnnotation(
                 "cc.hongz.ztools.core.lang", SuppressWarnings.class);
@@ -51,6 +55,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("scanPackageBySuper 超类/接口扫描")
     void scanPackageBySuperTest() {
         // Serializable 是超接口，ClassScanner 本身实现了它
         final Set<Class<?>> classes = ClassScanner.scanPackageBySuper(
@@ -61,6 +66,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("scanAllPackageBySuper 全量超类扫描")
     void scanAllPackageBySuperTest() {
         final Set<Class<?>> classes = ClassScanner.scanAllPackageBySuper(
                 "cc.hongz.ztools.core.lang", Serializable.class);
@@ -68,6 +74,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("scan(boolean) 可选全量扫描")
     void scanBooleanTest() {
         final ClassScanner scanner = new ClassScanner("cc.hongz.ztools.core.lang", null);
         final Set<Class<?>> classes = scanner.scan(false);
@@ -76,6 +83,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("setIgnoreLoadError 忽略加载错误")
     void setIgnoreLoadErrorAndGetClassesOfLoadErrorTest() {
         final ClassScanner scanner = new ClassScanner("cc.hongz.ztools.core.lang", null);
         scanner.setIgnoreLoadError(true);
@@ -86,6 +94,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("setClassLoader 自定义类加载器")
     void setClassLoaderTest() {
         final ClassScanner scanner = new ClassScanner("cc.hongz.ztools.core.lang", null);
         scanner.setClassLoader(Thread.currentThread().getContextClassLoader());
@@ -94,6 +103,7 @@ class ClassScannerTest {
     }
 
     @Test
+    @DisplayName("setInitialize 初始化控制")
     void setInitializeTest() {
         final AtomicInteger initCount = new AtomicInteger(0);
         final ClassScanner scanner = new ClassScanner("cc.hongz.ztools.core.lang",
