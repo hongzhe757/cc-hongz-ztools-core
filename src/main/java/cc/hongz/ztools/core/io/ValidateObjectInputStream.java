@@ -26,7 +26,8 @@ public class ValidateObjectInputStream extends ObjectInputStream {
      * @param acceptClasses 白名单的类
      * @throws IOException IO异常
      */
-    public ValidateObjectInputStream(final InputStream inputStream, final Class<?>... acceptClasses) throws IOException {
+    public ValidateObjectInputStream(final InputStream inputStream, final Class<?>... acceptClasses)
+            throws IOException {
         super(inputStream);
         accept(acceptClasses);
     }
