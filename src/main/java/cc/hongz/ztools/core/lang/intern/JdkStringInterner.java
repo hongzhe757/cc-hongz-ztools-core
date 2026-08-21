@@ -1,17 +1,18 @@
 package cc.hongz.ztools.core.lang.intern;
 
 /**
- * JDK中默认的字符串规范化实现
+ * JDK中默认的字符串规范化实现.
  *
  * @author looly
  * @since 5.4.3
  */
-public class JdkStringInterner implements Interner<String>{
-	@Override
-	public String intern(String sample) {
-		if(null == sample){
-			return null;
-		}
-		return sample.intern();
-	}
+public class JdkStringInterner implements Interner<String> {
+
+    @Override
+    public String intern(final String sample) {
+        if (null == sample) {
+            return null;
+        }
+        return sample.intern();
+    }
 }
