@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.io;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -20,12 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("IoUtil IO 流工具类")
 class IoUtilTest {
 
     /**
      * 验证 {@link IoUtil#toStream(byte[])} 对 null 返回 null.
      */
     @Test
+    @DisplayName("toStream null 返回 null")
     void toStreamNullReturnsNull() {
         assertNull(IoUtil.toStream((byte[]) null));
     }
@@ -34,6 +37,7 @@ class IoUtilTest {
      * 验证 {@link IoUtil#toStream(byte[])} 可读回原始字节.
      */
     @Test
+    @DisplayName("toStream 读回原始字节")
     void toStreamBytes() throws Exception {
         final byte[] data = {1, 2, 3};
         assertArrayEquals(data, IoUtil.toStream(data).readAllBytes());
@@ -43,6 +47,7 @@ class IoUtilTest {
      * 验证 {@link IoUtil#write(OutputStream, boolean, byte[])} 不关闭流时写入内容.
      */
     @Test
+    @DisplayName("write 不关闭流写入")
     void writeWithoutClose() throws Exception {
         final byte[] data = "abc".getBytes(java.nio.charset.StandardCharsets.UTF_8);
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -54,6 +59,7 @@ class IoUtilTest {
      * 验证 {@link IoUtil#write(OutputStream, boolean, byte[])} 关闭流选项.
      */
     @Test
+    @DisplayName("write 关闭流选项")
     void writeWithClose() throws Exception {
         final byte[] data = "x".getBytes(java.nio.charset.StandardCharsets.UTF_8);
         final CloseTrackingOutputStream out = new CloseTrackingOutputStream();
@@ -66,6 +72,7 @@ class IoUtilTest {
      * 验证 {@link IoUtil#toBuffered(OutputStream)} 包装普通输出流.
      */
     @Test
+    @DisplayName("toBuffered 包装普通流")
     void toBufferedWrapsStream() {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         assertNotNull(IoUtil.toBuffered(out));
@@ -75,6 +82,7 @@ class IoUtilTest {
      * 验证 {@link IoUtil#toBuffered(OutputStream)} 对已缓冲流直接返回原实例.
      */
     @Test
+    @DisplayName("toBuffered 已缓冲流返回原实例")
     void toBufferedReturnsSameWhenAlreadyBuffered() {
         final ByteArrayOutputStream base = new ByteArrayOutputStream();
         final java.io.BufferedOutputStream buffered = IoUtil.toBuffered(base);
@@ -85,6 +93,7 @@ class IoUtilTest {
      * 验证写入失败时抛出 {@link IORuntimeException}.
      */
     @Test
+    @DisplayName("write 失败抛 IORuntimeException")
     void writeThrowsIoRuntimeException() {
         final OutputStream broken = new OutputStream() {
             @Override

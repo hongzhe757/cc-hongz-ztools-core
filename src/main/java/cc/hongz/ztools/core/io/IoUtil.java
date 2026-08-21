@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.zip.Adler32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -42,17 +41,27 @@ public final class IoUtil {
     /**
      * 默认缓存大小 8192.
      */
-    public static final int DEFAULT_BUFFER_SIZE = 2 << 12;
+    public static final int DEFAULT_BUFFER_SIZE = 8192;
 
     /**
      * 默认中等缓存大小 16384.
      */
-    public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 2 << 13;
+    public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 16384;
 
     /**
      * 默认大缓冲区大小（32KB）.
      */
-    public static final int DEFAULT_LARGE_BUFFER_SIZE = 2 << 14;
+    public static final int DEFAULT_LARGE_BUFFER_SIZE = 32768;
+
+    /**
+     * 读取缓冲大小.
+     */
+    private static final int READ_BUFFER_SIZE = 4096;
+
+    /**
+     * 十六进制读取长度 64.
+     */
+    private static final int HEX64_LENGTH = 64;
 
     /**
      * 私有构造，禁止实例化.
@@ -121,7 +130,7 @@ public final class IoUtil {
         }
         try {
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            final byte[] buffer = new byte[4096];
+            final byte[] buffer = new byte[READ_BUFFER_SIZE];
             int n;
             while ((n = in.read(buffer)) != -1) {
                 out.write(buffer, 0, n);
@@ -234,7 +243,7 @@ public final class IoUtil {
      * @return 十六进制字符串
      */
     public static String readHex64Upper(final InputStream in) throws IORuntimeException {
-        return readHex(in, 64, false);
+        return readHex(in, HEX64_LENGTH, false);
     }
 
     /**
@@ -246,7 +255,7 @@ public final class IoUtil {
     public static String readHex8192Upper(final InputStream in) throws IORuntimeException {
         try {
             final int available = in.available();
-            return readHex(in, Math.min(8192, Math.max(available, 64)), false);
+            return readHex(in, Math.min(DEFAULT_BUFFER_SIZE, Math.max(available, HEX64_LENGTH)), false);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
@@ -291,7 +300,7 @@ public final class IoUtil {
 
     /**
      * 获取 {@link BufferedReader}.<br>
-     * 如果是 {@link BufferedReader} 强转返回，否则新建。如果提供的Reader为null返回null
+     * 如果是 {@link BufferedReader} 强转返回，否则新建。如果提供的Reader为null返回null.
      *
      * @param reader 普通Reader，如果为null返回null
      * @return {@link BufferedReader} or null
@@ -365,7 +374,8 @@ public final class IoUtil {
      * @return 结果集合
      * @throws IORuntimeException IO 异常
      */
-    public static <T extends Collection<String>> T readLines(final InputStream in, final Charset charset, final T collection) throws IORuntimeException {
+    public static <T extends Collection<String>> T readLines(final InputStream in, final Charset charset,
+            final T collection) throws IORuntimeException {
         final BufferedReader reader = getReader(in, charset);
         try {
             String line;
@@ -388,7 +398,8 @@ public final class IoUtil {
      * @param contents   写入的可序列化对象
      * @throws IORuntimeException IO异常
      */
-    public static void writeObjects(OutputStream out, boolean isCloseOut, Serializable... contents) throws IORuntimeException {
+    public static void writeObjects(final OutputStream out, final boolean isCloseOut,
+            final Serializable... contents) throws IORuntimeException {
         ObjectOutputStream osw = null;
         try {
             if (ArrayUtil.isEmpty(contents)) {
@@ -419,7 +430,7 @@ public final class IoUtil {
      * @throws IORuntimeException IO异常
      * @throws UtilException      ClassNotFoundException包装
      */
-    public static <T> T readObj(InputStream in) throws IORuntimeException, UtilException {
+    public static <T> T readObj(final InputStream in) throws IORuntimeException, UtilException {
         return readObj(in, null);
     }
 
@@ -437,7 +448,7 @@ public final class IoUtil {
      * @throws IORuntimeException IO异常
      * @throws UtilException      ClassNotFoundException包装
      */
-    public static <T> T readObj(InputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
+    public static <T> T readObj(final InputStream in, final Class<T> clazz) throws IORuntimeException, UtilException {
         try {
             ValidateObjectInputStream validateIn;
             if (in instanceof ValidateObjectInputStream) {
@@ -461,7 +472,7 @@ public final class IoUtil {
      * @param stream ValidateObjectInputStream
      * @param clazz  要加入的类
      */
-    private static void addClassHierarchy(ValidateObjectInputStream stream, Class<?> clazz) {
+    private static void addClassHierarchy(final ValidateObjectInputStream stream, final Class<?> clazz) {
         if (clazz == null || clazz == Object.class) {
             return;
         }
@@ -482,7 +493,8 @@ public final class IoUtil {
      * @throws IORuntimeException IO异常
      * @throws UtilException      ClassNotFoundException包装
      */
-    public static <T> T readObj(ValidateObjectInputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
+    public static <T> T readObj(final ValidateObjectInputStream in, final Class<T> clazz)
+            throws IORuntimeException, UtilException {
         if (in == null) {
             throw new IllegalArgumentException("The InputStream must not be null");
         }
