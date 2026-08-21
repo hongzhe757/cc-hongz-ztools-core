@@ -68,12 +68,12 @@ public class IORuntimeException extends RuntimeException {
     }
 
     /**
-     * 导致这个异常的异常是否是指定类型的异常
+     * 导致这个异常的异常是否是指定类型的异常.
      *
      * @param clazz 异常类
      * @return 是否为指定类型异常
      */
-    public boolean causeInstanceOf(Class<? extends Throwable> clazz) {
+    public boolean causeInstanceOf(final Class<? extends Throwable> clazz) {
         final Throwable cause = this.getCause();
         return null != clazz && clazz.isInstance(cause);
     }
