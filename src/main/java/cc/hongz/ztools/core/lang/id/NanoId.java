@@ -14,7 +14,13 @@ import java.util.Random;
  *
  * @author David Klebanoff
  */
-public class NanoId {
+public final class NanoId {
+
+    /**
+     * 私有构造，禁止实例化.
+     */
+    private NanoId() {
+    }
 
     /**
      * 默认随机数生成器，使用 {@link SecureRandom} 确保健壮性.
@@ -64,16 +70,11 @@ public class NanoId {
      * @param size     ID长度
      * @return 伪随机的NanoId字符串
      */
-    public static String randomNanoId(Random random, char[] alphabet, final int size) {
-        if (random == null) {
-            random = DEFAULT_NUMBER_GENERATOR;
-        }
+    public static String randomNanoId(final Random random, final char[] alphabet, final int size) {
+        final Random actualRandom = null == random ? DEFAULT_NUMBER_GENERATOR : random;
+        final char[] actualAlphabet = null == alphabet ? DEFAULT_ALPHABET : alphabet;
 
-        if (alphabet == null) {
-            alphabet = DEFAULT_ALPHABET;
-        }
-
-        if (alphabet.length == 0 || alphabet.length >= MAX_ALPHABET_SIZE) {
+        if (actualAlphabet.length == 0 || actualAlphabet.length >= MAX_ALPHABET_SIZE) {
             throw new IllegalArgumentException("Alphabet must contain between 1 and 255 symbols.");
         }
 
@@ -81,18 +82,18 @@ public class NanoId {
             throw new IllegalArgumentException("Size must be greater than zero.");
         }
 
-        final int mask = (2 << (int) Math.floor(Math.log(alphabet.length - 1) / Math.log(2))) - 1;
-        final int step = (int) Math.ceil(1.6 * mask * size / alphabet.length);
+        final int mask = (2 << (int) Math.floor(Math.log(actualAlphabet.length - 1) / Math.log(2))) - 1;
+        final int step = (int) Math.ceil(1.6 * mask * size / actualAlphabet.length);
 
         final StringBuilder idBuilder = new StringBuilder();
 
         while (true) {
             final byte[] bytes = new byte[step];
-            random.nextBytes(bytes);
+            actualRandom.nextBytes(bytes);
             for (int i = 0; i < step; i++) {
                 final int alphabetIndex = bytes[i] & mask;
-                if (alphabetIndex < alphabet.length) {
-                    idBuilder.append(alphabet[alphabetIndex]);
+                if (alphabetIndex < actualAlphabet.length) {
+                    idBuilder.append(actualAlphabet[alphabetIndex]);
                     if (idBuilder.length() == size) {
                         return idBuilder.toString();
                     }

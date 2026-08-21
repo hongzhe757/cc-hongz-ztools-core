@@ -10,7 +10,13 @@ import cc.hongz.ztools.core.util.IdUtil;
  *
  * @author Looly
  */
-public class IdConstants {
+public final class IdConstants {
+
+    /**
+     * 私有构造，禁止实例化.
+     */
+    private IdConstants() {
+    }
 
     /**
      * 默认的数据中心ID.
