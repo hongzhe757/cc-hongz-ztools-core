@@ -9,34 +9,34 @@ import java.util.Objects;
  */
 public class StrongObj<T> implements Ref<T> {
 
-	private final T obj;
+    private final T obj;
 
-	/**
-	 * 构造
-	 *
-	 * @param obj 原始对象
-	 */
-	public StrongObj(final T obj) {
-		this.obj = obj;
-	}
+    /**
+     * 构造.
+     *
+     * @param obj 原始对象
+     */
+    public StrongObj(final T obj) {
+        this.obj = obj;
+    }
 
-	@Override
-	public T get() {
-		return this.obj;
-	}
+    @Override
+    public T get() {
+        return this.obj;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(obj);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(obj);
+    }
 
-	@Override
-	public boolean equals(final Object other) {
-		if (other == this) {
-			return true;
-		} else if (other instanceof StrongObj) {
-			return Objects.equals(((StrongObj<?>) other).get(), get());
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(final Object other) {
+        if (other == this) {
+            return true;
+        } else if (other instanceof StrongObj) {
+            return Objects.equals(((StrongObj<?>) other).get(), get());
+        }
+        return false;
+    }
 }
