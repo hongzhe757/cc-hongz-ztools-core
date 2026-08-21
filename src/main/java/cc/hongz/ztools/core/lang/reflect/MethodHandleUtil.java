@@ -22,7 +22,13 @@ import java.lang.reflect.Method;
  * @author looly
  * @since 5.7.7
  */
-public class MethodHandleUtil {
+public final class MethodHandleUtil {
+
+    /**
+     * 私有构造，禁止实例化.
+     */
+    private MethodHandleUtil() {
+    }
 
     /**
      * jdk8中如果直接调用{@link MethodHandles#lookup()}获取到的{@link MethodHandles.Lookup}在调用findSpecial和unreflectSpecial
@@ -31,7 +37,7 @@ public class MethodHandleUtil {
      * @param callerClass 被调用的类或接口
      * @return {@link MethodHandles.Lookup}
      */
-    public static MethodHandles.Lookup lookup(Class<?> callerClass) {
+    public static MethodHandles.Lookup lookup(final Class<?> callerClass) {
         return LookupFactory.lookup(callerClass);
     }
 
@@ -50,7 +56,7 @@ public class MethodHandleUtil {
      * @param type        返回类型和参数类型
      * @return 方法句柄 {@link MethodHandle}，{@code null}表示未找到方法
      */
-    public static MethodHandle findMethod(Class<?> callerClass, String name, MethodType type) {
+    public static MethodHandle findMethod(final Class<?> callerClass, final String name, final MethodType type) {
         if (StrUtil.isBlank(name)) {
             return findConstructor(callerClass, type);
         }
@@ -93,7 +99,7 @@ public class MethodHandleUtil {
      * @param args        参数
      * @return 构造方法句柄
      */
-    public static MethodHandle findConstructor(Class<?> callerClass, Class<?>... args) {
+    public static MethodHandle findConstructor(final Class<?> callerClass, final Class<?>... args) {
         return findConstructor(callerClass, MethodType.methodType(void.class, args));
     }
 
@@ -104,7 +110,7 @@ public class MethodHandleUtil {
      * @param type        参数类型，此处返回类型应为void.class
      * @return 构造方法句柄
      */
-    public static MethodHandle findConstructor(Class<?> callerClass, MethodType type) {
+    public static MethodHandle findConstructor(final Class<?> callerClass, final MethodType type) {
         final MethodHandles.Lookup lookup = lookup(callerClass);
         try {
             return lookup.findConstructor(callerClass, type);
@@ -137,7 +143,7 @@ public class MethodHandleUtil {
      * @param args       参数
      * @return 结果
      */
-    public static <T> T invokeSpecial(Object obj, String methodName, Object... args) {
+    public static <T> T invokeSpecial(final Object obj, final String methodName, final Object... args) {
         Assert.notNull(obj, "Object to get method must be not null!");
         Assert.notBlank(methodName, "Method name must be not blank!");
 
@@ -157,7 +163,7 @@ public class MethodHandleUtil {
      * @param args   参数
      * @return 结果
      */
-    public static <T> T invoke(Object obj, Method method, Object... args) {
+    public static <T> T invoke(final Object obj, final Method method, final Object... args) {
         return invoke(false, obj, method, args);
     }
 
@@ -183,7 +189,7 @@ public class MethodHandleUtil {
      * @param args   参数
      * @return 结果
      */
-    public static <T> T invokeSpecial(Object obj, Method method, Object... args) {
+    public static <T> T invokeSpecial(final Object obj, final Method method, final Object... args) {
         return invoke(true, obj, method, args);
     }
 
@@ -211,7 +217,7 @@ public class MethodHandleUtil {
      * @return 结果
      */
     @SuppressWarnings("unchecked")
-    public static <T> T invoke(boolean isSpecial, Object obj, Method method, Object... args) {
+    public static <T> T invoke(final boolean isSpecial, final Object obj, final Method method, final Object... args) {
         Assert.notNull(method, "Method must be not null!");
         final Class<?> declaringClass = method.getDeclaringClass();
         final MethodHandles.Lookup lookup = lookup(declaringClass);
