@@ -171,4 +171,76 @@ public class RangeTest {
         assertEquals(DateUtil.parse("2017-01-31"), dateTimes1.get(0));
     }
 
+    @Test
+    public void resetTest() {
+        final Range<Integer> range = new Range<>(1, 3, (current, end, index) -> current >= end ? null : current + 1);
+        assertEquals(Integer.valueOf(1), range.next());
+        assertEquals(Integer.valueOf(2), range.next());
+        assertEquals(Integer.valueOf(3), range.next());
+        assertFalse(range.hasNext());
+
+        // reset 后应能重新遍历
+        range.reset();
+        assertTrue(range.hasNext());
+        assertEquals(Integer.valueOf(1), range.next());
+    }
+
+    @Test
+    public void disableLockTest() {
+        final Range<Integer> range = new Range<>(1, 3, (current, end, index) -> current >= end ? null : current + 1);
+        assertSame(range, range.disableLock());
+        // 禁用锁后仍能正常遍历
+        assertEquals(Integer.valueOf(1), range.next());
+        assertEquals(Integer.valueOf(2), range.next());
+        assertEquals(Integer.valueOf(3), range.next());
+        assertFalse(range.hasNext());
+    }
+
+    @Test
+    public void removeThrowsTest() {
+        final Range<Integer> range = new Range<>(1, 3, (current, end, index) -> current >= end ? null : current + 1);
+        assertThrows(UnsupportedOperationException.class, range::remove);
+    }
+
+    @Test
+    public void includeStartFalseTest() {
+        // 不包含起始元素
+        final Range<Integer> range = new Range<>(1, 5, (current, end, index) -> current >= end ? null : current + 1,
+                false, true);
+        assertEquals(Integer.valueOf(2), range.next());
+        assertEquals(Integer.valueOf(3), range.next());
+        assertEquals(Integer.valueOf(4), range.next());
+        assertEquals(Integer.valueOf(5), range.next());
+        assertFalse(range.hasNext());
+    }
+
+    @Test
+    public void includeEndFalseTest() {
+        // 不包含结束元素
+        final Range<Integer> range = new Range<>(1, 5, (current, end, index) -> current >= end ? null : current + 1,
+                true, false);
+        assertEquals(Integer.valueOf(1), range.next());
+        assertEquals(Integer.valueOf(2), range.next());
+        assertEquals(Integer.valueOf(3), range.next());
+        assertEquals(Integer.valueOf(4), range.next());
+        assertFalse(range.hasNext());
+    }
+
+    @Test
+    public void bothIncludeExcludeFalseTest() {
+        // 既不包含起始也不包含结束
+        final Range<Integer> range = new Range<>(1, 3, (current, end, index) -> current >= end ? null : current + 1,
+                false, false);
+        assertEquals(Integer.valueOf(2), range.next());
+        assertFalse(range.hasNext());
+    }
+
+    @Test
+    public void nullStepperReturnsNullTest() {
+        // stepper 返回 null 时 hasNext 应为 false
+        final Range<Integer> range = new Range<>(1, null, (current, end, index) -> null);
+        assertTrue(range.hasNext());
+        assertEquals(Integer.valueOf(1), range.next());
+        assertFalse(range.hasNext());
+    }
 }
