@@ -31,7 +31,7 @@ public final class LambdaUtil {
      * @return 返回解析后的结果
      */
     public static <T> SerializedLambda resolve(final Func1<T, ?> func) {
-        return _resolve(func);
+        return resolve0(func);
     }
 
     /**
@@ -92,7 +92,7 @@ public final class LambdaUtil {
      * @param func 需要解析的 lambda 对象
      * @return 返回解析后的结果
      */
-    private static SerializedLambda _resolve(final Serializable func) {
+    private static SerializedLambda resolve0(final Serializable func) {
         return CACHE.computeIfAbsent(func.getClass().getName(),
                 (key) -> ReflectUtil.invoke(func, "writeReplace"));
     }
