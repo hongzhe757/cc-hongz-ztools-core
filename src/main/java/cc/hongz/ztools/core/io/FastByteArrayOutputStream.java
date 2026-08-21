@@ -24,13 +24,15 @@ import java.nio.charset.Charset;
  */
 public class FastByteArrayOutputStream extends OutputStream {
 
+    private static final int DEFAULT_SIZE = 1024;
+
     private final FastByteBuffer buffer;
 
     /**
      * 构造.
      */
     public FastByteArrayOutputStream() {
-        this(1024);
+        this(DEFAULT_SIZE);
     }
 
     /**
@@ -38,20 +40,25 @@ public class FastByteArrayOutputStream extends OutputStream {
      *
      * @param size 预估大小
      */
-    public FastByteArrayOutputStream(int size) {
+    public FastByteArrayOutputStream(final int size) {
         buffer = new FastByteBuffer(size);
     }
 
     @Override
-    public void write(byte[] b, int off, int len) {
+    public void write(final byte[] b, final int off, final int len) {
         buffer.append(b, off, len);
     }
 
     @Override
-    public void write(int b) {
+    public void write(final int b) {
         buffer.append((byte) b);
     }
 
+    /**
+     * 获取当前缓冲区大小.
+     *
+     * @return 缓冲区大小
+     */
     public int size() {
         return buffer.size();
     }
@@ -64,6 +71,9 @@ public class FastByteArrayOutputStream extends OutputStream {
         // nop
     }
 
+    /**
+     * 重置缓冲区.
+     */
     public void reset() {
         buffer.reset();
     }
@@ -74,7 +84,7 @@ public class FastByteArrayOutputStream extends OutputStream {
      * @param out 输出流
      * @throws IORuntimeException IO异常
      */
-    public void writeTo(OutputStream out) throws IORuntimeException {
+    public void writeTo(final OutputStream out) throws IORuntimeException {
         final int index = buffer.index();
         if (index < 0) {
             // 无数据写出
@@ -112,7 +122,7 @@ public class FastByteArrayOutputStream extends OutputStream {
      * @param charsetName 编码
      * @return 字符串
      */
-    public String toString(String charsetName) {
+    public String toString(final String charsetName) {
         return toString(CharsetUtil.charset(charsetName));
     }
 
@@ -122,7 +132,7 @@ public class FastByteArrayOutputStream extends OutputStream {
      * @param charset 编码,null表示默认编码
      * @return 字符串
      */
-    public String toString(Charset charset) {
+    public String toString(final Charset charset) {
         return new String(toByteArray(),
                 ObjectUtil.defaultIfNull(charset, () -> CharsetUtil.defaultCharset()));
     }
