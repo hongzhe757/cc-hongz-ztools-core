@@ -9,8 +9,8 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 /**
- * 读取带BOM头的流内容的Reader，如果非bom的流或无法识别的编码，则默认UTF-8<br>
- * BOM定义：http://www.unicode.org/unicode/faq/utf_bom.html
+ * 读取带BOM头的流内容的Reader，如果非bom的流或无法识别的编码，则默认UTF-8.<br>
+ * BOM定义：http://www.unicode.org/unicode/faq/utf_bom.html.
  *
  * <ul>
  * <li>00 00 FE FF = UTF-32, big-endian</li>
@@ -30,29 +30,29 @@ import java.io.UnsupportedEncodingException;
  */
 public class BomReader extends Reader {
 
-	private InputStreamReader reader;
+    private InputStreamReader reader;
 
-	/**
-	 * 构造
-	 *
-	 * @param in 流
-	 */
-	public BomReader(InputStream in) {
-		Assert.notNull(in, "InputStream must be not null!");
-		final BOMInputStream bin = (in instanceof BOMInputStream) ? (BOMInputStream) in : new BOMInputStream(in);
-		try {
-			this.reader = new InputStreamReader(bin, bin.getCharset());
-		} catch (UnsupportedEncodingException ignore) {
-		}
-	}
+    /**
+     * 构造.
+     *
+     * @param in 流
+     */
+    public BomReader(final InputStream in) {
+        Assert.notNull(in, "InputStream must be not null!");
+        final BOMInputStream bin = (in instanceof BOMInputStream) ? (BOMInputStream) in : new BOMInputStream(in);
+        try {
+            this.reader = new InputStreamReader(bin, bin.getCharset());
+        } catch (UnsupportedEncodingException ignore) {
+        }
+    }
 
-	@Override
-	public int read(char[] cbuf, int off, int len) throws IOException {
-		return reader.read(cbuf, off, len);
-	}
+    @Override
+    public int read(final char[] cbuf, final int off, final int len) throws IOException {
+        return reader.read(cbuf, off, len);
+    }
 
-	@Override
-	public void close() throws IOException {
-		reader.close();
-	}
+    @Override
+    public void close() throws IOException {
+        reader.close();
+    }
 }
