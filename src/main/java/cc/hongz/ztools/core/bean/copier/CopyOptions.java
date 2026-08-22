@@ -162,8 +162,8 @@ public class CopyOptions implements Serializable {
      * @param editable 限制的类或接口
      * @return CopyOptions
      */
-    public CopyOptions setEditable(final Class<?> editable) {
-        this.editable = editable;
+    public CopyOptions setEditable(final Class<?> newEditable) {
+        this.editable = newEditable;
         return this;
     }
 
@@ -195,8 +195,8 @@ public class CopyOptions implements Serializable {
      * @param propertiesFilter 属性过滤器
      * @return CopyOptions
      */
-    public CopyOptions setPropertiesFilter(final BiPredicate<Field, Object> propertiesFilter) {
-        this.propertiesFilter = propertiesFilter;
+    public CopyOptions setPropertiesFilter(final BiPredicate<Field, Object> newPropertiesFilter) {
+        this.propertiesFilter = newPropertiesFilter;
         return this;
     }
 
@@ -232,8 +232,8 @@ public class CopyOptions implements Serializable {
      * @param ignoreError 是否忽略注入错误
      * @return CopyOptions
      */
-    public CopyOptions setIgnoreError(final boolean ignoreError) {
-        this.ignoreError = ignoreError;
+    public CopyOptions setIgnoreError(final boolean newIgnoreError) {
+        this.ignoreError = newIgnoreError;
         return this;
     }
 
@@ -253,8 +253,8 @@ public class CopyOptions implements Serializable {
      * @param ignoreCase 是否忽略大小写
      * @return CopyOptions
      */
-    public CopyOptions setIgnoreCase(final boolean ignoreCase) {
-        this.ignoreCase = ignoreCase;
+    public CopyOptions setIgnoreCase(final boolean newIgnoreCase) {
+        this.ignoreCase = newIgnoreCase;
         return this;
     }
 
@@ -289,8 +289,8 @@ public class CopyOptions implements Serializable {
      * @return CopyOptions
      * @since 5.4.2
      */
-    public CopyOptions setFieldNameEditor(final Editor<String> fieldNameEditor) {
-        this.fieldNameEditor = fieldNameEditor;
+    public CopyOptions setFieldNameEditor(final Editor<String> newFieldNameEditor) {
+        this.fieldNameEditor = newFieldNameEditor;
         return this;
     }
 
@@ -301,8 +301,8 @@ public class CopyOptions implements Serializable {
      * @return CopyOptions
      * @since 5.7.15
      */
-    public CopyOptions setFieldValueEditor(final BiFunction<String, Object, Object> fieldValueEditor) {
-        this.fieldValueEditor = fieldValueEditor;
+    public CopyOptions setFieldValueEditor(final BiFunction<String, Object, Object> newFieldValueEditor) {
+        this.fieldValueEditor = newFieldValueEditor;
         return this;
     }
 
@@ -326,8 +326,8 @@ public class CopyOptions implements Serializable {
      * @return this
      * @since 5.4.2
      */
-    public CopyOptions setTransientSupport(final boolean transientSupport) {
-        this.transientSupport = transientSupport;
+    public CopyOptions setTransientSupport(final boolean newTransientSupport) {
+        this.transientSupport = newTransientSupport;
         return this;
     }
 
@@ -338,8 +338,8 @@ public class CopyOptions implements Serializable {
      * @return this
      * @since 5.7.17
      */
-    public CopyOptions setOverride(final boolean override) {
-        this.override = override;
+    public CopyOptions setOverride(final boolean newOverride) {
+        this.override = newOverride;
         return this;
     }
 
@@ -358,8 +358,8 @@ public class CopyOptions implements Serializable {
      * @return this
      * @since 5.8.25
      */
-    public CopyOptions setAutoTransCamelCase(final boolean autoTransCamelCase) {
-        this.autoTransCamelCase = autoTransCamelCase;
+    public CopyOptions setAutoTransCamelCase(final boolean newAutoTransCamelCase) {
+        this.autoTransCamelCase = newAutoTransCamelCase;
         return this;
     }
 
@@ -370,8 +370,8 @@ public class CopyOptions implements Serializable {
      * @return this
      * @since 5.8.0
      */
-    public CopyOptions setConverter(final TypeConverter converter) {
-        this.converter = converter;
+    public CopyOptions setConverter(final TypeConverter newConverter) {
+        this.converter = newConverter;
         return this;
     }
 
@@ -388,8 +388,8 @@ public class CopyOptions implements Serializable {
      * @param formatIfDate 日期格式
      * @return this
      */
-    public CopyOptions setFormatIfDate(final String formatIfDate) {
-        this.formatIfDate = formatIfDate;
+    public CopyOptions setFormatIfDate(final String newFormatIfDate) {
+        this.formatIfDate = newFormatIfDate;
         return this;
     }
 

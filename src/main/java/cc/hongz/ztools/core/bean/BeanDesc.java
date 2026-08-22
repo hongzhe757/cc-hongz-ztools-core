@@ -162,18 +162,18 @@ public class BeanDesc implements Serializable {
      * 针对Record类的反射初始化.
      */
     private void initForRecord() {
-        final Class<?> beanClass = this.beanClass;
-        final Map<String, PropDesc> propMap = this.propMap;
+        final Class<?> targetClass = this.beanClass;
+        final Map<String, PropDesc> targetPropMap = this.propMap;
 
-        final List<Method> getters = ReflectUtil.getPublicMethods(beanClass, method -> 0 == method.getParameterCount());
+        final List<Method> getters = ReflectUtil.getPublicMethods(targetClass, method -> 0 == method.getParameterCount());
         // 排除静态属性和对象子类
-        final Field[] fields = ReflectUtil.getFields(beanClass, field -> !ModifierUtil.isStatic(field) && !ReflectUtil.isOuterClassField(field));
+        final Field[] fields = ReflectUtil.getFields(targetClass, field -> !ModifierUtil.isStatic(field) && !ReflectUtil.isOuterClassField(field));
         for (final Field field : fields) {
             for (final Method getter : getters) {
                 if (field.getName().equals(getter.getName())) {
                     //record对象，getter方法与字段同名
                     final PropDesc prop = new PropDesc(field, getter, null);
-                    propMap.putIfAbsent(prop.getFieldName(), prop);
+                    targetPropMap.putIfAbsent(prop.getFieldName(), prop);
                 }
             }
         }

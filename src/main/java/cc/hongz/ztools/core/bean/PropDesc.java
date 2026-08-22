@@ -334,13 +334,13 @@ public class PropDesc {
      * @param setter Setter方法
      * @return {@link Type}
      */
-    private Type findPropType(final Method getter,  final Method setter) {
+    private Type findPropType(final Method getterMethod,  final Method setterMethod) {
         Type type = null;
-        if (null != getter) {
-            type = TypeUtil.getReturnType(getter);
+        if (null != getterMethod) {
+            type = TypeUtil.getReturnType(getterMethod);
         }
-        if (null == type && null != setter) {
-            type = TypeUtil.getParamType(setter, 0);
+        if (null == type && null != setterMethod) {
+            type = TypeUtil.getParamType(setterMethod, 0);
         }
         return type;
     }
@@ -352,13 +352,13 @@ public class PropDesc {
      * @param setter Setter方法
      * @return {@link Type}
      */
-    private Class<?> findPropClass(final Method getter,  final Method setter) {
+    private Class<?> findPropClass(final Method getterMethod,  final Method setterMethod) {
         Class<?> type = null;
-        if (null != getter) {
-            type = TypeUtil.getReturnClass(getter);
+        if (null != getterMethod) {
+            type = TypeUtil.getReturnClass(getterMethod);
         }
-        if (null == type && null != setter) {
-            type = TypeUtil.getFirstParamClass(setter);
+        if (null == type && null != setterMethod) {
+            type = TypeUtil.getFirstParamClass(setterMethod);
         }
         return type;
     }

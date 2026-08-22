@@ -46,11 +46,11 @@ public class BeanValueProvider implements ValueProvider<String> {
     public BeanValueProvider(final Object bean,  final boolean ignoreCase,  final boolean ignoreError,  final Editor<String> keyEditor) {
         this.source = bean;
         this.ignoreError = ignoreError;
-        final Map<String, PropDesc> sourcePdMap = BeanUtil.getBeanDesc(source.getClass()).getPropMap(ignoreCase);
+        final Map<String, PropDesc> propMap = BeanUtil.getBeanDesc(source.getClass()).getPropMap(ignoreCase);
         // issue#2202@Github
         // 如果用户定义了键编辑器，则提供的map中的数据必须全部转换key
         // issue#I5VRHW@Gitee 使Function可以被序列化
-        this.sourcePdMap = new FuncKeyMap<>(new HashMap<>(sourcePdMap.size(), 1), (Function<Object, String> & Serializable)(key) -> {
+        this.sourcePdMap = new FuncKeyMap<>(new HashMap<>(propMap.size(), 1), (Function<Object, String> & Serializable)(key) -> {
             if (ignoreCase && key instanceof CharSequence) {
                 key = key.toString().toLowerCase();
             }
@@ -59,7 +59,7 @@ public class BeanValueProvider implements ValueProvider<String> {
             }
             return key.toString();
         });
-        this.sourcePdMap.putAll(sourcePdMap);
+        this.sourcePdMap.putAll(propMap);
     }
 
     @Override

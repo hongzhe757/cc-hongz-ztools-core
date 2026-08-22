@@ -65,26 +65,26 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
     public BeanCopier(final Object source,  final T target,  final Type targetType,  final CopyOptions copyOptions) {
         Assert.notNull(source, "Source bean must be not null!");
         Assert.notNull(target, "Target bean must be not null!");
-        Copier<T> copier;
+        Copier<T> resultCopier;
         if (source instanceof Map) {
             if (target instanceof Map) {
                 //noinspection unchecked
-                copier = (Copier<T>) new MapToMapCopier((Map<?, ?>) source, (Map<?, ?>) target, targetType, copyOptions);
+                resultCopier = (Copier<T>) new MapToMapCopier((Map<?, ?>) source, (Map<?, ?>) target, targetType, copyOptions);
             } else {
-                copier = new MapToBeanCopier<>((Map<?, ?>) source, target, targetType, copyOptions);
+                resultCopier = new MapToBeanCopier<>((Map<?, ?>) source, target, targetType, copyOptions);
             }
         }else if (source instanceof ValueProvider) {
             //noinspection unchecked
-            copier = new ValueProviderToBeanCopier<>((ValueProvider<String>) source, target, targetType, copyOptions);
+            resultCopier = new ValueProviderToBeanCopier<>((ValueProvider<String>) source, target, targetType, copyOptions);
         } else {
             if (target instanceof Map) {
                 //noinspection unchecked
-                copier = (Copier<T>) new BeanToMapCopier(source, (Map<?, ?>) target, targetType, copyOptions);
+                resultCopier = (Copier<T>) new BeanToMapCopier(source, (Map<?, ?>) target, targetType, copyOptions);
             } else {
-                copier = new BeanToBeanCopier<>(source, target, targetType, copyOptions);
+                resultCopier = new BeanToBeanCopier<>(source, target, targetType, copyOptions);
             }
         }
-        this.copier = copier;
+        this.copier = resultCopier;
     }
 
     @Override

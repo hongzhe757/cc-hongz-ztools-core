@@ -72,7 +72,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
      */
     private Map<String, Object> initAttributes() {
         final Method[] methods = ReflectUtil.getMethods(this.type);
-        final Map<String, Object> attributes = new HashMap<>(methods.length, 1);
+        final Map<String, Object> result = new HashMap<>(methods.length, 1);
 
         for (Method method : methods) {
             // 跳过匿名内部类自动生成的方法
@@ -80,9 +80,9 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
                 continue;
             }
 
-            attributes.put(method.getName(), ReflectUtil.invoke(this.annotation, method));
+            result.put(method.getName(), ReflectUtil.invoke(this.annotation, method));
         }
 
-        return attributes;
+        return result;
     }
 }

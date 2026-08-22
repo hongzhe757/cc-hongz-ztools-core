@@ -104,7 +104,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @param filter 过滤器
      * @return 当前实例
      */
-    public T setFilter(final Predicate<Class<?>> filter) {
+    public T setFilter(final Predicate<Class<?>> newFilter) {
         Assert.notNull(filter, "filter must not null");
         this.filter = filter;
         return typedThis;
@@ -116,8 +116,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @param excludeTypes 不扫描的类型
      * @return 当前实例
      */
-    public T addExcludeTypes(final Class<?>... excludeTypes) {
-        CollUtil.addAll(this.excludeTypes, excludeTypes);
+    public T addExcludeTypes(final Class<?>... newExcludeTypes) {
+        CollUtil.addAll(this.excludeTypes, newExcludeTypes);
         return typedThis;
     }
 
@@ -143,7 +143,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @param includeSuperClass 是否
      * @return 当前实例
      */
-    protected T setIncludeSuperClass(final boolean includeSuperClass) {
+    protected T setIncludeSuperClass(final boolean newIncludeSuperClass) {
         this.includeSuperClass = includeSuperClass;
         return typedThis;
     }
@@ -154,7 +154,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @param includeInterfaces 是否
      * @return 当前实例
      */
-    protected T setIncludeInterfaces(final boolean includeInterfaces) {
+    protected T setIncludeInterfaces(final boolean newIncludeInterfaces) {
         this.includeInterfaces = includeInterfaces;
         return typedThis;
     }
@@ -167,8 +167,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
      */
     @Override
-    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
-        final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(filter, a -> annotation -> true);
+    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> annotationFilter) {
+        final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(annotationFilter, a -> annotation -> true);
         final Class<?> sourceClass = getClassFormAnnotatedElement(annotatedEle);
         final Deque<List<Class<?>>> classDeque = CollUtil.newLinkedList(CollUtil.newArrayList(sourceClass));
         final Set<Class<?>> accessedTypes = new LinkedHashSet<>();

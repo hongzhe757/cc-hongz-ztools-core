@@ -137,57 +137,57 @@ public class BeanPath implements Serializable {
      * </pre>
      *
      * @param bean           Bean、Map或List
-     * @param patternParts   表达式块列表
+     * @param parts   表达式块列表
      * @param nextNumberPart 下一个值是否
      * @param value          值
      */
-    private void set(final Object bean,  final List<String> patternParts,  final boolean nextNumberPart,  final Object value) {
-        Object subBean = this.get(patternParts, bean, true);
+    private void set(final Object bean,  final List<String> parts,  final boolean nextNumberPart,  final Object value) {
+        Object subBean = this.get(parts, bean, true);
         if (null == subBean) {
             // 当前节点是空，则先创建父节点
-            final List<String> parentParts = getParentParts(patternParts);
+            final List<String> parentParts = getParentParts(parts);
             this.set(bean, parentParts, lastIsNumber(parentParts), nextNumberPart ? new ArrayList<>() : new HashMap<>());
             //set中有可能做过转换，因此此处重新获取bean
-            subBean = this.get(patternParts, bean, true);
+            subBean = this.get(parts, bean, true);
         }
 
-        final Object newSubBean = BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
+        final Object newSubBean = BeanUtil.setFieldValue(subBean, parts.get(parts.size() - 1), value);
         if (newSubBean != subBean) {
             // 对象变更，重新加入
-            this.set(bean, getParentParts(patternParts), nextNumberPart, newSubBean);
+            this.set(bean, getParentParts(parts), nextNumberPart, newSubBean);
         }
     }
 
     /**
      * 判断path列表中末尾的标记是否为数字.
      *
-     * @param patternParts path列表
+     * @param parts path列表
      * @return 是否为数字
      */
-    private static boolean lastIsNumber(final List<String> patternParts) {
-        return NumberUtil.isInteger(patternParts.get(patternParts.size() - 1));
+    private static boolean lastIsNumber(final List<String> parts) {
+        return NumberUtil.isInteger(parts.get(parts.size() - 1));
     }
 
     /**
      * 获取父级路径列表.
      *
-     * @param patternParts 路径列表
+     * @param parts 路径列表
      * @return 父级路径列表
      */
-    private static List<String> getParentParts(final List<String> patternParts) {
-        return patternParts.subList(0, patternParts.size() - 1);
+    private static List<String> getParentParts(final List<String> parts) {
+        return parts.subList(0, parts.size() - 1);
     }
 
     /**
      * 获取Bean中对应表达式的值.
      *
-     * @param patternParts 表达式分段列表
+     * @param parts 表达式分段列表
      * @param bean         Bean对象或Map或List等
      * @param ignoreLast   是否忽略最后一个值，忽略最后一个值则用于set，否则用于read
      * @return 值，如果对应值不存在，则返回null
      */
-    private Object get(final List<String> patternParts, final Object bean, final boolean ignoreLast) {
-        int length = patternParts.size();
+    private Object get(final List<String> parts, final Object bean, final boolean ignoreLast) {
+        int length = parts.size();
         if (ignoreLast) {
             length--;
         }
@@ -195,13 +195,13 @@ public class BeanPath implements Serializable {
         boolean isFirst = true;
         String patternPart;
         for (int i = 0; i < length; i++) {
-            patternPart = patternParts.get(i);
+            patternPart = parts.get(i);
             
             // 支持通配符 * 语法，用于获取集合或数组中所有元素的指定字段
             if ("*".equals(patternPart)) {
                 // 如果当前对象是集合或数组，且后面还有路径部分，则展开处理
                 if (i < length - 1 && (subBean instanceof Collection || ArrayUtil.isArray(subBean))) {
-                    return getByWildcard(subBean, patternParts, i + 1, length);
+                    return getByWildcard(subBean, parts, i + 1, length);
                 }
                 // 如果 * 是最后一个部分，直接返回当前集合/数组
                 return subBean;
@@ -225,17 +225,17 @@ public class BeanPath implements Serializable {
      * 处理通配符 * 的情况，对集合或数组中的每个元素应用剩余路径.
      *
      * @param collectionOrArray 集合或数组对象
-     * @param patternParts      完整的表达式分段列表
+     * @param parts      完整的表达式分段列表
      * @param startIndex        剩余路径的起始索引
      * @param endIndex          路径的结束索引
      * @return 结果列表
      */
-    private Object getByWildcard(final Object collectionOrArray, final List<String> patternParts, 
+    private Object getByWildcard(final Object collectionOrArray, final List<String> parts, 
                                   final int startIndex, final int endIndex) {
         final List<Object> results = new ArrayList<>();
         
         // 获取剩余的路径部分
-        final List<String> remainingParts = patternParts.subList(startIndex, endIndex);
+        final List<String> remainingParts = parts.subList(startIndex, endIndex);
         
         if (collectionOrArray instanceof Collection) {
             // 处理集合
