@@ -137,7 +137,8 @@ public final class LambdaUtil {
         final SerializedLambda lambda = resolve(func);
         checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
         final String instantiatedMethodType = lambda.getInstantiatedMethodType();
-        return ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+        return ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType,
+                ';')));
     }
 
     /**

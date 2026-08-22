@@ -48,7 +48,8 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
         if (ObjectUtil.isNull(annotation)) {
             return null;
         }
-        final SynthesizedAnnotationProxy proxyHandler = new SynthesizedAnnotationProxy(annotationAttributeValueProvider, annotation);
+        final SynthesizedAnnotationProxy proxyHandler = new SynthesizedAnnotationProxy(annotationAttributeValueProvider,
+                annotation);
         if (ObjectUtil.isNull(annotation)) {
             return null;
         }
@@ -83,7 +84,8 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
     }
 
     @SuppressWarnings("checkstyle:MagicNumber")
-    SynthesizedAnnotationProxy(final AnnotationAttributeValueProvider annotationAttributeValueProvider,  final SynthesizedAnnotation annotation) {
+    SynthesizedAnnotationProxy(final AnnotationAttributeValueProvider annotationAttributeValueProvider,
+            final SynthesizedAnnotation annotation) {
         Assert.notNull(annotationAttributeValueProvider, "annotationAttributeValueProvider must not null");
         Assert.notNull(annotation, "annotation must not null");
         this.annotationAttributeValueProvider = annotationAttributeValueProvider;
@@ -142,7 +144,8 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
     }
 
     private Object proxyAttributeValue(final Method attributeMethod) {
-        return annotationAttributeValueProvider.getAttributeValue(attributeMethod.getName(), attributeMethod.getReturnType());
+        return annotationAttributeValueProvider.getAttributeValue(attributeMethod.getName(),
+                attributeMethod.getReturnType());
     }
 
     /**

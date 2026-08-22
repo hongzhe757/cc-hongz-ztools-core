@@ -42,7 +42,8 @@ import java.util.function.Function;
  * @author Looly
  * @since 5.8.41
  */
-public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
+public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterable<Map.Entry<K, V>>,
+        Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -178,7 +179,8 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
         while (null == result) {
             this.purgeStale();
             final Ref<V> vReference = this.raw.computeIfPresent(wrapKey(key),
-                (kReference, vReference1) -> wrapValue(remappingFunction.apply(unwrap(kReference), unwrap(vReference1))));
+                (kReference, vReference1) -> wrapValue(remappingFunction.apply(unwrap(kReference),
+                        unwrap(vReference1))));
 
             // issue#IA5GMH 如果vReference在此时被GC回收，则unwrap后为null，需要循环计算
             // 但是当用户提供的值本身为null，则直接返回之

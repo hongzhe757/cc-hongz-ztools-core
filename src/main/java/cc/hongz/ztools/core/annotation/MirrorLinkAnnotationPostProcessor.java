@@ -62,9 +62,11 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
         // 校验镜像关系
         checkMirrorRelation(annotation, originalAttribute, linkedAttribute);
         // 包装这一对镜像属性，并替换原注解中的对应属性
-        final AnnotationAttribute mirroredOriginalAttribute = new MirroredAnnotationAttribute(originalAttribute, linkedAttribute);
+        final AnnotationAttribute mirroredOriginalAttribute = new MirroredAnnotationAttribute(originalAttribute,
+                linkedAttribute);
         originalAnnotation.setAttribute(originalAttribute.getAttributeName(), mirroredOriginalAttribute);
-        final AnnotationAttribute mirroredTargetAttribute = new MirroredAnnotationAttribute(linkedAttribute, originalAttribute);
+        final AnnotationAttribute mirroredTargetAttribute = new MirroredAnnotationAttribute(linkedAttribute,
+                originalAttribute);
         linkedAnnotation.setAttribute(annotation.attribute(), mirroredTargetAttribute);
     }
 
@@ -77,7 +79,8 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
 
         // 校验通过
         final boolean passed = originalAttributeMirrored && mirrorAttributeMirrored
-            && ObjectUtil.equals(((MirroredAnnotationAttribute) original).getLinked(), ((MirroredAnnotationAttribute) mirror).getOriginal());
+            && ObjectUtil.equals(((MirroredAnnotationAttribute) original).getLinked(),
+                    ((MirroredAnnotationAttribute) mirror).getOriginal());
         if (passed) {
             return;
         }
@@ -112,7 +115,8 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
     /**
      * 基本校验.
      */
-    private void checkMirrorRelation(final Link annotation,  final AnnotationAttribute original,  final AnnotationAttribute mirror) {
+    private void checkMirrorRelation(final Link annotation,  final AnnotationAttribute original,
+            final AnnotationAttribute mirror) {
         // 镜像属性必须存在
         checkLinkedAttributeNotNull(original, mirror, annotation);
         // 镜像属性返回值必须一致

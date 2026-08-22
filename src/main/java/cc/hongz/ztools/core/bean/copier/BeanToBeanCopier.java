@@ -85,7 +85,8 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
             sValue = copyOptions.editFieldValue(sFieldName, sValue);
 
             // 目标赋值
-            tDesc.setValue(this.target, sValue, copyOptions.ignoreNullValue, copyOptions.ignoreError, copyOptions.override);
+            tDesc.setValue(this.target, sValue, copyOptions.ignoreNullValue, copyOptions.ignoreError,
+                    copyOptions.override);
         });
         return this.target;
     }

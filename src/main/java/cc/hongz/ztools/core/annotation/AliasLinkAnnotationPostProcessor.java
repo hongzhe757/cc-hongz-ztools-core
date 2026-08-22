@@ -20,7 +20,8 @@ import java.util.function.BinaryOperator;
  */
 public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPostProcessor {
 
-    private static final RelationType[] PROCESSED_RELATION_TYPES = new RelationType[]{ RelationType.ALIAS_FOR, RelationType.FORCE_ALIAS_FOR };
+    private static final RelationType[] PROCESSED_RELATION_TYPES = new RelationType[]{ RelationType.ALIAS_FOR,
+            RelationType.FORCE_ALIAS_FOR };
 
     @Override
     public int order() {
@@ -70,7 +71,8 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
      * 对指定注解属性进行包装，若该属性已被包装过，则递归以其为根节点的树结构，对树上全部的叶子节点进行包装.
      */
     private void wrappingLinkedAttribute(
-        final AnnotationSynthesizer synthesizer, final AnnotationAttribute originalAttribute, final AnnotationAttribute aliasAttribute, final BinaryOperator<AnnotationAttribute> wrapping) {
+        final AnnotationSynthesizer synthesizer, final AnnotationAttribute originalAttribute,
+                final AnnotationAttribute aliasAttribute, final BinaryOperator<AnnotationAttribute> wrapping) {
         // 不是包装属性
         if (!aliasAttribute.isWrapped()) {
             processAttribute(synthesizer, originalAttribute, aliasAttribute, wrapping);
@@ -91,13 +93,15 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
         final AnnotationAttribute target, final BinaryOperator<AnnotationAttribute> wrapping) {
         Opt.ofNullable(target.getAnnotationType())
             .map(synthesizer::getSynthesizedAnnotation)
-            .ifPresent(t -> t.replaceAttribute(target.getAttributeName(), old -> wrapping.apply(old, originalAttribute)));
+            .ifPresent(t -> t.replaceAttribute(target.getAttributeName(), old -> wrapping.apply(old,
+                    originalAttribute)));
     }
 
     /**
      * 基本校验.
      */
-    private void checkAliasRelation(final Link annotation,  final AnnotationAttribute originalAttribute,  final AnnotationAttribute linkedAttribute) {
+    private void checkAliasRelation(final Link annotation,  final AnnotationAttribute originalAttribute,
+            final AnnotationAttribute linkedAttribute) {
         checkLinkedAttributeNotNull(originalAttribute, linkedAttribute, annotation);
         checkAttributeType(originalAttribute, linkedAttribute);
         checkCircularDependency(originalAttribute, linkedAttribute);

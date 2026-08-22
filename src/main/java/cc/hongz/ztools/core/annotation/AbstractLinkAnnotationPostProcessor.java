@@ -38,7 +38,8 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
                 return;
             }
             // 获取注解属性
-            final SynthesizedAnnotation linkedAnnotation = getLinkedAnnotation(link, synthesizer, synthesizedAnnotation.annotationType());
+            final SynthesizedAnnotation linkedAnnotation = getLinkedAnnotation(link, synthesizer,
+                    synthesizedAnnotation.annotationType());
             if (ObjectUtil.isNull(linkedAnnotation)) {
                 return;
             }
@@ -101,7 +102,8 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
      * @param defaultType 默认类型
      * @return {@link SynthesizedAnnotation}
      */
-    protected SynthesizedAnnotation getLinkedAnnotation(final Link annotation,  final AnnotationSynthesizer synthesizer,  final Class<? extends Annotation> defaultType) {
+    protected SynthesizedAnnotation getLinkedAnnotation(final Link annotation,  final AnnotationSynthesizer synthesizer,
+            final Class<? extends Annotation> defaultType) {
         final Class<?> targetAnnotationType = getLinkedAnnotationType(annotation, defaultType);
         return synthesizer.getSynthesizedAnnotation(targetAnnotationType);
     }
@@ -153,7 +155,8 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
      * @param linkedAttribute {@link Link}指向的注解属性
      * @param annotation      {@link Link}注解
      */
-    protected void checkLinkedAttributeNotNull(final AnnotationAttribute original,  final AnnotationAttribute linkedAttribute,  final Link annotation) {
+    protected void checkLinkedAttributeNotNull(final AnnotationAttribute original,
+            final AnnotationAttribute linkedAttribute,  final Link annotation) {
         Assert.notNull(linkedAttribute, "cannot find linked attribute [{}] of original [{}] in [{}]",
                 original.getAttribute(), annotation.attribute(),
                 getLinkedAnnotationType(annotation, original.getAnnotationType())

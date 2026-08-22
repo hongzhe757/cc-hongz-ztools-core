@@ -45,7 +45,8 @@ public class CacheableSynthesizedAnnotationAttributeProcessor implements Synthes
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getAttributeValue(final String attributeName,  final Class<T> attributeType,  final Collection<? extends SynthesizedAnnotation> synthesizedAnnotations) {
+    public <T> T getAttributeValue(final String attributeName,  final Class<T> attributeType,
+            final Collection<? extends SynthesizedAnnotation> synthesizedAnnotations) {
         Object value = valueCaches.get(attributeName, attributeType);
         if (Objects.isNull(value)) {
             synchronized (valueCaches) {

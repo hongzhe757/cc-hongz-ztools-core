@@ -195,7 +195,8 @@ public final class AnnotationUtil {
      * @return 注解对象数组
      * @since 5.8.0
      */
-    public static <T> T[] getCombinationAnnotations(final AnnotatedElement annotationEle,  final Class<T> annotationType) {
+    public static <T> T[] getCombinationAnnotations(final AnnotatedElement annotationEle,
+            final Class<T> annotationType) {
         return getAnnotations(annotationEle, true, annotationType);
     }
 
@@ -210,7 +211,8 @@ public final class AnnotationUtil {
      * @since 5.8.0
      */
     @SuppressWarnings("unchecked")
-    public static <T> T[] getAnnotations(final AnnotatedElement annotationEle,  final boolean isToCombination,  final Class<T> annotationType) {
+    public static <T> T[] getAnnotations(final AnnotatedElement annotationEle,  final boolean isToCombination,
+            final Class<T> annotationType) {
         final Annotation[] annotations = getAnnotations(annotationEle, isToCombination,
                 (annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
 
@@ -230,7 +232,8 @@ public final class AnnotationUtil {
      * @return 注解对象，如果提供的{@link AnnotatedElement}为{@code null}，返回{@code null}
      * @since 5.8.0
      */
-    public static Annotation[] getAnnotations(final AnnotatedElement annotationEle,  final boolean isToCombination,  final Predicate<Annotation> predicate) {
+    public static Annotation[] getAnnotations(final AnnotatedElement annotationEle,  final boolean isToCombination,
+            final Predicate<Annotation> predicate) {
         if (null == annotationEle) {
             return null;
         }
@@ -259,7 +262,8 @@ public final class AnnotationUtil {
      * @return 注解对象，未找到返回{@code null}
      */
     @SuppressWarnings("unchecked")
-    public static <A extends Annotation> A getAnnotation(final AnnotatedElement annotationEle,  final Class<A> annotationType) {
+    public static <A extends Annotation> A getAnnotation(final AnnotatedElement annotationEle,
+            final Class<A> annotationType) {
         if (null == annotationEle || null == annotationType) {
             return null;
         }
@@ -288,7 +292,8 @@ public final class AnnotationUtil {
      * @return 是否包含指定注解
      * @since 5.4.2
      */
-    public static boolean hasAnnotation(final AnnotatedElement annotationEle,  final Class<? extends Annotation> annotationType) {
+    public static boolean hasAnnotation(final AnnotatedElement annotationEle,
+            final Class<? extends Annotation> annotationType) {
         return null != getAnnotation(annotationEle, annotationType);
     }
 
@@ -326,7 +331,8 @@ public final class AnnotationUtil {
      * @return 注解对象
      * @throws UtilException 调用注解中的方法时执行异常
      */
-    public static <T> T getAnnotationValue(final AnnotatedElement annotationEle,  final Class<? extends Annotation> annotationType) throws UtilException {
+    public static <T> T getAnnotationValue(final AnnotatedElement annotationEle,
+            final Class<? extends Annotation> annotationType) throws UtilException {
         return getAnnotationValue(annotationEle, annotationType, "value");
     }
 
@@ -341,7 +347,8 @@ public final class AnnotationUtil {
      * @return 注解对象
      * @throws UtilException 调用注解中的方法时执行异常
      */
-    public static <T> T getAnnotationValue(final AnnotatedElement annotationEle,  final Class<? extends Annotation> annotationType,  final String propertyName) throws UtilException {
+    public static <T> T getAnnotationValue(final AnnotatedElement annotationEle,
+            final Class<? extends Annotation> annotationType,  final String propertyName) throws UtilException {
         final Annotation annotation = getAnnotation(annotationEle, annotationType);
         if (null == annotation) {
             return null;
@@ -366,13 +373,15 @@ public final class AnnotationUtil {
      * @throws UtilException 调用注解中的方法时执行异常
      * @since 5.8.9
      */
-    public static <A extends Annotation, R> R getAnnotationValue(final AnnotatedElement annotationEle,  final Func1<A, R> propertyName) {
+    public static <A extends Annotation, R> R getAnnotationValue(final AnnotatedElement annotationEle,
+            final Func1<A, R> propertyName) {
         if (propertyName == null) {
             return null;
         } else {
             final SerializedLambda lambda = LambdaUtil.resolve(propertyName);
             final String instantiatedMethodType = lambda.getInstantiatedMethodType();
-            final Class<A> annotationClass = ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+            final Class<A> annotationClass = ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2,
+                    StrUtil.indexOf(instantiatedMethodType, ';')));
             return getAnnotationValue(annotationEle, annotationClass, lambda.getImplMethodName());
         }
     }
@@ -386,7 +395,8 @@ public final class AnnotationUtil {
      * @return 注解对象
      * @throws UtilException 调用注解中的方法时执行异常
      */
-    public static Map<String, Object> getAnnotationValueMap(final AnnotatedElement annotationEle,  final Class<? extends Annotation> annotationType) throws UtilException {
+    public static Map<String, Object> getAnnotationValueMap(final AnnotatedElement annotationEle,
+            final Class<? extends Annotation> annotationType) throws UtilException {
         final Annotation annotation = getAnnotation(annotationEle, annotationType);
         if (null == annotation) {
             return null;
@@ -555,7 +565,8 @@ public final class AnnotationUtil {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static void setValue(final Annotation annotation,  final String annotationField,  final Object value) {
-        final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
+        final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation),
+                "memberValues");
         memberValues.put(annotationField, value);
     }
 
@@ -580,7 +591,8 @@ public final class AnnotationUtil {
      * @since 5.7.23
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Annotation> T getAnnotationAlias(final AnnotatedElement annotationEle,  final Class<T> annotationType) {
+    public static <T extends Annotation> T getAnnotationAlias(final AnnotatedElement annotationEle,
+            final Class<T> annotationType) {
         if (null == annotationEle || null == annotationType) {
             return null;
         }
@@ -611,7 +623,8 @@ public final class AnnotationUtil {
      * @return 合成注解
      * @see SynthesizedAggregateAnnotation
      */
-    public static <T extends Annotation> T getSynthesizedAnnotation(final Class<T> annotationType,  final Annotation... annotations) {
+    public static <T extends Annotation> T getSynthesizedAnnotation(final Class<T> annotationType,
+            final Annotation... annotations) {
         // TODO 缓存合成注解信息，避免重复解析
         return Opt.ofNullable(annotations)
                 .filter(ArrayUtil::isNotEmpty)
@@ -643,7 +656,8 @@ public final class AnnotationUtil {
      * @see SynthesizedAggregateAnnotation
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Annotation> T getSynthesizedAnnotation(final AnnotatedElement annotatedEle,  final Class<T> annotationType) {
+    public static <T extends Annotation> T getSynthesizedAnnotation(final AnnotatedElement annotatedEle,
+            final Class<T> annotationType) {
         if (null == annotatedEle || null == annotationType) {
             return null;
         }
@@ -698,7 +712,8 @@ public final class AnnotationUtil {
      * @return 合成注解
      * @see SynthesizedAggregateAnnotation
      */
-    public static <T extends Annotation> List<T> getAllSynthesizedAnnotations(final AnnotatedElement annotatedEle,  final Class<T> annotationType) {
+    public static <T extends Annotation> List<T> getAllSynthesizedAnnotations(final AnnotatedElement annotatedEle,
+            final Class<T> annotationType) {
         return AnnotationScanner.DIRECTLY
                 .getAnnotationsIfSupport(annotatedEle).stream()
                 .map(annotation -> getSynthesizedAnnotation(annotationType, annotation))
@@ -723,7 +738,8 @@ public final class AnnotationUtil {
      * @return 聚合注解
      */
     public static SynthesizedAggregateAnnotation aggregatingFromAnnotationWithMeta(final Annotation... annotations) {
-        return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), AnnotationScanner.DIRECTLY_AND_META_ANNOTATION);
+        return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations),
+                AnnotationScanner.DIRECTLY_AND_META_ANNOTATION);
     }
 
     /**

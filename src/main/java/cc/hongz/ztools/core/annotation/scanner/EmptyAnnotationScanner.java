@@ -25,7 +25,8 @@ public class EmptyAnnotationScanner implements AnnotationScanner {
     }
 
     @Override
-    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
+    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,
+            final Predicate<Annotation> filter) {
         // do nothing
     }
 }

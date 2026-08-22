@@ -24,7 +24,8 @@ public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnn
      * @param filter             过滤器
      * @param excludeTypes       不包含的类型
      */
-    public TypeAnnotationScanner(final boolean includeSupperClass,  final boolean includeInterfaces,  final Predicate<Class<?>> filter,  final Set<Class<?>> excludeTypes) {
+    public TypeAnnotationScanner(final boolean includeSupperClass,  final boolean includeInterfaces,
+            final Predicate<Class<?>> filter,  final Set<Class<?>> excludeTypes) {
         super(includeSupperClass, includeInterfaces, filter, excludeTypes);
     }
 
@@ -66,7 +67,8 @@ public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnn
      * @return 类上直接声明的注解
      */
     @Override
-    protected Annotation[] getAnnotationsFromTargetClass(final AnnotatedElement source,  final int index,  final Class<?> targetClass) {
+    protected Annotation[] getAnnotationsFromTargetClass(final AnnotatedElement source,  final int index,
+            final Class<?> targetClass) {
         return targetClass.getAnnotations();
     }
 

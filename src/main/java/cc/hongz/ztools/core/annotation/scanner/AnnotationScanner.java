@@ -101,7 +101,8 @@ public interface AnnotationScanner {
      * @param scanners     注解扫描器
      * @return 注解
      */
-    static List<Annotation> scanByAnySupported(final AnnotatedElement annotatedEle,  final AnnotationScanner... scanners) {
+    static List<Annotation> scanByAnySupported(final AnnotatedElement annotatedEle,
+            final AnnotationScanner... scanners) {
         if (ObjectUtil.isNull(annotatedEle) && ArrayUtil.isNotEmpty(scanners)) {
             return Collections.emptyList();
         }
@@ -119,7 +120,8 @@ public interface AnnotationScanner {
      * @param scanners     注解扫描器
      * @return 注解
      */
-    static List<Annotation> scanByAllSupported(final AnnotatedElement annotatedEle,  final AnnotationScanner... scanners) {
+    static List<Annotation> scanByAllSupported(final AnnotatedElement annotatedEle,
+            final AnnotationScanner... scanners) {
         if (ObjectUtil.isNull(annotatedEle) && ArrayUtil.isNotEmpty(scanners)) {
             return Collections.emptyList();
         }
@@ -173,7 +175,8 @@ public interface AnnotationScanner {
      * @param annotatedEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
      * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
      */
-    default void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
+    default void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,
+            final Predicate<Annotation> filter) {
         final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(filter, (a) -> annotation -> true);
         for (final Annotation annotation : annotatedEle.getAnnotations()) {
             if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) && targetFilter.test(annotation)) {
@@ -189,7 +192,8 @@ public interface AnnotationScanner {
      * @param annotatedEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
      * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
      */
-    default void scanIfSupport(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
+    default void scanIfSupport(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,
+            final Predicate<Annotation> filter) {
         if (support(annotatedEle)) {
             scan(consumer, annotatedEle, filter);
         }

@@ -146,7 +146,8 @@ public class BeanPath implements Serializable {
         if (null == subBean) {
             // 当前节点是空，则先创建父节点
             final List<String> parentParts = getParentParts(parts);
-            this.set(bean, parentParts, lastIsNumber(parentParts), nextNumberPart ? new ArrayList<>() : new HashMap<>());
+            this.set(bean, parentParts, lastIsNumber(parentParts),
+                    nextNumberPart ? new ArrayList<>() : new HashMap<>());
             //set中有可能做过转换，因此此处重新获取bean
             subBean = this.get(parts, bean, true);
         }

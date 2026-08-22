@@ -136,7 +136,7 @@ public class BeanDesc implements Serializable {
         return null == desc ? null : desc.getSetter();
     }
 
-    // ------------------------------------------------------------------------------------------------------ Private method start
+    // --------------------------------------------------- Private method start
 
     /**
      * 初始化.
@@ -145,7 +145,8 @@ public class BeanDesc implements Serializable {
      * @return this
      */
     private BeanDesc init() {
-        final Method[] gettersAndSetters = ReflectUtil.getMethods(this.beanClass, ReflectUtil::isGetterOrSetterIgnoreCase);
+        final Method[] gettersAndSetters = ReflectUtil.getMethods(this.beanClass,
+                ReflectUtil::isGetterOrSetterIgnoreCase);
         PropDesc prop;
         for (Field field : ReflectUtil.getFields(this.beanClass)) {
             // 排除静态属性和对象子类
@@ -165,9 +166,11 @@ public class BeanDesc implements Serializable {
         final Class<?> targetClass = this.beanClass;
         final Map<String, PropDesc> targetPropMap = this.propMap;
 
-        final List<Method> getters = ReflectUtil.getPublicMethods(targetClass, method -> 0 == method.getParameterCount());
+        final List<Method> getters = ReflectUtil.getPublicMethods(targetClass,
+                method -> 0 == method.getParameterCount());
         // 排除静态属性和对象子类
-        final Field[] fields = ReflectUtil.getFields(targetClass, field -> !ModifierUtil.isStatic(field) && !ReflectUtil.isOuterClassField(field));
+        final Field[] fields = ReflectUtil.getFields(targetClass,
+                field -> !ModifierUtil.isStatic(field) && !ReflectUtil.isOuterClassField(field));
         for (final Field field : fields) {
             for (final Method getter : getters) {
                 if (field.getName().equals(getter.getName())) {
@@ -270,7 +273,8 @@ public class BeanDesc implements Serializable {
      * @param ignoreCase     匹配是否忽略大小写
      * @return 是否匹配
      */
-    private boolean isMatchGetter(final String methodName,  final String fieldName,  final boolean isBooleanField,  final boolean ignoreCase) {
+    private boolean isMatchGetter(final String methodName,  final String fieldName,  final boolean isBooleanField,
+            final boolean ignoreCase) {
         final String targetMethodName = ignoreCase ? methodName.toLowerCase() : methodName;
         final String targetFieldName = ignoreCase ? fieldName.toLowerCase() : fieldName;
         final String handledFieldName = ignoreCase ? fieldName.toLowerCase() : StrUtil.upperFirst(fieldName);
@@ -312,7 +316,8 @@ public class BeanDesc implements Serializable {
      * @param ignoreCase     匹配是否忽略大小写
      * @return 是否匹配
      */
-    private boolean isMatchSetter(final String methodName,  final String fieldName,  final boolean isBooleanField,  final boolean ignoreCase) {
+    private boolean isMatchSetter(final String methodName,  final String fieldName,  final boolean isBooleanField,
+            final boolean ignoreCase) {
         final String targetMethodName = ignoreCase ? methodName.toLowerCase() : methodName;
         final String targetFieldName = ignoreCase ? fieldName.toLowerCase() : fieldName;
         final String handledFieldName = ignoreCase ? fieldName.toLowerCase() : StrUtil.upperFirst(fieldName);
@@ -335,5 +340,5 @@ public class BeanDesc implements Serializable {
         // 包括boolean的任何类型只有一种匹配情况：name -》 setName
         return ("set" + handledFieldName).equals(targetMethodName);
     }
-    // ------------------------------------------------------------------------------------------------------ Private method end
+    // --------------------------------------------------- Private method end
 }

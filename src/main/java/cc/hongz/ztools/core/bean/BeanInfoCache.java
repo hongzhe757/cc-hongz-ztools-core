@@ -29,7 +29,8 @@ public enum BeanInfoCache {
      * @param ignoreCase 是否忽略大小写
      * @return 属性名和{@link PropertyDescriptor}Map映射
      */
-    public Map<String, PropertyDescriptor> getPropertyDescriptorMap(final Class<?> beanClass,  final boolean ignoreCase) {
+    public Map<String, PropertyDescriptor> getPropertyDescriptorMap(final Class<?> beanClass,
+            final boolean ignoreCase) {
         return getCache(ignoreCase).get(beanClass);
     }
 
@@ -56,7 +57,8 @@ public enum BeanInfoCache {
      * @param fieldNamePropertyDescriptorMap 属性名和{@link PropertyDescriptor}Map映射
      * @param ignoreCase                     是否忽略大小写
      */
-    public void putPropertyDescriptorMap(final Class<?> beanClass,  final Map<String, PropertyDescriptor> fieldNamePropertyDescriptorMap,  final boolean ignoreCase) {
+    public void putPropertyDescriptorMap(final Class<?> beanClass,
+            final Map<String, PropertyDescriptor> fieldNamePropertyDescriptorMap,  final boolean ignoreCase) {
         getCache(ignoreCase).put(beanClass, fieldNamePropertyDescriptorMap);
     }
 

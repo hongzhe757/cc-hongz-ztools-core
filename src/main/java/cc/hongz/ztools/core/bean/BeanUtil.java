@@ -203,7 +203,7 @@ public final class BeanUtil {
         getBeanDesc(clazz).getProps().forEach(action);
     }
 
-    // --------------------------------------------------------------------------------------------------------- PropertyDescriptor
+    // --------------------------------------------------- PropertyDescriptor
 
     /**
      * 获得Bean字段描述数组.
@@ -233,8 +233,10 @@ public final class BeanUtil {
      * @return 字段名和字段描述Map
      * @throws BeanException 获取属性异常
      */
-    public static Map<String, PropertyDescriptor> getPropertyDescriptorMap(final Class<?> clazz,  final boolean ignoreCase) throws BeanException {
-        return BeanInfoCache.INSTANCE.getPropertyDescriptorMap(clazz, ignoreCase, () -> internalGetPropertyDescriptorMap(clazz, ignoreCase));
+    public static Map<String, PropertyDescriptor> getPropertyDescriptorMap(final Class<?> clazz,
+            final boolean ignoreCase) throws BeanException {
+        return BeanInfoCache.INSTANCE.getPropertyDescriptorMap(clazz, ignoreCase,
+                () -> internalGetPropertyDescriptorMap(clazz, ignoreCase));
     }
 
     /**
@@ -245,9 +247,11 @@ public final class BeanUtil {
      * @return 字段名和字段描述Map
      * @throws BeanException 获取属性异常
      */
-    private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(final Class<?> clazz,  final boolean ignoreCase) throws BeanException {
+    private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(final Class<?> clazz,
+            final boolean ignoreCase) throws BeanException {
         final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
-        final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1f)
+        final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length,
+                1f)
                 : new HashMap<>(propertyDescriptors.length, 1);
 
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
@@ -264,7 +268,8 @@ public final class BeanUtil {
      * @return PropertyDescriptor
      * @throws BeanException 获取属性异常
      */
-    public static PropertyDescriptor getPropertyDescriptor(final Class<?> clazz,  final String fieldName) throws BeanException {
+    public static PropertyDescriptor getPropertyDescriptor(final Class<?> clazz,
+            final String fieldName) throws BeanException {
         return getPropertyDescriptor(clazz, fieldName, false);
     }
 
@@ -277,7 +282,8 @@ public final class BeanUtil {
      * @return PropertyDescriptor
      * @throws BeanException 获取属性异常
      */
-    public static PropertyDescriptor getPropertyDescriptor(final Class<?> clazz,  final String fieldName,  final boolean ignoreCase) throws BeanException {
+    public static PropertyDescriptor getPropertyDescriptor(final Class<?> clazz,  final String fieldName,
+            final boolean ignoreCase) throws BeanException {
         final Map<String, PropertyDescriptor> map = getPropertyDescriptorMap(clazz, ignoreCase);
         return (null == map) ? null : map.get(fieldName);
     }
@@ -383,7 +389,7 @@ public final class BeanUtil {
         BeanPath.create(expression).set(bean, value);
     }
 
-    // --------------------------------------------------------------------------------------------- mapToBean
+    // --------------------------------------------------- mapToBean
 
     /**
      * Map转换为Bean对象.
@@ -412,7 +418,8 @@ public final class BeanUtil {
      * @deprecated 请使用 {@link #toBeanIgnoreCase(Object, Class, boolean)}
      */
     @Deprecated
-    public static <T> T mapToBeanIgnoreCase(final Map<?, ?> map,  final Class<T> beanClass,  final boolean isIgnoreError) {
+    public static <T> T mapToBeanIgnoreCase(final Map<?, ?> map,  final Class<T> beanClass,
+            final boolean isIgnoreError) {
         return fillBeanWithMapIgnoreCase(map, ReflectUtil.newInstanceIfPossible(beanClass), isIgnoreError);
     }
 
@@ -443,11 +450,12 @@ public final class BeanUtil {
      * @deprecated isToCamelCase参数无效，请使用 {@link #toBean(Object, Class, CopyOptions)}
      */
     @Deprecated
-    public static <T> T mapToBean(final Map<?, ?> map,  final Class<T> beanClass,  final boolean isToCamelCase,  final CopyOptions copyOptions) {
+    public static <T> T mapToBean(final Map<?, ?> map,  final Class<T> beanClass,  final boolean isToCamelCase,
+            final CopyOptions copyOptions) {
         return fillBeanWithMap(map, ReflectUtil.newInstanceIfPossible(beanClass), isToCamelCase, copyOptions);
     }
 
-    // --------------------------------------------------------------------------------------------- fillBeanWithMap
+    // --------------------------------------------------- fillBeanWithMap
 
     /**
      * 使用Map填充Bean对象.
@@ -474,7 +482,8 @@ public final class BeanUtil {
      * @deprecated isToCamelCase参数无效，请使用{@link #fillBeanWithMap(Map, Object, boolean)}
      */
     @Deprecated
-    public static <T> T fillBeanWithMap(final Map<?, ?> map,  final T bean,  final boolean isToCamelCase,  final boolean isIgnoreError) {
+    public static <T> T fillBeanWithMap(final Map<?, ?> map,  final T bean,  final boolean isToCamelCase,
+            final boolean isIgnoreError) {
         return fillBeanWithMap(map, bean, isToCamelCase, CopyOptions.create().setIgnoreError(isIgnoreError));
     }
 
@@ -521,7 +530,8 @@ public final class BeanUtil {
      * @deprecated isToCamelCase参数无效，请使用{@link #fillBeanWithMap(Map, Object, CopyOptions)}
      */
     @Deprecated
-    public static <T> T fillBeanWithMap(final Map<?, ?> map,  final T bean,  final boolean isToCamelCase,  final CopyOptions copyOptions) {
+    public static <T> T fillBeanWithMap(final Map<?, ?> map,  final T bean,  final boolean isToCamelCase,
+            final CopyOptions copyOptions) {
         if (MapUtil.isEmpty(map)) {
             return bean;
         }
@@ -534,7 +544,7 @@ public final class BeanUtil {
         return bean;
     }
 
-    // --------------------------------------------------------------------------------------------- fillBean
+    // --------------------------------------------------- fillBean
 
     /**
      * 对象或Map转Bean.
@@ -621,7 +631,8 @@ public final class BeanUtil {
      * @param copyOptions   拷贝选项，见 {@link CopyOptions}
      * @return Bean
      */
-    public static <T> T toBean(final Class<T> beanClass,  final ValueProvider<String> valueProvider,  final CopyOptions copyOptions) {
+    public static <T> T toBean(final Class<T> beanClass,  final ValueProvider<String> valueProvider,
+            final CopyOptions copyOptions) {
         if (null == beanClass || null == valueProvider) {
             return null;
         }
@@ -637,7 +648,8 @@ public final class BeanUtil {
      * @param copyOptions   拷贝选项，见 {@link CopyOptions}
      * @return Bean
      */
-    public static <T> T fillBean(final T bean,  final ValueProvider<String> valueProvider,  final CopyOptions copyOptions) {
+    public static <T> T fillBean(final T bean,  final ValueProvider<String> valueProvider,
+            final CopyOptions copyOptions) {
         if (null == valueProvider) {
             return bean;
         }
@@ -645,7 +657,7 @@ public final class BeanUtil {
         return BeanCopier.create(valueProvider, bean, copyOptions).copy();
     }
 
-    // --------------------------------------------------------------------------------------------- beanToMap
+    // --------------------------------------------------- beanToMap
 
     /**
      * 将bean的部分属性转换成map.
@@ -678,7 +690,8 @@ public final class BeanUtil {
      * @param ignoreNullValue   是否忽略值为空的字段
      * @return Map
      */
-    public static Map<String, Object> beanToMap(final Object bean,  final boolean isToUnderlineCase,  final boolean ignoreNullValue) {
+    public static Map<String, Object> beanToMap(final Object bean,  final boolean isToUnderlineCase,
+            final boolean ignoreNullValue) {
         if (null == bean) {
             return null;
         }
@@ -695,12 +708,14 @@ public final class BeanUtil {
      * @return Map
      * @since 3.2.3
      */
-    public static Map<String, Object> beanToMap(final Object bean,  final Map<String, Object> targetMap,  final boolean isToUnderlineCase,  final boolean ignoreNullValue) {
+    public static Map<String, Object> beanToMap(final Object bean,  final Map<String, Object> targetMap,
+            final boolean isToUnderlineCase,  final boolean ignoreNullValue) {
         if (null == bean) {
             return null;
         }
 
-        return beanToMap(bean, targetMap, ignoreNullValue, key -> isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key);
+        return beanToMap(bean, targetMap, ignoreNullValue,
+                key -> isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key);
     }
 
     /**
@@ -720,7 +735,8 @@ public final class BeanUtil {
      * @return Map
      * @since 4.0.5
      */
-    public static Map<String, Object> beanToMap(final Object bean,  final Map<String, Object> targetMap,  final boolean ignoreNullValue,  final Editor<String> keyEditor) {
+    public static Map<String, Object> beanToMap(final Object bean,  final Map<String, Object> targetMap,
+            final boolean ignoreNullValue,  final Editor<String> keyEditor) {
         if (null == bean) {
             return null;
         }
@@ -750,7 +766,8 @@ public final class BeanUtil {
      * @return Map
      * @since 5.7.15
      */
-    public static Map<String, Object> beanToMap(final Object bean,  final Map<String, Object> targetMap,  final CopyOptions copyOptions) {
+    public static Map<String, Object> beanToMap(final Object bean,  final Map<String, Object> targetMap,
+            final CopyOptions copyOptions) {
         if (null == bean) {
             return null;
         }
@@ -758,7 +775,7 @@ public final class BeanUtil {
         return BeanCopier.create(bean, targetMap, copyOptions).copy();
     }
 
-    // --------------------------------------------------------------------------------------------- copyProperties
+    // --------------------------------------------------- copyProperties
 
     /**
      * 按照Bean对象属性创建对应的Class对象，并忽略某些属性.
@@ -827,7 +844,8 @@ public final class BeanUtil {
      * @return 复制后的List
      * @since 5.6.4
      */
-    public static <T> List<T> copyToList(final Collection<?> collection,  final Class<T> targetType,  final CopyOptions copyOptions) {
+    public static <T> List<T> copyToList(final Collection<?> collection,  final Class<T> targetType,
+            final CopyOptions copyOptions) {
         if (null == collection) {
             return null;
         }
@@ -876,7 +894,8 @@ public final class BeanUtil {
         if (null == bean || StrUtil.isBlank(beanClassName)) {
             return false;
         }
-        return ClassUtil.getClassName(bean, isSimple).equals(isSimple ? StrUtil.upperFirst(beanClassName) : beanClassName);
+        return ClassUtil.getClassName(bean,
+                isSimple).equals(isSimple ? StrUtil.upperFirst(beanClassName) : beanClassName);
     }
 
     /**
@@ -1030,7 +1049,8 @@ public final class BeanUtil {
      * @author Takak11
      * @since 5.8.4
      */
-    public static boolean isCommonFieldsEqual(final Object source,  final Object target,  final String... ignoreProperties) {
+    public static boolean isCommonFieldsEqual(final Object source,  final Object target,
+            final String... ignoreProperties) {
 
         if (null == source && null == target) {
             return true;

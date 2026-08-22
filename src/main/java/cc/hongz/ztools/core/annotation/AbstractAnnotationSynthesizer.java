@@ -95,7 +95,8 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
      * @param <A>            注解类型
      * @return 最终所需的合成注解
      */
-    protected abstract <A extends Annotation> A synthesize(final Class<A> annotationType,  final SynthesizedAnnotation annotation);
+    protected abstract <A extends Annotation> A synthesize(final Class<A> annotationType,
+            final SynthesizedAnnotation annotation);
 
     /**
      * 获取合成注解来源最初来源.

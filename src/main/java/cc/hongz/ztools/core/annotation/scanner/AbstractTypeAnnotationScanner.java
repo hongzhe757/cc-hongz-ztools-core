@@ -69,7 +69,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @param excludeTypes      不包含的类型
      */
     @SuppressWarnings("unchecked")
-    protected AbstractTypeAnnotationScanner(final boolean includeSuperClass,  final boolean includeInterfaces,  final Predicate<Class<?>> filter,  final Set<Class<?>> excludeTypes) {
+    protected AbstractTypeAnnotationScanner(final boolean includeSuperClass,  final boolean includeInterfaces,
+            final Predicate<Class<?>> filter,  final Set<Class<?>> excludeTypes) {
         Assert.notNull(filter, "filter must not null");
         Assert.notNull(excludeTypes, "excludeTypes must not null");
         this.includeSuperClass = includeSuperClass;
@@ -167,7 +168,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
      */
     @Override
-    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> annotationFilter) {
+    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,
+            final Predicate<Annotation> annotationFilter) {
         final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(annotationFilter, a -> annotation -> true);
         final Class<?> sourceClass = getClassFormAnnotatedElement(annotatedEle);
         final Deque<List<Class<?>>> classDeque = CollUtil.newLinkedList(CollUtil.newArrayList(sourceClass));
@@ -218,7 +220,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @param targetClass 类
      * @return 最终所需的目标注解
      */
-    protected abstract Annotation[] getAnnotationsFromTargetClass(final AnnotatedElement source,  final int index,  final Class<?> targetClass);
+    protected abstract Annotation[] getAnnotationsFromTargetClass(final AnnotatedElement source,  final int index,
+            final Class<?> targetClass);
 
     /**
      * 当前类是否不需要处理.

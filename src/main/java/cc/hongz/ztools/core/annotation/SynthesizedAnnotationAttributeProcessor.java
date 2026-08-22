@@ -19,6 +19,7 @@ public interface SynthesizedAnnotationAttributeProcessor {
      * @param <R> 属性类型
      * @return 属性值
      */
-    <R> R getAttributeValue(final String attributeName,  final Class<R> attributeType,  final Collection<? extends SynthesizedAnnotation> synthesizedAnnotations);
+    <R> R getAttributeValue(final String attributeName,  final Class<R> attributeType,
+            final Collection<? extends SynthesizedAnnotation> synthesizedAnnotations);
 
 }

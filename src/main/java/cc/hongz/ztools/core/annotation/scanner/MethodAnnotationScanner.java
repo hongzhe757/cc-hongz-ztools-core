@@ -42,7 +42,8 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
      * @param filter                  过滤器
      * @param excludeTypes            不包含的类型
      */
-    public MethodAnnotationScanner(final boolean scanSameSignatureMethod,  final Predicate<Class<?>> filter,  final Set<Class<?>> excludeTypes) {
+    public MethodAnnotationScanner(final boolean scanSameSignatureMethod,  final Predicate<Class<?>> filter,
+            final Set<Class<?>> excludeTypes) {
         super(scanSameSignatureMethod, scanSameSignatureMethod, filter, excludeTypes);
     }
 
@@ -54,7 +55,8 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
      * @param filter            过滤器
      * @param excludeTypes      不包含的类型
      */
-    public MethodAnnotationScanner(final boolean includeSuperClass,  final boolean includeInterfaces,  final Predicate<Class<?>> filter,  final Set<Class<?>> excludeTypes) {
+    public MethodAnnotationScanner(final boolean includeSuperClass,  final boolean includeInterfaces,
+            final Predicate<Class<?>> filter,  final Set<Class<?>> excludeTypes) {
         super(includeSuperClass, includeInterfaces, filter, excludeTypes);
     }
 
@@ -90,7 +92,8 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
      * @return 最终所需的目标注解
      */
     @Override
-    protected Annotation[] getAnnotationsFromTargetClass(final AnnotatedElement source,  final int index,  final Class<?> targetClass) {
+    protected Annotation[] getAnnotationsFromTargetClass(final AnnotatedElement source,  final int index,
+            final Class<?> targetClass) {
         final Method sourceMethod = (Method) source;
         return Stream.of(ClassUtil.getDeclaredMethods(targetClass))
             .filter(superMethod -> !superMethod.isBridge())

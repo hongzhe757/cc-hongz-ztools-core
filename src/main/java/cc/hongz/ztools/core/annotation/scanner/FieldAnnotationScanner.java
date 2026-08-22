@@ -35,7 +35,8 @@ public class FieldAnnotationScanner implements AnnotationScanner {
      * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
      */
     @Override
-    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
+    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,
+            final Predicate<Annotation> filter) {
         final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(filter, a -> annotation -> true);
         for (final Annotation annotation : annotatedEle.getAnnotations()) {
             if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) && targetFilter.test(annotation)) {

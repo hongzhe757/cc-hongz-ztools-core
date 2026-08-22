@@ -31,7 +31,8 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
      * @param targetType  目标泛型类型
      * @param copyOptions 拷贝选项
      */
-    public MapToBeanCopier(final Map<?, ?> source,  final T target,  final Type targetType,  final CopyOptions copyOptions) {
+    public MapToBeanCopier(final Map<?, ?> source,  final T target,  final Type targetType,
+            final CopyOptions copyOptions) {
         super(source, target, copyOptions);
 
         // 针对MapWrapper特殊处理，提供的Map包装了忽略大小写的Map，则默认转Bean的时候也忽略大小写，如JSONObject
@@ -92,7 +93,8 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
             newValue = copyOptions.editFieldValue(sKeyStr, newValue);
 
             // 目标赋值
-            tDesc.setValue(this.target, newValue, copyOptions.ignoreNullValue, copyOptions.ignoreError, copyOptions.override);
+            tDesc.setValue(this.target, newValue, copyOptions.ignoreNullValue, copyOptions.ignoreError,
+                    copyOptions.override);
         });
         return this.target;
     }

@@ -27,7 +27,8 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
      * @param targetType  目标泛型类型
      * @param copyOptions 拷贝选项
      */
-    public BeanToMapCopier(final Object source,  final Map target,  final Type targetType,  final CopyOptions copyOptions) {
+    public BeanToMapCopier(final Object source,  final Map target,  final Type targetType,
+            final CopyOptions copyOptions) {
         super(source, target, copyOptions);
         this.targetTypeArguments = TypeUtil.getTypeArguments(targetType);
     }

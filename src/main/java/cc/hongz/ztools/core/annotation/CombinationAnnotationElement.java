@@ -29,7 +29,8 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
      * @return CombinationAnnotationElement
      * @since 5.8.0
      */
-    public static CombinationAnnotationElement of(final AnnotatedElement element,  final Predicate<Annotation> predicate) {
+    public static CombinationAnnotationElement of(final AnnotatedElement element,
+            final Predicate<Annotation> predicate) {
         return new CombinationAnnotationElement(element, predicate);
     }
 

@@ -83,7 +83,8 @@ public class MetaAnnotationScanner implements AnnotationScanner {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
+    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,
+            final Predicate<Annotation> filter) {
         final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(filter, a -> t -> true);
         Set<Class<? extends Annotation>> accessed = new HashSet<>();
         final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList((Class<? extends Annotation>) annotatedEle));

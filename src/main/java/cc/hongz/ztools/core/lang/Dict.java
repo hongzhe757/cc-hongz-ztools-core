@@ -645,7 +645,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     @Override
-    public Object computeIfPresent(final String key, final BiFunction<? super String, ? super Object, ?> remappingFunction) {
+    public Object computeIfPresent(final String key,
+            final BiFunction<? super String, ? super Object, ?> remappingFunction) {
         return super.computeIfPresent(customKey(key), remappingFunction);
     }
 
@@ -655,7 +656,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     @Override
-    public Object merge(final String key, final Object value, final BiFunction<? super Object, ? super Object, ?> remappingFunction) {
+    public Object merge(final String key, final Object value,
+            final BiFunction<? super Object, ? super Object, ?> remappingFunction) {
         return super.merge(customKey(key), value, remappingFunction);
     }
 

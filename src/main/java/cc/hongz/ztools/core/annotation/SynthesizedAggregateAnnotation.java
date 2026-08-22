@@ -35,7 +35,8 @@ import java.lang.annotation.Annotation;
  * @see SynthesizedAnnotationPostProcessor
  * @see GenericSynthesizedAggregateAnnotation
  */
-public interface SynthesizedAggregateAnnotation extends AggregateAnnotation, Hierarchical, AnnotationSynthesizer, AnnotationAttributeValueProvider {
+public interface SynthesizedAggregateAnnotation extends AggregateAnnotation, Hierarchical, AnnotationSynthesizer,
+        AnnotationAttributeValueProvider {
 
     // ================== hierarchical ==================
 

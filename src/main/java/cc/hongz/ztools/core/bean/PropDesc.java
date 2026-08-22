@@ -275,7 +275,8 @@ public class PropDesc {
      * @return this
      * @since 5.4.2
      */
-    public PropDesc setValue(final Object bean,  final Object value,  final boolean ignoreNull,  final boolean ignoreError) {
+    public PropDesc setValue(final Object bean,  final Object value,  final boolean ignoreNull,
+            final boolean ignoreError) {
         return setValue(bean, value, ignoreNull, ignoreError, true);
     }
 
@@ -290,7 +291,8 @@ public class PropDesc {
      * @return this
      * @since 5.7.17
      */
-    public PropDesc setValue(final Object bean,  final Object value,  final boolean ignoreNull,  final boolean ignoreError,  final boolean override) {
+    public PropDesc setValue(final Object bean,  final Object value,  final boolean ignoreNull,
+            final boolean ignoreError,  final boolean override) {
         if (null == value && ignoreNull) {
             return this;
         }

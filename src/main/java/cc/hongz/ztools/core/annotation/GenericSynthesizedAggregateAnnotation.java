@@ -99,7 +99,8 @@ public class GenericSynthesizedAggregateAnnotation
      * @param source            源注解
      * @param annotationScanner 注解扫描器，该扫描器必须支持扫描注解类
      */
-    public GenericSynthesizedAggregateAnnotation(final List<Annotation> source,  final AnnotationScanner annotationScanner) {
+    public GenericSynthesizedAggregateAnnotation(final List<Annotation> source,
+            final AnnotationScanner annotationScanner) {
         this(
             source, SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY,
             new CacheableSynthesizedAnnotationAttributeProcessor(),
@@ -201,8 +202,10 @@ public class GenericSynthesizedAggregateAnnotation
         // 根注解默认水平坐标为0，根注解的元注解坐标从1开始
         for (int i = 0; i < source.size(); i++) {
             final Annotation sourceAnnotation = source.get(i);
-            Assert.isFalse(AnnotationUtil.isSynthesizedAnnotation(sourceAnnotation), "source [{}] has been synthesized");
-            annotationMap.put(sourceAnnotation.annotationType(), new MetaAnnotation(sourceAnnotation, sourceAnnotation, 0, i));
+            Assert.isFalse(AnnotationUtil.isSynthesizedAnnotation(sourceAnnotation),
+                    "source [{}] has been synthesized");
+            annotationMap.put(sourceAnnotation.annotationType(), new MetaAnnotation(sourceAnnotation, sourceAnnotation,
+                    0, i));
             Assert.isTrue(
                 annotationScanner.support(sourceAnnotation.annotationType()),
                 "annotation scanner [{}] cannot support scan [{}]",
@@ -211,11 +214,13 @@ public class GenericSynthesizedAggregateAnnotation
             annotationScanner.scan(
                 (index, annotation) -> {
                     SynthesizedAnnotation oldAnnotation = annotationMap.get(annotation.annotationType());
-                    SynthesizedAnnotation newAnnotation = new MetaAnnotation(sourceAnnotation, annotation, index + 1, annotationMap.size());
+                    SynthesizedAnnotation newAnnotation = new MetaAnnotation(sourceAnnotation, annotation, index + 1,
+                            annotationMap.size());
                     if (ObjectUtil.isNull(oldAnnotation)) {
                         annotationMap.put(annotation.annotationType(), newAnnotation);
                     } else {
-                        annotationMap.put(annotation.annotationType(), annotationSelector.choose(oldAnnotation, newAnnotation));
+                        annotationMap.put(annotation.annotationType(), annotationSelector.choose(oldAnnotation,
+                                newAnnotation));
                     }
                 },
                 sourceAnnotation.annotationType(), null
@@ -313,7 +318,8 @@ public class GenericSynthesizedAggregateAnnotation
          * @param verticalDistance   距离根对象的水平距离
          * @param horizontalDistance 距离根对象的垂直距离
          */
-        protected MetaAnnotation(final Annotation root,  final Annotation annotation,  final int verticalDistance,  final int horizontalDistance) {
+        protected MetaAnnotation(final Annotation root,  final Annotation annotation,  final int verticalDistance,
+                final int horizontalDistance) {
             super(root, annotation, verticalDistance, horizontalDistance);
         }
 
