@@ -12,30 +12,30 @@ import cc.hongz.ztools.core.util.ArrayUtil;
 
 /**
  * <p>
- * Assists in implementing {@link Object#hashCode()} methods.
+ * 辅助实现 {@link Object#hashCode()} 方法.
  * </p>
  *
  * <p>
- * This class enables a good <code>hashCode</code> method to be built for any class. It follows the rules laid out in
- * the book <a href="http://www.oracle.com/technetwork/java/effectivejava-136174.html">Effective Java</a> by Joshua Bloch. Writing a
- * good <code>hashCode</code> method is actually quite difficult. This class aims to simplify the process.
+ * 此类可为任何类构建良好的 <code>hashCode</code> 方法，遵循
+ * Joshua Bloch 的 <a href="http://www.oracle.com/technetwork/java/effectivejava-136174.html">Effective Java</a> 一书中的规则，编写
+ * 良好的 <code>hashCode</code> 方法实际上相当困难，此类旨在简化这个过程.
  * </p>
  *
  * <p>
- * The following is the approach taken. When appending a data field, the current total is multiplied by the
- * multiplier then a relevant value
- * for that data type is added. For example, if the current hashCode is 17, and the multiplier is 37, then
- * appending the integer 45 will create a hashcode of 674, namely 17 * 37 + 45.
+ * 采用的方法如下：追加数据字段时，当前总值乘以乘数，
+ * 然后加上该数据类型对应的值，
+ * 例如，当前 hashCode 为 17，乘数为 37，
+ * 追加整数 45 将生成 hashcode 674，即 17 * 37 + 45.
  * </p>
  *
  * <p>
- * All relevant fields from the object should be included in the <code>hashCode</code> method. Derived fields may be
- * excluded. In general, any field used in the <code>equals</code> method must be used in the <code>hashCode</code>
- * method.
+ * 对象的所有相关字段都应包含在 <code>hashCode</code> 方法中，派生字段可以
+ * 排除。通常，<code>equals</code> 方法中使用的任何字段都必须在 <code>hashCode</code>
+ * 方法中使用.
  * </p>
  *
  * <p>
- * To use this class write code as follows:
+ * 使用此类编写如下代码：
  * </p>
  *
  * <pre>
@@ -58,18 +58,18 @@ import cc.hongz.ztools.core.util.ArrayUtil;
  * </pre>
  *
  * <p>
- * If required, the superclass <code>hashCode()</code> can be added using {@link #appendSuper}.
+ * 如果需要，可以使用 {@link #appendSuper} 添加父类的 <code>hashCode()</code>.
  * </p>
  *
  * <p>
- * Alternatively, there is a method that uses reflection to determine the fields to test. Because these fields are
- * usually private, the method, <code>reflectionHashCode</code>, uses <code>AccessibleObject.setAccessible</code>
- * to change the visibility of the fields. This will fail under a security manager, unless the appropriate permissions
- * are set up correctly. It is also slower than testing explicitly.
+ * 另外，还有一个使用反射确定测试字段的方法，因为这些字段
+ * 通常是 private 的，<code>reflectionHashCode</code> 方法使用 <code>AccessibleObject.setAccessible</code>
+ * 改变字段的可见性，在 security manager 下会失败，除非正确设置权限，
+ * 它也比显式测试慢.
  * </p>
  *
  * <p>
- * A typical invocation for this method would look like:
+ * 此方法的典型调用方式如下：
  * </p>
  *
  * <pre>
@@ -84,21 +84,26 @@ import cc.hongz.ztools.core.util.ArrayUtil;
  * @since 4.2.2
  */
 public class HashCodeBuilder implements Builder<Integer> {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
-     * The default initial value to use in reflection hash code building.
+     * 反射哈希码构建时使用的默认初始值.
      */
     private static final int DEFAULT_INITIAL_VALUE = 17;
 
     /**
-     * The default multipler value to use in reflection hash code building.
+     * 反射哈希码构建时使用的默认乘数.
      */
     private static final int DEFAULT_MULTIPLIER_VALUE = 37;
 
     /**
+     * long 类型的高位位移量.
+     */
+    private static final int LONG_HALF_SHIFT = 32;
+
+    /**
      * <p>
-     * A registry of objects used by reflection methods to detect cyclical object references and avoid infinite loops.
+     * 反射方法使用的对象注册表，用于检测循环对象引用并避免无限循环.
      * </p>
      *
      * @since 2.3
@@ -106,28 +111,28 @@ public class HashCodeBuilder implements Builder<Integer> {
     private static final ThreadLocal<Set<IDKey>> REGISTRY = new ThreadLocal<>();
 
     /*
-     * NOTE: we cannot store the actual objects in a HashSet, as that would use the very hashCode()
-     * we are in the process of calculating.
+     * 注意：不能在 HashSet 中存储实际对象，因为那会使用正在计算的 hashCode()
+     * （正在计算的 hashCode）
      *
-     * So we generate a one-to-one mapping from the original object to a new object.
+     * 因此生成从原始对象到新对象的一对一映射.
      *
-     * Now HashSet uses equals() to determine if two elements with the same hashcode really
-     * are equal, so we also need to ensure that the replacement objects are only equal
-     * if the original objects are identical.
+     * HashSet 使用 equals() 确定两个具有相同 hashcode 的元素是否真的
+     * 相等，因此还需要确保替换对象只有在原始对象相同的情况下才相等.
+     * （原始对象相同）
      *
-     * The original implementation (2.4 and before) used the System.indentityHashCode()
-     * method - however this is not guaranteed to generate unique ids (e.g. LANG-459)
+     * 原始实现（2.4 及之前）使用 System.identityHashCode()
+     * 方法，但这不能保证生成唯一的 id（例如 LANG-459）
      *
-     * We now use the IDKey helper class (adapted from org.apache.axis.utils.IDKey)
-     * to disambiguate the duplicate ids.
+     * 现在使用 IDKey 辅助类（改编自 org.apache.axis.utils.IDKey）
+     * 来消除重复 id 的歧义.
      */
 
     /**
      * <p>
-     * Returns the registry of objects being traversed by the reflection methods in the current thread.
+     * 返回当前线程中反射方法正在遍历的对象注册表.
      * </p>
      *
-     * @return Set the registry of objects being traversed
+     * @return 正在遍历的对象注册表 Set
      * @since 2.3
      */
     private static Set<IDKey> getRegistry() {
@@ -136,13 +141,13 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Returns <code>true</code> if the registry contains the given object. Used by the reflection methods to avoid
-     * infinite loops.
+     * 如果注册表包含给定对象则返回 <code>true</code>，用于反射方法避免
+     * 无限循环.
      * </p>
      *
      * @param value
-     *            The object to lookup in the registry.
-     * @return boolean <code>true</code> if the registry contains the given object.
+     *            要在注册表中查找的对象.
+     * @return 如果注册表包含给定对象则返回 <code>true</code>
      * @since 2.3
      */
     private static boolean isRegistered(final Object value) {
@@ -152,21 +157,22 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Appends the fields and values defined by the given object of the given <code>Class</code>.
+     * 追加给定 <code>Class</code> 对象所定义的字段和值.
      * </p>
      *
      * @param object
-     *            the object to append details of
+     *            要追加详细信息的对象
      * @param clazz
-     *            the class to append details of
+     *            要追加详细信息的类
      * @param builder
-     *            the builder to append to
+     *            要追加到的构建器
      * @param useTransients
-     *            whether to use transient fields
+     *            是否使用 transient 字段
      * @param excludeFields
-     *            Collection of String field names to exclude from use in calculation of hash code
+     *            计算哈希码时要排除的 String 字段名集合
      */
-    private static void reflectionAppend(final Object object, final Class<?> clazz, final HashCodeBuilder builder, final boolean useTransients,
+    private static void reflectionAppend(final Object object, final Class<?> clazz, final HashCodeBuilder builder,
+                final boolean useTransients,
             final String[] excludeFields) {
         if (isRegistered(object)) {
             return;
@@ -184,8 +190,8 @@ public class HashCodeBuilder implements Builder<Integer> {
                         final Object fieldValue = field.get(object);
                         builder.append(fieldValue);
                     } catch (final IllegalAccessException e) {
-                        // this can't happen. Would get a Security exception instead
-                        // throw a runtime exception in case the impossible happens.
+                        // 此情况不会发生，否则会得到 Security 异常
+                        // 抛出运行时异常以防不可能的情况发生
                         throw new InternalError("Unexpected IllegalAccessException");
                     }
                 }
@@ -197,140 +203,143 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Uses reflection to build a valid hash code from the fields of {@code object}.
+     * 使用反射从 {@code object} 的字段构建有效的哈希码.
      * </p>
      *
      * <p>
-     * It uses <code>AccessibleObject.setAccessible</code> to gain access to private fields. This means that it will
-     * throw a security exception if run under a security manager, if the permissions are not set up correctly. It is
-     * also not as efficient as testing explicitly.
+     * 使用 <code>AccessibleObject.setAccessible</code> 访问私有字段，这意味着
+     * 如果权限设置不正确，在 security manager 下会抛出安全异常，
+     * 它也比显式测试慢.
      * </p>
      *
      * <p>
-     * Transient members will be not be used, as they are likely derived fields, and not part of the value of the
+     * transient 成员不会被使用，因为它们可能是派生字段，不属于对象的值，
      * <code>Object</code>.
      * </p>
      *
      * <p>
-     * Static fields will not be tested. Superclass fields will be included.
+     * 静态字段不会被测试，父类字段会被包含.
      * </p>
      *
      * <p>
-     * Two randomly chosen, non-zero, odd numbers must be passed in. Ideally these should be different for each class,
-     * however this is not vital. Prime numbers are preferred, especially for the multiplier.
+     * 必须传入两个随机选择的非零奇数，理想情况下每个类应不同，
+     * 然而这不是至关重要的，质数是首选，尤其是乘数.
      * </p>
      *
      * @param initialNonZeroOddNumber
-     *            a non-zero, odd number used as the initial value. This will be the returned
-     *            value if no fields are found to include in the hash code
+     *            用作初始值的非零奇数，这将是返回的
+     *            如果没有字段被包含到哈希码中则返回此值
      * @param multiplierNonZeroOddNumber
-     *            a non-zero, odd number used as the multiplier
+     *            用作乘数的非零奇数
      * @param object
-     *            the Object to create a <code>hashCode</code> for
-     * @return int hash code
+     *            要为其创建 <code>hashCode</code> 的 Object
+     * @return int 哈希码
      * @throws IllegalArgumentException
-     *             if the Object is <code>null</code>
+     *             如果 Object 为 <code>null</code>
      * @throws IllegalArgumentException
-     *             if the number is zero or even
+     *             如果数字是零或偶数
      */
-    public static int reflectionHashCode(final int initialNonZeroOddNumber, final int multiplierNonZeroOddNumber, final Object object) {
+    public static int reflectionHashCode(final int initialNonZeroOddNumber, final int multiplierNonZeroOddNumber,
+                final Object object) {
         return reflectionHashCode(initialNonZeroOddNumber, multiplierNonZeroOddNumber, object, false, null);
     }
 
     /**
      * <p>
-     * Uses reflection to build a valid hash code from the fields of {@code object}.
+     * 使用反射从 {@code object} 的字段构建有效的哈希码.
      * </p>
      *
      * <p>
-     * It uses <code>AccessibleObject.setAccessible</code> to gain access to private fields. This means that it will
-     * throw a security exception if run under a security manager, if the permissions are not set up correctly. It is
-     * also not as efficient as testing explicitly.
+     * 使用 <code>AccessibleObject.setAccessible</code> 访问私有字段，这意味着
+     * 如果权限设置不正确，在 security manager 下会抛出安全异常，
+     * 它也比显式测试慢.
      * </p>
      *
      * <p>
-     * If the TestTransients parameter is set to <code>true</code>, transient members will be tested, otherwise they
-     * are ignored, as they are likely derived fields, and not part of the value of the <code>Object</code>.
+     * 如果 testTransients 参数为 <code>true</code>, transient 成员会被测试，否则它们
+     * 被忽略，因为它们可能是派生字段，不属于 <code>Object</code> 的值.
      * </p>
      *
      * <p>
-     * Static fields will not be tested. Superclass fields will be included.
+     * 静态字段不会被测试，父类字段会被包含.
      * </p>
      *
      * <p>
-     * Two randomly chosen, non-zero, odd numbers must be passed in. Ideally these should be different for each class,
-     * however this is not vital. Prime numbers are preferred, especially for the multiplier.
+     * 必须传入两个随机选择的非零奇数，理想情况下每个类应不同，
+     * 然而这不是至关重要的，质数是首选，尤其是乘数.
      * </p>
      *
      * @param initialNonZeroOddNumber
-     *            a non-zero, odd number used as the initial value. This will be the returned
-     *            value if no fields are found to include in the hash code
+     *            用作初始值的非零奇数，这将是返回的
+     *            如果没有字段被包含到哈希码中则返回此值
      * @param multiplierNonZeroOddNumber
-     *            a non-zero, odd number used as the multiplier
+     *            用作乘数的非零奇数
      * @param object
-     *            the Object to create a <code>hashCode</code> for
+     *            要为其创建 <code>hashCode</code> 的 Object
      * @param testTransients
-     *            whether to include transient fields
-     * @return int hash code
+     *            是否包含 transient 字段
+     * @return int 哈希码
      * @throws IllegalArgumentException
-     *             if the Object is <code>null</code>
+     *             如果 Object 为 <code>null</code>
      * @throws IllegalArgumentException
-     *             if the number is zero or even
+     *             如果数字是零或偶数
      */
-    public static int reflectionHashCode(final int initialNonZeroOddNumber, final int multiplierNonZeroOddNumber, final Object object,
+    public static int reflectionHashCode(final int initialNonZeroOddNumber, final int multiplierNonZeroOddNumber,
+                final Object object,
             final boolean testTransients) {
         return reflectionHashCode(initialNonZeroOddNumber, multiplierNonZeroOddNumber, object, testTransients, null);
     }
 
     /**
      * <p>
-     * Uses reflection to build a valid hash code from the fields of {@code object}.
+     * 使用反射从 {@code object} 的字段构建有效的哈希码.
      * </p>
      *
      * <p>
-     * It uses <code>AccessibleObject.setAccessible</code> to gain access to private fields. This means that it will
-     * throw a security exception if run under a security manager, if the permissions are not set up correctly. It is
-     * also not as efficient as testing explicitly.
+     * 使用 <code>AccessibleObject.setAccessible</code> 访问私有字段，这意味着
+     * 如果权限设置不正确，在 security manager 下会抛出安全异常，
+     * 它也比显式测试慢.
      * </p>
      *
      * <p>
-     * If the TestTransients parameter is set to <code>true</code>, transient members will be tested, otherwise they
-     * are ignored, as they are likely derived fields, and not part of the value of the <code>Object</code>.
+     * 如果 testTransients 参数为 <code>true</code>, transient 成员会被测试，否则它们
+     * 被忽略，因为它们可能是派生字段，不属于 <code>Object</code> 的值.
      * </p>
      *
      * <p>
-     * Static fields will not be included. Superclass fields will be included up to and including the specified
-     * superclass. A null superclass is treated as java.lang.Object.
+     * 静态字段不会被包含，父类字段会包含到指定的
+     * 父类（含），null 父类按 java.lang.Object 处理.
      * </p>
      *
      * <p>
-     * Two randomly chosen, non-zero, odd numbers must be passed in. Ideally these should be different for each class,
-     * however this is not vital. Prime numbers are preferred, especially for the multiplier.
+     * 必须传入两个随机选择的非零奇数，理想情况下每个类应不同，
+     * 然而这不是至关重要的，质数是首选，尤其是乘数.
      * </p>
      *
      * @param <T>
-     *            the type of the object involved
+     *            所涉及对象的类型
      * @param initialNonZeroOddNumber
-     *            a non-zero, odd number used as the initial value. This will be the returned
-     *            value if no fields are found to include in the hash code
+     *            用作初始值的非零奇数，这将是返回的
+     *            如果没有字段被包含到哈希码中则返回此值
      * @param multiplierNonZeroOddNumber
-     *            a non-zero, odd number used as the multiplier
+     *            用作乘数的非零奇数
      * @param object
-     *            the Object to create a <code>hashCode</code> for
+     *            要为其创建 <code>hashCode</code> 的 Object
      * @param testTransients
-     *            whether to include transient fields
+     *            是否包含 transient 字段
      * @param reflectUpToClass
-     *            the superclass to reflect up to (inclusive), may be <code>null</code>
+     *            要反射到的父类（含），可为 <code>null</code>
      * @param excludeFields
-     *            array of field names to exclude from use in calculation of hash code
-     * @return int hash code
+     *            计算哈希码时要排除的字段名数组
+     * @return int 哈希码
      * @throws IllegalArgumentException
-     *             if the Object is <code>null</code>
+     *             如果 Object 为 <code>null</code>
      * @throws IllegalArgumentException
-     *             if the number is zero or even
+     *             如果数字是零或偶数
      * @since 2.0
      */
-    public static <T> int reflectionHashCode(final int initialNonZeroOddNumber, final int multiplierNonZeroOddNumber, final T object,
+    public static <T> int reflectionHashCode(final int initialNonZeroOddNumber, final int multiplierNonZeroOddNumber,
+                final T object,
             final boolean testTransients, final Class<? super T> reflectUpToClass, final String... excludeFields) {
 
         if (object == null) {
@@ -348,36 +357,36 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Uses reflection to build a valid hash code from the fields of {@code object}.
+     * 使用反射从 {@code object} 的字段构建有效的哈希码.
      * </p>
      *
      * <p>
-     * This constructor uses two hard coded choices for the constants needed to build a hash code.
+     * 此构造器使用两个硬编码的选择作为构建哈希码所需的常量.
      * </p>
      *
      * <p>
-     * It uses <code>AccessibleObject.setAccessible</code> to gain access to private fields. This means that it will
-     * throw a security exception if run under a security manager, if the permissions are not set up correctly. It is
-     * also not as efficient as testing explicitly.
+     * 使用 <code>AccessibleObject.setAccessible</code> 访问私有字段，这意味着
+     * 如果权限设置不正确，在 security manager 下会抛出安全异常，
+     * 它也比显式测试慢.
      * </p>
      *
      * <P>
-     * If the TestTransients parameter is set to <code>true</code>, transient members will be tested, otherwise they
-     * are ignored, as they are likely derived fields, and not part of the value of the <code>Object</code>.
+     * 如果 testTransients 参数为 <code>true</code>, transient 成员会被测试，否则它们
+     * 被忽略，因为它们可能是派生字段，不属于 <code>Object</code> 的值.
      * </p>
      *
      * <p>
-     * Static fields will not be tested. Superclass fields will be included. If no fields are found to include
-     * in the hash code, the result of this method will be constant.
+     * 静态字段不会被测试，父类字段会被包含，如果没有找到要包含的字段，
+     * 在哈希码中，此方法的结果将是常量.
      * </p>
      *
      * @param object
-     *            the Object to create a <code>hashCode</code> for
+     *            要为其创建 <code>hashCode</code> 的 Object
      * @param testTransients
-     *            whether to include transient fields
-     * @return int hash code
+     *            是否包含 transient 字段
+     * @return int 哈希码
      * @throws IllegalArgumentException
-     *             if the object is <code>null</code>
+     *             如果对象为 <code>null</code>
      */
     public static int reflectionHashCode(final Object object, final boolean testTransients) {
         return reflectionHashCode(DEFAULT_INITIAL_VALUE, DEFAULT_MULTIPLIER_VALUE, object,
@@ -386,36 +395,36 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Uses reflection to build a valid hash code from the fields of {@code object}.
+     * 使用反射从 {@code object} 的字段构建有效的哈希码.
      * </p>
      *
      * <p>
-     * This constructor uses two hard coded choices for the constants needed to build a hash code.
+     * 此构造器使用两个硬编码的选择作为构建哈希码所需的常量.
      * </p>
      *
      * <p>
-     * It uses <code>AccessibleObject.setAccessible</code> to gain access to private fields. This means that it will
-     * throw a security exception if run under a security manager, if the permissions are not set up correctly. It is
-     * also not as efficient as testing explicitly.
+     * 使用 <code>AccessibleObject.setAccessible</code> 访问私有字段，这意味着
+     * 如果权限设置不正确，在 security manager 下会抛出安全异常，
+     * 它也比显式测试慢.
      * </p>
      *
      * <p>
-     * Transient members will be not be used, as they are likely derived fields, and not part of the value of the
+     * transient 成员不会被使用，因为它们可能是派生字段，不属于对象的值，
      * <code>Object</code>.
      * </p>
      *
      * <p>
-     * Static fields will not be tested. Superclass fields will be included. If no fields are found to include
-     * in the hash code, the result of this method will be constant.
+     * 静态字段不会被测试，父类字段会被包含，如果没有找到要包含的字段，
+     * 在哈希码中，此方法的结果将是常量.
      * </p>
      *
      * @param object
-     *            the Object to create a <code>hashCode</code> for
+     *            要为其创建 <code>hashCode</code> 的 Object
      * @param excludeFields
-     *            Collection of String field names to exclude from use in calculation of hash code
-     * @return int hash code
+     *            计算哈希码时要排除的 String 字段名集合
+     * @return int 哈希码
      * @throws IllegalArgumentException
-     *             if the object is <code>null</code>
+     *             如果对象为 <code>null</code>
      */
     public static int reflectionHashCode(final Object object, final Collection<String> excludeFields) {
         return reflectionHashCode(object, ArrayUtil.toArray(excludeFields, String.class));
@@ -425,36 +434,36 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Uses reflection to build a valid hash code from the fields of {@code object}.
+     * 使用反射从 {@code object} 的字段构建有效的哈希码.
      * </p>
      *
      * <p>
-     * This constructor uses two hard coded choices for the constants needed to build a hash code.
+     * 此构造器使用两个硬编码的选择作为构建哈希码所需的常量.
      * </p>
      *
      * <p>
-     * It uses <code>AccessibleObject.setAccessible</code> to gain access to private fields. This means that it will
-     * throw a security exception if run under a security manager, if the permissions are not set up correctly. It is
-     * also not as efficient as testing explicitly.
+     * 使用 <code>AccessibleObject.setAccessible</code> 访问私有字段，这意味着
+     * 如果权限设置不正确，在 security manager 下会抛出安全异常，
+     * 它也比显式测试慢.
      * </p>
      *
      * <p>
-     * Transient members will be not be used, as they are likely derived fields, and not part of the value of the
+     * transient 成员不会被使用，因为它们可能是派生字段，不属于对象的值，
      * <code>Object</code>.
      * </p>
      *
      * <p>
-     * Static fields will not be tested. Superclass fields will be included. If no fields are found to include
-     * in the hash code, the result of this method will be constant.
+     * 静态字段不会被测试，父类字段会被包含，如果没有找到要包含的字段，
+     * 在哈希码中，此方法的结果将是常量.
      * </p>
      *
      * @param object
-     *            the Object to create a <code>hashCode</code> for
+     *            要为其创建 <code>hashCode</code> 的 Object
      * @param excludeFields
-     *            array of field names to exclude from use in calculation of hash code
-     * @return int hash code
+     *            计算哈希码时要排除的字段名数组
+     * @return int 哈希码
      * @throws IllegalArgumentException
-     *             if the object is <code>null</code>
+     *             如果对象为 <code>null</code>
      */
     public static int reflectionHashCode(final Object object, final String... excludeFields) {
         return reflectionHashCode(DEFAULT_INITIAL_VALUE, DEFAULT_MULTIPLIER_VALUE, object, false,
@@ -463,11 +472,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Registers the given object. Used by the reflection methods to avoid infinite loops.
+     * 注册给定对象，用于反射方法避免 无限循环.
      * </p>
      *
      * @param value
-     *            The object to register.
+     *            要注册的对象.
      */
     static void register(final Object value) {
         synchronized (HashCodeBuilder.class) {
@@ -480,14 +489,14 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Unregisters the given object.
+     * 注销给定对象.
      * </p>
      *
      * <p>
-     * Used by the reflection methods to avoid infinite loops.
+     * 用于反射方法避免 无限循环.
      *
      * @param value
-     *            The object to unregister.
+     *            要注销的对象.
      * @since 2.3
      */
     static void unregister(final Object value) {
@@ -505,41 +514,41 @@ public class HashCodeBuilder implements Builder<Integer> {
     }
 
     /**
-     * Constant to use in building the hashCode.
+     * 构建 hashCode 时使用的常量.
      */
     private final int iConstant;
 
     /**
-     * Running total of the hashCode.
+     * hashCode 的运行总数.
      */
     private int iTotal;
 
     /**
      * <p>
-     * Uses two hard coded choices for the constants needed to build a <code>hashCode</code>.
+     * 使用两个硬编码的选择作为构建 <code>hashCode</code> 所需的常量.
      * </p>
      */
     public HashCodeBuilder() {
-        iConstant = 37;
-        iTotal = 17;
+        iConstant = DEFAULT_MULTIPLIER_VALUE;
+        iTotal = DEFAULT_INITIAL_VALUE;
     }
 
     /**
      * <p>
-     * Two randomly chosen, odd numbers must be passed in. Ideally these should be different for each class,
-     * however this is not vital.
+     * 必须传入两个随机选择的奇数，理想情况下每个类应不同，
+     * 然而这不是至关重要的.
      * </p>
      *
      * <p>
-     * Prime numbers are preferred, especially for the multiplier.
+     * 质数是首选，尤其是乘数.
      * </p>
      *
      * @param initialOddNumber
-     *            an odd number used as the initial value
+     *            用作初始值的奇数
      * @param multiplierOddNumber
-     *            an odd number used as the multiplier
+     *            用作乘数的奇数
      * @throws IllegalArgumentException
-     *             if the number is even
+     *             如果数字是偶数
      */
     public HashCodeBuilder(final int initialOddNumber, final int multiplierOddNumber) {
         Assert.isTrue(initialOddNumber % 2 != 0, "HashCodeBuilder requires an odd initial value");
@@ -550,23 +559,23 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>boolean</code>.
+     * 追加 <code>hashCode</code> for a <code>boolean</code>.
      * </p>
      * <p>
-     * This adds <code>1</code> when true, and <code>0</code> when false to the <code>hashCode</code>.
+     * 为 true 时在 <code>hashCode</code> 中添加 <code>1</code>，为 false 时添加 <code>0</code>.
      * </p>
      * <p>
-     * This is in contrast to the standard <code>java.lang.Boolean.hashCode</code> handling, which computes
-     * a <code>hashCode</code> value of <code>1231</code> for <code>java.lang.Boolean</code> instances
-     * that represent <code>true</code> or <code>1237</code> for <code>java.lang.Boolean</code> instances
-     * that represent <code>false</code>.
+     * 这与标准 <code>java.lang.Boolean.hashCode</code> 处理相反，后者
+     * 对表示 <code>true</code> 的 <code>java.lang.Boolean</code> 实例计算 <code>1231</code>
+     * 对表示 <code>false</code> 的实例计算 <code>1237</code>
+     * 
      * </p>
      * <p>
-     * This is in accordance with the <i>Effective Java</i> design.
+     * 这符合 <i>Effective Java</i> 设计.
      * </p>
      *
      * @param value
-     *            the boolean to add to the <code>hashCode</code>
+     *            要添加到哈希码的 boolean<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final boolean value) {
@@ -576,11 +585,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>boolean</code> array.
+     * 追加 <code>hashCode</code> for a <code>boolean</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final boolean[] array) {
@@ -598,11 +607,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>byte</code>.
+     * 追加 <code>hashCode</code> for a <code>byte</code>.
      * </p>
      *
      * @param value
-     *            the byte to add to the <code>hashCode</code>
+     *            要添加到哈希码的 byte<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final byte value) {
@@ -614,11 +623,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>byte</code> array.
+     * 追加 <code>hashCode</code> for a <code>byte</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final byte[] array) {
@@ -634,11 +643,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>char</code>.
+     * 追加 <code>hashCode</code> for a <code>char</code>.
      * </p>
      *
      * @param value
-     *            the char to add to the <code>hashCode</code>
+     *            要添加到哈希码的 char<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final char value) {
@@ -648,11 +657,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>char</code> array.
+     * 追加 <code>hashCode</code> for a <code>char</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final char[] array) {
@@ -668,11 +677,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>double</code>.
+     * 追加 <code>hashCode</code> for a <code>double</code>.
      * </p>
      *
      * @param value
-     *            the double to add to the <code>hashCode</code>
+     *            要添加到哈希码的 double<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final double value) {
@@ -681,11 +690,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>double</code> array.
+     * 追加 <code>hashCode</code> for a <code>double</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final double[] array) {
@@ -701,11 +710,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>float</code>.
+     * 追加 <code>hashCode</code> for a <code>float</code>.
      * </p>
      *
      * @param value
-     *            the float to add to the <code>hashCode</code>
+     *            要添加到哈希码的 float<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final float value) {
@@ -715,11 +724,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>float</code> array.
+     * 追加 <code>hashCode</code> for a <code>float</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final float[] array) {
@@ -735,11 +744,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for an <code>int</code>.
+     * 追加 <code>hashCode</code> for an <code>int</code>.
      * </p>
      *
      * @param value
-     *            the int to add to the <code>hashCode</code>
+     *            要添加到哈希码的 int<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final int value) {
@@ -749,11 +758,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for an <code>int</code> array.
+     * 追加 <code>hashCode</code> for an <code>int</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final int[] array) {
@@ -769,29 +778,29 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>long</code>.
+     * 追加 <code>hashCode</code> for a <code>long</code>.
      * </p>
      *
      * @param value
-     *            the long to add to the <code>hashCode</code>
+     *            要添加到哈希码的 long<code>hashCode</code>
      * @return this
      */
-    // NOTE: This method uses >> and not >>> as Effective Java and
-    //       Long.hashCode do. Ideally we should switch to >>> at
-    //       some stage. There are backwards compat issues, so
-    //       that will have to wait for the time being. cf LANG-342.
+    // 注意：此方法使用 >> 而不是 >>>，如 Effective Java 和
+    //       Long.hashCode 那样，理想情况下应该切换到 >>>，
+    //       但有向后兼容问题，所以
+    //       暂时只能等待，参考 LANG-342.
     public HashCodeBuilder append(final long value) {
-        iTotal = iTotal * iConstant + ((int) (value ^ (value >> 32)));
+        iTotal = iTotal * iConstant + ((int) (value ^ (value >> LONG_HALF_SHIFT)));
         return this;
     }
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>long</code> array.
+     * 追加 <code>hashCode</code> for a <code>long</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final long[] array) {
@@ -807,11 +816,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for an <code>Object</code>.
+     * 追加 <code>hashCode</code> for an <code>Object</code>.
      * </p>
      *
      * @param object
-     *            the Object to add to the <code>hashCode</code>
+     *            要添加到 <code>hashCode</code> 的 Object
      * @return this
      */
     public HashCodeBuilder append(final Object object) {
@@ -819,9 +828,9 @@ public class HashCodeBuilder implements Builder<Integer> {
             iTotal = iTotal * iConstant;
 
         } else {
-            if(object.getClass().isArray()) {
+            if (object.getClass().isArray()) {
                 // 'Switch' on type of array, to dispatch to the correct handler
-                // This handles multi dimensional arrays
+                // 此处理多维数组
                 if (object instanceof long[]) {
                     append((long[]) object);
                 } else if (object instanceof int[]) {
@@ -851,11 +860,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for an <code>Object</code> array.
+     * 追加 <code>hashCode</code> for an <code>Object</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final Object[] array) {
@@ -871,11 +880,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>short</code>.
+     * 追加 <code>hashCode</code> for a <code>short</code>.
      * </p>
      *
      * @param value
-     *            the short to add to the <code>hashCode</code>
+     *            要添加到哈希码的 short<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final short value) {
@@ -885,11 +894,11 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Append a <code>hashCode</code> for a <code>short</code> array.
+     * 追加 <code>hashCode</code> for a <code>short</code> array.
      * </p>
      *
      * @param array
-     *            the array to add to the <code>hashCode</code>
+     *            要添加到哈希码的数组<code>hashCode</code>
      * @return this
      */
     public HashCodeBuilder append(final short[] array) {
@@ -905,12 +914,12 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Adds the result of super.hashCode() to this builder.
+     * 将 super.hashCode() 的结果添加到本构建器.
      * </p>
      *
      * @param superHashCode
-     *            the result of calling <code>super.hashCode()</code>
-     * @return this HashCodeBuilder, used to chain calls.
+     *            调用 <code>super.hashCode()</code>
+     * @return this HashCodeBuilder，用于链式调用
      * @since 2.0
      */
     public HashCodeBuilder appendSuper(final int superHashCode) {
@@ -920,19 +929,19 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * Return the computed <code>hashCode</code>.
+     * 返回计算出的 <code>hashCode</code>.
      * </p>
      *
-     * @return <code>hashCode</code> based on the fields appended
+     * @return 基于已追加字段的 <code>hashCode</code>
      */
     public int toHashCode() {
         return iTotal;
     }
 
     /**
-     * Returns the computed <code>hashCode</code>.
+     * 返回计算出的 <code>hashCode</code>.
      *
-     * @return <code>hashCode</code> based on the fields appended
+     * @return 基于已追加字段的 <code>hashCode</code>
      *
      * @since 3.0
      */
@@ -943,13 +952,14 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * <p>
-     * The computed <code>hashCode</code> from toHashCode() is returned due to the likelihood
-     * of bugs in mis-calling toHashCode() and the unlikeliness of it mattering what the hashCode for
-     * HashCodeBuilder itself is.</p>
+     * 返回 toHashCode() 计算出的 <code>hashCode</code>，因为
+     * 误调用 toHashCode() 可能引入 bug，而且 hashCode 本身的值并不重要
+     * （HashCodeBuilder 本身）.
      *
-     * @return <code>hashCode</code> based on the fields appended
+     * @return 基于已追加字段的 <code>hashCode</code>
      * @since 2.5
      */
+    @SuppressWarnings("checkstyle:EqualsHashCode")
     @Override
     public int hashCode() {
         return toHashCode();
