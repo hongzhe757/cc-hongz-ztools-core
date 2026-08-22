@@ -24,6 +24,11 @@ public final class GzipBase64 {
     private GzipBase64() {
     }
 
+    /**
+     * 解压缓冲区大小.
+     */
+    private static final int BUFFER_SIZE = 4096;
+
     // --------------------------------------- Static method start
 
     /**
@@ -118,7 +123,7 @@ public final class GzipBase64 {
     private static byte[] gunzip(final byte[] data) {
         try (GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(data));
              ByteArrayOutputStream out = new ByteArrayOutputStream(data.length)) {
-            final byte[] buffer = new byte[4096];
+            final byte[] buffer = new byte[BUFFER_SIZE];
             int n;
             while ((n = gzip.read(buffer)) != -1) {
                 out.write(buffer, 0, n);
