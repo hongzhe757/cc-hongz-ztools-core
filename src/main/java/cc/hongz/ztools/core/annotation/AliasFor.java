@@ -1,6 +1,11 @@
 package cc.hongz.ztools.core.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * <p>{@link Link}的子注解。表示“原始属性”将作为“关联属性”的别名。

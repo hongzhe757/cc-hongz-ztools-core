@@ -1,7 +1,11 @@
 package cc.hongz.ztools.core.bean;
 
 import cc.hongz.ztools.core.bean.copier.ValueProvider;
-import cc.hongz.ztools.core.util.*;
+import cc.hongz.ztools.core.util.ArrayUtil;
+import cc.hongz.ztools.core.util.ClassUtil;
+import cc.hongz.ztools.core.util.JdkUtil;
+import cc.hongz.ztools.core.util.ReflectUtil;
+import cc.hongz.ztools.core.util.TypeUtil;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -98,7 +102,7 @@ public class RecordUtil {
      */
     public static Object newInstance(final Class<?> recordClass, final ValueProvider<String> valueProvider) {
         final Map.Entry<String, Type>[] recordComponents = getRecordComponents(recordClass);
-        if(ArrayUtil.isEmpty(recordComponents)){
+        if (ArrayUtil.isEmpty(recordComponents)) {
             throw new IllegalArgumentException("Record class [" + recordClass.getName() + "] has no components");
         }
         final Class<?>[] argTypes = new Class<?>[recordComponents.length];

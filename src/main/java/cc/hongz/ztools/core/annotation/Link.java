@@ -1,6 +1,11 @@
 package cc.hongz.ztools.core.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * <p>用于在同一注解中，或具有一定关联的不同注解的属性中，表明这些属性之间具有特定的关联关系。

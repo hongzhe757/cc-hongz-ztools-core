@@ -56,7 +56,7 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
             }
 
             // 无字段内容跳过
-            if(false == source.containsKey(tFieldName)){
+            if (false == source.containsKey(tFieldName)) {
                 return;
             }
 

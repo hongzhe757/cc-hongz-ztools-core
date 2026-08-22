@@ -49,9 +49,9 @@ public class BeanDesc implements Serializable {
     public BeanDesc(final Class<?> beanClass) {
         Assert.notNull(beanClass);
         this.beanClass = beanClass;
-        if(RecordUtil.isRecord(beanClass)){
+        if (RecordUtil.isRecord(beanClass)) {
             initForRecord();
-        }else{
+        } else {
             init();
         }
     }
@@ -238,7 +238,7 @@ public class BeanDesc implements Serializable {
                 }
             } else if (isMatchSetter(methodName, fieldName, isBooleanField, ignoreCase)) {
                 // setter方法的参数类型和字段类型必须一致，或参数类型是字段类型的子类
-                if(fieldType.isAssignableFrom(method.getParameterTypes()[0])){
+                if (fieldType.isAssignableFrom(method.getParameterTypes()[0])) {
                     setter = method;
                 }
             }

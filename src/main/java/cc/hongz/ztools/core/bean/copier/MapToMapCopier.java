@@ -36,7 +36,7 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
                 return;
             }
 
-            if(sKey instanceof String){
+            if (sKey instanceof String) {
                 sKey = copyOptions.editFieldName((String) sKey);
                 // 对key做转换，转换后为null的跳过
                 if (null == sKey) {

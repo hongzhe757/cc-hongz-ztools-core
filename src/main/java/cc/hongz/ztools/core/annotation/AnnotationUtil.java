@@ -10,14 +10,29 @@ import cc.hongz.ztools.core.lang.Opt;
 import cc.hongz.ztools.core.lang.func.Func1;
 import cc.hongz.ztools.core.lang.func.LambdaUtil;
 import cc.hongz.ztools.core.map.reference.WeakKeyConcurrentMap;
-import cc.hongz.ztools.core.util.*;
+import cc.hongz.ztools.core.util.ArrayUtil;
+import cc.hongz.ztools.core.util.ClassUtil;
+import cc.hongz.ztools.core.util.ObjectUtil;
+import cc.hongz.ztools.core.util.ReflectUtil;
+import cc.hongz.ztools.core.util.StrUtil;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -292,7 +307,7 @@ public class AnnotationUtil {
         } catch (final ClassNotFoundException e) {
             // ignore
         }
-        if(null != aClass){
+        if (null != aClass) {
             return hasAnnotation(annotationEle, aClass);
         }
         return false;

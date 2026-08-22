@@ -35,9 +35,9 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
         super(source, target, copyOptions);
 
         // 针对MapWrapper特殊处理，提供的Map包装了忽略大小写的Map，则默认转Bean的时候也忽略大小写，如JSONObject
-        if(source instanceof MapWrapper){
+        if (source instanceof MapWrapper) {
             final Map<?, ?> raw = ((MapWrapper<?, ?>) source).getRaw();
-            if(raw instanceof CaseInsensitiveMap){
+            if (raw instanceof CaseInsensitiveMap) {
                 copyOptions.setIgnoreCase(true);
             }
         }

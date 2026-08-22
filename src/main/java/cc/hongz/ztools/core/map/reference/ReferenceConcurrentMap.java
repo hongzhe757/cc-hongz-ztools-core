@@ -23,7 +23,12 @@ import cc.hongz.ztools.core.util.ReferenceUtil;
 import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
-import java.util.*;
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -151,14 +156,14 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     @Override
     public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
         V result = null;
-        while(null == result){
+        while (null == result) {
             this.purgeStale();
             final Ref<V> vReference = this.raw.computeIfAbsent(wrapKey(key),
                 kReference -> wrapValue(mappingFunction.apply(unwrap(kReference))));
 
             // issue#IA5GMH 如果vReference在此时被GC回收，则unwrap后为null，需要循环计算
             // 但是当用户提供的值本身为null，则直接返回之
-            if(NullRef.NULL == vReference){
+            if (NullRef.NULL == vReference) {
                 // 用户提供的值本身为null
                 return null;
             }
@@ -170,14 +175,14 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     @Override
     public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         V result = null;
-        while(null == result){
+        while (null == result) {
             this.purgeStale();
             final Ref<V> vReference = this.raw.computeIfPresent(wrapKey(key),
                 (kReference, vReference1) -> wrapValue(remappingFunction.apply(unwrap(kReference), unwrap(vReference1))));
 
             // issue#IA5GMH 如果vReference在此时被GC回收，则unwrap后为null，需要循环计算
             // 但是当用户提供的值本身为null，则直接返回之
-            if(NullRef.NULL == vReference){
+            if (NullRef.NULL == vReference) {
                 // 用户提供的值本身为null
                 return null;
             }
@@ -394,7 +399,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
      */
     @SuppressWarnings("unchecked")
     private Ref<V> wrapValue(final Object value) {
-        if(null == value){
+        if (null == value) {
             return (Ref<V>) NullRef.NULL;
         }
         return wrapValue((V) value, this.lastValueQueue);

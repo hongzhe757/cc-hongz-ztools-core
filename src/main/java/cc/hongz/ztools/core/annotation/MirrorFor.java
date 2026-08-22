@@ -1,6 +1,11 @@
 package cc.hongz.ztools.core.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * <p>{@link Link}的子注解。表示注解的属性与指定的属性互为镜像，通过一个属性将能够获得对方的值。

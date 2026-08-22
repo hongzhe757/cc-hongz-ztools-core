@@ -10,12 +10,29 @@ import cc.hongz.ztools.core.lang.Dict;
 import cc.hongz.ztools.core.lang.Editor;
 import cc.hongz.ztools.core.map.CaseInsensitiveMap;
 import cc.hongz.ztools.core.map.MapUtil;
-import cc.hongz.ztools.core.util.*;
+import cc.hongz.ztools.core.util.ArrayUtil;
+import cc.hongz.ztools.core.util.ClassUtil;
+import cc.hongz.ztools.core.util.ModifierUtil;
+import cc.hongz.ztools.core.util.ObjectUtil;
+import cc.hongz.ztools.core.util.ReflectUtil;
+import cc.hongz.ztools.core.util.StrUtil;
 
-import java.beans.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -75,11 +92,11 @@ public class BeanUtil {
      * @since 4.2.2
      */
     public static boolean hasSetter(final Class<?> clazz) {
-        if(null == clazz){
+        if (null == clazz) {
             return false;
         }
         // issue#I9VTZG，排除定义setXXX的预定义类
-        if(Dict.class == clazz){
+        if (Dict.class == clazz) {
             return false;
         }
 
@@ -126,7 +143,7 @@ public class BeanUtil {
      * @since 5.1.0
      */
     public static boolean hasPublicField(final Class<?> clazz) {
-        if(null == clazz){
+        if (null == clazz) {
             return false;
         }
         if (ClassUtil.isNormalClass(clazz)) {
@@ -815,7 +832,7 @@ public class BeanUtil {
         }
 
         // issue#3091
-        if(ClassUtil.isBasicType(targetType) || String.class == targetType){
+        if (ClassUtil.isBasicType(targetType) || String.class == targetType) {
             return Convert.toList(targetType, collection);
         }
 
@@ -1025,7 +1042,7 @@ public class BeanUtil {
         sourceFields.removeAll(Arrays.asList(ignoreProperties));
 
         for (String field : sourceFields) {
-            if(sourceFieldsMap.containsKey(field) && targetFieldsMap.containsKey(field)){
+            if (sourceFieldsMap.containsKey(field) && targetFieldsMap.containsKey(field)) {
                 if (ObjectUtil.notEqual(sourceFieldsMap.get(field), targetFieldsMap.get(field))) {
                     return false;
                 }

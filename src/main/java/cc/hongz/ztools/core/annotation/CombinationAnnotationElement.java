@@ -118,7 +118,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
      * @param annotations Class, Method, Field等
      */
     private void parseDeclared(final Annotation[] annotations) {
-        if(ArrayUtil.isEmpty(annotations)){
+        if (ArrayUtil.isEmpty(annotations)) {
             return;
         }
 
@@ -129,7 +129,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
             // issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
             if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)
                     && false == declaredAnnotationMap.containsKey(annotationType)) {
-                if(test(annotation)){
+                if (test(annotation)) {
                     declaredAnnotationMap.put(annotationType, annotation);
                 }
                 // 测试不通过的注解，不影响继续递归
@@ -144,7 +144,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
      * @param annotations Class, Method, Field等
      */
     private void parse(final Annotation[] annotations) {
-        if(ArrayUtil.isEmpty(annotations)){
+        if (ArrayUtil.isEmpty(annotations)) {
             return;
         }
 
@@ -154,7 +154,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
             // issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
             if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)
                     && false == annotationMap.containsKey(annotationType)) {
-                if(test(annotation)){
+                if (test(annotation)) {
                     annotationMap.put(annotationType, annotation);
                 }
                 // 测试不通过的注解，不影响继续递归

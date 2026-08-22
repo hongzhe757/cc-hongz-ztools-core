@@ -93,7 +93,7 @@ public class CopyOptions implements Serializable {
         }
 
         // 快速处理简单值类型的转换
-        if (type instanceof Class){
+        if (type instanceof Class) {
             Class<?> targetType = (Class<?>) type;
             if (ClassUtil.isSimpleValueType(targetType) && targetType.isInstance(value)) {
                 return targetType.cast(value);
@@ -404,7 +404,7 @@ public class CopyOptions implements Serializable {
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected Object convertField(final Type targetType,  final Object fieldValue) {
-        if((targetType instanceof Class && Date.class.isAssignableFrom((Class<?>) targetType)) && null != this.formatIfDate){
+        if ((targetType instanceof Class && Date.class.isAssignableFrom((Class<?>) targetType)) && null != this.formatIfDate) {
             return new DateConverter((Class) targetType, this.formatIfDate).convert(fieldValue, null);
         }
 

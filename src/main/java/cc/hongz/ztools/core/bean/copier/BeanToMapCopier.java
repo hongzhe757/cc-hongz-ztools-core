@@ -67,7 +67,7 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
             }
 
             // 尝试转换源值
-            if(null != targetTypeArguments && targetTypeArguments.length > 1){
+            if (null != targetTypeArguments && targetTypeArguments.length > 1) {
                 //sValue = Convert.convertWithCheck(typeArguments[1], sValue, null, this.copyOptions.ignoreError);
                 sValue = this.copyOptions.convertField(targetTypeArguments[1], sValue);
             }
@@ -76,7 +76,7 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
             sValue = copyOptions.editFieldValue(sFieldName, sValue);
 
             // 目标赋值
-            if(null != sValue || false == copyOptions.ignoreNullValue){
+            if (null != sValue || false == copyOptions.ignoreNullValue) {
                 //noinspection unchecked
                 target.put(sFieldName, sValue);
             }

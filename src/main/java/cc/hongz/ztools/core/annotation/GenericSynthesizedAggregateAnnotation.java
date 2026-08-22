@@ -8,7 +8,11 @@ import cc.hongz.ztools.core.util.ObjectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link SynthesizedAggregateAnnotation}的基本实现，表示基于多个注解对象，.

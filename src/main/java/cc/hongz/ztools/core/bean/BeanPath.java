@@ -10,7 +10,11 @@ import cc.hongz.ztools.core.util.NumberUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象.
@@ -148,7 +152,7 @@ public class BeanPath implements Serializable {
         }
 
         final Object newSubBean = BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
-        if(newSubBean != subBean){
+        if (newSubBean != subBean) {
             // 对象变更，重新加入
             this.set(bean, getParentParts(patternParts), nextNumberPart, newSubBean);
         }
