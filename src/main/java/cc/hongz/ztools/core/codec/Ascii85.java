@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
  *
  * @author hongzhe.qin
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class Ascii85 {
 
     /**
