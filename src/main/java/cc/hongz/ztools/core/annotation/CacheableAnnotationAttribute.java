@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- * {@link AnnotationAttribute}的基本实现
+ * {@link AnnotationAttribute}的基本实现.
  *
  * @author huangchengxing
  */
@@ -23,7 +23,7 @@ public class CacheableAnnotationAttribute implements AnnotationAttribute {
     private final Annotation annotation;
     private final Method attribute;
 
-    public CacheableAnnotationAttribute(Annotation annotation, Method attribute) {
+    public CacheableAnnotationAttribute(final Annotation annotation,  final Method attribute) {
         Assert.notNull(annotation, "annotation must not null");
         Assert.notNull(attribute, "attribute must not null");
         this.annotation = annotation;

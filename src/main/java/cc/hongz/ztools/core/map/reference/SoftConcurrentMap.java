@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * 线程安全的SoftMap实现<br>
+ * 线程安全的SoftMap实现.
  * 键和值都为Soft引用，即，在GC报告内存不足时会被GC回收
  *
  * @param <K> 键类型
@@ -36,14 +36,14 @@ public class SoftConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 构造
+     * 构造.
      */
     public SoftConcurrentMap() {
         this(new ConcurrentHashMap<>());
     }
 
     /**
-     * 构造
+     * 构造.
      *
      * @param raw {@link ConcurrentMap}实现
      */

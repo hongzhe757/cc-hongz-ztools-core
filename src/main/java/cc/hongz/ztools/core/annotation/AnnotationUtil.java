@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * 注解工具类<br>
+ * 注解工具类.
  * 快速获取注解对象、注解值等工具封装
  *
  * @author looly
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class AnnotationUtil {
 
     /**
-     * 元注解
+     * 元注解.
      */
     static final Set<Class<? extends Annotation>> META_ANNOTATIONS = CollUtil.newHashSet(Target.class, //
             Retention.class, //
@@ -43,7 +43,7 @@ public class AnnotationUtil {
     );
 
     /**
-     * 注解查询两级缓存优化
+     * 注解查询两级缓存优化.
      * 哨兵对象：用于表示“缓存中不存在该注解”，避免缓存null导致NPE */
     private static final Annotation NULL_ANNOTATION_SENTINEL = new Annotation() {
         @Override
@@ -53,21 +53,21 @@ public class AnnotationUtil {
     };
 
     /**
-     * L1 原始注解缓存（核心高频场景）<br>
+     * L1 原始注解缓存（核心高频场景）.
      * 键：注解查询键（被注解元素 + 目标注解类型）<br>
      * 值：原生注解对象，或NULL_ANNOTATION_SENTINEL（表示不存在）
      */
     private static final WeakKeyConcurrentMap<AnnotationLookupKey, Annotation> L1_ANNOTATION_CACHE = new WeakKeyConcurrentMap<>();
 
     /**
-     * L2 合成注解缓存（别名/聚合场景）<br>
+     * L2 合成注解缓存（别名/聚合场景）.
      * 键：注解查询键（被注解元素 + 目标注解类型）<br>
      * 值：合成注解对象，或NULL_ANNOTATION_SENTINEL（表示不存在）
      */
     private static final WeakKeyConcurrentMap<AnnotationLookupKey, Annotation> L2_SYNTHESIZED_ANNOTATION_CACHE = new WeakKeyConcurrentMap<>();
 
     /**
-     * 注解查询缓存键，唯一标识一次注解查询操作
+     * 注解查询缓存键，唯一标识一次注解查询操作.
      */
     private static class AnnotationLookupKey {
         /** 被注解的元素（Class、Method、Field等） */
@@ -76,18 +76,18 @@ public class AnnotationUtil {
         private final Class<? extends Annotation> annotationType;
 
         /**
-         * 构造
+         * 构造.
          *
          * @param element        被注解的元素
          * @param annotationType 目标注解类型
          */
-        public AnnotationLookupKey(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+        public AnnotationLookupKey(final AnnotatedElement element,  final Class<? extends Annotation> annotationType) {
             this.element = element;
             this.annotationType = annotationType;
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) {
                 return true;
             }
@@ -105,7 +105,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * 是否为Jdk自带的元注解。<br>
+     * 是否为Jdk自带的元注解。
      * 包括：
      * <ul>
      *     <li>{@link Target}</li>
@@ -120,12 +120,12 @@ public class AnnotationUtil {
      * @param annotationType 注解类型
      * @return 是否为Jdk自带的元注解
      */
-    public static boolean isJdkMetaAnnotation(Class<? extends Annotation> annotationType) {
+    public static boolean isJdkMetaAnnotation(final Class<? extends Annotation> annotationType) {
         return META_ANNOTATIONS.contains(annotationType);
     }
 
     /**
-     * 是否不为Jdk自带的元注解。<br>
+     * 是否不为Jdk自带的元注解。
      * 包括：
      * <ul>
      *     <li>{@link Target}</li>
@@ -140,17 +140,17 @@ public class AnnotationUtil {
      * @param annotationType 注解类型
      * @return 是否为Jdk自带的元注解
      */
-    public static boolean isNotJdkMateAnnotation(Class<? extends Annotation> annotationType) {
+    public static boolean isNotJdkMateAnnotation(final Class<? extends Annotation> annotationType) {
         return false == isJdkMetaAnnotation(annotationType);
     }
 
     /**
-     * 将指定的被注解的元素转换为组合注解元素
+     * 将指定的被注解的元素转换为组合注解元素.
      *
      * @param annotationEle 注解元素
      * @return 组合注解元素
      */
-    public static CombinationAnnotationElement toCombination(AnnotatedElement annotationEle) {
+    public static CombinationAnnotationElement toCombination(final AnnotatedElement annotationEle) {
         if (annotationEle instanceof CombinationAnnotationElement) {
             return (CombinationAnnotationElement) annotationEle;
         }
@@ -158,18 +158,18 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取指定注解
+     * 获取指定注解.
      *
      * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
      * @param isToCombination 是否为转换为组合注解，组合注解可以递归获取注解的注解
      * @return 注解对象
      */
-    public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination) {
+    public static Annotation[] getAnnotations(final AnnotatedElement annotationEle,  final boolean isToCombination) {
         return getAnnotations(annotationEle, isToCombination, (Predicate<Annotation>) null);
     }
 
     /**
-     * 获取组合注解
+     * 获取组合注解.
      *
      * @param <T>            注解类型
      * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
@@ -177,12 +177,12 @@ public class AnnotationUtil {
      * @return 注解对象数组
      * @since 5.8.0
      */
-    public static <T> T[] getCombinationAnnotations(AnnotatedElement annotationEle, Class<T> annotationType) {
+    public static <T> T[] getCombinationAnnotations(final AnnotatedElement annotationEle,  final Class<T> annotationType) {
         return getAnnotations(annotationEle, true, annotationType);
     }
 
     /**
-     * 获取指定注解
+     * 获取指定注解.
      *
      * @param <T>             注解类型
      * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
@@ -192,7 +192,7 @@ public class AnnotationUtil {
      * @since 5.8.0
      */
     @SuppressWarnings("unchecked")
-    public static <T> T[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Class<T> annotationType) {
+    public static <T> T[] getAnnotations(final AnnotatedElement annotationEle,  final boolean isToCombination,  final Class<T> annotationType) {
         final Annotation[] annotations = getAnnotations(annotationEle, isToCombination,
                 (annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
 
@@ -204,7 +204,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取指定注解
+     * 获取指定注解.
      *
      * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
      * @param isToCombination 是否为转换为组合注解，组合注解可以递归获取注解的注解
@@ -212,7 +212,7 @@ public class AnnotationUtil {
      * @return 注解对象，如果提供的{@link AnnotatedElement}为{@code null}，返回{@code null}
      * @since 5.8.0
      */
-    public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Predicate<Annotation> predicate) {
+    public static Annotation[] getAnnotations(final AnnotatedElement annotationEle,  final boolean isToCombination,  final Predicate<Annotation> predicate) {
         if (null == annotationEle) {
             return null;
         }
@@ -232,7 +232,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取指定注解（优化版：新增L1缓存，提升高频调用性能）<br>
+     * 获取指定注解（优化版：新增L1缓存，提升高频调用性能）.
      * 支持获取直接注解、元注解、组合注解，行为与原生实现完全一致
      *
      * @param <A>            注解类型
@@ -241,7 +241,7 @@ public class AnnotationUtil {
      * @return 注解对象，未找到返回{@code null}
      */
     @SuppressWarnings("unchecked")
-    public static <A extends Annotation> A getAnnotation(AnnotatedElement annotationEle, Class<A> annotationType) {
+    public static <A extends Annotation> A getAnnotation(final AnnotatedElement annotationEle,  final Class<A> annotationType) {
         if (null == annotationEle || null == annotationType) {
             return null;
         }
@@ -263,19 +263,19 @@ public class AnnotationUtil {
     }
 
     /**
-     * 检查是否包含指定注解指定注解
+     * 检查是否包含指定注解指定注解.
      *
      * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
      * @param annotationType 注解类型
      * @return 是否包含指定注解
      * @since 5.4.2
      */
-    public static boolean hasAnnotation(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) {
+    public static boolean hasAnnotation(final AnnotatedElement annotationEle,  final Class<? extends Annotation> annotationType) {
         return null != getAnnotation(annotationEle, annotationType);
     }
 
     /**
-     * 检查是否包含指定注解<br>
+     * 检查是否包含指定注解.
      * 注解类传入全名，通过{@link Class#forName(String)}加载，避免不存在的注解导致的ClassNotFoundException
      *
      * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
@@ -299,7 +299,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取指定注解默认值<br>
+     * 获取指定注解默认值.
      * 如果无指定的属性方法返回null
      *
      * @param <T>            注解值类型
@@ -308,12 +308,12 @@ public class AnnotationUtil {
      * @return 注解对象
      * @throws UtilException 调用注解中的方法时执行异常
      */
-    public static <T> T getAnnotationValue(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) throws UtilException {
+    public static <T> T getAnnotationValue(final AnnotatedElement annotationEle,  final Class<? extends Annotation> annotationType) throws UtilException {
         return getAnnotationValue(annotationEle, annotationType, "value");
     }
 
     /**
-     * 获取指定注解属性的值<br>
+     * 获取指定注解属性的值.
      * 如果无指定的属性方法返回null
      *
      * @param <T>            注解值类型
@@ -323,7 +323,7 @@ public class AnnotationUtil {
      * @return 注解对象
      * @throws UtilException 调用注解中的方法时执行异常
      */
-    public static <T> T getAnnotationValue(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType, String propertyName) throws UtilException {
+    public static <T> T getAnnotationValue(final AnnotatedElement annotationEle,  final Class<? extends Annotation> annotationType,  final String propertyName) throws UtilException {
         final Annotation annotation = getAnnotation(annotationEle, annotationType);
         if (null == annotation) {
             return null;
@@ -337,7 +337,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取指定注解属性的值<br>
+     * 获取指定注解属性的值.
      * 如果无指定的属性方法返回null
      *
      * @param <A>           注解类型
@@ -348,7 +348,7 @@ public class AnnotationUtil {
      * @throws UtilException 调用注解中的方法时执行异常
      * @since 5.8.9
      */
-    public static <A extends Annotation, R> R getAnnotationValue(AnnotatedElement annotationEle, Func1<A, R> propertyName) {
+    public static <A extends Annotation, R> R getAnnotationValue(final AnnotatedElement annotationEle,  final Func1<A, R> propertyName) {
         if (propertyName == null) {
             return null;
         } else {
@@ -360,7 +360,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取指定注解中所有属性值<br>
+     * 获取指定注解中所有属性值.
      * 如果无指定的属性方法返回null
      *
      * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
@@ -368,7 +368,7 @@ public class AnnotationUtil {
      * @return 注解对象
      * @throws UtilException 调用注解中的方法时执行异常
      */
-    public static Map<String, Object> getAnnotationValueMap(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) throws UtilException {
+    public static Map<String, Object> getAnnotationValueMap(final AnnotatedElement annotationEle,  final Class<? extends Annotation> annotationType) throws UtilException {
         final Annotation annotation = getAnnotation(annotationEle, annotationType);
         if (null == annotation) {
             return null;
@@ -394,12 +394,12 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取注解类的保留时间，可选值 SOURCE（源码时），CLASS（编译时），RUNTIME（运行时），默认为 CLASS
+     * 获取注解类的保留时间，可选值 SOURCE（源码时），CLASS（编译时），RUNTIME（运行时），默认为 CLASS.
      *
      * @param annotationType 注解类
      * @return 保留时间枚举
      */
-    public static RetentionPolicy getRetentionPolicy(Class<? extends Annotation> annotationType) {
+    public static RetentionPolicy getRetentionPolicy(final Class<? extends Annotation> annotationType) {
         final Retention retention = annotationType.getAnnotation(Retention.class);
         if (null == retention) {
             return RetentionPolicy.CLASS;
@@ -408,12 +408,12 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取注解类可以用来修饰哪些程序元素，如 TYPE, METHOD, CONSTRUCTOR, FIELD, PARAMETER 等
+     * 获取注解类可以用来修饰哪些程序元素，如 TYPE, METHOD, CONSTRUCTOR, FIELD, PARAMETER 等.
      *
      * @param annotationType 注解类
      * @return 注解修饰的程序元素数组
      */
-    public static ElementType[] getTargetType(Class<? extends Annotation> annotationType) {
+    public static ElementType[] getTargetType(final Class<? extends Annotation> annotationType) {
         final Target target = annotationType.getAnnotation(Target.class);
         if (null == target) {
             return new ElementType[]{ElementType.TYPE, //
@@ -430,27 +430,27 @@ public class AnnotationUtil {
     }
 
     /**
-     * 是否会保存到 Javadoc 文档中
+     * 是否会保存到 Javadoc 文档中.
      *
      * @param annotationType 注解类
      * @return 是否会保存到 Javadoc 文档中
      */
-    public static boolean isDocumented(Class<? extends Annotation> annotationType) {
+    public static boolean isDocumented(final Class<? extends Annotation> annotationType) {
         return annotationType.isAnnotationPresent(Documented.class);
     }
 
     /**
-     * 是否可以被继承，默认为 false
+     * 是否可以被继承，默认为 false.
      *
      * @param annotationType 注解类
      * @return 是否会保存到 Javadoc 文档中
      */
-    public static boolean isInherited(Class<? extends Annotation> annotationType) {
+    public static boolean isInherited(final Class<? extends Annotation> annotationType) {
         return annotationType.isAnnotationPresent(Inherited.class);
     }
 
     /**
-     * 扫描注解类，以及注解类的{@link Class}层级结构中的注解，将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认注解外，
+     * 扫描注解类，以及注解类的{@link Class}层级结构中的注解，将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认注解外，.
      * 按元注解对象与{@code annotationType}的距离和{@link Class#getAnnotations()}顺序排序的注解对象集合
      *
      * <p>比如：<br>
@@ -466,12 +466,12 @@ public class AnnotationUtil {
      * @return 注解对象集合
      * @see MetaAnnotationScanner
      */
-    public static List<Annotation> scanMetaAnnotation(Class<? extends Annotation> annotationType) {
+    public static List<Annotation> scanMetaAnnotation(final Class<? extends Annotation> annotationType) {
         return AnnotationScanner.DIRECTLY_AND_META_ANNOTATION.getAnnotationsIfSupport(annotationType);
     }
 
     /**
-     * <p>扫描类以及类的{@link Class}层级结构中的注解，将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认元注解外,
+     * <p>扫描类以及类的{@link Class}层级结构中的注解，将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认元注解外,.
      * 全部类/接口的{@link Class#getAnnotations()}方法返回的注解对象。<br>
      * 层级结构将按广度优先递归，遵循规则如下：
      * <ul>
@@ -495,12 +495,12 @@ public class AnnotationUtil {
      * @return 注解对象集合
      * @see TypeAnnotationScanner
      */
-    public static List<Annotation> scanClass(Class<?> targetClass) {
+    public static List<Annotation> scanClass(final Class<?> targetClass) {
         return AnnotationScanner.TYPE_HIERARCHY.getAnnotationsIfSupport(targetClass);
     }
 
     /**
-     * <p>扫描方法，以及该方法所在类的{@link Class}层级结构中的具有相同方法签名的方法，
+     * <p>扫描方法，以及该方法所在类的{@link Class}层级结构中的具有相同方法签名的方法，.
      * 将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认元注解外,
      * 全部匹配方法上{@link Method#getAnnotations()}方法返回的注解对象。<br>
      * 方法所在类的层级结构将按广度优先递归，遵循规则如下：
@@ -523,12 +523,12 @@ public class AnnotationUtil {
      * @return 注解对象集合
      * @see MethodAnnotationScanner
      */
-    public static List<Annotation> scanMethod(Method method) {
+    public static List<Annotation> scanMethod(final Method method) {
         return AnnotationScanner.TYPE_HIERARCHY.getAnnotationsIfSupport(method);
     }
 
     /**
-     * 设置新的注解的属性（字段）值
+     * 设置新的注解的属性（字段）值.
      *
      * @param annotation      注解对象
      * @param annotationField 注解属性（字段）名称
@@ -536,24 +536,24 @@ public class AnnotationUtil {
      * @since 5.5.2
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void setValue(Annotation annotation, String annotationField, Object value) {
+    public static void setValue(final Annotation annotation,  final String annotationField,  final Object value) {
         final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
         memberValues.put(annotationField, value);
     }
 
     /**
-     * 该注解对象是否为通过代理类生成的合成注解
+     * 该注解对象是否为通过代理类生成的合成注解.
      *
      * @param annotation 注解对象
      * @return 是否
      * @see SynthesizedAnnotationProxy#isProxyAnnotation(Class)
      */
-    public static boolean isSynthesizedAnnotation(Annotation annotation) {
+    public static boolean isSynthesizedAnnotation(final Annotation annotation) {
         return SynthesizedAnnotationProxy.isProxyAnnotation(annotation.getClass());
     }
 
     /**
-     * 获取别名支持后的注解（优化版：新增L2缓存，提升高频别名解析性能）
+     * 获取别名支持后的注解（优化版：新增L2缓存，提升高频别名解析性能）.
      *
      * @param annotationEle  被注解的类
      * @param annotationType 注解类型Class
@@ -562,7 +562,7 @@ public class AnnotationUtil {
      * @since 5.7.23
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
+    public static <T extends Annotation> T getAnnotationAlias(final AnnotatedElement annotationEle,  final Class<T> annotationType) {
         if (null == annotationEle || null == annotationType) {
             return null;
         }
@@ -585,7 +585,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * 将指定注解实例与其元注解转为合成注解
+     * 将指定注解实例与其元注解转为合成注解.
      *
      * @param annotationType 注解类
      * @param annotations    注解对象
@@ -593,7 +593,7 @@ public class AnnotationUtil {
      * @return 合成注解
      * @see SynthesizedAggregateAnnotation
      */
-    public static <T extends Annotation> T getSynthesizedAnnotation(Class<T> annotationType, Annotation... annotations) {
+    public static <T extends Annotation> T getSynthesizedAnnotation(final Class<T> annotationType,  final Annotation... annotations) {
         // TODO 缓存合成注解信息，避免重复解析
         return Opt.ofNullable(annotations)
                 .filter(ArrayUtil::isNotEmpty)
@@ -603,7 +603,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * <p>获取元素上距离指定元素最接近的合成注解（优化版：新增L2缓存，避免重复合成解析）
+     * <p>获取元素上距离指定元素最接近的合成注解（优化版：新增L2缓存，避免重复合成解析）.
      * <ul>
      *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
      *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
@@ -625,7 +625,7 @@ public class AnnotationUtil {
      * @see SynthesizedAggregateAnnotation
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Annotation> T getSynthesizedAnnotation(AnnotatedElement annotatedEle, Class<T> annotationType) {
+    public static <T extends Annotation> T getSynthesizedAnnotation(final AnnotatedElement annotatedEle,  final Class<T> annotationType) {
         if (null == annotatedEle || null == annotationType) {
             return null;
         }
@@ -659,7 +659,7 @@ public class AnnotationUtil {
     }
 
     /**
-     * 获取元素上所有指定注解
+     * 获取元素上所有指定注解.
      * <ul>
      *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
      *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
@@ -680,7 +680,7 @@ public class AnnotationUtil {
      * @return 合成注解
      * @see SynthesizedAggregateAnnotation
      */
-    public static <T extends Annotation> List<T> getAllSynthesizedAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
+    public static <T extends Annotation> List<T> getAllSynthesizedAnnotations(final AnnotatedElement annotatedEle,  final Class<T> annotationType) {
         return AnnotationScanner.DIRECTLY
                 .getAnnotationsIfSupport(annotatedEle).stream()
                 .map(annotation -> getSynthesizedAnnotation(annotationType, annotation))
@@ -689,32 +689,32 @@ public class AnnotationUtil {
     }
 
     /**
-     * 对指定注解对象进行聚合
+     * 对指定注解对象进行聚合.
      *
      * @param annotations 注解对象
      * @return 聚合注解
      */
-    public static SynthesizedAggregateAnnotation aggregatingFromAnnotation(Annotation... annotations) {
+    public static SynthesizedAggregateAnnotation aggregatingFromAnnotation(final Annotation... annotations) {
         return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), AnnotationScanner.NOTHING);
     }
 
     /**
-     * 对指定注解对象及其元注解进行聚合
+     * 对指定注解对象及其元注解进行聚合.
      *
      * @param annotations 注解对象
      * @return 聚合注解
      */
-    public static SynthesizedAggregateAnnotation aggregatingFromAnnotationWithMeta(Annotation... annotations) {
+    public static SynthesizedAggregateAnnotation aggregatingFromAnnotationWithMeta(final Annotation... annotations) {
         return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), AnnotationScanner.DIRECTLY_AND_META_ANNOTATION);
     }
 
     /**
-     * 方法是否为注解属性方法。 <br>
+     * 方法是否为注解属性方法。 
      * 方法无参数，且有返回值的方法认为是注解属性的方法。
      *
      * @param method 方法
      */
-    static boolean isAttributeMethod(Method method) {
+    static boolean isAttributeMethod(final Method method) {
         return method.getParameterCount() == 0 && method.getReturnType() != void.class;
     }
 

@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Map属性拷贝到Bean中的拷贝器
+ * Map属性拷贝到Bean中的拷贝器.
  *
  * @param <T> 目标Bean类型
  * @since 5.8.0
@@ -19,19 +19,19 @@ import java.util.Map;
 public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 
     /**
-     * 目标的类型（用于泛型类注入）
+     * 目标的类型（用于泛型类注入）.
      */
     private final Type targetType;
 
     /**
-     * 构造
+     * 构造.
      *
      * @param source      来源Map
      * @param target      目标Bean对象
      * @param targetType  目标泛型类型
      * @param copyOptions 拷贝选项
      */
-    public MapToBeanCopier(Map<?, ?> source, T target, Type targetType, CopyOptions copyOptions) {
+    public MapToBeanCopier(final Map<?, ?> source,  final T target,  final Type targetType,  final CopyOptions copyOptions) {
         super(source, target, copyOptions);
 
         // 针对MapWrapper特殊处理，提供的Map包装了忽略大小写的Map，则默认转Bean的时候也忽略大小写，如JSONObject

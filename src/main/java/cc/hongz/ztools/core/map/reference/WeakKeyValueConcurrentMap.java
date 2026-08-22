@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * 线程安全的WeakMap实现<br>
+ * 线程安全的WeakMap实现.
  * 键和值都为Weak引用，即，在GC时发现弱引用会回收其对象
  *
  * @param <K> 键类型
@@ -36,14 +36,14 @@ public class WeakKeyValueConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V
     private static final long serialVersionUID = 1L;
 
     /**
-     * 构造
+     * 构造.
      */
     public WeakKeyValueConcurrentMap() {
         this(new ConcurrentHashMap<>());
     }
 
     /**
-     * 构造
+     * 构造.
      *
      * @param raw {@link ConcurrentMap}实现
      */

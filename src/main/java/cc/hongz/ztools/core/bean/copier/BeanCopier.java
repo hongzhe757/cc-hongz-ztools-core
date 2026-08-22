@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Bean拷贝，提供：
+ * Bean拷贝，提供：.
  *
  * <pre>
  *     1. Bean 转 Bean
@@ -28,7 +28,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
     private final Copier<T> copier;
 
     /**
-     * 创建BeanCopier
+     * 创建BeanCopier.
      *
      * @param <T> 目标Bean类型
      * @param source 来源对象，可以是Bean或者Map
@@ -36,12 +36,12 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
      * @param copyOptions 拷贝属性选项
      * @return BeanCopier
      */
-    public static <T> BeanCopier<T> create(Object source, T target, CopyOptions copyOptions) {
+    public static <T> BeanCopier<T> create(final Object source,  final T target,  final CopyOptions copyOptions) {
         return create(source, target, target.getClass(), copyOptions);
     }
 
     /**
-     * 创建BeanCopier
+     * 创建BeanCopier.
      *
      * @param <T> 目标Bean类型
      * @param source 来源对象，可以是Bean或者Map
@@ -50,19 +50,19 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
      * @param copyOptions 拷贝属性选项
      * @return BeanCopier
      */
-    public static <T> BeanCopier<T> create(Object source, T target, Type destType, CopyOptions copyOptions) {
+    public static <T> BeanCopier<T> create(final Object source,  final T target,  final Type destType,  final CopyOptions copyOptions) {
         return new BeanCopier<>(source, target, destType, copyOptions);
     }
 
     /**
-     * 构造
+     * 构造.
      *
      * @param source 来源对象，可以是Bean或者Map
      * @param target 目标Bean对象
      * @param targetType 目标的泛型类型，用于标注有泛型参数的Bean对象
      * @param copyOptions 拷贝属性选项
      */
-    public BeanCopier(Object source, T target, Type targetType, CopyOptions copyOptions) {
+    public BeanCopier(final Object source,  final T target,  final Type targetType,  final CopyOptions copyOptions) {
         Assert.notNull(source, "Source bean must be not null!");
         Assert.notNull(target, "Target bean must be not null!");
         Copier<T> copier;

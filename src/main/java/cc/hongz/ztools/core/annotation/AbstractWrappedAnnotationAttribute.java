@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * {@link WrappedAnnotationAttribute}的基本实现
+ * {@link WrappedAnnotationAttribute}的基本实现.
  *
  * @author huangchengxing
  * @see ForceAliasedAnnotationAttribute
@@ -20,7 +20,7 @@ public abstract class AbstractWrappedAnnotationAttribute implements WrappedAnnot
     protected final AnnotationAttribute original;
     protected final AnnotationAttribute linked;
 
-    protected AbstractWrappedAnnotationAttribute(AnnotationAttribute original, AnnotationAttribute linked) {
+    protected AbstractWrappedAnnotationAttribute(final AnnotationAttribute original,  final AnnotationAttribute linked) {
         Assert.notNull(original, "target must not null");
         Assert.notNull(linked, "linked must not null");
         this.original = original;
@@ -55,7 +55,7 @@ public abstract class AbstractWrappedAnnotationAttribute implements WrappedAnnot
         return leafAttributes;
     }
 
-    private void collectLeafAttribute(AnnotationAttribute curr, List<AnnotationAttribute> leafAttributes) {
+    private void collectLeafAttribute(final AnnotationAttribute curr,  final List<AnnotationAttribute> leafAttributes) {
         if (ObjectUtil.isNull(curr)) {
             return;
         }

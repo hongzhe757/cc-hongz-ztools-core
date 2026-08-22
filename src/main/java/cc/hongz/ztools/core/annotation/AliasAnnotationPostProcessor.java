@@ -11,7 +11,7 @@ import cc.hongz.ztools.core.util.ObjectUtil;
 import java.util.Map;
 
 /**
- * <p>用于处理注解对象中带有{@link Alias}注解的属性。<br>
+ * <p>用于处理注解对象中带有{@link Alias}注解的属性。
  * 当该处理器执行完毕后，{@link Alias}注解指向的目标注解的属性将会被包装并替换为
  * {@link ForceAliasedAnnotationAttribute}。
  *
@@ -27,7 +27,7 @@ public class AliasAnnotationPostProcessor implements SynthesizedAnnotationPostPr
     }
 
     @Override
-    public void process(SynthesizedAnnotation synthesizedAnnotation, AnnotationSynthesizer synthesizer) {
+    public void process(final SynthesizedAnnotation synthesizedAnnotation,  final AnnotationSynthesizer synthesizer) {
         final Map<String, AnnotationAttribute> attributeMap = synthesizedAnnotation.getAttributes();
 
         // 记录别名与属性的关系

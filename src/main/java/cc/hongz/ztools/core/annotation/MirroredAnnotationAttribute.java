@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.annotation;
 import cc.hongz.ztools.core.lang.Assert;
 
 /**
- * 表示存在对应镜像属性的注解属性，当获取值时将根据{@link RelationType#MIRROR_FOR}的规则进行处理
+ * 表示存在对应镜像属性的注解属性，当获取值时将根据{@link RelationType#MIRROR_FOR}的规则进行处理.
  *
  * @author huangchengxing
  * @see MirrorLinkAnnotationPostProcessor
@@ -11,7 +11,7 @@ import cc.hongz.ztools.core.lang.Assert;
  */
 public class MirroredAnnotationAttribute extends AbstractWrappedAnnotationAttribute {
 
-    public MirroredAnnotationAttribute(AnnotationAttribute origin, AnnotationAttribute linked) {
+    public MirroredAnnotationAttribute(final AnnotationAttribute origin,  final AnnotationAttribute linked) {
         super(origin, linked);
     }
 
@@ -37,7 +37,7 @@ public class MirroredAnnotationAttribute extends AbstractWrappedAnnotationAttrib
     }
 
     /**
-     * 当{@link #original}与{@link #linked}都为默认值时返回{@code true}
+     * 当{@link #original}与{@link #linked}都为默认值时返回{@code true}.
      *
      * @return 是否
      */

@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Bean属性拷贝到Map中的拷贝器
+ * Bean属性拷贝到Map中的拷贝器.
  *
  * @since 5.8.0
  */
@@ -20,14 +20,14 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
     private final Type[] targetTypeArguments;
 
     /**
-     * 构造
+     * 构造.
      *
      * @param source      来源Map
      * @param target      目标Map对象
      * @param targetType  目标泛型类型
      * @param copyOptions 拷贝选项
      */
-    public BeanToMapCopier(Object source, Map target, Type targetType, CopyOptions copyOptions) {
+    public BeanToMapCopier(final Object source,  final Map target,  final Type targetType,  final CopyOptions copyOptions) {
         super(source, target, copyOptions);
         this.targetTypeArguments = TypeUtil.getTypeArguments(targetType);
     }

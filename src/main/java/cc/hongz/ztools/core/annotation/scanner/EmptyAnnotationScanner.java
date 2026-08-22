@@ -8,24 +8,24 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
- * 默认不扫描任何元素的扫描器
+ * 默认不扫描任何元素的扫描器.
  *
  * @author huangchengxing
  */
 public class EmptyAnnotationScanner implements AnnotationScanner {
 
     @Override
-    public boolean support(AnnotatedElement annotatedEle) {
+    public boolean support(final AnnotatedElement annotatedEle) {
         return true;
     }
 
     @Override
-    public List<Annotation> getAnnotations(AnnotatedElement annotatedEle) {
+    public List<Annotation> getAnnotations(final AnnotatedElement annotatedEle) {
         return Collections.emptyList();
     }
 
     @Override
-    public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
+    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
         // do nothing
     }
 }

@@ -9,7 +9,7 @@ import java.util.AbstractMap;
 import java.util.Map;
 
 /**
- * java.lang.Record 相关工具类封装<br>
+ * java.lang.Record 相关工具类封装.
  * 来自于FastJSON2的BeanUtils
  *
  * @author fastjson2, Looly
@@ -24,7 +24,7 @@ public class RecordUtil {
     private static volatile Method METHOD_COMPONENT_GET_GENERIC_TYPE;
 
     /**
-     * 判断给定类是否为Record类
+     * 判断给定类是否为Record类.
      *
      * @param clazz 类
      * @return 是否为Record类
@@ -54,7 +54,7 @@ public class RecordUtil {
     }
 
     /**
-     * 获取Record类中所有字段名称，getter方法名与字段同名
+     * 获取Record类中所有字段名称，getter方法名与字段同名.
      *
      * @param recordClass Record类
      * @return 字段数组
@@ -90,7 +90,7 @@ public class RecordUtil {
     }
 
     /**
-     * 实例化Record类
+     * 实例化Record类.
      *
      * @param recordClass   类
      * @param valueProvider 参数值提供器

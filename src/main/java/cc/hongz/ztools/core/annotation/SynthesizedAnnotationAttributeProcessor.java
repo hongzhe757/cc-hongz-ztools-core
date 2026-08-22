@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.annotation;
 import java.util.Collection;
 
 /**
- * 合成注解属性选择器。用于在{@link SynthesizedAggregateAnnotation}中从指定类型的合成注解里获取到对应的属性值
+ * 合成注解属性选择器。用于在{@link SynthesizedAggregateAnnotation}中从指定类型的合成注解里获取到对应的属性值.
  *
  * @author huangchengxing
  */
@@ -11,7 +11,7 @@ import java.util.Collection;
 public interface SynthesizedAnnotationAttributeProcessor {
 
     /**
-     * 从一批被合成注解中，获取指定名称与类型的属性值
+     * 从一批被合成注解中，获取指定名称与类型的属性值.
      *
      * @param attributeName          属性名称
      * @param attributeType          属性类型
@@ -19,6 +19,6 @@ public interface SynthesizedAnnotationAttributeProcessor {
      * @param <R> 属性类型
      * @return 属性值
      */
-    <R> R getAttributeValue(String attributeName, Class<R> attributeType, Collection<? extends SynthesizedAnnotation> synthesizedAnnotations);
+    <R> R getAttributeValue(final String attributeName,  final Class<R> attributeType,  final Collection<? extends SynthesizedAnnotation> synthesizedAnnotations);
 
 }

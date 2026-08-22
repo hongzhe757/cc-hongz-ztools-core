@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
+ * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象.
  * 根据给定的表达式，查找Bean中对应的属性值对象。 表达式分为两种：
  * <ol>
  * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
@@ -37,7 +37,7 @@ public class BeanPath implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 表达式边界符号数组
+     * 表达式边界符号数组.
      */
     private static final char[] EXP_CHARS = {CharUtil.DOT, CharUtil.BRACKET_START, CharUtil.BRACKET_END};
 
@@ -45,7 +45,7 @@ public class BeanPath implements Serializable {
     protected List<String> patternParts;
 
     /**
-     * 解析Bean路径表达式为Bean模式<br>
+     * 解析Bean路径表达式为Bean模式.
      * Bean表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
      * 根据给定的表达式，查找Bean中对应的属性值对象。 表达式分为两种：
      * <ol>
@@ -71,7 +71,7 @@ public class BeanPath implements Serializable {
     }
 
     /**
-     * 构造
+     * 构造.
      *
      * @param expression 表达式
      */
@@ -80,7 +80,7 @@ public class BeanPath implements Serializable {
     }
 
     /**
-     * 获取表达式解析后的分段列表
+     * 获取表达式解析后的分段列表.
      *
      * @return 表达式分段列表
      */
@@ -89,7 +89,7 @@ public class BeanPath implements Serializable {
     }
 
     /**
-     * 获取Bean中对应表达式的值
+     * 获取Bean中对应表达式的值.
      *
      * @param bean Bean对象或Map或List等
      * @return 值，如果对应值不存在，则返回null
@@ -99,7 +99,7 @@ public class BeanPath implements Serializable {
     }
 
     /**
-     * 设置表达式指定位置（或field对应）的值<br>
+     * 设置表达式指定位置（或field对应）的值.
      * 若表达式指向一个List则设置其坐标对应位置的值，若指向Map则put对应key的值，Bean则设置字段的值<br>
      * 注意：
      *
@@ -123,7 +123,7 @@ public class BeanPath implements Serializable {
     //region Private Methods
 
     /**
-     * 设置表达式指定位置（或field对应）的值<br>
+     * 设置表达式指定位置（或field对应）的值.
      * 若表达式指向一个List则设置其坐标对应位置的值，若指向Map则put对应key的值，Bean则设置字段的值<br>
      * 注意：
      *
@@ -137,7 +137,7 @@ public class BeanPath implements Serializable {
      * @param nextNumberPart 下一个值是否
      * @param value          值
      */
-    private void set(Object bean, List<String> patternParts, boolean nextNumberPart, Object value) {
+    private void set(final Object bean,  final List<String> patternParts,  final boolean nextNumberPart,  final Object value) {
         Object subBean = this.get(patternParts, bean, true);
         if (null == subBean) {
             // 当前节点是空，则先创建父节点
@@ -155,27 +155,27 @@ public class BeanPath implements Serializable {
     }
 
     /**
-     * 判断path列表中末尾的标记是否为数字
+     * 判断path列表中末尾的标记是否为数字.
      *
      * @param patternParts path列表
      * @return 是否为数字
      */
-    private static boolean lastIsNumber(List<String> patternParts) {
+    private static boolean lastIsNumber(final List<String> patternParts) {
         return NumberUtil.isInteger(patternParts.get(patternParts.size() - 1));
     }
 
     /**
-     * 获取父级路径列表
+     * 获取父级路径列表.
      *
      * @param patternParts 路径列表
      * @return 父级路径列表
      */
-    private static List<String> getParentParts(List<String> patternParts) {
+    private static List<String> getParentParts(final List<String> patternParts) {
         return patternParts.subList(0, patternParts.size() - 1);
     }
 
     /**
-     * 获取Bean中对应表达式的值
+     * 获取Bean中对应表达式的值.
      *
      * @param patternParts 表达式分段列表
      * @param bean         Bean对象或Map或List等
@@ -218,7 +218,7 @@ public class BeanPath implements Serializable {
     }
 
     /**
-     * 处理通配符 * 的情况，对集合或数组中的每个元素应用剩余路径
+     * 处理通配符 * 的情况，对集合或数组中的每个元素应用剩余路径.
      *
      * @param collectionOrArray 集合或数组对象
      * @param patternParts      完整的表达式分段列表
@@ -309,7 +309,7 @@ public class BeanPath implements Serializable {
     }
 
     /**
-     * 初始化
+     * 初始化.
      *
      * @param expression 表达式
      */

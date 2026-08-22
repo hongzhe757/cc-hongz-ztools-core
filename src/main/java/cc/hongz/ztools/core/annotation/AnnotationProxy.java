@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 注解代理<br>
+ * 注解代理.
  * 通过代理指定注解，可以自定义调用注解的方法逻辑，如支持{@link Alias} 注解
  *
  * @param <T> 注解类型
@@ -25,12 +25,12 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
     private final Map<String, Object> attributes;
 
     /**
-     * 构造
+     * 构造.
      *
      * @param annotation 注解
      */
     @SuppressWarnings("unchecked")
-    public AnnotationProxy(T annotation) {
+    public AnnotationProxy(final T annotation) {
         this.annotation = annotation;
         this.type = (Class<T>) annotation.annotationType();
         this.attributes = initAttributes();
@@ -43,7 +43,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(final Object proxy,  final Method method,  final Object[] args) throws Throwable {
 
         // 注解别名
         Alias alias = method.getAnnotation(Alias.class);
@@ -65,7 +65,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
     }
 
     /**
-     * 初始化注解的属性<br>
+     * 初始化注解的属性.
      * 此方法预先调用所有注解的方法，将注解方法值缓存于attributes中
      *
      * @return 属性（方法结果）映射

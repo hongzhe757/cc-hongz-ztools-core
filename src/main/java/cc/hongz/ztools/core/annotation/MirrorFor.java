@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.annotation;
 import java.lang.annotation.*;
 
 /**
- * <p>{@link Link}的子注解。表示注解的属性与指定的属性互为镜像，通过一个属性将能够获得对方的值。<br>
+ * <p>{@link Link}的子注解。表示注解的属性与指定的属性互为镜像，通过一个属性将能够获得对方的值。
  * 它们遵循下述规则：
  * <ul>
  *     <li>互为镜像的两个属性，必须同时通过指定模式为{@code MIRROR_FOR}的{@link Link}注解指定对方；</li>
@@ -24,7 +24,7 @@ import java.lang.annotation.*;
 public @interface MirrorFor {
 
     /**
-     * 产生关联的注解类型，当不指定时，默认指注释的属性所在的类
+     * 产生关联的注解类型，当不指定时，默认指注释的属性所在的类.
      *
      * @return 关联的注解类型
      */
@@ -32,7 +32,7 @@ public @interface MirrorFor {
     Class<? extends Annotation> annotation() default Annotation.class;
 
     /**
-     * {@link #annotation()}指定注解中关联的属性
+     * {@link #annotation()}指定注解中关联的属性.
      *
      * @return 属性名
      */

@@ -15,7 +15,7 @@
  */
 
 /**
- * 弱引用Map实现
+ * 弱引用Map实现.
  *
  * @author Looly
  * @since 5.8.41

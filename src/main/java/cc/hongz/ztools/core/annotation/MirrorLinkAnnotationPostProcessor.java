@@ -5,7 +5,7 @@ import cc.hongz.ztools.core.text.CharSequenceUtil;
 import cc.hongz.ztools.core.util.ObjectUtil;
 
 /**
- * <p>用于处理注解对象中带有{@link Link}注解，且{@link Link#type()}为{@link RelationType#MIRROR_FOR}的属性。<br>
+ * <p>用于处理注解对象中带有{@link Link}注解，且{@link Link#type()}为{@link RelationType#MIRROR_FOR}的属性。
  * 当该处理器执行完毕后，原始合成注解中被{@link Link}注解的属性与{@link Link}注解指向的目标注解的属性，
  * 都将会被被包装并替换为{@link MirroredAnnotationAttribute}。
  *
@@ -23,7 +23,7 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
     }
 
     /**
-     * 该处理器只处理{@link Link#type()}类型为{@link RelationType#MIRROR_FOR}的注解属性
+     * 该处理器只处理{@link Link#type()}类型为{@link RelationType#MIRROR_FOR}的注解属性.
      *
      * @return 仅有{@link RelationType#MIRROR_FOR}数组
      */
@@ -33,7 +33,7 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
     }
 
     /**
-     * 将存在镜像关系的合成注解属性分别包装为{@link MirroredAnnotationAttribute}对象，
+     * 将存在镜像关系的合成注解属性分别包装为{@link MirroredAnnotationAttribute}对象，.
      * 并使用包装后{@link MirroredAnnotationAttribute}替换在它们对应合成注解实例中的{@link AnnotationAttribute}
      *
      * @param synthesizer        注解合成器
@@ -69,9 +69,9 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
     }
 
     /**
-     * 检查映射关系是否正确
+     * 检查映射关系是否正确.
      */
-    private void checkMirrored(AnnotationAttribute original, AnnotationAttribute mirror) {
+    private void checkMirrored(final AnnotationAttribute original,  final AnnotationAttribute mirror) {
         final boolean originalAttributeMirrored = original instanceof MirroredAnnotationAttribute;
         final boolean mirrorAttributeMirrored = mirror instanceof MirroredAnnotationAttribute;
 
@@ -112,9 +112,9 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
     }
 
     /**
-     * 基本校验
+     * 基本校验.
      */
-    private void checkMirrorRelation(Link annotation, AnnotationAttribute original, AnnotationAttribute mirror) {
+    private void checkMirrorRelation(final Link annotation,  final AnnotationAttribute original,  final AnnotationAttribute mirror) {
         // 镜像属性必须存在
         checkLinkedAttributeNotNull(original, mirror, annotation);
         // 镜像属性返回值必须一致

@@ -13,44 +13,44 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * {@link AnnotationSynthesizer}的基本实现
+ * {@link AnnotationSynthesizer}的基本实现.
  *
  * @author huangchengxing
  */
 public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynthesizer {
 
     /**
-     * 合成注解来源最初来源
+     * 合成注解来源最初来源.
      */
     protected final T source;
 
     /**
-     * 包含根注解以及其元注解在内的全部注解实例
+     * 包含根注解以及其元注解在内的全部注解实例.
      */
     protected final Map<Class<? extends Annotation>, SynthesizedAnnotation> synthesizedAnnotationMap;
 
     /**
-     * 已经合成过的注解对象
+     * 已经合成过的注解对象.
      */
     private final Map<Class<? extends Annotation>, Annotation> synthesizedProxyAnnotations;
 
     /**
-     * 合成注解选择器
+     * 合成注解选择器.
      */
     protected final SynthesizedAnnotationSelector annotationSelector;
 
     /**
-     * 合成注解属性处理器
+     * 合成注解属性处理器.
      */
     protected final Collection<SynthesizedAnnotationPostProcessor> postProcessors;
 
     /**
-     * 注解扫描器
+     * 注解扫描器.
      */
     protected final AnnotationScanner annotationScanner;
 
     /**
-     * 构造一个注解合成器
+     * 构造一个注解合成器.
      *
      * @param source                   当前查找的注解对象
      * @param annotationSelector       合成注解选择器
@@ -81,24 +81,24 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
     }
 
     /**
-     * 加载合成注解的必要属性
+     * 加载合成注解的必要属性.
      *
      * @return 合成注解
      */
     protected abstract Map<Class<? extends Annotation>, SynthesizedAnnotation> loadAnnotations();
 
     /**
-     * 根据指定的注解类型和对应注解对象，合成最终所需的合成注解
+     * 根据指定的注解类型和对应注解对象，合成最终所需的合成注解.
      *
      * @param annotationType 注解类型
      * @param annotation     合成注解对象
      * @param <A>            注解类型
      * @return 最终所需的合成注解
      */
-    protected abstract <A extends Annotation> A synthesize(Class<A> annotationType, SynthesizedAnnotation annotation);
+    protected abstract <A extends Annotation> A synthesize(final Class<A> annotationType,  final SynthesizedAnnotation annotation);
 
     /**
-     * 获取合成注解来源最初来源
+     * 获取合成注解来源最初来源.
      *
      * @return 合成注解来源最初来源
      */
@@ -108,7 +108,7 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
     }
 
     /**
-     * 合成注解选择器
+     * 合成注解选择器.
      *
      * @return 注解选择器
      */
@@ -118,7 +118,7 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
     }
 
     /**
-     * 获取合成注解后置处理器
+     * 获取合成注解后置处理器.
      *
      * @return 合成注解后置处理器
      */
@@ -128,18 +128,18 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
     }
 
     /**
-     * 获取已合成的注解
+     * 获取已合成的注解.
      *
      * @param annotationType 注解类型
      * @return 已合成的注解
      */
     @Override
-    public SynthesizedAnnotation getSynthesizedAnnotation(Class<?> annotationType) {
+    public SynthesizedAnnotation getSynthesizedAnnotation(final Class<?> annotationType) {
         return synthesizedAnnotationMap.get(annotationType);
     }
 
     /**
-     * 获取全部的合成注解
+     * 获取全部的合成注解.
      *
      * @return 合成注解
      */
@@ -149,7 +149,7 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
     }
 
     /**
-     * 获取合成注解
+     * 获取合成注解.
      *
      * @param annotationType 注解类型
      * @param <A>            注解类型
@@ -157,7 +157,7 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <A extends Annotation> A synthesize(Class<A> annotationType) {
+    public <A extends Annotation> A synthesize(final Class<A> annotationType) {
         A annotation = (A)synthesizedProxyAnnotations.get(annotationType);
         if (Objects.nonNull(annotation)) {
             return annotation;

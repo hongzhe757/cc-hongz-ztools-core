@@ -30,7 +30,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * 线程安全的ReferenceMap实现
+ * 线程安全的ReferenceMap实现.
  *
  * @param <K> 键类型
  * @param <V> 值类型
@@ -41,26 +41,26 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     private static final long serialVersionUID = 1L;
 
     /**
-     * 键值对引用
+     * 键值对引用.
      */
     final ConcurrentMap<Ref<K>, Ref<V>> raw;
     /**
-     * 因无强链接而清除的键队列
+     * 因无强链接而清除的键队列.
      */
     private final ReferenceQueue<K> lastKeyQueue;
     /**
-     * 因无强链接而清除的值队列
+     * 因无强链接而清除的值队列.
      */
     private final ReferenceQueue<V> lastValueQueue;
     /**
-     * 回收监听
+     * 回收监听.
      */
     private BiConsumer<Ref<? extends K>, Ref<? extends V>> purgeListener;
 
     // region 构造
 
     /**
-     * 构造
+     * 构造.
      *
      * @param raw {@link ConcurrentMap}实现
      */
@@ -72,7 +72,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     // endregion
 
     /**
-     * 设置对象回收清除监听
+     * 设置对象回收清除监听.
      *
      * @param purgeListener 监听函数
      */
@@ -333,7 +333,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     }
 
     /**
-     * 清除被回收的键和值
+     * 清除被回收的键和值.
      */
     @SuppressWarnings("unchecked")
     private void purgeStale() {
@@ -358,7 +358,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     }
 
     /**
-     * 根据Reference类型构建key对应的{@link Reference}
+     * 根据Reference类型构建key对应的{@link Reference}.
      *
      * @param key   键
      * @param queue {@link ReferenceQueue}
@@ -367,7 +367,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     abstract Ref<K> wrapKey(final K key, final ReferenceQueue<? super K> queue);
 
     /**
-     * 根据Reference类型构建value对应的{@link Reference}
+     * 根据Reference类型构建value对应的{@link Reference}.
      *
      * @param value 值
      * @param queue {@link ReferenceQueue}
@@ -376,7 +376,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     abstract Ref<V> wrapValue(final V value, final ReferenceQueue<? super V> queue);
 
     /**
-     * 根据Reference类型构建key对应的{@link Reference}
+     * 根据Reference类型构建key对应的{@link Reference}.
      *
      * @param key 键
      * @return {@link Reference}
@@ -387,7 +387,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     }
 
     /**
-     * 根据Reference类型构建value对应的{@link Reference}
+     * 根据Reference类型构建value对应的{@link Reference}.
      *
      * @param value 键
      * @return {@link Reference}
@@ -401,7 +401,7 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     }
 
     /**
-     * 去包装对象
+     * 去包装对象.
      *
      * @param <T> 对象类型
      * @param obj 对象

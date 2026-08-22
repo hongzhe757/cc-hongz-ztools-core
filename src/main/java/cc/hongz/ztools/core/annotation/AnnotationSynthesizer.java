@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * <p>注解合成器，用于处理一组给定的与{@link #getSource()}具有直接或间接联系的注解对象，
+ * <p>注解合成器，用于处理一组给定的与{@link #getSource()}具有直接或间接联系的注解对象，.
  * 并返回与原始注解对象具有不同属性的“合成”注解。
  *
  * <p>合成注解一般被用于处理类层级结果中具有直接或间接关联的注解对象，
@@ -30,48 +30,48 @@ import java.util.Map;
 public interface AnnotationSynthesizer {
 
     /**
-     * 获取合成注解来源最初来源
+     * 获取合成注解来源最初来源.
      *
      * @return 合成注解来源最初来源
      */
     Object getSource();
 
     /**
-     * 合成注解选择器
+     * 合成注解选择器.
      *
      * @return 注解选择器
      */
     SynthesizedAnnotationSelector getAnnotationSelector();
 
     /**
-     * 获取合成注解后置处理器
+     * 获取合成注解后置处理器.
      *
      * @return 合成注解后置处理器
      */
     Collection<SynthesizedAnnotationPostProcessor> getAnnotationPostProcessors();
 
     /**
-     * 获取已合成的注解
+     * 获取已合成的注解.
      *
      * @param annotationType 注解类型
      * @return 已合成的注解
      */
-    SynthesizedAnnotation getSynthesizedAnnotation(Class<?> annotationType);
+    SynthesizedAnnotation getSynthesizedAnnotation(final Class<?> annotationType);
 
     /**
-     * 获取全部的合成注解
+     * 获取全部的合成注解.
      *
      * @return 合成注解
      */
     Map<Class<? extends Annotation>, SynthesizedAnnotation> getAllSynthesizedAnnotation();
 
     /**
-     * 获取合成注解
+     * 获取合成注解.
      *
      * @param annotationType 注解类型
      * @param <T>            注解类型
      * @return 类型
      */
-    <T extends Annotation> T synthesize(Class<T> annotationType);
+    <T extends Annotation> T synthesize(final Class<T> annotationType);
 
 }

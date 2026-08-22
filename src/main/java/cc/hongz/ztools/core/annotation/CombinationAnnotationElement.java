@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 /**
- * 组合注解 对JDK的原生注解机制做一个增强，支持类似Spring的组合注解。<br>
+ * 组合注解 对JDK的原生注解机制做一个增强，支持类似Spring的组合注解。
  * 核心实现使用了递归获取指定元素上的注解以及注解的注解，以实现复合注解的获取。
  *
  * @author Succy, Looly
@@ -22,59 +22,59 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
     private static final long serialVersionUID = 1L;
 
     /**
-     * 创建CombinationAnnotationElement
+     * 创建CombinationAnnotationElement.
      *
      * @param element   需要解析注解的元素：可以是Class、Method、Field、Constructor、ReflectPermission
      * @param predicate 过滤器，{@link Predicate#test(Object)}返回{@code true}保留，否则不保留
      * @return CombinationAnnotationElement
      * @since 5.8.0
      */
-    public static CombinationAnnotationElement of(AnnotatedElement element, Predicate<Annotation> predicate) {
+    public static CombinationAnnotationElement of(final AnnotatedElement element,  final Predicate<Annotation> predicate) {
         return new CombinationAnnotationElement(element, predicate);
     }
 
     /**
-     * 注解类型与注解对象对应表
+     * 注解类型与注解对象对应表.
      */
     private Map<Class<? extends Annotation>, Annotation> annotationMap;
     /**
-     * 直接注解类型与注解对象对应表
+     * 直接注解类型与注解对象对应表.
      */
     private Map<Class<? extends Annotation>, Annotation> declaredAnnotationMap;
     /**
-     * 过滤器
+     * 过滤器.
      */
     private final Predicate<Annotation> predicate;
 
     /**
-     * 构造
+     * 构造.
      *
      * @param element 需要解析注解的元素：可以是Class、Method、Field、Constructor、ReflectPermission
      */
-    public CombinationAnnotationElement(AnnotatedElement element) {
+    public CombinationAnnotationElement(final AnnotatedElement element) {
         this(element, null);
     }
 
     /**
-     * 构造
+     * 构造.
      *
      * @param element   需要解析注解的元素：可以是Class、Method、Field、Constructor、ReflectPermission
      * @param predicate 过滤器，{@link Predicate#test(Object)}返回{@code true}保留，否则不保留
      * @since 5.8.0
      */
-    public CombinationAnnotationElement(AnnotatedElement element, Predicate<Annotation> predicate) {
+    public CombinationAnnotationElement(final AnnotatedElement element,  final Predicate<Annotation> predicate) {
         this.predicate = predicate;
         init(element);
     }
 
     @Override
-    public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+    public boolean isAnnotationPresent(final Class<? extends Annotation> annotationClass) {
         return annotationMap.containsKey(annotationClass);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+    public <T extends Annotation> T getAnnotation(final Class<T> annotationClass) {
         Annotation annotation = annotationMap.get(annotationClass);
         return (annotation == null) ? null : (T) annotation;
     }
@@ -92,11 +92,11 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
     }
 
     /**
-     * 初始化
+     * 初始化.
      *
      * @param element 元素
      */
-    private void init(AnnotatedElement element) {
+    private void init(final AnnotatedElement element) {
         final Annotation[] declaredAnnotations = element.getDeclaredAnnotations();
         this.declaredAnnotationMap = new TableMap<>();
         parseDeclared(declaredAnnotations);
@@ -113,11 +113,11 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
     }
 
     /**
-     * 进行递归解析注解，直到全部都是元注解为止
+     * 进行递归解析注解，直到全部都是元注解为止.
      *
      * @param annotations Class, Method, Field等
      */
-    private void parseDeclared(Annotation[] annotations) {
+    private void parseDeclared(final Annotation[] annotations) {
         if(ArrayUtil.isEmpty(annotations)){
             return;
         }
@@ -139,11 +139,11 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
     }
 
     /**
-     * 进行递归解析注解，直到全部都是元注解为止
+     * 进行递归解析注解，直到全部都是元注解为止.
      *
      * @param annotations Class, Method, Field等
      */
-    private void parse(Annotation[] annotations) {
+    private void parse(final Annotation[] annotations) {
         if(ArrayUtil.isEmpty(annotations)){
             return;
         }
@@ -164,12 +164,12 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
     }
 
     /**
-     * 检查给定的注解是否符合过滤条件
+     * 检查给定的注解是否符合过滤条件.
      *
      * @param annotation 注解对象
      * @return 是否符合条件
      */
-    private boolean test(Annotation annotation) {
+    private boolean test(final Annotation annotation) {
         return null == this.predicate || this.predicate.test(annotation);
     }
 }

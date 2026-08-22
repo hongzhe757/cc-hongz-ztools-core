@@ -37,38 +37,38 @@ import java.util.function.Predicate;
 public class GenericAnnotationScanner implements AnnotationScanner {
 
     /**
-     * 类型扫描器
+     * 类型扫描器.
      */
     private final AnnotationScanner typeScanner;
 
     /**
-     * 方法扫描器
+     * 方法扫描器.
      */
     private final AnnotationScanner methodScanner;
 
     /**
-     * 元注解扫描器
+     * 元注解扫描器.
      */
     private final AnnotationScanner metaScanner;
 
     /**
-     * 普通元素扫描器
+     * 普通元素扫描器.
      */
     private final AnnotationScanner elementScanner;
 
     /**
-     * 通用注解扫描器支持扫描所有类型的{@link AnnotatedElement}
+     * 通用注解扫描器支持扫描所有类型的{@link AnnotatedElement}.
      *
      * @param annotatedEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
      * @return 是否支持扫描该注解元素
      */
     @Override
-    public boolean support(AnnotatedElement annotatedEle) {
+    public boolean support(final AnnotatedElement annotatedEle) {
         return true;
     }
 
     /**
-     * 构造一个通用注解扫描器
+     * 构造一个通用注解扫描器.
      *
      * @param enableScanMetaAnnotation  是否扫描注解上的元注解
      * @param enableScanSupperClass     是否扫描父类
@@ -90,34 +90,34 @@ public class GenericAnnotationScanner implements AnnotationScanner {
     }
 
     /**
-     * 扫描注解元素的层级结构（若存在），然后对获取到的注解和注解对应的层级索引进行处理
+     * 扫描注解元素的层级结构（若存在），然后对获取到的注解和注解对应的层级索引进行处理.
      *
      * @param consumer     对获取到的注解和注解对应的层级索引的处理
      * @param annotatedEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
      * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
      */
     @Override
-    public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
-        filter = ObjectUtil.defaultIfNull(filter, a -> t -> true);
+    public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
+        final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(filter, a -> t -> true);
         if (ObjectUtil.isNull(annotatedEle)) {
             return;
         }
         // 注解元素是类
         if (annotatedEle instanceof Class) {
-            scanElements(typeScanner, consumer, annotatedEle, filter);
+            scanElements(typeScanner, consumer, annotatedEle, targetFilter);
         }
         // 注解元素是方法
         else if (annotatedEle instanceof Method) {
-            scanElements(methodScanner, consumer, annotatedEle, filter);
+            scanElements(methodScanner, consumer, annotatedEle, targetFilter);
         }
         // 注解元素是其他类型
         else {
-            scanElements(elementScanner, consumer, annotatedEle, filter);
+            scanElements(elementScanner, consumer, annotatedEle, targetFilter);
         }
     }
 
     /**
-     * 扫描注解类的层级结构（若存在），然后对获取到的注解和注解对应的层级索引进行处理
+     * 扫描注解类的层级结构（若存在），然后对获取到的注解和注解对应的层级索引进行处理.
      *
      * @param scanner      使用的扫描器
      * @param consumer     对获取到的注解和注解对应的层级索引的处理

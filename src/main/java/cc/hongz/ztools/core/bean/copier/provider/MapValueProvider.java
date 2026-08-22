@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Map值提供者
+ * Map值提供者.
  *
  * @author Looly
  * @since 5.8.40
@@ -18,7 +18,7 @@ public class MapValueProvider implements ValueProvider<String> {
     private final Map map;
 
     /**
-     * 构造
+     * 构造.
      *
      * @param map map
      */
@@ -27,12 +27,12 @@ public class MapValueProvider implements ValueProvider<String> {
     }
 
     @Override
-    public Object value(String key, Type valueType) {
+    public Object value(final String key,  final Type valueType) {
         return Convert.convert(valueType, map.get(key));
     }
 
     @Override
-    public boolean containsKey(String key) {
+    public boolean containsKey(final String key) {
         return map.containsKey(key);
     }
 }

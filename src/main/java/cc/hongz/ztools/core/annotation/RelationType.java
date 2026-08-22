@@ -1,7 +1,7 @@
 package cc.hongz.ztools.core.annotation;
 
 /**
- * <p>注解属性的关系类型 <br>
+ * <p>注解属性的关系类型.
  * 若将被{@link Link}注解的属性称为“原始属性”，而在{@link Link}注解中指向的注解属性称为“关联属性”，
  * 则该枚举用于描述“原始属性”与“关联属性”在{@link SynthesizedAggregateAnnotation}处理过程中的作用关系。<br>
  * 根据在{@link Link#type()}中指定的关系类型的不同，通过{@link SynthesizedAggregateAnnotation}合成的注解的属性值也将有所变化。
@@ -21,7 +21,7 @@ package cc.hongz.ztools.core.annotation;
 public enum RelationType {
 
     /**
-     * <p>表示注解的属性与指定的属性互为镜像，通过一个属性将能够获得对方的值。<br>
+     * <p>表示注解的属性与指定的属性互为镜像，通过一个属性将能够获得对方的值。
      * 它们遵循下述规则：
      * <ul>
      *     <li>互为镜像的两个属性，必须同时通过指定模式为{@code MIRROR_FOR}的{@link Link}注解指定对方；</li>
@@ -42,7 +42,7 @@ public enum RelationType {
     ALIAS_FOR,
 
     /**
-     * <p>表示“原始属性”将强制作为“关联属性”的别名。效果等同于在“原始属性”上添加{@link Alias}注解，
+     * <p>表示“原始属性”将强制作为“关联属性”的别名。效果等同于在“原始属性”上添加{@link Alias}注解，.
      * 任何情况下，获取“关联属性”的值都将直接返回“原始属性”的值
      */
     FORCE_ALIAS_FOR;

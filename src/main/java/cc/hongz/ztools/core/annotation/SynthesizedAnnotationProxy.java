@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 合成注解代理类，用于为{@link SynthesizedAnnotation}生成对应的合成注解代理对象
+ * 合成注解代理类，用于为{@link SynthesizedAnnotation}生成对应的合成注解代理对象.
  *
  * @author huangchengxing
  * @see SynthesizedAnnotation
@@ -73,16 +73,16 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
     }
 
     /**
-     * 该类是否为通过{@code SynthesizedAnnotationProxy}生成的代理类
+     * 该类是否为通过{@code SynthesizedAnnotationProxy}生成的代理类.
      *
      * @param annotationType 注解类型
      * @return 是否
      */
-    public static boolean isProxyAnnotation(Class<?> annotationType) {
+    public static boolean isProxyAnnotation(final Class<?> annotationType) {
         return ClassUtil.isAssignable(SyntheticProxyAnnotation.class, annotationType);
     }
 
-    SynthesizedAnnotationProxy(AnnotationAttributeValueProvider annotationAttributeValueProvider, SynthesizedAnnotation annotation) {
+    SynthesizedAnnotationProxy(final AnnotationAttributeValueProvider annotationAttributeValueProvider,  final SynthesizedAnnotation annotation) {
         Assert.notNull(annotationAttributeValueProvider, "annotationAttributeValueProvider must not null");
         Assert.notNull(annotation, "annotation must not null");
         this.annotationAttributeValueProvider = annotationAttributeValueProvider;
@@ -92,7 +92,7 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(final Object proxy,  final Method method,  final Object[] args) throws Throwable {
         return Opt.ofNullable(methods.get(method.getName()))
                 .map(m -> m.apply(method, args))
                 .orElseGet(() -> ReflectUtil.invoke(annotation.getAnnotation(), method, args));
@@ -140,19 +140,19 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
         return annotation;
     }
 
-    private Object proxyAttributeValue(Method attributeMethod) {
+    private Object proxyAttributeValue(final Method attributeMethod) {
         return annotationAttributeValueProvider.getAttributeValue(attributeMethod.getName(), attributeMethod.getReturnType());
     }
 
     /**
-     * 通过代理类生成的合成注解
+     * 通过代理类生成的合成注解.
      *
      * @author huangchengxing
      */
     interface SyntheticProxyAnnotation extends SynthesizedAnnotation {
 
         /**
-         * 获取该代理注解对应的已合成注解
+         * 获取该代理注解对应的已合成注解.
          *
          * @return 理注解对应的已合成注解
          */

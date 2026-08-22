@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * {@link ValueProvider}属性拷贝到Bean中的拷贝器
+ * {@link ValueProvider}属性拷贝到Bean中的拷贝器.
  *
  * @param <T> 目标Bean类型
  * @since 5.8.0
@@ -17,19 +17,19 @@ import java.util.Map;
 public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String>, T> {
 
     /**
-     * 目标的类型（用于泛型类注入）
+     * 目标的类型（用于泛型类注入）.
      */
     private final Type targetType;
 
     /**
-     * 构造
+     * 构造.
      *
      * @param source      来源Map
      * @param target      目标Bean对象
      * @param targetType  目标泛型类型
      * @param copyOptions 拷贝选项
      */
-    public ValueProviderToBeanCopier(ValueProvider<String> source, T target, Type targetType, CopyOptions copyOptions) {
+    public ValueProviderToBeanCopier(final ValueProvider<String> source,  final T target,  final Type targetType,  final CopyOptions copyOptions) {
         super(source, target, copyOptions);
         this.targetType = targetType;
     }

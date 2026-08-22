@@ -11,7 +11,7 @@ import java.lang.invoke.MethodHandleInfo;
 import java.lang.invoke.SerializedLambda;
 
 /**
- * Lambda相关工具类
+ * Lambda相关工具类.
  *
  * @author looly, Scen
  * @since 5.6.3
@@ -21,7 +21,7 @@ public class LambdaUtil {
     private static final WeakKeyValueConcurrentMap<String, SerializedLambda> cache = new WeakKeyValueConcurrentMap<>();
 
     /**
-     * 通过对象的方法或类的静态方法引用，获取lambda实现类
+     * 通过对象的方法或类的静态方法引用，获取lambda实现类.
      * 传入lambda无参数但含有返回值的情况能够匹配到此方法：
      * <ul>
      * <li>引用特定对象的实例方法：<pre>{@code
@@ -54,7 +54,7 @@ public class LambdaUtil {
      * @since 5.8.0
      * @author VampireAchao
      */
-    public static <R> Class<R> getRealClass(Func0<?> func) {
+    public static <R> Class<R> getRealClass(final Func0<?> func) {
         final SerializedLambda lambda = resolve(func);
         checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
         return ClassUtil.loadClass(lambda.getImplClass());
@@ -68,7 +68,7 @@ public class LambdaUtil {
      * @param func 需要解析的 lambda 对象（无参方法）
      * @return 返回解析后的结果
      */
-    public static <T> SerializedLambda resolve(Func1<T, ?> func) {
+    public static <T> SerializedLambda resolve(final Func1<T, ?> func) {
         return _resolve(func);
     }
 
@@ -81,35 +81,35 @@ public class LambdaUtil {
      * @return 返回解析后的结果
      * @since 5.7.23
      */
-    public static <R> SerializedLambda resolve(Func0<R> func) {
+    public static <R> SerializedLambda resolve(final Func0<R> func) {
         return _resolve(func);
     }
 
     /**
-     * 获取lambda表达式函数（方法）名称
+     * 获取lambda表达式函数（方法）名称.
      *
      * @param <P>  Lambda参数类型
      * @param func 函数（无参方法）
      * @return 函数名称
      */
-    public static <P> String getMethodName(Func1<P, ?> func) {
+    public static <P> String getMethodName(final Func1<P, ?> func) {
         return resolve(func).getImplMethodName();
     }
 
     /**
-     * 获取lambda表达式函数（方法）名称
+     * 获取lambda表达式函数（方法）名称.
      *
      * @param <R>  Lambda返回类型
      * @param func 函数（无参方法）
      * @return 函数名称
      * @since 5.7.23
      */
-    public static <R> String getMethodName(Func0<R> func) {
+    public static <R> String getMethodName(final Func0<R> func) {
         return resolve(func).getImplMethodName();
     }
 
     /**
-     * 通过对象的方法或类的静态方法引用，然后根据{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类<br>
+     * 通过对象的方法或类的静态方法引用，然后根据{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类.
      * 传入lambda有参数且含有返回值的情况能够匹配到此方法：
      * <ul>
      * <li>引用特定类型的任意对象的实例方法：<pre>{@code
@@ -130,7 +130,7 @@ public class LambdaUtil {
      * @since 5.8.0
      * @author VampireAchao
      */
-    public static <P, R> Class<P> getRealClass(Func1<P, R> func) {
+    public static <P, R> Class<P> getRealClass(final Func1<P, R> func) {
         final SerializedLambda lambda = resolve(func);
         checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
         final String instantiatedMethodType = lambda.getInstantiatedMethodType();
@@ -138,7 +138,7 @@ public class LambdaUtil {
     }
 
     /**
-     * 获取lambda表达式Getter或Setter函数（方法）对应的字段名称，规则如下：
+     * 获取lambda表达式Getter或Setter函数（方法）对应的字段名称，规则如下：.
      * <ul>
      *     <li>getXxxx获取为xxxx，如getName得到name。</li>
      *     <li>setXxxx获取为xxxx，如setName得到name。</li>
@@ -152,12 +152,12 @@ public class LambdaUtil {
      * @throws IllegalArgumentException 非Getter或Setter方法
      * @since 5.7.10
      */
-    public static <T> String getFieldName(Func1<T, ?> func) throws IllegalArgumentException {
+    public static <T> String getFieldName(final Func1<T, ?> func) throws IllegalArgumentException {
         return BeanUtil.getFieldName(getMethodName(func));
     }
 
     /**
-     * 获取lambda表达式Getter或Setter函数（方法）对应的字段名称，规则如下：
+     * 获取lambda表达式Getter或Setter函数（方法）对应的字段名称，规则如下：.
      * <ul>
      *     <li>getXxxx获取为xxxx，如getName得到name。</li>
      *     <li>setXxxx获取为xxxx，如setName得到name。</li>
@@ -171,18 +171,18 @@ public class LambdaUtil {
      * @throws IllegalArgumentException 非Getter或Setter方法
      * @since 5.7.23
      */
-    public static <T> String getFieldName(Func0<T> func) throws IllegalArgumentException {
+    public static <T> String getFieldName(final Func0<T> func) throws IllegalArgumentException {
         return BeanUtil.getFieldName(getMethodName(func));
     }
 
     //region Private methods
     /**
-     * 检查是否为支持的类型
+     * 检查是否为支持的类型.
      *
      * @param implMethodKind 支持的lambda类型
      * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常
      */
-    private static void checkLambdaTypeCanGetClass(int implMethodKind) {
+    private static void checkLambdaTypeCanGetClass(final int implMethodKind) {
         if (implMethodKind != MethodHandleInfo.REF_invokeVirtual &&
                 implMethodKind != MethodHandleInfo.REF_invokeStatic) {
             throw new IllegalArgumentException("该lambda不是合适的方法引用");
@@ -201,7 +201,7 @@ public class LambdaUtil {
      * @param func 需要解析的 lambda 对象
      * @return 返回解析后的结果
      */
-    private static SerializedLambda _resolve(Serializable func) {
+    private static SerializedLambda _resolve(final Serializable func) {
         return cache.computeIfAbsent(func.getClass().getName(), (key) -> ReflectUtil.invoke(func, "writeReplace"));
     }
     //endregion

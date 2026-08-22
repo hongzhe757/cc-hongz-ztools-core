@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 /**
- * <p>表示一个被包装过的{@link AnnotationAttribute}，
+ * <p>表示一个被包装过的{@link AnnotationAttribute}，.
  * 该实例中的一些方法可能会被代理到另一个注解属性对象中，
  * 从而使得通过原始的注解属性的方法获取到另一注解属性的值。<br>
  * 除了{@link #getValue()}以外，其他方法的返回值应当尽可能与{@link #getOriginal()}
@@ -32,28 +32,28 @@ public interface WrappedAnnotationAttribute extends AnnotationAttribute {
     // =========================== 新增方法 ===========================
 
     /**
-     * 获取被包装的{@link AnnotationAttribute}对象，该对象也可能是{@link AnnotationAttribute}
+     * 获取被包装的{@link AnnotationAttribute}对象，该对象也可能是{@link AnnotationAttribute}.
      *
      * @return 被包装的{@link AnnotationAttribute}对象
      */
     AnnotationAttribute getOriginal();
 
     /**
-     * 获取最初的被包装的{@link AnnotationAttribute}
+     * 获取最初的被包装的{@link AnnotationAttribute}.
      *
      * @return 最初的被包装的{@link AnnotationAttribute}
      */
     AnnotationAttribute getNonWrappedOriginal();
 
     /**
-     * 获取包装{@link #getOriginal()}的{@link AnnotationAttribute}对象，该对象也可能是{@link AnnotationAttribute}
+     * 获取包装{@link #getOriginal()}的{@link AnnotationAttribute}对象，该对象也可能是{@link AnnotationAttribute}.
      *
      * @return 包装对象
      */
     AnnotationAttribute getLinked();
 
     /**
-     * 遍历以当前实例为根节点的树结构，获取所有未被包装的属性
+     * 遍历以当前实例为根节点的树结构，获取所有未被包装的属性.
      *
      * @return 叶子节点
      */
@@ -62,7 +62,7 @@ public interface WrappedAnnotationAttribute extends AnnotationAttribute {
     // =========================== 代理实现 ===========================
 
     /**
-     * 获取注解对象
+     * 获取注解对象.
      *
      * @return 注解对象
      */
@@ -72,7 +72,7 @@ public interface WrappedAnnotationAttribute extends AnnotationAttribute {
     }
 
     /**
-     * 获取注解属性对应的方法
+     * 获取注解属性对应的方法.
      *
      * @return 注解属性对应的方法
      */
@@ -82,7 +82,7 @@ public interface WrappedAnnotationAttribute extends AnnotationAttribute {
     }
 
     /**
-     * 该注解属性的值是否等于默认值 <br>
+     * 该注解属性的值是否等于默认值.
      * 默认仅当{@link #getOriginal()}与{@link #getLinked()}返回的注解属性
      * 都为默认值时，才返回{@code true}
      *
@@ -92,7 +92,7 @@ public interface WrappedAnnotationAttribute extends AnnotationAttribute {
     boolean isValueEquivalentToDefaultValue();
 
     /**
-     * 获取属性类型
+     * 获取属性类型.
      *
      * @return 属性类型
      */
@@ -102,18 +102,18 @@ public interface WrappedAnnotationAttribute extends AnnotationAttribute {
     }
 
     /**
-     * 获取属性上的注解
+     * 获取属性上的注解.
      *
      * @param annotationType 注解类型
      * @return 注解对象
      */
     @Override
-    default <T extends Annotation> T getAnnotation(Class<T> annotationType) {
+    default <T extends Annotation> T getAnnotation(final Class<T> annotationType) {
         return getOriginal().getAnnotation(annotationType);
     }
 
     /**
-     * 当前注解属性是否已经被{@link WrappedAnnotationAttribute}包装
+     * 当前注解属性是否已经被{@link WrappedAnnotationAttribute}包装.
      *
      * @return boolean
      */

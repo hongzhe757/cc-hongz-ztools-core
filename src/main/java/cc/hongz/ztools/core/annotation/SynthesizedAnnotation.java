@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 /**
- * <p>用于在{@link SynthesizedAggregateAnnotation}中表示一个处于合成状态的注解对象。<br>
+ * <p>用于在{@link SynthesizedAggregateAnnotation}中表示一个处于合成状态的注解对象。
  * 当对多个合成注解排序时，默认使用{@link #DEFAULT_HIERARCHICAL_COMPARATOR}进行排序，
  * 从保证合成注解按{@link #getVerticalDistance()}与{@link #getHorizontalDistance()}的返回值保持有序，
  * 从而使得距离根元素更接近的注解对象在被处理是具有更高的优先级。
@@ -18,7 +18,7 @@ import java.util.function.UnaryOperator;
 public interface SynthesizedAnnotation extends Annotation, Hierarchical, AnnotationAttributeValueProvider {
 
     /**
-     * 获取被合成的注解对象
+     * 获取被合成的注解对象.
      *
      * @return 注解对象
      */
@@ -43,54 +43,54 @@ public interface SynthesizedAnnotation extends Annotation, Hierarchical, Annotat
     int getHorizontalDistance();
 
     /**
-     * 注解是否存在该名称相同，且类型一致的属性
+     * 注解是否存在该名称相同，且类型一致的属性.
      *
      * @param attributeName 属性名
      * @param returnType    返回值类型
      * @return 是否存在该属性
      */
-    boolean hasAttribute(String attributeName, Class<?> returnType);
+    boolean hasAttribute(final String attributeName,  final Class<?> returnType);
 
     /**
-     * 获取该注解的全部属性
+     * 获取该注解的全部属性.
      *
      * @return 注解属性
      */
     Map<String, AnnotationAttribute> getAttributes();
 
     /**
-     * 设置该注解的全部属性
+     * 设置该注解的全部属性.
      *
      * @param attributes 注解属性
      */
-    default void setAttributes(Map<String, AnnotationAttribute> attributes) {
+    default void setAttributes(final Map<String, AnnotationAttribute> attributes) {
         if (CollUtil.isNotEmpty(attributes)) {
             attributes.forEach(this::setAttribute);
         }
     }
 
     /**
-     * 设置属性值
+     * 设置属性值.
      *
      * @param attributeName 属性名称
      * @param attribute     注解属性
      */
-    void setAttribute(String attributeName, AnnotationAttribute attribute);
+    void setAttribute(final String attributeName,  final AnnotationAttribute attribute);
 
     /**
-     * 替换属性值
+     * 替换属性值.
      *
      * @param attributeName 属性名
      * @param operator      替换操作
      */
-    void replaceAttribute(String attributeName, UnaryOperator<AnnotationAttribute> operator);
+    void replaceAttribute(final String attributeName,  final UnaryOperator<AnnotationAttribute> operator);
 
     /**
-     * 获取属性值
+     * 获取属性值.
      *
      * @param attributeName 属性名
      * @return 属性值
      */
-    Object getAttributeValue(String attributeName);
+    Object getAttributeValue(final String attributeName);
 
 }

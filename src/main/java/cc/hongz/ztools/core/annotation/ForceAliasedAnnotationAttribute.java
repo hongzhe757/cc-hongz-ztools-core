@@ -12,12 +12,12 @@ package cc.hongz.ztools.core.annotation;
  */
 public class ForceAliasedAnnotationAttribute extends AbstractWrappedAnnotationAttribute {
 
-    protected ForceAliasedAnnotationAttribute(AnnotationAttribute origin, AnnotationAttribute linked) {
+    protected ForceAliasedAnnotationAttribute(final AnnotationAttribute origin,  final AnnotationAttribute linked) {
         super(origin, linked);
     }
 
     /**
-     * 总是返回{@link #linked}的{@link AnnotationAttribute#getValue()}的返回值
+     * 总是返回{@link #linked}的{@link AnnotationAttribute#getValue()}的返回值.
      *
      * @return {@link #linked}的{@link AnnotationAttribute#getValue()}的返回值
      */
@@ -27,7 +27,7 @@ public class ForceAliasedAnnotationAttribute extends AbstractWrappedAnnotationAt
     }
 
     /**
-     * 总是返回{@link #linked}的{@link AnnotationAttribute#isValueEquivalentToDefaultValue()}的返回值
+     * 总是返回{@link #linked}的{@link AnnotationAttribute#isValueEquivalentToDefaultValue()}的返回值.
      *
      * @return {@link #linked}的{@link AnnotationAttribute#isValueEquivalentToDefaultValue()}的返回值
      */
@@ -37,7 +37,7 @@ public class ForceAliasedAnnotationAttribute extends AbstractWrappedAnnotationAt
     }
 
     /**
-     * 总是返回{@link #linked}的{@link AnnotationAttribute#getAttributeType()}的返回值
+     * 总是返回{@link #linked}的{@link AnnotationAttribute#getAttributeType()}的返回值.
      *
      * @return {@link #linked}的{@link AnnotationAttribute#getAttributeType()}的返回值
      */

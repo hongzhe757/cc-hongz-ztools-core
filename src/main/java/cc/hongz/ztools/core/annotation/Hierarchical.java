@@ -28,20 +28,20 @@ public interface Hierarchical extends Comparable<Hierarchical> {
     // ====================== compare  ======================
 
     /**
-     * 默认{@link #getHorizontalDistance()}与{@link #getVerticalDistance()}排序的比较器
+     * 默认{@link #getHorizontalDistance()}与{@link #getVerticalDistance()}排序的比较器.
      */
     Comparator<Hierarchical> DEFAULT_HIERARCHICAL_COMPARATOR = Comparator
         .comparing(Hierarchical::getVerticalDistance)
         .thenComparing(Hierarchical::getHorizontalDistance);
 
     /**
-     * 按{@link #getVerticalDistance()}和{@link #getHorizontalDistance()}排序
+     * 按{@link #getVerticalDistance()}和{@link #getHorizontalDistance()}排序.
      *
      * @param o {@link SynthesizedAnnotation}对象
      * @return 比较值
      */
     @Override
-    default int compareTo(Hierarchical o) {
+    default int compareTo(final Hierarchical o) {
         return DEFAULT_HIERARCHICAL_COMPARATOR.compare(this, o);
     }
 
@@ -75,77 +75,77 @@ public interface Hierarchical extends Comparable<Hierarchical> {
     // ====================== selector  ======================
 
     /**
-     * {@link Hierarchical}选择器，用于根据一定的规则从两个{@link Hierarchical}实现类中选择并返回一个最合适的对象
+     * {@link Hierarchical}选择器，用于根据一定的规则从两个{@link Hierarchical}实现类中选择并返回一个最合适的对象.
      */
     @FunctionalInterface
     interface Selector {
 
         /**
-         * 返回距离根对象更近的对象，当距离一样时优先返回旧对象
+         * 返回距离根对象更近的对象，当距离一样时优先返回旧对象.
          */
         Selector NEAREST_AND_OLDEST_PRIORITY = new NearestAndOldestPrioritySelector();
 
         /**
-         * 返回距离根对象更近的对象，当距离一样时优先返回新对象
+         * 返回距离根对象更近的对象，当距离一样时优先返回新对象.
          */
         Selector NEAREST_AND_NEWEST_PRIORITY = new NearestAndNewestPrioritySelector();
 
         /**
-         * 返回距离根对象更远的对象，当距离一样时优先返回旧对象
+         * 返回距离根对象更远的对象，当距离一样时优先返回旧对象.
          */
         Selector FARTHEST_AND_OLDEST_PRIORITY = new FarthestAndOldestPrioritySelector();
 
         /**
-         * 返回距离根对象更远的对象，当距离一样时优先返回新对象
+         * 返回距离根对象更远的对象，当距离一样时优先返回新对象.
          */
         Selector FARTHEST_AND_NEWEST_PRIORITY = new FarthestAndNewestPrioritySelector();
 
         /**
-         * 比较两个被合成的对象，选择其中的一个并返回
+         * 比较两个被合成的对象，选择其中的一个并返回.
          *
          * @param <T>           复合注解类型
          * @param prev 上一对象，该参数不允许为空
          * @param next 下一对象，该参数不允许为空
          * @return 对象
          */
-        <T extends Hierarchical> T choose(T prev, T next);
+        <T extends Hierarchical> T choose(final T prev,  final T next);
 
         /**
-         * 返回距离根对象更近的注解，当距离一样时优先返回旧注解
+         * 返回距离根对象更近的注解，当距离一样时优先返回旧注解.
          */
         class NearestAndOldestPrioritySelector implements Selector {
             @Override
-            public <T extends Hierarchical> T choose(T oldAnnotation, T newAnnotation) {
+            public <T extends Hierarchical> T choose(final T oldAnnotation,  final T newAnnotation) {
                 return newAnnotation.getVerticalDistance() < oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
             }
         }
 
         /**
-         * 返回距离根对象更近的注解，当距离一样时优先返回新注解
+         * 返回距离根对象更近的注解，当距离一样时优先返回新注解.
          */
         class NearestAndNewestPrioritySelector implements Selector {
             @Override
-            public <T extends Hierarchical> T choose(T oldAnnotation, T newAnnotation) {
+            public <T extends Hierarchical> T choose(final T oldAnnotation,  final T newAnnotation) {
                 return newAnnotation.getVerticalDistance() <= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
             }
         }
 
         /**
-         * 返回距离根对象更远的注解，当距离一样时优先返回旧注解
+         * 返回距离根对象更远的注解，当距离一样时优先返回旧注解.
          */
         class FarthestAndOldestPrioritySelector implements Selector {
             @Override
-            public <T extends Hierarchical> T choose(T oldAnnotation, T newAnnotation) {
+            public <T extends Hierarchical> T choose(final T oldAnnotation,  final T newAnnotation) {
                 return newAnnotation.getVerticalDistance() > oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
             }
         }
 
         /**
-         * 返回距离根对象更远的注解，当距离一样时优先返回新注解
+         * 返回距离根对象更远的注解，当距离一样时优先返回新注解.
          */
         class FarthestAndNewestPrioritySelector implements Selector {
             @Override
-            public <T extends Hierarchical> T choose(T oldAnnotation, T newAnnotation) {
+            public <T extends Hierarchical> T choose(final T oldAnnotation,  final T newAnnotation) {
                 return newAnnotation.getVerticalDistance() >= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
             }
         }
