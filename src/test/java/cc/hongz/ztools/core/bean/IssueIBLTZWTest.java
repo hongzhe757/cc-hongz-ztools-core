@@ -19,8 +19,11 @@ import java.util.Date;
  */
 @DisplayName("回归测试")
 class IssueIBLTZWTest {
+    /**
+     * 验证通过自定义字段值编辑器将 Date 格式化为年份字符串.
+     */
     @Test
-    @DisplayName("copyProperties customFieldConverter")
+    @DisplayName("自定义字段转换")
     void copyTest() {
         TestBean bean = new TestBean();
         bean.setName("test");

@@ -15,8 +15,11 @@ import java.util.Map;
  */
 @DisplayName("回归测试")
 class Issue3702Test {
+    /**
+     * 验证字段值编辑器将空串转为 null 后再忽略 null 值拷贝.
+     */
     @Test
-    @DisplayName("copyProperties ignoreNullAfterEditor")
+    @DisplayName("编辑后忽略 null")
     void mapToMapTest() {
         Map<String,String> map= new HashMap<>();
         map.put("a","");

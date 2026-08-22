@@ -16,8 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("回归测试")
 class IssueI8JASOTest {
 
+    /**
+     * 验证相同别名字段可正确拷贝.
+     */
     @Test
-    @DisplayName("copyProperties aliasFieldCopied")
+    @DisplayName("同别名拷贝")
     void copyTest() {
         final UserOne userOne = new UserOne();
         userOne.setEmail("123@qq.com");

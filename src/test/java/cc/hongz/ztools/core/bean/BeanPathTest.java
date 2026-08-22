@@ -60,8 +60,11 @@ class BeanPathTest {
         tempMap.put("flag", 1);
     }
 
+    /**
+     * 验证点号分隔的路径表达式可正确解析出各段路径.
+     */
     @Test
-    @DisplayName("beanPath dot notation parses parts")
+    @DisplayName("点号路径解析")
     void beanPathTest1() {
         final BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
         assertEquals("userInfo", pattern.patternParts.get(0));
@@ -71,8 +74,11 @@ class BeanPathTest {
 
     }
 
+    /**
+     * 验证方括号形式的路径表达式可正确解析出各段路径.
+     */
     @Test
-    @DisplayName("beanPath bracket notation parses parts")
+    @DisplayName("方括号路径解析")
     void beanPathTest2() {
         final BeanPath pattern = new BeanPath("[userInfo][examInfoDict][0][id]");
         assertEquals("userInfo", pattern.patternParts.get(0));
@@ -81,8 +87,11 @@ class BeanPathTest {
         assertEquals("id", pattern.patternParts.get(3));
     }
 
+    /**
+     * 验证带单引号的方括号路径表达式可正确解析出各段路径.
+     */
     @Test
-    @DisplayName("beanPath quoted bracket notation parses parts")
+    @DisplayName("引号路径解析")
     void beanPathTest3() {
         final BeanPath pattern = new BeanPath("['userInfo']['examInfoDict'][0]['id']");
         assertEquals("userInfo", pattern.patternParts.get(0));
@@ -91,16 +100,22 @@ class BeanPathTest {
         assertEquals("id", pattern.patternParts.get(3));
     }
 
+    /**
+     * 验证点号路径可读取嵌套 Map 中的值.
+     */
     @Test
-    @DisplayName("get dot notation reads nested value")
+    @DisplayName("点号路径取值")
     void getTest() {
         final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
         final Object result = pattern.get(tempMap);
         assertEquals(1, result);
     }
 
+    /**
+     * 验证点号路径可向嵌套 Map 中写入值.
+     */
     @Test
-    @DisplayName("set dot notation writes nested value")
+    @DisplayName("点号路径赋值")
     void setTest() {
         final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
         pattern.set(tempMap, 2);
@@ -108,8 +123,11 @@ class BeanPathTest {
         assertEquals(2, result);
     }
 
+    /**
+     * 验证多属性取值可返回包含多个字段的 Map.
+     */
     @Test
-    @DisplayName("get multi property returns map")
+    @DisplayName("多属性取值")
     void getMapTest() {
         final BeanPath pattern = BeanPath.create("userInfo[id, photoPath]");
         @SuppressWarnings("unchecked") final Map<String, Object> result = (Map<String, Object>) pattern.get(tempMap);
@@ -117,8 +135,11 @@ class BeanPathTest {
         assertEquals("yx.mm.com", result.get("photoPath"));
     }
 
+    /**
+     * 验证通过索引路径赋值时可自动创建 List 并填充元素.
+     */
     @Test
-    @DisplayName("set auto creates list for index path")
+    @DisplayName("索引自动建列表")
     void issue2362Test() {
         final Map<String, Object> map = new HashMap<>();
 
@@ -137,8 +158,11 @@ class BeanPathTest {
         assertEquals("{list=[[null, {name=张三}]]}", map.toString());
     }
 
+    /**
+     * 验证按索引赋值可自动追加数组元素.
+     */
     @Test
-    @DisplayName("set appends array by index")
+    @DisplayName("索引追加数组")
     void appendArrayTest(){
         // issue#3008@Github
         final MyUser myUser = new MyUser();
@@ -149,8 +173,11 @@ class BeanPathTest {
         assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
     }
 
+    /**
+     * 验证通配符 * 语法可读取列表中所有元素的指定字段.
+     */
     @Test
-    @DisplayName("get wildcard returns id list")
+    @DisplayName("通配符取值")
     void wildcardTest() {
         // 测试通配符 * 语法
         final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[*].id");

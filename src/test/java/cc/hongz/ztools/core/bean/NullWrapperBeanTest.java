@@ -14,7 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DisplayName("NullWrapperBean 空值包装")
 class NullWrapperBeanTest {
 
+    /**
+     * 获取包装类保存的原始类型.
+     */
     @Test
+    @DisplayName("获取包装类型")
     void getWrappedClassTest() {
         final NullWrapperBean<String> bean = new NullWrapperBean<>(String.class);
         assertNotNull(bean);

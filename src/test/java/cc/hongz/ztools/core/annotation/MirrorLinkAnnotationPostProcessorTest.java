@@ -21,8 +21,11 @@ import java.util.function.UnaryOperator;
 @DisplayName("MirrorLinkAnnotationPostProcessor 注解后处理器")
 class MirrorLinkAnnotationPostProcessorTest {
 
+    /**
+     * 验证后处理器将镜像关系的两个属性相互包装为 MirroredAnnotationAttribute 并互为链接.
+     */
     @Test
-    @DisplayName("process wrapsMirroredAttributes")
+    @DisplayName("包装镜像属性")
     void processTest() {
         MirrorLinkAnnotationPostProcessor processor = new MirrorLinkAnnotationPostProcessor();
 

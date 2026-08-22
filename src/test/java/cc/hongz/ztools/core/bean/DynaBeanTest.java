@@ -14,8 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("动态Bean")
 class DynaBeanTest {
 
+    /**
+     * 验证包装实例后可进行属性读写并调用指定方法.
+     */
     @Test
-    @DisplayName("create wrapsInstance getSetInvoke")
+    @DisplayName("包装实例读写")
     void beanTest() {
         User user = new User();
         DynaBean bean = DynaBean.create(user);
@@ -38,8 +41,11 @@ class DynaBeanTest {
     }
 
 
+    /**
+     * 验证按类创建包装后进行属性读写并调用指定方法.
+     */
     @Test
-    @DisplayName("create byClass wrapsAndInvokes")
+    @DisplayName("类创建包装")
     void beanByStaticClazzConstructorTest() {
         String name_before = "李华";
         int age_before = 12;
@@ -64,8 +70,11 @@ class DynaBeanTest {
     }
 
 
+    /**
+     * 验证按类构造动态 Bean 后进行属性读写并调用指定方法.
+     */
     @Test
-    @DisplayName("new byClass wrapsAndInvokes")
+    @DisplayName("构造动态 Bean")
     void beanByInstanceClazzConstructorTest() {
         String name_before = "李华";
         int age_before = 12;

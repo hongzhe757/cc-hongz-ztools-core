@@ -20,10 +20,10 @@ import java.util.Map;
 class Issue2202Test {
 
     /**
-     * https://github.com/chinabugotech/hutool/issues/2202
+     * 验证通过字段名编辑器将连字符键转为驼峰键后转为 Bean.
      */
     @Test
-    @DisplayName("mapToBean fieldNameEditor camelCase")
+    @DisplayName("字段名编辑器转 Bean")
     void mapToBeanWithFieldNameEditorTest(){
         Map<String, String> headerMap = new HashMap<>(5);
         headerMap.put("wechatpay-serial", "serial");

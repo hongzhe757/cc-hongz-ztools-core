@@ -16,8 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("回归测试")
 class Issue2718Test {
 
+    /**
+     * 验证拷贝为 Map 时忽略指定属性，目标为空.
+     */
     @Test
-    @DisplayName("copy toMap ignoresProperties")
+    @DisplayName("忽略属性转 Map")
     void copyToMapTest(){
         final Deployment deployment = new Deployment();
         deployment.setResources("test");
@@ -28,8 +31,11 @@ class Issue2718Test {
         assertTrue(target.isEmpty());
     }
 
+    /**
+     * 验证拷贝为 Bean 时忽略指定属性，目标字段为 null.
+     */
     @Test
-    @DisplayName("copy toBean ignoresProperties")
+    @DisplayName("忽略属性转 Bean")
     void copyToBeanTest(){
         final Deployment deployment = new Deployment();
         deployment.setResources("test");

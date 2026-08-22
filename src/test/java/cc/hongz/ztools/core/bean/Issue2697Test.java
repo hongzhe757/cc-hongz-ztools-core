@@ -17,8 +17,11 @@ import java.util.Map;
 @DisplayName("回归测试")
 class Issue2697Test {
 
+    /**
+     * 验证 Map 拷贝为 Map 时忽略指定键.
+     */
     @Test
-    @DisplayName("copyProperties mapToMap ignoresKey")
+    @DisplayName("忽略指定键拷贝")
     void mapToMapTest(){
         final Map<String, String> mapA = new HashMap<>(16);
         mapA.put("12", "21");

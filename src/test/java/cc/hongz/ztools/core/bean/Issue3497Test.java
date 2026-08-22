@@ -17,8 +17,11 @@ import java.util.Map;
  */
 @DisplayName("回归测试")
 class Issue3497Test {
+    /**
+     * 验证 Map 转 Bean 时通过字段名编辑器将下划线键转为驼峰键.
+     */
     @Test
-    @DisplayName("toBean map fieldNameEditor camelCase")
+    @DisplayName("下划线转驼峰")
     void mapToMapTest() {
         final Map<String, String> aB = MapUtil.builder("a_b", "1").build();
         final Map<?, ?> bean = BeanUtil.toBean(aB, Map.class, CopyOptions.create().setFieldNameEditor(StrUtil::toCamelCase));

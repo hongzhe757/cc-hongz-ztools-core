@@ -18,11 +18,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class BeanCopyMappingTest {
 
     /**
-     * https://gitee.com/chinabugotech/hutool/issues/I4C48U <br>
-     * 传递复制不要用注解别名，应该用动态映射
+     * 验证传递复制时使用字段映射将 car 映射为 carNo，而非使用注解别名.
      */
     @Test
-    @DisplayName("copyProperties fieldMapping mapsCarToCarNo")
+    @DisplayName("动态字段映射")
     void copyPropertiesTest() {
         final CopyOptions copyOptions = CopyOptions.create()
                 .setFieldMapping(MapUtil.of("car", "carNo"));

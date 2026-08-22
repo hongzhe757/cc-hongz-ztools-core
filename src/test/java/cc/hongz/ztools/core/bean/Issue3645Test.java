@@ -16,8 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @DisplayName("回归测试")
 class Issue3645Test {
+    /**
+     * 验证 Map 泛型类型拷贝时值可正确保留.
+     */
     @Test
-    @DisplayName("copyProperties mapGenericDeepCopy")
+    @DisplayName("泛型 Map 拷贝")
     void copyPropertiesTest() {
         User p = new User();
         p.setUserId(123L);

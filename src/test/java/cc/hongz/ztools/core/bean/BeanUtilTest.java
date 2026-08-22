@@ -38,8 +38,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Bean 工具")
 class BeanUtilTest {
 
+    /**
+     * 验证 HashMap 不包含 setXXX 方法，因此不是 Bean.
+     */
     @Test
-    @DisplayName("isBean hashMap withoutSetters returnsFalse")
+    @DisplayName("HashMap 非 Bean")
     void isBeanTest() {
 
         // HashMap不包含setXXX方法，不是bean
@@ -47,8 +50,11 @@ class BeanUtilTest {
         assertFalse(isBean);
     }
 
+    /**
+     * 验证通过 ValueProvider 填充 name 和 age 字段.
+     */
     @Test
-    @DisplayName("fillBean withValueProvider fillsNameAndAge")
+    @DisplayName("ValueProvider 填充")
     void fillBeanTest() {
         final Person person = BeanUtil.fillBean(new Person(), new ValueProvider<String>() {
 
@@ -75,8 +81,11 @@ class BeanUtilTest {
         assertEquals(18, person.getAge());
     }
 
+    /**
+     * 验证忽略大小写方式填充 Bean，Name、aGe 键能匹配到对应字段.
+     */
     @Test
-    @DisplayName("fillBeanWithMapIgnoreCase ignoresCase")
+    @DisplayName("忽略大小写填充")
     void fillBeanWithMapIgnoreCaseTest() {
         final Map<String, Object> map = MapBuilder.<String, Object>create()
             .put("Name", "Joe")
@@ -89,8 +98,11 @@ class BeanUtilTest {
         assertEquals("DFDFSDFWERWER", person.getOpenid());
     }
 
+    /**
+     * 验证 Bean 转 Map 时忽略 static 静态属性.
+     */
     @Test
-    @DisplayName("toBean beanToMap ignoresStaticFields")
+    @DisplayName("忽略静态属性")
     void toBeanTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
@@ -107,10 +119,10 @@ class BeanUtilTest {
     }
 
     /**
-     * 忽略转换错误测试
+     * 验证在忽略错误模式下，转换失败的字段被跳过并使用对象默认值.
      */
     @Test
-    @DisplayName("toBeanIgnoreError skipsInvalidField")
+    @DisplayName("忽略转换错误")
     void toBeanIgnoreErrorTest() {
         final HashMap<String, Object> map = MapUtil.newHashMap();
         map.put("name", "Joe");
@@ -123,8 +135,11 @@ class BeanUtilTest {
         assertEquals(0, person.getAge());
     }
 
+    /**
+     * 验证忽略大小写方式将 Map 转为 Bean.
+     */
     @Test
-    @DisplayName("mapToBeanIgnoreCase matchesIgnoreCase")
+    @DisplayName("忽略大小写转 Bean")
     void mapToBeanIgnoreCaseTest() {
         final HashMap<String, Object> map = MapUtil.newHashMap();
         map.put("Name", "Joe");
@@ -135,8 +150,11 @@ class BeanUtilTest {
         assertEquals(12, person.getAge());
     }
 
+    /**
+     * 验证通过字段映射将 Map 的别名键映射到 Bean 字段.
+     */
     @Test
-    @DisplayName("mapToBean withFieldMapping mapsAliases")
+    @DisplayName("字段映射转 Bean")
     void mapToBeanTest() {
         final HashMap<String, Object> map = MapUtil.newHashMap();
         map.put("a_name", "Joe");
@@ -153,10 +171,10 @@ class BeanUtilTest {
     }
 
     /**
-     * 测试public类型的字段注入是否成功
+     * 验证 public 类型的字段可直接注入赋值.
      */
     @Test
-    @DisplayName("mapToBean withPublicFields injectsFields")
+    @DisplayName("公有字段注入")
     void mapToBeanTest2() {
         final HashMap<String, Object> map = MapUtil.newHashMap();
         map.put("name", "Joe");
@@ -169,10 +187,10 @@ class BeanUtilTest {
     }
 
     /**
-     * 测试在不忽略错误情况下，转换失败需要报错。
+     * 验证在不忽略错误情况下，转换失败时抛出异常.
      */
     @Test
-    @DisplayName("mapToBean invalidValueThrows")
+    @DisplayName("非法值抛异常")
     void mapToBeanWinErrorTest() {
         assertThrows(NumberFormatException.class, () -> {
             final Map<String, String> map = new HashMap<>();
@@ -181,8 +199,11 @@ class BeanUtilTest {
         });
     }
 
+    /**
+     * 验证 Bean 转 Map 时忽略 static 静态属性.
+     */
     @Test
-    @DisplayName("beanToMap convertsBeanToMap")
+    @DisplayName("Bean 转 Map")
     void beanToMapTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
@@ -199,8 +220,11 @@ class BeanUtilTest {
         assertFalse(map.containsKey("SUBNAME"));
     }
 
+    /**
+     * 验证 Bean 转 Map 时传入 null 属性列表仍可正常转换并忽略静态属性.
+     */
     @Test
-    @DisplayName("beanToMap withNullProperties")
+    @DisplayName("null 属性转 Map")
     void beanToMapNullPropertiesTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
@@ -217,8 +241,11 @@ class BeanUtilTest {
         assertFalse(map.containsKey("SUBNAME"));
     }
 
+    /**
+     * 验证 Bean 转 Map 时可生成下划线分隔的驼峰键.
+     */
     @Test
-    @DisplayName("beanToMap camelCaseKey")
+    @DisplayName("驼峰键转 Map")
     void beanToMapTest2() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
@@ -230,8 +257,11 @@ class BeanUtilTest {
         assertEquals("sub名字", map.get("sub_name"));
     }
 
+    /**
+     * 验证 Bean 转 Map 时通过字段值编辑器改写值.
+     */
     @Test
-    @DisplayName("beanToMap withFieldValueEditor")
+    @DisplayName("值编辑器转 Map")
     void beanToMapWithValueEditTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
@@ -244,8 +274,11 @@ class BeanUtilTest {
         assertEquals("subName_sub名字", map.get("subName"));
     }
 
+    /**
+     * 验证 Bean 转 Map 时使用别名字段作为键.
+     */
     @Test
-    @DisplayName("beanToMap withAliasField")
+    @DisplayName("别名转 Map")
     void beanToMapWithAliasTest() {
         final SubPersonWithAlias person = new SubPersonWithAlias();
         person.setAge(14);
@@ -260,8 +293,11 @@ class BeanUtilTest {
         assertEquals("sub名字", map.get("aliasSubName"));
     }
 
+    /**
+     * 验证 Map 转 Bean 时根据别名字段赋值.
+     */
     @Test
-    @DisplayName("mapToBean withAliasField")
+    @DisplayName("别名转 Bean")
     void mapToBeanWithAliasTest() {
         final Map<String, Object> map = MapUtil.newHashMap();
         map.put("aliasSubName", "sub名字");
@@ -277,8 +313,11 @@ class BeanUtilTest {
         assertNull(subPersonWithAlias.getBooleanb());
     }
 
+    /**
+     * 验证 Bean 转 Map 时保留 LocalDateTime 与 LocalDate 类型不变.
+     */
     @Test
-    @DisplayName("beanToMap preservesLocalDateTime")
+    @DisplayName("保留时间类型")
     void beanToMapWithLocalDateTimeTest() {
         final LocalDateTime now = LocalDateTime.now();
 
@@ -295,8 +334,11 @@ class BeanUtilTest {
         assertEquals(now.toLocalDate(), map.get("date2"));
     }
 
+    /**
+     * 验证可读取 Bean 中的属性值.
+     */
     @Test
-    @DisplayName("getProperty readsNestedField")
+    @DisplayName("读取属性")
     void getPropertyTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
@@ -310,16 +352,22 @@ class BeanUtilTest {
         assertEquals("sub名字", subName);
     }
 
+    /**
+     * 验证对 null 对象读取属性时返回 null.
+     */
     @Test
     @SuppressWarnings("ConstantConditions")
-    @DisplayName("getProperty onNull returnsNull")
+    @DisplayName("null 取属性")
     void getNullPropertyTest() {
         final Object property = BeanUtil.getProperty(null, "name");
         assertNull(property);
     }
 
+    /**
+     * 验证可获取 Bean 的全部属性描述符.
+     */
     @Test
-    @DisplayName("getPropertyDescriptors returnsAllDescriptors")
+    @DisplayName("获取属性描述")
     void getPropertyDescriptorsTest() {
         final HashSet<Object> set = CollUtil.newHashSet();
         final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
@@ -334,8 +382,11 @@ class BeanUtilTest {
         assertTrue(set.contains("subName"));
     }
 
+    /**
+     * 验证拷贝属性到新的目标实例.
+     */
     @Test
-    @DisplayName("copyProperties copiesToNewInstance")
+    @DisplayName("拷贝到新实例")
     void copyPropertiesTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
@@ -350,9 +401,12 @@ class BeanUtilTest {
         assertEquals("sub名字", person1.getSubName());
     }
 
+    /**
+     * 验证多线程环境下拷贝属性的稳定性.
+     */
     @Test
     @Disabled
-    @DisplayName("copyProperties multiThread clones")
+    @DisplayName("多线程拷贝")
     void multiThreadTest() {
         final Student student = new Student();
         student.setName("张三");
@@ -382,8 +436,11 @@ class BeanUtilTest {
         ThreadUtil.waitForDie();
     }
 
+    /**
+     * 验证 isXXX 与非 isXXX 形式的 boolean 字段均能正确拷贝.
+     */
     @Test
-    @DisplayName("copyProperties booleanFieldCopied")
+    @DisplayName("布尔字段拷贝")
     void copyPropertiesHasBooleanTest() {
         final SubPerson p1 = new SubPerson();
         p1.setSlow(true);
@@ -399,8 +456,11 @@ class BeanUtilTest {
         assertTrue(p3.getSlow());
     }
 
+    /**
+     * 验证忽略 null 值时保留目标已有属性，否则被 null 覆盖.
+     */
     @Test
-    @DisplayName("copyProperties ignoreNullValue keepsTarget")
+    @DisplayName("忽略 null 拷贝")
     void copyPropertiesIgnoreNullTest() {
         final SubPerson p1 = new SubPerson();
         p1.setSlow(true);
@@ -418,8 +478,11 @@ class BeanUtilTest {
         assertNull(p2.getName());
     }
 
+    /**
+     * 验证将 Bean 拷贝为 Map.
+     */
     @Test
-    @DisplayName("copyProperties beanToMap")
+    @DisplayName("Bean 拷贝为 Map")
     void copyPropertiesBeanToMapTest() {
         // 测试BeanToMap
         final SubPerson p1 = new SubPerson();
@@ -434,8 +497,11 @@ class BeanUtilTest {
         assertEquals("sub测试", map.get("subName"));
     }
 
+    /**
+     * 验证将 Map 拷贝为 Map.
+     */
     @Test
-    @DisplayName("copyProperties mapToMap")
+    @DisplayName("Map 拷贝为 Map")
     void copyPropertiesMapToMapTest() {
         // 测试MapToMap
         final Map<String, Object> p1 = new HashMap<>();
@@ -450,8 +516,11 @@ class BeanUtilTest {
         assertEquals("sub测试", map.get("subName"));
     }
 
+    /**
+     * 验证 Map 拷贝为 Map 时忽略 null 值，null 键不写入目标.
+     */
     @Test
-    @DisplayName("copyProperties mapToMap ignoreNull")
+    @DisplayName("忽略 null Map 拷贝")
     void copyPropertiesMapToMapIgnoreNullTest() {
         // 测试MapToMap
         final Map<String, Object> p1 = new HashMap<>();
@@ -466,8 +535,11 @@ class BeanUtilTest {
         assertFalse(map.containsKey("subName"));
     }
 
+    /**
+     * 验证去除字符串字段首尾空格并返回新对象.
+     */
     @Test
-    @DisplayName("trimStrFields trimsStringFields")
+    @DisplayName("去除字段空格")
     void trimBeanStrFieldsTest() {
         final Person person = new Person();
         person.setAge(1);
@@ -551,10 +623,10 @@ class BeanUtilTest {
     }
 
     /**
-     * <a href="https://github.com/chinabugotech/hutool/issues/1173">#1173</a>
+     * 验证子类字段可覆盖父类的 transient 属性并正确拷贝.
      */
     @Test
-    @DisplayName("copyProperties overlayTransientField")
+    @DisplayName("覆盖 transient 字段")
     void beanToBeanOverlayFieldTest() {
         final SubPersonWithOverlayTransientField source = new SubPersonWithOverlayTransientField();
         source.setName("zhangsan");
@@ -568,8 +640,11 @@ class BeanUtilTest {
         assertEquals(source.getOpenid(), dest.getOpenid());
     }
 
+    /**
+     * 验证对象无 getter 方法时转换不报错.
+     */
     @Test
-    @DisplayName("toBean withoutGetter noError")
+    @DisplayName("无 getter 转 Bean")
     void beanToBeanTest() {
         // 修复对象无getter方法导致报错的问题
         final Page page1 = new Page();
@@ -589,8 +664,11 @@ class BeanUtilTest {
         }
     }
 
+    /**
+     * 验证拷贝属性时别名字段有效.
+     */
     @Test
-    @DisplayName("copyProperties aliasFieldCopied")
+    @DisplayName("别名字段拷贝")
     void copyBeanToBeanTest() {
         // 测试在copyProperties方法中alias是否有效
         final Food info = new Food();
@@ -602,8 +680,11 @@ class BeanUtilTest {
         assertEquals(info.getCode(), entity.getCode2());
     }
 
+    /**
+     * 验证拷贝时按属性名忽略指定属性.
+     */
     @Test
-    @DisplayName("copyProperties withIgnoreProperties")
+    @DisplayName("忽略属性拷贝")
     void copyBeanTest() {
         final Food info = new Food();
         info.setBookID("0");
@@ -613,14 +694,20 @@ class BeanUtilTest {
         assertNull(newFood.getCode());
     }
 
+    /**
+     * 验证源对象为 null 时拷贝返回 null.
+     */
     @Test
-    @DisplayName("copyProperties nullSource returnsNull")
+    @DisplayName("null 源拷贝")
     void copyNullTest() {
         assertNull(BeanUtil.copyProperties(null, Food.class));
     }
 
+    /**
+     * 验证通过属性过滤器过滤空字符串字段.
+     */
     @Test
-    @DisplayName("copyProperties withPropertiesFilter")
+    @DisplayName("属性过滤拷贝")
     void copyBeanPropertiesFilterTest() {
         final Food info = new Food();
         info.setBookID("0");
@@ -632,8 +719,11 @@ class BeanUtilTest {
         assertNull(newFood.getCode());
     }
 
+    /**
+     * 验证通过 getter 方法引用忽略指定属性.
+     */
     @Test
-    @DisplayName("copyProperties ignorePropertiesByGetter")
+    @DisplayName("getter 忽略属性")
     void copyBeanPropertiesFunctionFilterTest() {
         //https://gitee.com/chinabugotech/hutool/pulls/590
         final Person o = new Person();
@@ -666,16 +756,22 @@ class BeanUtilTest {
         private String code2;
     }
 
+    /**
+     * 验证通过嵌套路径赋值时可自动创建 Map 与 List.
+     */
     @Test
-    @DisplayName("setProperty nestedPath createsMap")
+    @DisplayName("嵌套路径赋值")
     void setPropertiesTest() {
         final Map<String, Object> resultMap = MapUtil.newHashMap();
         BeanUtil.setProperty(resultMap, "codeList[0].name", "张三");
         assertEquals("{codeList=[{name=张三}]}", resultMap.toString());
     }
 
+    /**
+     * 验证泛型类型 id 字段可正确拷贝.
+     */
     @Test
-    @DisplayName("copyProperties genericIdCopied")
+    @DisplayName("泛型 ID 拷贝")
     void beanCopyTest() {
         final Station station = new Station();
         station.setId(123456L);
@@ -697,8 +793,11 @@ class BeanUtilTest {
     }
 
 
+    /**
+     * 验证 EnumSet 类型字段可正确拷贝.
+     */
     @Test
-    @DisplayName("copyProperties enumSetCopied")
+    @DisplayName("EnumSet 拷贝")
     void beanWithEnumSetTest() {
         final Vto v1 = new Vto();
         v1.setVersions(EnumSet.allOf(Version.class));
@@ -707,8 +806,11 @@ class BeanUtilTest {
         assertNotNull(v2.getVersions());
     }
 
+    /**
+     * 验证通过 CollUtil 可创建 EnumSet 集合.
+     */
     @Test
-    @DisplayName("enumSet createByCollUtil")
+    @DisplayName("创建 EnumSet")
     void enumSetTest() {
         final Collection<Version> objects = CollUtil.create(EnumSet.class, Version.class);
         assertNotNull(objects);
@@ -726,8 +828,11 @@ class BeanUtilTest {
         private T id;
     }
 
+    /**
+     * 验证将列表元素拷贝转换为目标类型列表.
+     */
     @Test
-    @DisplayName("copyToList convertsListElements")
+    @DisplayName("列表元素转换")
     void copyListTest() {
         final Student student = new Student();
         student.setName("张三");
@@ -750,8 +855,11 @@ class BeanUtilTest {
 
     }
 
+    /**
+     * 验证大列表元素拷贝转换的正确性与性能.
+     */
     @Test
-    @DisplayName("copyToList largeListPerformance")
+    @DisplayName("大列表拷贝")
     void copyLargeListTest(){
         final SubPerson person = new SubPerson();
         person.setName("测试A11");
@@ -782,8 +890,11 @@ class BeanUtilTest {
     }
 
 
+    /**
+     * 验证 Bean 转 Map 时通过键编辑器过滤键，无效键不写入.
+     */
     @Test
-    @DisplayName("beanToMap withKeyEditor filtersKeys")
+    @DisplayName("键编辑器转 Map")
     void toMapTest() {
         // 测试转map的时候返回key
         final PrivilegeIClassification a = new PrivilegeIClassification();
@@ -813,8 +924,11 @@ class BeanUtilTest {
         private Date createTime;
     }
 
+    /**
+     * 验证通过路径读取数组字段中所有元素的属性值.
+     */
     @Test
-    @DisplayName("beanPath get arrayFieldValues")
+    @DisplayName("数组字段取值")
     void getFieldValue() {
         final TestPojo testPojo = new TestPojo();
         testPojo.setName("名字");
@@ -855,12 +969,12 @@ class BeanUtilTest {
     }
 
     /**
+     * 验证拷贝时通过字段名编辑器将下划线字段转为驼峰字段.
+     *
      * @author dazer
-     * copyProperties(Object source, Object target, CopyOptions copyOptions)
-     * 当：copyOptions的 setFieldNameEditor 不为空的时候，有bug,这里进行修复；
      */
     @Test
-    @DisplayName("copyProperties withFieldNameEditor")
+    @DisplayName("字段名编辑器拷贝")
     void beanToBeanCopyOptionsTest() {
         final ChildVo1 childVo1 = new ChildVo1();
         childVo1.setChild_address("中国北京五道口");
@@ -898,9 +1012,12 @@ class BeanUtilTest {
         String childFatherName;
     }
 
+    /**
+     * 验证泛型集合转换失败时忽略错误并返回 null.
+     */
     @Test
     @Disabled("泛型集合转换边界用例：List<String> -> List<Integer> 需报错忽略，ztools 移植暂未覆盖")
-    @DisplayName("copyProperties genericListConversion")
+    @DisplayName("泛型集合转换")
     void issueI41WKPTest() {
         final Test1 t1 = new Test1().setStrList(ListUtil.toList("list"));
         final Test2 t2_hu = new Test2();
@@ -920,8 +1037,11 @@ class BeanUtilTest {
         private List<Integer> strList;
     }
 
+    /**
+     * 验证空字符串不会写入 LocalDateTime 字段，保持为 null.
+     */
     @Test
-    @DisplayName("copyProperties mapToBean emptyString")
+    @DisplayName("空字符串转 Bean")
     void issuesI53O9JTest() {
         final Map<String, String> map = new HashMap<>();
         map.put("statusIdUpdateTime", "");
@@ -937,8 +1057,11 @@ class BeanUtilTest {
         private LocalDateTime statusIdUpdateTime;
     }
 
+    /**
+     * 验证通过 ValueProvider 结合字段映射将值转为 Bean.
+     */
     @Test
-    @DisplayName("toBean withValueProvider mapping")
+    @DisplayName("ValueProvider 转 Bean")
     void valueProviderToBeanTest() {
         // https://gitee.com/chinabugotech/hutool/issues/I5B4R7
         final CopyOptions copyOptions = CopyOptions.create();
@@ -985,8 +1108,11 @@ class BeanUtilTest {
         private String mobile;
     }
 
+    /**
+     * 验证比较两个对象公共字段值是否相等，并支持忽略指定字段.
+     */
     @Test
-    @DisplayName("isCommonFieldsEqual comparesFields")
+    @DisplayName("公共字段比较")
     void isCommonFieldsEqualTest() {
         final TestUserEntity userEntity = new TestUserEntity();
         final TestUserDTO userDTO = new TestUserDTO();
@@ -1012,16 +1138,22 @@ class BeanUtilTest {
         assertTrue(BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age", "sex"));
     }
 
+    /**
+     * 验证 Object 类无 getter 方法，返回 false.
+     */
     @Test
-    @DisplayName("hasGetter object returnsFalse")
+    @DisplayName("Object 无 getter")
     void hasGetterTest() {
         // https://gitee.com/chinabugotech/hutool/issues/I6M7Z7
         final boolean b = BeanUtil.hasGetter(Object.class);
         assertFalse(b);
     }
 
+    /**
+     * 验证 Dict 不是 Bean.
+     */
     @Test
-    @DisplayName("isBean dict returnsFalse")
+    @DisplayName("Dict 非 Bean")
     void issueI9VTZGTest() {
         final boolean bean = BeanUtil.isBean(Dict.class);
         assertFalse(bean);
@@ -1063,16 +1195,11 @@ class BeanUtilTest {
     }
 
     /**
-     * GitHub issue#4245: BeanUtil.copyProperties throws ConvertException
-     * when source list element has protected setters.
-     *
-     * <p>Root cause: BeanConverter used isBean() (which checks for public setters)
-     * on the SOURCE object instead of isReadableBean() (which checks for public getters).
-     * A source bean only needs to be readable, not writable.</p>
+     * 验证源列表元素具有 protected setter 时仍可拷贝，不抛出 ConvertException.
      */
     @Test
     @Disabled("泛型集合深拷贝边界用例：List<OrderItem> -> List<OrderItemDto> 需元素级转换，ztools 移植暂未覆盖")
-    @DisplayName("copyProperties listWithProtectedSetter")
+    @DisplayName("protected setter 列表拷贝")
     void issue4245Test() {
         final Order4245 order = new Order4245(
                 1L,
@@ -1097,10 +1224,10 @@ class BeanUtilTest {
     }
 
     /**
-     * Test map conversion with protected setter bean
+     * 验证具有 protected setter 的 Bean 可正常转为 Map.
      */
     @Test
-    @DisplayName("beanToMap withProtectedSetter")
+    @DisplayName("protected setter 转 Map")
     void issue4245MapConvertTest() {
         final OrderItem4245 item = new OrderItem4245(1L, "aa", 1);
         // Should not throw UnsupportedOperationException

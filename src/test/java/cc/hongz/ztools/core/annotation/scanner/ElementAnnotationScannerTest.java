@@ -21,8 +21,11 @@ import java.util.Map;
 @DisplayName("ElementAnnotationScanner 注解扫描器")
 class ElementAnnotationScannerTest {
 
+    /**
+     * 验证元素扫描器支持字段、方法与类型元素.
+     */
     @Test
-    @DisplayName("support acceptsFieldsMethodsTypes")
+    @DisplayName("支持类型判断")
     void supportTest() {
         final ElementAnnotationScanner scanner = new ElementAnnotationScanner();
         assertTrue(scanner.support(ReflectUtil.getField(FieldAnnotationScannerTest.Example.class, "id")));
@@ -31,8 +34,11 @@ class ElementAnnotationScannerTest {
         assertTrue(scanner.support(FieldAnnotationScannerTest.Example.class));
     }
 
+    /**
+     * 验证元素扫描器能获取元素上的匹配注解.
+     */
     @Test
-    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    @DisplayName("获取匹配注解")
     void getAnnotationsTest() {
         final ElementAnnotationScanner scanner = new ElementAnnotationScanner();
         final Field field = ReflectUtil.getField(FieldAnnotationScannerTest.Example.class, "id");
@@ -43,8 +49,11 @@ class ElementAnnotationScannerTest {
         assertEquals(AnnotationForScannerTest.class, CollUtil.getFirst(annotations).annotationType());
     }
 
+    /**
+     * 验证元素扫描器能遍历元素上的每个注解并回调.
+     */
     @Test
-    @DisplayName("scan visitsEachAnnotation")
+    @DisplayName("遍历每个注解")
     void scanTest() {
         final ElementAnnotationScanner scanner = new ElementAnnotationScanner();
         final Field field = ReflectUtil.getField(FieldAnnotationScannerTest.Example.class, "id");

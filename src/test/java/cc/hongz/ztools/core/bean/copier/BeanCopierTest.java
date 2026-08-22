@@ -16,8 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Bean拷贝")
 class BeanCopierTest {
 
+    /**
+     * 验证 Bean 拷贝为 Map 时忽略 null 值，空字段不写入.
+     */
     @Test
-    @DisplayName("copy beanToMap ignoresNullValue")
+    @DisplayName("忽略 null 转 Map")
     void beanToMapIgnoreNullTest() {
         final A a = new A();
 
@@ -33,10 +36,10 @@ class BeanCopierTest {
     }
 
     /**
-     * 测试在非覆盖模式下，目标对象有值则不覆盖
+     * 验证非覆盖模式下目标对象已有值则不被覆盖.
      */
     @Test
-    @DisplayName("copy notOverride keepsTargetValue")
+    @DisplayName("非覆盖模式")
     void beanToBeanNotOverrideTest() {
         final A a = new A();
         a.setValue("123");
@@ -50,10 +53,10 @@ class BeanCopierTest {
     }
 
     /**
-     * 测试在覆盖模式下，目标对象值被覆盖
+     * 验证覆盖模式下目标对象的值被源对象覆盖.
      */
     @Test
-    @DisplayName("copy override overwritesTarget")
+    @DisplayName("覆盖模式")
     void beanToBeanOverrideTest() {
         final A a = new A();
         a.setValue("123");
@@ -67,10 +70,10 @@ class BeanCopierTest {
     }
 
     /**
-     * 为{@code null}则写，否则忽略。如果覆盖，则不判断直接写
+     * 验证目标值为 null 时写入源值，否则忽略.
      */
     @Test
-    @DisplayName("copy nullValue writesWhenTargetNull")
+    @DisplayName("目标 null 才写入")
     void issues2484Test() {
         final A a = new A();
         a.setValue("abc");

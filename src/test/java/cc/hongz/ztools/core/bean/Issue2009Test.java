@@ -70,8 +70,11 @@ class Issue2009Test {
         }
     }
 
+    /**
+     * 验证继承父类的字段可正确拷贝.
+     */
     @Test
-    @DisplayName("copyProperties inheritedFieldCopied")
+    @DisplayName("继承字段拷贝")
     void test() {
         B b = new B("a string text");
         A a = new A();

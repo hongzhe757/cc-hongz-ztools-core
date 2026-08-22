@@ -2,17 +2,30 @@ package cc.hongz.ztools.core.lang;
 
 import cc.hongz.ztools.core.builder.GenericBuilder;
 import cc.hongz.ztools.core.date.DateTime;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static cc.hongz.ztools.core.lang.OptTest.User;
 
-public class DictTest {
+/**
+ * {@link Dict} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("Dict 字典")
+class DictTest {
+
+    /**
+     * 链式 set 后按类型取值.
+     */
     @Test
-    public void dictTest(){
+    @DisplayName("链式 set 后 getLong 取值")
+    void dictTest() {
         Dict dict = Dict.create()
                 .set("key1", 1)//int
                 .set("key2", 1000L)//long
@@ -22,8 +35,12 @@ public class DictTest {
         assertEquals(Long.valueOf(1000L), v2);
     }
 
+    /**
+     * 忽略大小写的 Dict，putAll 后大小写不敏感取值.
+     */
     @Test
-    public void dictTest2(){
+    @DisplayName("忽略大小写取值")
+    void dictTest2() {
         final Dict dict = new Dict(true);
         Map<String, Object> map = new HashMap<>();
         map.put("A", 1);
@@ -34,8 +51,12 @@ public class DictTest {
         assertEquals(1, dict.get("a"));
     }
 
+    /**
+     * 静态工厂 of 按键值对创建.
+     */
     @Test
-    public void ofTest(){
+    @DisplayName("of 创建")
+    void ofTest() {
         Dict dict = Dict.of(
                 "RED", "#FF0000",
                 "GREEN", "#00FF00",
@@ -47,8 +68,12 @@ public class DictTest {
         assertEquals("#0000FF", dict.get("BLUE"));
     }
 
+    /**
+     * removeEqual 移除与另一个 Dict 值相同的键.
+     */
     @Test
-    public void removeEqualTest(){
+    @DisplayName("removeEqual 移除相同项")
+    void removeEqualTest() {
         Dict dict = Dict.of(
             "key1", null
         );
@@ -62,8 +87,12 @@ public class DictTest {
         assertTrue(dict.isEmpty());
     }
 
+    /**
+     * setFields 通过 lambda 方法引用批量设置字段.
+     */
     @Test
-    public void setFieldsTest() {
+    @DisplayName("setFields 批量设置")
+    void setFieldsTest() {
         User user = GenericBuilder.of(User::new).with(User::setUsername, "hutool").build();
         Dict dict = Dict.create();
         dict.setFields(user::getNickname, user::getUsername);

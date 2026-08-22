@@ -16,8 +16,11 @@ import java.util.function.UnaryOperator;
 @DisplayName("SynthesizedAnnotationSelector 合成注解选择器")
 class SynthesizedAnnotationSelectorTest {
 
+    /**
+     * 验证最近且最旧优先选择器按距离选择注解.
+     */
     @Test
-    @DisplayName("choose nearestOldest selectsByDistance")
+    @DisplayName("最近最旧选择")
     void chooseTest() {
         final SynthesizedAnnotationSelector.NearestAndOldestPrioritySelector selector = (SynthesizedAnnotationSelector.NearestAndOldestPrioritySelector)SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY;
 
@@ -34,8 +37,11 @@ class SynthesizedAnnotationSelectorTest {
         assertEquals(annotation2, selector.choose(annotation1, annotation2));
     }
 
+    /**
+     * 验证最近且最新优先选择器按距离选择注解.
+     */
     @Test
-    @DisplayName("nearestNewest selectsByDistance")
+    @DisplayName("最近最新选择")
     void nearestAndNewestPriorityTest() {
         final SynthesizedAnnotationSelector.NearestAndNewestPrioritySelector selector = (SynthesizedAnnotationSelector.NearestAndNewestPrioritySelector)SynthesizedAnnotationSelector.NEAREST_AND_NEWEST_PRIORITY;
 
@@ -52,8 +58,11 @@ class SynthesizedAnnotationSelectorTest {
         assertEquals(annotation1, selector.choose(annotation1, annotation2));
     }
 
+    /**
+     * 验证最远且最旧优先选择器按距离选择注解.
+     */
     @Test
-    @DisplayName("farthestOldest selectsByDistance")
+    @DisplayName("最远最旧选择")
     void farthestAndOldestPriorityTest() {
         final SynthesizedAnnotationSelector.FarthestAndOldestPrioritySelector selector = (SynthesizedAnnotationSelector.FarthestAndOldestPrioritySelector)SynthesizedAnnotationSelector.FARTHEST_AND_OLDEST_PRIORITY;
 
@@ -70,8 +79,11 @@ class SynthesizedAnnotationSelectorTest {
         assertEquals(annotation2, selector.choose(annotation1, annotation2));
     }
 
+    /**
+     * 验证最远且最新优先选择器按距离选择注解.
+     */
     @Test
-    @DisplayName("farthestNewest selectsByDistance")
+    @DisplayName("最远最新选择")
     void farthestAndNewestPriorityTest() {
         final SynthesizedAnnotationSelector.FarthestAndNewestPrioritySelector selector = (SynthesizedAnnotationSelector.FarthestAndNewestPrioritySelector)SynthesizedAnnotationSelector.FARTHEST_AND_NEWEST_PRIORITY;
 

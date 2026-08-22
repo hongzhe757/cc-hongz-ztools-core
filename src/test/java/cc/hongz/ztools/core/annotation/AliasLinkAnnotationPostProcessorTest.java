@@ -21,8 +21,11 @@ import java.util.function.UnaryOperator;
 @DisplayName("AliasLinkAnnotationPostProcessor 注解后处理器")
 class AliasLinkAnnotationPostProcessorTest {
 
+    /**
+     * 验证 FORCE_ALIAS_FOR 关系将目标属性包装为 ForceAliasedAnnotationAttribute 并链接到原属性.
+     */
     @Test
-    @DisplayName("processForceAliasFor wrapsWithForceAliasedAttribute")
+    @DisplayName("强制别名包装")
     void processForceAliasForTest() {
         AliasLinkAnnotationPostProcessor processor = new AliasLinkAnnotationPostProcessor();
 
@@ -46,8 +49,11 @@ class AliasLinkAnnotationPostProcessorTest {
         assertEquals(valueAttribute, ((WrappedAnnotationAttribute)nameAttribute).getLinked());
     }
 
+    /**
+     * 验证 ALIAS_FOR 关系将目标属性包装为 AliasedAnnotationAttribute 并链接到原属性.
+     */
     @Test
-    @DisplayName("processAliasFor wrapsWithAliasedAttribute")
+    @DisplayName("别名包装")
     void processAliasForTest() {
         AliasLinkAnnotationPostProcessor processor = new AliasLinkAnnotationPostProcessor();
 

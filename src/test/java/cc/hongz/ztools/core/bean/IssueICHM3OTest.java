@@ -19,8 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @DisplayName("回归测试")
 class IssueICHM3OTest {
+    /**
+     * 验证带别名的 Map 转 Bean 后再转回 Map 时字段一致.
+     */
     @Test
-    @DisplayName("toBean alias mapToBeanAndBack")
+    @DisplayName("别名往返转换")
     void testMapToBean() {
         Map<Object,Object> map = MapUtil.builder()
             .put("doctor_name", "李医生")

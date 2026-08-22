@@ -13,12 +13,10 @@ import org.junit.jupiter.api.Test;
 class IssueIAYGT0Test {
 
     /**
-     * BeanUtil.setProperty默认调用的是BeanPath方法，在设置值时，使用BeanUtil.setFieldValue这个方法。
-     * 此方法默认直接给字段赋值。
-     * 这里确实存在一定的歧义性，但是考虑到兼容性，不做处理。
+     * 验证 setProperty 通过 BeanPath 直接给字段赋值，而非调用 setter 方法.
      */
     @Test
-    @DisplayName("setProperty usesDirectFieldWrite")
+    @DisplayName("直接字段赋值")
     void setPropertyTest() {
         Cat cat = new Cat();
         BeanUtil.setProperty(cat, "name", "Kitty");

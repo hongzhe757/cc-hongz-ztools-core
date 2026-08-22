@@ -19,8 +19,11 @@ import java.util.*;
 @DisplayName("MethodAnnotationScanner 注解扫描器")
 class MethodAnnotationScannerTest {
 
+    /**
+     * 验证方法扫描器仅支持方法元素.
+     */
     @Test
-    @DisplayName("support acceptsMethodsOnly")
+    @DisplayName("仅支持方法")
     void supportTest() {
         AnnotationScanner scanner = new MethodAnnotationScanner();
         assertTrue(scanner.support(ReflectUtil.getMethod(Example.class, "test")));
@@ -29,8 +32,11 @@ class MethodAnnotationScannerTest {
         assertFalse(scanner.support(ReflectUtil.getField(Example.class, "id")));
     }
 
+    /**
+     * 验证方法扫描器能获取方法注解，并支持查找父类方法及过滤.
+     */
     @Test
-    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    @DisplayName("获取匹配方法注解")
     void getAnnotationsTest() {
         AnnotationScanner scanner = new MethodAnnotationScanner();
         Method method = ReflectUtil.getMethod(Example.class, "test");
@@ -65,8 +71,11 @@ class MethodAnnotationScannerTest {
         assertEquals("SuperClass", ((AnnotationForScannerTest) annotations.get(1)).value());
     }
 
+    /**
+     * 验证方法扫描器能遍历方法及其父类方法上的注解并回调.
+     */
     @Test
-    @DisplayName("scan visitsEachAnnotation")
+    @DisplayName("遍历方法注解")
     void scanTest() {
         Method method = ReflectUtil.getMethod(Example.class, "test");
 

@@ -21,8 +21,11 @@ import java.util.function.UnaryOperator;
 @DisplayName("AliasAnnotationPostProcessor 注解后处理器")
 class AliasAnnotationPostProcessorTest {
 
+    /**
+     * 验证后处理器将 @Alias 注解属性包装为 ForceAliasedAnnotationAttribute，普通属性保持 CacheableAnnotationAttribute.
+     */
     @Test
-    @DisplayName("process wrapsAliasedAttribute")
+    @DisplayName("包装别名属性")
     void processTest() {
         AliasAnnotationPostProcessor processor = new AliasAnnotationPostProcessor();
 

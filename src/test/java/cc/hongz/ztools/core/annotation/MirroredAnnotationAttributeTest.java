@@ -16,8 +16,11 @@ import java.lang.reflect.Method;
 @DisplayName("MirroredAnnotationAttribute 注解属性")
 class MirroredAnnotationAttributeTest {
 
+    /**
+     * 验证镜像注解属性正确暴露注解与方法元信息.
+     */
     @Test
-    @DisplayName("baseInfo exposesAnnotationMetadata")
+    @DisplayName("基本信息")
     void baseInfoTest() {
         // 组合属性
         final Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest.class);
@@ -36,8 +39,11 @@ class MirroredAnnotationAttributeTest {
         assertEquals(nameMethod.getReturnType(), nameAnnotationAttribute.getAttributeType());
     }
 
+    /**
+     * 验证镜像属性在默认值时返回空字符串并判定为等价默认值.
+     */
     @Test
-    @DisplayName("valueDefault returnsDefaultValue")
+    @DisplayName("默认值返回默认")
     void workWhenValueDefaultTest() {
         // 组合属性
         final Annotation annotation = ClassForTest2.class.getAnnotation(AnnotationForTest.class);
@@ -53,8 +59,11 @@ class MirroredAnnotationAttributeTest {
         assertTrue(nameAnnotationAttribute.isWrapped());
     }
 
+    /**
+     * 验证镜像属性在非默认时返回链接属性的值.
+     */
     @Test
-    @DisplayName("valueNonDefault returnsLinkedValue")
+    @DisplayName("非默认返回链接值")
     void workWhenValueNonDefaultTest() {
         // 组合属性
         final Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest.class);

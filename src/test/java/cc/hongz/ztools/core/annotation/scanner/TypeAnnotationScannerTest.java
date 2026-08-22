@@ -20,8 +20,11 @@ import java.util.Map;
 @DisplayName("TypeAnnotationScanner 注解扫描器")
 class TypeAnnotationScannerTest {
 
+    /**
+     * 验证类型扫描器仅支持类型元素.
+     */
     @Test
-    @DisplayName("support acceptsTypesOnly")
+    @DisplayName("仅支持类型")
     void supportTest() {
         AnnotationScanner scanner = new TypeAnnotationScanner();
         assertTrue(scanner.support(Example.class));
@@ -30,8 +33,11 @@ class TypeAnnotationScannerTest {
         assertFalse(scanner.support(null));
     }
 
+    /**
+     * 验证类型扫描器能获取类型注解，并支持包含或排除父类父接口及过滤.
+     */
     @Test
-    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    @DisplayName("获取匹配类型注解")
     void getAnnotationsTest() {
         AnnotationScanner scanner = new TypeAnnotationScanner();
         List<Annotation> annotations = scanner.getAnnotations(Example.class);
@@ -63,8 +69,11 @@ class TypeAnnotationScannerTest {
         annotations.forEach(a -> assertEquals(a.annotationType(), AnnotationForScannerTest.class));
     }
 
+    /**
+     * 验证类型扫描器能遍历类型及其父类父接口上的注解并回调.
+     */
     @Test
-    @DisplayName("scan visitsEachAnnotation")
+    @DisplayName("遍历类型注解")
     void scanTest() {
         Map<Integer, List<Annotation>> map = new HashMap<>();
 

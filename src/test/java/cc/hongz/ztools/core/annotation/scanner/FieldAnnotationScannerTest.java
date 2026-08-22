@@ -21,8 +21,11 @@ import java.util.Map;
 @DisplayName("FieldAnnotationScanner 注解扫描器")
 class FieldAnnotationScannerTest {
 
+    /**
+     * 验证字段扫描器仅支持字段元素.
+     */
     @Test
-    @DisplayName("support acceptsFieldsOnly")
+    @DisplayName("仅支持字段")
     void supportTest() {
         AnnotationScanner scanner = new FieldAnnotationScanner();
         assertTrue(scanner.support(ReflectUtil.getField(Example.class, "id")));
@@ -31,8 +34,11 @@ class FieldAnnotationScannerTest {
         assertFalse(scanner.support(Example.class));
     }
 
+    /**
+     * 验证字段扫描器能获取字段上的匹配注解.
+     */
     @Test
-    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    @DisplayName("获取匹配注解")
     void getAnnotationsTest() {
         AnnotationScanner scanner = new FieldAnnotationScanner();
         Field field = ReflectUtil.getField(Example.class, "id");
@@ -43,8 +49,11 @@ class FieldAnnotationScannerTest {
         assertEquals(AnnotationForScannerTest.class, CollUtil.getFirst(annotations).annotationType());
     }
 
+    /**
+     * 验证字段扫描器能遍历字段上的每个注解并回调.
+     */
     @Test
-    @DisplayName("scan visitsEachAnnotation")
+    @DisplayName("遍历每个注解")
     void scanTest() {
         AnnotationScanner scanner = new FieldAnnotationScanner();
         Field field = ReflectUtil.getField(Example.class, "id");

@@ -16,8 +16,11 @@ import java.lang.reflect.Method;
 @DisplayName("ForceAliasedAnnotationAttribute 注解属性")
 class ForceAliasedAnnotationAttributeTest {
 
+    /**
+     * 验证强制别名注解属性正确暴露注解与方法元信息.
+     */
     @Test
-    @DisplayName("baseInfo exposesAnnotationMetadata")
+    @DisplayName("基本信息")
     void baseInfoTest() {
         // 组合属性
         final Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest.class);
@@ -36,8 +39,11 @@ class ForceAliasedAnnotationAttributeTest {
         assertEquals(valueMethod.getReturnType(), valueAnnotationAttribute.getAttributeType());
     }
 
+    /**
+     * 验证值为默认值时强制别名属性回退到链接的 name 值.
+     */
     @Test
-    @DisplayName("valueDefault returnsLinkedName")
+    @DisplayName("默认值取链接")
     void workWhenValueDefaultTest() {
         // 组合属性
         final Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest.class);
@@ -53,8 +59,11 @@ class ForceAliasedAnnotationAttributeTest {
         assertTrue(valueAnnotationAttribute.isWrapped());
     }
 
+    /**
+     * 验证值属性非默认时，强制别名属性忽略自身值并返回默认的空字符串.
+     */
     @Test
-    @DisplayName("valueNonDefault returnsDefaultValue")
+    @DisplayName("非默认返回默认值")
     void workWhenValueNonDefaultTest() {
         // 组合属性
         final Annotation annotation = ClassForTest2.class.getAnnotation(AnnotationForTest.class);

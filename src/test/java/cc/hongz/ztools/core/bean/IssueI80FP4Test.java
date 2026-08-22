@@ -14,8 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @DisplayName("回归测试")
 class IssueI80FP4Test {
+    /**
+     * 验证忽略指定属性时按精确名称匹配.
+     */
     @Test
-    @DisplayName("copyProperties ignoreProperties caseSensitive")
+    @DisplayName("精确名忽略属性")
     void copyPropertiesTest() {
         final Dest sourceDest = new Dest();
         sourceDest.setCPF(33699);
@@ -27,8 +30,11 @@ class IssueI80FP4Test {
         assertNull(dest.getEnderDest());
     }
 
+    /**
+     * 验证忽略属性时忽略大小写匹配.
+     */
     @Test
-    @DisplayName("copyProperties ignoreProperties ignoreCase")
+    @DisplayName("忽略大小写匹配")
     void copyPropertiesTest2() {
         final Dest sourceDest = new Dest();
         sourceDest.setCPF(33699);

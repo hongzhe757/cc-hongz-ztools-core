@@ -20,8 +20,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("GenericSynthesizedAggregateAnnotation 合成聚合注解")
 class GenericSynthesizedAggregateAnnotationTest {
 
+    /**
+     * 验证合成聚合注解能聚合子注解、父注解与祖父注解并暴露元信息.
+     */
     @Test
-    @DisplayName("baseSynthesis aggregatesAnnotations")
+    @DisplayName("基础合成聚合")
     void baseSynthesisAnnotationWorkTest() {
         // AnnotatedClass -> @ChildAnnotation -> @ParentAnnotation -> @GrandParentAnnotation
         //                                    -> @GrandParentAnnotation
@@ -57,8 +60,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertEquals(3, syntheticMetaAnnotation.getAnnotationPostProcessors().size());
     }
 
+    /**
+     * 验证合成聚合注解能解析各层级注解的属性值.
+     */
     @Test
-    @DisplayName("synthesis resolvesAttributeValues")
+    @DisplayName("解析属性值")
     void synthesisAnnotationAttributeTest() {
         final ChildAnnotation rootAnnotation = AnnotatedClass.class.getAnnotation(ChildAnnotation.class);
         GenericSynthesizedAggregateAnnotation syntheticMetaAnnotation = new GenericSynthesizedAggregateAnnotation(rootAnnotation);
@@ -72,8 +78,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertEquals("Child's GrandParent!", syntheticMetaAnnotation.getAttributeValue("grandParentValue", String.class));
     }
 
+    /**
+     * 验证逐层合成各层级注解并解析属性值，重复合成时抛出异常.
+     */
     @Test
-    @DisplayName("synthesize worksPerLevel")
+    @DisplayName("逐层合成")
     void syntheticAnnotationTest() {
         final ChildAnnotation rootAnnotation = AnnotatedClass.class.getAnnotation(ChildAnnotation.class);
         GenericSynthesizedAggregateAnnotation syntheticMetaAnnotation = new GenericSynthesizedAggregateAnnotation(rootAnnotation);
@@ -115,8 +124,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertThrows(IllegalArgumentException.class, () -> new GenericSynthesizedAggregateAnnotation(grandParentAnnotation));
     }
 
+    /**
+     * 验证从 @AliasFor 元注解合成 Link 注解并解析 annotation 与 attribute 属性.
+     */
     @Test
-    @DisplayName("link synthesizesLink")
+    @DisplayName("合成Link")
     void linkTest() {
         final Method method = ReflectUtil.getMethod(AnnotationForLinkTest.class, "value");
         final SynthesizedAggregateAnnotation synthesizedAnnotationAggregator = new GenericSynthesizedAggregateAnnotation(method.getAnnotation(AliasFor.class));
@@ -125,8 +137,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertEquals("name", link.attribute());
     }
 
+    /**
+     * 验证镜像注解属性双向取值，冲突时抛出异常.
+     */
     @Test
-    @DisplayName("mirror resolvesMirroredValue")
+    @DisplayName("镜像解析")
     void mirrorAttributeTest() {
         AnnotationForMirrorTest annotation = ClassForMirrorTest.class.getAnnotation(AnnotationForMirrorTest.class);
         SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
@@ -147,8 +162,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertThrows(IllegalArgumentException.class, finalSyntheticAnnotation::name);
     }
 
+    /**
+     * 验证 @AliasFor 别名注解在元注解与子注解间的取值解析.
+     */
     @Test
-    @DisplayName("aliasFor resolvesAliasedValue")
+    @DisplayName("别名解析")
     void aliasForTest() {
         AnnotationForAliasForTest annotation = ClassForAliasForTest.class.getAnnotation(AnnotationForAliasForTest.class);
         SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
@@ -165,8 +183,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertEquals("Foo", childAnnotation.value());
     }
 
+    /**
+     * 验证 @ForceAliasFor 强制别名注解的取值解析.
+     */
     @Test
-    @DisplayName("forceAliasFor resolvesValue")
+    @DisplayName("强制别名解析")
     void forceAliasForTest() {
         AnnotationForceForAliasForTest annotation = ClassForForceAliasForTest.class.getAnnotation(AnnotationForceForAliasForTest.class);
         SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
@@ -183,8 +204,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertEquals("Foo", childAnnotation.value());
     }
 
+    /**
+     * 验证别名与镜像组合场景下的属性值解析.
+     */
     @Test
-    @DisplayName("aliasForAndMirror resolvesValue")
+    @DisplayName("别名镜像组合")
     void aliasForAndMirrorTest() {
         AnnotationForMirrorThenAliasForTest annotation = ClassForAliasForAndMirrorTest.class.getAnnotation(AnnotationForMirrorThenAliasForTest.class);
         SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
@@ -195,8 +219,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertEquals("test", childAnnotation.childValue());
     }
 
+    /**
+     * 验证多级别名链场景下逐级解析属性值.
+     */
     @Test
-    @DisplayName("multiAliasFor resolvesChained")
+    @DisplayName("多级别名链")
     void multiAliasForTest() {
         final AnnotationForMultiAliasForTest annotation = ClassForMultiAliasForTest.class.getAnnotation(AnnotationForMultiAliasForTest.class);
         final SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
@@ -210,8 +237,11 @@ class GenericSynthesizedAggregateAnnotationTest {
         assertEquals("test", childAnnotation.value3());
     }
 
+    /**
+     * 验证隐式别名（镜像）场景下属性值解析.
+     */
     @Test
-    @DisplayName("implicitAlias resolvesImplicitValue")
+    @DisplayName("隐式别名")
     void implicitAliasTest() {
         final AnnotationForImplicitAliasTest annotation = ClassForImplicitAliasTest.class.getAnnotation(AnnotationForImplicitAliasTest.class);
         final SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);

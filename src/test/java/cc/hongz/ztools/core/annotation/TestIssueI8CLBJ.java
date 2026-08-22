@@ -21,8 +21,11 @@ import java.util.List;
 @DisplayName("注解别名并发读取")
 class TestIssueI8CLBJ {
 
+    /**
+     * 验证并发读取注解别名属性时不抛异常，覆盖回归问题 I8CLBJ.
+     */
     @Test
-    @DisplayName("concurrent alias reading")
+    @DisplayName("并发读取别名")
     void test() throws NoSuchFieldException {
         Field field = Foo.class.getDeclaredField("name");
         assertNotNull(field);

@@ -18,8 +18,11 @@ import java.util.Map;
 @DisplayName("回归测试")
 class Issue3452Test {
 
+    /**
+     * 验证通过下划线键填充 Bean 中对应的驼峰字段.
+     */
     @Test
-    @DisplayName("fillBeanWithMap snakeCaseField")
+    @DisplayName("下划线键填充")
     void fillBeanWithMapTest() {
         final Map<String, Object> properties = new HashMap<>();
         properties.put("name", "JohnDoe");

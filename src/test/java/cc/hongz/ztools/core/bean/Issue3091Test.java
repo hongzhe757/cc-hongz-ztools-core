@@ -28,8 +28,11 @@ import java.util.List;
 @DisplayName("回归测试")
 class Issue3091Test {
 
+    /**
+     * 验证列表元素由 Long 转换为 Integer 类型.
+     */
     @Test
-    @DisplayName("copyToList longToInteger")
+    @DisplayName("Long 转 Integer")
     void copyToListTest() {
         final List<Long> list = Arrays.asList(1L,2L);
         final List<Integer> result = BeanUtil.copyToList(list, Integer.class);

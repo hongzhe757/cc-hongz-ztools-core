@@ -17,8 +17,11 @@ import java.lang.reflect.Method;
 @DisplayName("AbstractWrappedAnnotationAttribute 包装注解属性")
 class AbstractWrappedAnnotationAttributeTest {
 
+    /**
+     * 验证包装注解属性正确暴露注解与方法元信息，并将取值委托给链接属性.
+     */
     @Test
-    @DisplayName("work delegatesToLinkedValue")
+    @DisplayName("包装属性委托")
     void workTest() {
         Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest1.class);
         Method valueMethod = ReflectUtil.getMethod(AnnotationForTest1.class, "value1");
@@ -42,8 +45,11 @@ class AbstractWrappedAnnotationAttributeTest {
         assertEquals("value1", nameWrapper.getValue());
     }
 
+    /**
+     * 验证多层包装注解属性能正确展平并返回所有链接的非包装属性.
+     */
     @Test
-    @DisplayName("multiWrapper flattensAllLinkedAttributes")
+    @DisplayName("多层包装展平")
     void multiWrapperTest() {
         // 包装第一层： name1 + value1
         Annotation annotation1 = ClassForTest1.class.getAnnotation(AnnotationForTest1.class);

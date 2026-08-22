@@ -14,8 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("回归测试")
 class Issue2082Test {
 
+    /**
+     * 验证存在重载 setter 时转换不会误调用，id 保持 null.
+     */
     @Test
-    @DisplayName("toBean overloadedSetter idNull")
+    @DisplayName("重载 setter 转换")
     void toBeanTest() {
         TestBean2 testBean2 = new TestBean2();
         TestBean test = BeanUtil.toBean(testBean2, TestBean.class);

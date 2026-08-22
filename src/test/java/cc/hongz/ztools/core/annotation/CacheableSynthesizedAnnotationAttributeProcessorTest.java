@@ -20,8 +20,11 @@ import java.util.function.UnaryOperator;
 @DisplayName("CacheableSynthesizedAnnotationAttributeProcessor 注解属性处理器")
 class CacheableSynthesizedAnnotationAttributeProcessorTest {
 
+    /**
+     * 验证属性处理器根据垂直与水平距离选择最近的注解属性值.
+     */
     @Test
-    @DisplayName("getAttributeValue selectsByDistance")
+    @DisplayName("按距离选择")
     void getAttributeValueTest() {
         CacheableSynthesizedAnnotationAttributeProcessor processor = new CacheableSynthesizedAnnotationAttributeProcessor();
 

@@ -14,8 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("属性描述")
 class BeanDescTest {
 
+    /**
+     * 验证通过字段名 age 可解析出对应的 getter、setter 及其参数类型.
+     */
     @Test
-    @DisplayName("propDesc age field getter setter resolved")
+    @DisplayName("age 字段解析")
     void propDescTes() {
         BeanDesc desc = BeanUtil.getBeanDesc(User.class);
         assertEquals("User", desc.getSimpleName());
@@ -28,8 +31,11 @@ class BeanDescTest {
 
     }
 
+    /**
+     * 验证通过属性名 name 可解析出 getter、setter 及其参数类型.
+     */
     @Test
-    @DisplayName("propDesc name prop resolvesGetterSetter")
+    @DisplayName("name 属性解析")
     void propDescTes2() {
         BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
@@ -41,8 +47,11 @@ class BeanDescTest {
         assertSame(String.class, prop.getSetter().getParameterTypes()[0]);
     }
 
+    /**
+     * 验证 boolean 字段 isAdmin、gender 的 getter 与 setter 命名解析.
+     */
     @Test
-    @DisplayName("propDesc boolean getters isAdmin isGender")
+    @DisplayName("布尔 getter 解析")
     void propDescOfBooleanTest() {
         BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
@@ -52,8 +61,11 @@ class BeanDescTest {
         assertEquals("setGender", desc.getSetter("gender").getName());
     }
 
+    /**
+     * 验证 isSuper 字段解析出的 getter 为 isIsSuper、setter 为 setIsSuper.
+     */
     @Test
-    @DisplayName("propDesc isSuper resolves isIsSuper")
+    @DisplayName("isSuper 解析")
     void propDescOfBooleanTest2() {
         BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
@@ -61,8 +73,11 @@ class BeanDescTest {
         assertEquals("setIsSuper", desc.getSetter("isSuper").getName());
     }
 
+    /**
+     * 验证通过 PropDesc 对 name 属性进行设置与读取值.
+     */
     @Test
-    @DisplayName("getSet name prop getSetValue")
+    @DisplayName("属性读写值")
     void getSetTest() {
         BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
@@ -74,9 +89,12 @@ class BeanDescTest {
         assertEquals("张三", value);
     }
 
+    /**
+     * 验证 Boolean 包装类型 lastPage 字段的 setter 命名解析.
+     */
     @Test
     @Disabled
-    @DisplayName("propDesc boolean lastPage setters")
+    @DisplayName("Boolean setter 解析")
     void propDescOfBooleanTest3() {
         BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 

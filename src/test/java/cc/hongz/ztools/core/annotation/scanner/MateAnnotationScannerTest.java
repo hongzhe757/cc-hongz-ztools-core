@@ -20,8 +20,11 @@ import java.util.Map;
 @DisplayName("MetaAnnotationScanner 注解扫描器")
 class MateAnnotationScannerTest {
 
+    /**
+     * 验证元注解扫描器仅支持注解类型元素.
+     */
     @Test
-    @DisplayName("support acceptsAnnotationTypes")
+    @DisplayName("仅支持注解类型")
     void supportTest() {
         AnnotationScanner scanner = new MetaAnnotationScanner();
         assertTrue(scanner.support(AnnotationForScannerTest.class));
@@ -31,8 +34,11 @@ class MateAnnotationScannerTest {
         assertFalse(scanner.support(Example.class));
     }
 
+    /**
+     * 验证元注解扫描器能获取注解类型上的元注解，非递归模式下只返回直接元注解.
+     */
     @Test
-    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    @DisplayName("获取匹配元注解")
     void getAnnotationsTest() {
         AnnotationScanner scanner = new MetaAnnotationScanner();
         assertTrue(scanner.support(AnnotationForScannerTest3.class));
@@ -53,8 +59,11 @@ class MateAnnotationScannerTest {
         assertFalse(annotations.containsKey(AnnotationForScannerTest3.class));
     }
 
+    /**
+     * 验证元注解扫描器能逐层遍历元注解并回调.
+     */
     @Test
-    @DisplayName("scan visitsEachAnnotation")
+    @DisplayName("遍历每个元注解")
     void scanTest() {
         AnnotationScanner scanner = new MetaAnnotationScanner();
         Map<Integer, List<Annotation>> map = new HashMap<>();

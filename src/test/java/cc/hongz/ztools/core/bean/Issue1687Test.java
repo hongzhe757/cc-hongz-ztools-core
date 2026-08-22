@@ -19,8 +19,11 @@ import java.io.Serializable;
 @DisplayName("回归测试")
 class Issue1687Test {
 
+    /**
+     * 验证别名错位导致字段无法匹配时返回 null.
+     */
     @Test
-    @DisplayName("toBean aliasMisplacement returnsNull")
+    @DisplayName("别名错位返回 null")
     void toBeanTest(){
         final SysUserFb sysUserFb = new SysUserFb();
         sysUserFb.setDepId("123");
@@ -32,8 +35,11 @@ class Issue1687Test {
         assertEquals(new Long(456L), sysUser.getOrgId());
     }
 
+    /**
+     * 验证通过字段映射补救别名错位，正确映射字段.
+     */
     @Test
-    @DisplayName("toBean fieldMapping fixesAlias")
+    @DisplayName("字段映射补救别名")
     void toBeanTest2(){
         final SysUserFb sysUserFb = new SysUserFb();
         sysUserFb.setDepId("123");
