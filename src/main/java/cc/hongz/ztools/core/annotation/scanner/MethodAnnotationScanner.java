@@ -78,7 +78,7 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
      */
     @Override
     protected Class<?> getClassFormAnnotatedElement(final AnnotatedElement annotatedElement) {
-        return ((Method)annotatedElement).getDeclaringClass();
+        return ((Method) annotatedElement).getDeclaringClass();
     }
 
     /**

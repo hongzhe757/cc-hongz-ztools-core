@@ -323,7 +323,7 @@ public class BeanPath implements Serializable {
 
         final StringBuilder builder = new StringBuilder();
         char c;
-        boolean isNumStart = false;// 下标标识符开始
+        boolean isNumStart = false; // 下标标识符开始
         boolean isInWrap = false; //标识是否在引号内
         for (int i = 0; i < length; i++) {
             c = expression.charAt(i);

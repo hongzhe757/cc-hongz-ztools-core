@@ -77,7 +77,7 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
 
         // 校验通过
         final boolean passed = originalAttributeMirrored && mirrorAttributeMirrored
-            && ObjectUtil.equals(((MirroredAnnotationAttribute)original).getLinked(), ((MirroredAnnotationAttribute)mirror).getOriginal());
+            && ObjectUtil.equals(((MirroredAnnotationAttribute) original).getLinked(), ((MirroredAnnotationAttribute) mirror).getOriginal());
         if (passed) {
             return;
         }
@@ -88,21 +88,21 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
         if (originalAttributeMirrored && !mirrorAttributeMirrored) {
             errorMsg = CharSequenceUtil.format(
                 "attribute [{}] cannot mirror for [{}], because it's already mirrored for [{}]",
-                original.getAttribute(), mirror.getAttribute(), ((MirroredAnnotationAttribute)original).getLinked()
+                original.getAttribute(), mirror.getAttribute(), ((MirroredAnnotationAttribute) original).getLinked()
             );
         } else if (!originalAttributeMirrored && mirrorAttributeMirrored) {
             // 镜像字段已经跟其他字段形成镜像
             errorMsg = CharSequenceUtil.format(
                 "attribute [{}] cannot mirror for [{}], because it's already mirrored for [{}]",
-                mirror.getAttribute(), original.getAttribute(), ((MirroredAnnotationAttribute)mirror).getLinked()
+                mirror.getAttribute(), original.getAttribute(), ((MirroredAnnotationAttribute) mirror).getLinked()
             );
         } else {
             // 两者都形成了镜像，但是都未指向对方，理论上不会存在该情况
             errorMsg = CharSequenceUtil.format(
                 "attribute [{}] cannot mirror for [{}], because [{}] already mirrored for [{}] and  [{}] already mirrored for [{}]",
                 mirror.getAttribute(), original.getAttribute(),
-                mirror.getAttribute(), ((MirroredAnnotationAttribute)mirror).getLinked(),
-                original.getAttribute(), ((MirroredAnnotationAttribute)original).getLinked()
+                mirror.getAttribute(), ((MirroredAnnotationAttribute) mirror).getLinked(),
+                original.getAttribute(), ((MirroredAnnotationAttribute) original).getLinked()
             );
         }
 

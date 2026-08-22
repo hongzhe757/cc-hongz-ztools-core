@@ -384,6 +384,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -393,6 +395,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -402,6 +406,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -411,6 +417,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -440,6 +448,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -449,6 +459,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -458,6 +470,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -472,6 +486,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -480,6 +496,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -489,6 +507,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -497,6 +517,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */
@@ -505,6 +527,8 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
     }
 
     /**
+     * 获取字段值.
+     *
      * @param attr 字段名
      * @return 字段值
      */

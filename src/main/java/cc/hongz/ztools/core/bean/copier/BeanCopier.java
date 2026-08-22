@@ -73,7 +73,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
             } else {
                 resultCopier = new MapToBeanCopier<>((Map<?, ?>) source, target, targetType, copyOptions);
             }
-        }else if (source instanceof ValueProvider) {
+        } else if (source instanceof ValueProvider) {
             //noinspection unchecked
             resultCopier = new ValueProviderToBeanCopier<>((ValueProvider<String>) source, target, targetType, copyOptions);
         } else {

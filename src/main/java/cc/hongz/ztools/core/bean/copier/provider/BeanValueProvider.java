@@ -50,7 +50,7 @@ public class BeanValueProvider implements ValueProvider<String> {
         // issue#2202@Github
         // 如果用户定义了键编辑器，则提供的map中的数据必须全部转换key
         // issue#I5VRHW@Gitee 使Function可以被序列化
-        this.sourcePdMap = new FuncKeyMap<>(new HashMap<>(propMap.size(), 1), (Function<Object, String> & Serializable)(key) -> {
+        this.sourcePdMap = new FuncKeyMap<>(new HashMap<>(propMap.size(), 1), (Function<Object, String> & Serializable) (key) -> {
             if (ignoreCase && key instanceof CharSequence) {
                 key = key.toString().toLowerCase();
             }

@@ -317,7 +317,7 @@ public final class BeanUtil {
                 // 非数字，see pr#254@Gitee
                 return ArrayUtil.map(bean, Object.class, (beanEle) -> getFieldValue(beanEle, fieldNameOrIndex));
             }
-        } else {// 普通Bean对象
+        } else { // 普通Bean对象
             return ReflectUtil.getFieldValue(bean, fieldNameOrIndex);
         }
     }

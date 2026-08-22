@@ -54,7 +54,7 @@ public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnn
      */
     @Override
     protected Class<?> getClassFormAnnotatedElement(final AnnotatedElement annotatedEle) {
-        return (Class<?>)annotatedEle;
+        return (Class<?>) annotatedEle;
     }
 
     /**

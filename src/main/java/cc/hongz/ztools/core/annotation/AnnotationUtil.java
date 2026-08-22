@@ -88,9 +88,9 @@ public final class AnnotationUtil {
      * 注解查询缓存键，唯一标识一次注解查询操作.
      */
     private static class AnnotationLookupKey {
-        /** 被注解的元素（Class、Method、Field等） */
+        /** 被注解的元素（Class、Method、Field等）. */
         private final AnnotatedElement element;
-        /** 目标注解类型 */
+        /** 目标注解类型. */
         private final Class<? extends Annotation> annotationType;
 
         /**

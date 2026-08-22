@@ -158,12 +158,12 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
     @SuppressWarnings("unchecked")
     @Override
     public <A extends Annotation> A synthesize(final Class<A> annotationType) {
-        A annotation = (A)synthesizedProxyAnnotations.get(annotationType);
+        A annotation = (A) synthesizedProxyAnnotations.get(annotationType);
         if (Objects.nonNull(annotation)) {
             return annotation;
         }
         synchronized (synthesizedProxyAnnotations) {
-            annotation = (A)synthesizedProxyAnnotations.get(annotationType);
+            annotation = (A) synthesizedProxyAnnotations.get(annotationType);
             if (Objects.isNull(annotation)) {
                 final SynthesizedAnnotation synthesizedAnnotation = synthesizedAnnotationMap.get(annotationType);
                 annotation = synthesize(annotationType, synthesizedAnnotation);

@@ -43,7 +43,7 @@ public abstract class AbstractWrappedAnnotationAttribute implements WrappedAnnot
         AnnotationAttribute next = original;
         while (next != null) {
             curr = next;
-            next = next.isWrapped() ? ((WrappedAnnotationAttribute)curr).getOriginal() : null;
+            next = next.isWrapped() ? ((WrappedAnnotationAttribute) curr).getOriginal() : null;
         }
         return curr;
     }
@@ -63,7 +63,7 @@ public abstract class AbstractWrappedAnnotationAttribute implements WrappedAnnot
             leafAttributes.add(curr);
             return;
         }
-        WrappedAnnotationAttribute wrappedAttribute = (WrappedAnnotationAttribute)curr;
+        WrappedAnnotationAttribute wrappedAttribute = (WrappedAnnotationAttribute) curr;
         collectLeafAttribute(wrappedAttribute.getOriginal(), leafAttributes);
         collectLeafAttribute(wrappedAttribute.getLinked(), leafAttributes);
     }

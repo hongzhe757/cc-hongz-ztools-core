@@ -60,6 +60,6 @@ public class CacheableSynthesizedAnnotationAttributeProcessor implements Synthes
                 }
             }
         }
-        return (T)value;
+        return (T) value;
     }
 }

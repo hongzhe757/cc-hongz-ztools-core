@@ -35,7 +35,7 @@ public class ElementAnnotationScanner implements AnnotationScanner {
      */
     @Override
     public void scan(final BiConsumer<Integer, Annotation> consumer,  final AnnotatedElement annotatedEle,  final Predicate<Annotation> filter) {
-        final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(filter,a-> t -> true);
+        final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(filter, a -> t -> true);
         Stream.of(annotatedEle.getAnnotations())
             .filter(targetFilter)
             .forEach(annotation -> consumer.accept(0, annotation));

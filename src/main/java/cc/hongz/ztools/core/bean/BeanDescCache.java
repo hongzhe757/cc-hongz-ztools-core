@@ -26,7 +26,7 @@ public enum BeanDescCache {
      * @since 5.4.2
      */
     public BeanDesc getBeanDesc(final Class<?> beanClass,  final Func0<BeanDesc> supplier) {
-        return bdCache.computeIfAbsent(beanClass, (key)->supplier.callWithRuntimeException());
+        return bdCache.computeIfAbsent(beanClass, (key) -> supplier.callWithRuntimeException());
     }
 
     /**

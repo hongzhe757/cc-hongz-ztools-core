@@ -77,7 +77,7 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
             return;
         }
         // 是包装属性
-        final AbstractWrappedAnnotationAttribute wrapper = (AbstractWrappedAnnotationAttribute)aliasAttribute;
+        final AbstractWrappedAnnotationAttribute wrapper = (AbstractWrappedAnnotationAttribute) aliasAttribute;
         wrapper.getAllLinkedNonWrappedAttributes().forEach(
             t -> processAttribute(synthesizer, originalAttribute, t, wrapping)
         );

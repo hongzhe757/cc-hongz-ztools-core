@@ -7,7 +7,7 @@ import cc.hongz.ztools.core.util.StrUtil;
  * Bean异常.
  * @author xiaoleilu
  */
-public class BeanException extends RuntimeException{
+public class BeanException extends RuntimeException {
     private static final long serialVersionUID = -8096998667745023423L;
 
     /**

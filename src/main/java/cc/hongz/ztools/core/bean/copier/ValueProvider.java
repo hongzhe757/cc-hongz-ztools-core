@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
  * @param <T> KEY类型，一般情况下为 {@link String}
  *
  */
-public interface ValueProvider<T>{
+public interface ValueProvider<T> {
 
     /**
      * 获取值.
