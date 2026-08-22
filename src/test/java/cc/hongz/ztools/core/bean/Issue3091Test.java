@@ -12,16 +12,25 @@
 
 package cc.hongz.ztools.core.bean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class Issue3091Test {
+/**
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("回归测试")
+class Issue3091Test {
 
     @Test
-    public void copyToListTest() {
+    @DisplayName("copyToList longToInteger")
+    void copyToListTest() {
         final List<Long> list = Arrays.asList(1L,2L);
         final List<Integer> result = BeanUtil.copyToList(list, Integer.class);
         assertEquals("[1, 2]", result.toString());

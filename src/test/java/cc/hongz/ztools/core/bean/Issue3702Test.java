@@ -2,16 +2,21 @@ package cc.hongz.ztools.core.bean;
 
 import cc.hongz.ztools.core.bean.copier.CopyOptions;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * setFieldValueEditor编辑后的值理应继续判断ignoreNullValue
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
  */
-public class Issue3702Test {
+@DisplayName("回归测试")
+class Issue3702Test {
     @Test
+    @DisplayName("copyProperties ignoreNullAfterEditor")
     void mapToMapTest() {
         Map<String,String> map= new HashMap<>();
         map.put("a","");

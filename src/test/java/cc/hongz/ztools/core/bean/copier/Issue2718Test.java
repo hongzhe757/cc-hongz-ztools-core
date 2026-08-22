@@ -1,15 +1,24 @@
 package cc.hongz.ztools.core.bean.copier;
 
 import lombok.Setter;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 
-public class Issue2718Test {
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * {@link BeanCopier} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("回归测试")
+class Issue2718Test {
 
     @Test
-    public void copyToMapTest(){
+    @DisplayName("copy toMap ignoresProperties")
+    void copyToMapTest(){
         final Deployment deployment = new Deployment();
         deployment.setResources("test");
         final LinkedHashMap<String, Object> target = BeanCopier
@@ -20,7 +29,8 @@ public class Issue2718Test {
     }
 
     @Test
-    public void copyToBeanTest(){
+    @DisplayName("copy toBean ignoresProperties")
+    void copyToBeanTest(){
         final Deployment deployment = new Deployment();
         deployment.setResources("test");
         final Deployment target = BeanCopier

@@ -1,15 +1,24 @@
 package cc.hongz.ztools.core.bean.copier;
 
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-public class BeanCopierTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * {@link BeanCopier} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("Bean拷贝")
+class BeanCopierTest {
 
     @Test
-    public void beanToMapIgnoreNullTest() {
+    @DisplayName("copy beanToMap ignoresNullValue")
+    void beanToMapIgnoreNullTest() {
         final A a = new A();
 
         HashMap<Object, Object> map = BeanCopier.create(a, new HashMap<>(), CopyOptions.create()).copy();
@@ -27,7 +36,8 @@ public class BeanCopierTest {
      * 测试在非覆盖模式下，目标对象有值则不覆盖
      */
     @Test
-    public void beanToBeanNotOverrideTest() {
+    @DisplayName("copy notOverride keepsTargetValue")
+    void beanToBeanNotOverrideTest() {
         final A a = new A();
         a.setValue("123");
         final B b = new B();
@@ -43,7 +53,8 @@ public class BeanCopierTest {
      * 测试在覆盖模式下，目标对象值被覆盖
      */
     @Test
-    public void beanToBeanOverrideTest() {
+    @DisplayName("copy override overwritesTarget")
+    void beanToBeanOverrideTest() {
         final A a = new A();
         a.setValue("123");
         final B b = new B();
@@ -59,7 +70,8 @@ public class BeanCopierTest {
      * 为{@code null}则写，否则忽略。如果覆盖，则不判断直接写
      */
     @Test
-    public void issues2484Test() {
+    @DisplayName("copy nullValue writesWhenTargetNull")
+    void issues2484Test() {
         final A a = new A();
         a.setValue("abc");
         final B b = new B();

@@ -4,16 +4,24 @@ import cc.hongz.ztools.core.collection.CollUtil;
 import cc.hongz.ztools.core.util.ClassUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class MethodAnnotationScannerTest {
+/**
+ * {@link MethodAnnotationScanner} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("MethodAnnotationScanner 注解扫描器")
+class MethodAnnotationScannerTest {
 
     @Test
-    public void supportTest() {
+    @DisplayName("support acceptsMethodsOnly")
+    void supportTest() {
         AnnotationScanner scanner = new MethodAnnotationScanner();
         assertTrue(scanner.support(ReflectUtil.getMethod(Example.class, "test")));
         assertFalse(scanner.support(null));
@@ -22,7 +30,8 @@ public class MethodAnnotationScannerTest {
     }
 
     @Test
-    public void getAnnotationsTest() {
+    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    void getAnnotationsTest() {
         AnnotationScanner scanner = new MethodAnnotationScanner();
         Method method = ReflectUtil.getMethod(Example.class, "test");
         assertNotNull(method);
@@ -57,7 +66,8 @@ public class MethodAnnotationScannerTest {
     }
 
     @Test
-    public void scanTest() {
+    @DisplayName("scan visitsEachAnnotation")
+    void scanTest() {
         Method method = ReflectUtil.getMethod(Example.class, "test");
 
         // 不查找父类中具有相同方法签名的方法

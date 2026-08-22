@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.annotation.scanner;
 import cc.hongz.ztools.core.collection.CollUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
@@ -11,10 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MateAnnotationScannerTest {
+/**
+ * {@link MetaAnnotationScanner} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("MetaAnnotationScanner 注解扫描器")
+class MateAnnotationScannerTest {
 
     @Test
-    public void supportTest() {
+    @DisplayName("support acceptsAnnotationTypes")
+    void supportTest() {
         AnnotationScanner scanner = new MetaAnnotationScanner();
         assertTrue(scanner.support(AnnotationForScannerTest.class));
         assertFalse(scanner.support(ReflectUtil.getField(Example.class, "id")));
@@ -24,7 +32,8 @@ public class MateAnnotationScannerTest {
     }
 
     @Test
-    public void getAnnotationsTest() {
+    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    void getAnnotationsTest() {
         AnnotationScanner scanner = new MetaAnnotationScanner();
         assertTrue(scanner.support(AnnotationForScannerTest3.class));
         Map<Class<? extends Annotation>, Annotation> annotations = CollUtil.toMap(scanner.getAnnotations(AnnotationForScannerTest3.class), new HashMap<>(), Annotation::annotationType);
@@ -45,7 +54,8 @@ public class MateAnnotationScannerTest {
     }
 
     @Test
-    public void scanTest() {
+    @DisplayName("scan visitsEachAnnotation")
+    void scanTest() {
         AnnotationScanner scanner = new MetaAnnotationScanner();
         Map<Integer, List<Annotation>> map = new HashMap<>();
         scanner.scan(

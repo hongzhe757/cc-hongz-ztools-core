@@ -1,19 +1,25 @@
 package cc.hongz.ztools.core.bean;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * https://github.com/chinabugotech/hutool/issues/2697
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
  */
-public class Issue2697Test {
+@DisplayName("回归测试")
+class Issue2697Test {
 
     @Test
-    public void mapToMapTest(){
+    @DisplayName("copyProperties mapToMap ignoresKey")
+    void mapToMapTest(){
         final Map<String, String> mapA = new HashMap<>(16);
         mapA.put("12", "21");
         mapA.put("121", "21");

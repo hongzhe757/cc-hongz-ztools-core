@@ -4,6 +4,7 @@ import cc.hongz.ztools.core.lang.Opt;
 import cc.hongz.ztools.core.map.MapBuilder;
 import cc.hongz.ztools.core.util.ClassUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -11,10 +12,17 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
-public class CacheableSynthesizedAnnotationAttributeProcessorTest {
+/**
+ * {@link CacheableSynthesizedAnnotationAttributeProcessor} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("CacheableSynthesizedAnnotationAttributeProcessor 注解属性处理器")
+class CacheableSynthesizedAnnotationAttributeProcessorTest {
 
     @Test
-    public void getAttributeValueTest() {
+    @DisplayName("getAttributeValue selectsByDistance")
+    void getAttributeValueTest() {
         CacheableSynthesizedAnnotationAttributeProcessor processor = new CacheableSynthesizedAnnotationAttributeProcessor();
 
         Map<String, Object> values1 = MapBuilder.<String, Object> create().put("name", "name1").put("value", 111).build();

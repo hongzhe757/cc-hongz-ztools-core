@@ -3,15 +3,23 @@ package cc.hongz.ztools.core.annotation;
 import cc.hongz.ztools.core.collection.CollUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
 
-public class AbstractWrappedAnnotationAttributeTest {
+/**
+ * {@link AbstractWrappedAnnotationAttribute} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("AbstractWrappedAnnotationAttribute 包装注解属性")
+class AbstractWrappedAnnotationAttributeTest {
 
     @Test
-    public void workTest() {
+    @DisplayName("work delegatesToLinkedValue")
+    void workTest() {
         Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest1.class);
         Method valueMethod = ReflectUtil.getMethod(AnnotationForTest1.class, "value1");
         CacheableAnnotationAttribute valueAttribute = new CacheableAnnotationAttribute(annotation, valueMethod);
@@ -35,7 +43,8 @@ public class AbstractWrappedAnnotationAttributeTest {
     }
 
     @Test
-    public void multiWrapperTest() {
+    @DisplayName("multiWrapper flattensAllLinkedAttributes")
+    void multiWrapperTest() {
         // 包装第一层： name1 + value1
         Annotation annotation1 = ClassForTest1.class.getAnnotation(AnnotationForTest1.class);
         Method value1Method = ReflectUtil.getMethod(AnnotationForTest1.class, "value1");

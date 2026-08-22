@@ -2,15 +2,23 @@ package cc.hongz.ztools.core.annotation;
 
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
 
-public class CacheableAnnotationAttributeTest {
+/**
+ * {@link CacheableAnnotationAttribute} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("CacheableAnnotationAttribute 注解属性")
+class CacheableAnnotationAttributeTest {
 
     @Test
-    public void baseInfoTest() {
+    @DisplayName("baseInfo exposesAnnotationMetadata")
+    void baseInfoTest() {
         final Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest.class);
         final Method attribute = ReflectUtil.getMethod(AnnotationForTest.class, "value");
         final CacheableAnnotationAttribute annotationAttribute = new CacheableAnnotationAttribute(annotation, attribute);
@@ -23,7 +31,8 @@ public class CacheableAnnotationAttributeTest {
     }
 
     @Test
-    public void workWhenValueDefaultTest() {
+    @DisplayName("valueDefault returnsDefaultValue")
+    void workWhenValueDefaultTest() {
         final Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest.class);
         final Method attribute = ReflectUtil.getMethod(AnnotationForTest.class, "value");
         final CacheableAnnotationAttribute annotationAttribute = new CacheableAnnotationAttribute(annotation, attribute);
@@ -35,7 +44,8 @@ public class CacheableAnnotationAttributeTest {
     }
 
     @Test
-    public void workWhenValueNonDefaultTest() {
+    @DisplayName("valueNonDefault returnsAssignedValue")
+    void workWhenValueNonDefaultTest() {
         final Annotation annotation = ClassForTest2.class.getAnnotation(AnnotationForTest.class);
         final Method attribute = ReflectUtil.getMethod(AnnotationForTest.class, "value");
         final CacheableAnnotationAttribute annotationAttribute = new CacheableAnnotationAttribute(annotation, attribute);

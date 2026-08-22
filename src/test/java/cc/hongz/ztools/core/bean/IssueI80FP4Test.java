@@ -2,12 +2,21 @@ package cc.hongz.ztools.core.bean;
 
 import cc.hongz.ztools.core.bean.copier.CopyOptions;
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class IssueI80FP4Test {
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("回归测试")
+class IssueI80FP4Test {
     @Test
-    public void copyPropertiesTest() {
+    @DisplayName("copyProperties ignoreProperties caseSensitive")
+    void copyPropertiesTest() {
         final Dest sourceDest = new Dest();
         sourceDest.setCPF(33699);
         sourceDest.setEnderDest("abc");
@@ -19,7 +28,8 @@ public class IssueI80FP4Test {
     }
 
     @Test
-    public void copyPropertiesTest2() {
+    @DisplayName("copyProperties ignoreProperties ignoreCase")
+    void copyPropertiesTest2() {
         final Dest sourceDest = new Dest();
         sourceDest.setCPF(33699);
         sourceDest.setEnderDest("abc");

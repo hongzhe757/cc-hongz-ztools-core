@@ -2,16 +2,25 @@ package cc.hongz.ztools.core.bean;
 
 import cc.hongz.ztools.core.bean.copier.CopyOptions;
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Issue3452Test {
+/**
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("回归测试")
+class Issue3452Test {
 
     @Test
-    public void fillBeanWithMapTest() {
+    @DisplayName("fillBeanWithMap snakeCaseField")
+    void fillBeanWithMapTest() {
         final Map<String, Object> properties = new HashMap<>();
         properties.put("name", "JohnDoe");
         properties.put("user_age", 25);

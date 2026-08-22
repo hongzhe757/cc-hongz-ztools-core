@@ -1,16 +1,24 @@
 package cc.hongz.ztools.core.annotation;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
-public class SynthesizedAnnotationSelectorTest {
+/**
+ * {@link SynthesizedAnnotationSelector} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("SynthesizedAnnotationSelector 合成注解选择器")
+class SynthesizedAnnotationSelectorTest {
 
     @Test
-    public void chooseTest() {
+    @DisplayName("choose nearestOldest selectsByDistance")
+    void chooseTest() {
         final SynthesizedAnnotationSelector.NearestAndOldestPrioritySelector selector = (SynthesizedAnnotationSelector.NearestAndOldestPrioritySelector)SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY;
 
         TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
@@ -27,7 +35,8 @@ public class SynthesizedAnnotationSelectorTest {
     }
 
     @Test
-    public void nearestAndNewestPriorityTest() {
+    @DisplayName("nearestNewest selectsByDistance")
+    void nearestAndNewestPriorityTest() {
         final SynthesizedAnnotationSelector.NearestAndNewestPrioritySelector selector = (SynthesizedAnnotationSelector.NearestAndNewestPrioritySelector)SynthesizedAnnotationSelector.NEAREST_AND_NEWEST_PRIORITY;
 
         TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
@@ -44,7 +53,8 @@ public class SynthesizedAnnotationSelectorTest {
     }
 
     @Test
-    public void farthestAndOldestPriorityTest() {
+    @DisplayName("farthestOldest selectsByDistance")
+    void farthestAndOldestPriorityTest() {
         final SynthesizedAnnotationSelector.FarthestAndOldestPrioritySelector selector = (SynthesizedAnnotationSelector.FarthestAndOldestPrioritySelector)SynthesizedAnnotationSelector.FARTHEST_AND_OLDEST_PRIORITY;
 
         TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
@@ -61,7 +71,8 @@ public class SynthesizedAnnotationSelectorTest {
     }
 
     @Test
-    public void farthestAndNewestPriorityTest() {
+    @DisplayName("farthestNewest selectsByDistance")
+    void farthestAndNewestPriorityTest() {
         final SynthesizedAnnotationSelector.FarthestAndNewestPrioritySelector selector = (SynthesizedAnnotationSelector.FarthestAndNewestPrioritySelector)SynthesizedAnnotationSelector.FARTHEST_AND_NEWEST_PRIORITY;
 
         TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);

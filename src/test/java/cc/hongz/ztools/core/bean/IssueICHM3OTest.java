@@ -5,15 +5,23 @@ import cc.hongz.ztools.core.map.MapUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 import lombok.Getter;
 import lombok.Setter;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class IssueICHM3OTest {
+/**
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("回归测试")
+class IssueICHM3OTest {
     @Test
-    public void testMapToBean() {
+    @DisplayName("toBean alias mapToBeanAndBack")
+    void testMapToBean() {
         Map<Object,Object> map = MapUtil.builder()
             .put("doctor_name", "李医生")
             .put("doctor_id_card_value", "12345")

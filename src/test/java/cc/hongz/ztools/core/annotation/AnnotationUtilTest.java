@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.annotation;
 import cc.hongz.ztools.core.util.ArrayUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -15,17 +16,25 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class AnnotationUtilTest {
+/**
+ * {@link AnnotationUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("AnnotationUtil 注解工具")
+class AnnotationUtilTest {
 
     @Test
-    public void getCombinationAnnotationsTest(){
+    @DisplayName("getAnnotations includeMeta returnsCombined")
+    void getCombinationAnnotationsTest(){
         final Annotation[] annotations = AnnotationUtil.getAnnotations(ClassWithAnnotation.class, true);
         assertNotNull(annotations);
         assertEquals(2, annotations.length);
     }
 
     @Test
-    public void getCombinationAnnotationsWithClassTest(){
+    @DisplayName("getCombinationAnnotations returnsMatchingType")
+    void getCombinationAnnotationsWithClassTest(){
         final AnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassWithAnnotation.class, AnnotationForTest.class);
         assertNotNull(annotations);
         assertEquals(1, annotations.length);
@@ -33,20 +42,23 @@ public class AnnotationUtilTest {
     }
 
     @Test
-    public void getAnnotationValueTest() {
+    @DisplayName("getAnnotationValue returnsValue")
+    void getAnnotationValueTest() {
         final Object value = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest.class);
         assertTrue(value.equals("测试") || value.equals("repeat-annotation"));
 
     }
 
     @Test
-    public void getAnnotationValueTest2() {
+    @DisplayName("getAnnotationValue withMethodRef returnsNames")
+    void getAnnotationValueTest2() {
         final String[] names = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest::names);
         assertTrue(names.length == 1 && names[0].isEmpty() || ArrayUtil.equals(names, new String[]{"测试1", "测试2"}));
     }
 
     @Test
-    public void getAnnotationSyncAlias() {
+    @DisplayName("getAnnotationAlias resolvesAliasedValue")
+    void getAnnotationSyncAlias() {
         // 直接获取
         assertEquals("", ClassWithAnnotation.class.getAnnotation(AnnotationForTest.class).retry());
 
@@ -58,7 +70,8 @@ public class AnnotationUtilTest {
     }
 
     @Test
-    public void getAnnotationSyncAliasWhenNotAnnotation() {
+    @DisplayName("getAnnotationAlias missingReturnsNull")
+    void getAnnotationSyncAliasWhenNotAnnotation() {
         getAnnotationSyncAlias();
         // 使用AnnotationUtil.getAnnotationAlias获取对象上并不存在的注解
         final Alias alias = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, Alias.class);
@@ -74,7 +87,8 @@ public class AnnotationUtilTest {
     }
 
     @Test
-    public void scanMetaAnnotationTest() {
+    @DisplayName("scanMetaAnnotation returnsHierarchy")
+    void scanMetaAnnotationTest() {
         // RootAnnotation -> RootMetaAnnotation1 -> RootMetaAnnotation2 -> RootMetaAnnotation3
         //                -> RootMetaAnnotation3
         final List<Annotation> annotations = AnnotationUtil.scanMetaAnnotation(RootAnnotation.class);
@@ -89,7 +103,8 @@ public class AnnotationUtilTest {
     }
 
     @Test
-    public void scanClassTest() {
+    @DisplayName("scanClass returnsHierarchy")
+    void scanClassTest() {
         // TargetClass -> TargetSuperClass ----------------------------------> SuperInterface
         //             -> TargetSuperInterface -> SuperTargetSuperInterface -> SuperInterface
         final List<Annotation> annotations = AnnotationUtil.scanClass(TargetClass.class);
@@ -102,7 +117,8 @@ public class AnnotationUtilTest {
     }
 
     @Test
-    public void scanMethodTest() {
+    @DisplayName("scanMethod returnsHierarchy")
+    void scanMethodTest() {
         // TargetClass -> TargetSuperClass
         //             -> TargetSuperInterface
         final Method method = ReflectUtil.getMethod(TargetClass.class, "testMethod");
@@ -170,7 +186,8 @@ public class AnnotationUtilTest {
      * 测试L1缓存：getAnnotation方法缓存命中，功能正常
      */
     @Test
-    public void AnnotationL1CacheTest() {
+    @DisplayName("getAnnotation l1CacheReturnsSameInstance")
+    void AnnotationL1CacheTest() {
         // 1. 复用已有测试类：直接注解场景
         final AnnotationForTest annotation1 = AnnotationUtil.getAnnotation(ClassWithAnnotation.class, AnnotationForTest.class);
         assertNotNull(annotation1);
@@ -194,7 +211,8 @@ public class AnnotationUtilTest {
      * 测试L2缓存：getAnnotationAlias方法缓存命中，功能正常
      */
     @Test
-    public void AnnotationAliasL2CacheTest() {
+    @DisplayName("getAnnotationAlias l2CacheReturnsSameInstance")
+    void AnnotationAliasL2CacheTest() {
         // 复用已有测试类：自带@AliasFor别名逻辑，无需自定义注解
         final AnnotationForTest annotation1 = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, AnnotationForTest.class);
         assertNotNull(annotation1);
@@ -209,7 +227,8 @@ public class AnnotationUtilTest {
      * 测试L2缓存：getSynthesizedAnnotation方法缓存命中，功能正常
      */
     @Test
-    public void SynthesizedAnnotationL2CacheTest() {
+    @DisplayName("getSynthesizedAnnotation l2CacheReturnsSameInstance")
+    void SynthesizedAnnotationL2CacheTest() {
         // 复用已有元注解测试类
         final RootMetaAnnotation1 metaAnnotation1 = AnnotationUtil.getSynthesizedAnnotation(RootAnnotation.class, RootMetaAnnotation1.class);
         assertNotNull(metaAnnotation1);
@@ -222,7 +241,8 @@ public class AnnotationUtilTest {
      * 测试依赖方法：hasAnnotation方法因L1缓存受益，功能正常
      */
     @Test
-    public void HasAnnotationWithCacheTest() {
+    @DisplayName("hasAnnotation benefitsFromCache")
+    void HasAnnotationWithCacheTest() {
         assertTrue(AnnotationUtil.hasAnnotation(ClassWithAnnotation.class, AnnotationForTest.class));
         assertTrue(AnnotationUtil.hasAnnotation(TargetClass.class, AnnotationForTest.class));
         assertFalse(AnnotationUtil.hasAnnotation(ClassWithAnnotation.class, Deprecated.class));

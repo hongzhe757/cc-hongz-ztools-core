@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.bean;
 
 import lombok.Data;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -8,9 +9,16 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class Issue3645Test {
+/**
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("回归测试")
+class Issue3645Test {
     @Test
-    public void copyPropertiesTest() {
+    @DisplayName("copyProperties mapGenericDeepCopy")
+    void copyPropertiesTest() {
         User p = new User();
         p.setUserId(123L);
 

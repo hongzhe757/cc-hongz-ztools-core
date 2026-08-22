@@ -4,18 +4,24 @@ import cc.hongz.ztools.core.annotation.Alias;
 import cc.hongz.ztools.core.bean.copier.CopyOptions;
 import cc.hongz.ztools.core.map.MapUtil;
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Serializable;
 
 /**
- * https://github.com/chinabugotech/hutool/issues/1687
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
  */
-public class Issue1687Test {
+@DisplayName("回归测试")
+class Issue1687Test {
 
     @Test
-    public void toBeanTest(){
+    @DisplayName("toBean aliasMisplacement returnsNull")
+    void toBeanTest(){
         final SysUserFb sysUserFb = new SysUserFb();
         sysUserFb.setDepId("123");
         sysUserFb.setCustomerId("456");
@@ -27,7 +33,8 @@ public class Issue1687Test {
     }
 
     @Test
-    public void toBeanTest2(){
+    @DisplayName("toBean fieldMapping fixesAlias")
+    void toBeanTest2(){
         final SysUserFb sysUserFb = new SysUserFb();
         sysUserFb.setDepId("123");
         sysUserFb.setCustomerId("456");

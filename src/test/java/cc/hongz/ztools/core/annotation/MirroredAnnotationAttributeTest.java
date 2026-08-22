@@ -2,15 +2,23 @@ package cc.hongz.ztools.core.annotation;
 
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
 
-public class MirroredAnnotationAttributeTest {
+/**
+ * {@link MirroredAnnotationAttribute} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("MirroredAnnotationAttribute 注解属性")
+class MirroredAnnotationAttributeTest {
 
     @Test
-    public void baseInfoTest() {
+    @DisplayName("baseInfo exposesAnnotationMetadata")
+    void baseInfoTest() {
         // 组合属性
         final Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest.class);
         final Method valueMethod = ReflectUtil.getMethod(AnnotationForTest.class, "value");
@@ -29,7 +37,8 @@ public class MirroredAnnotationAttributeTest {
     }
 
     @Test
-    public void workWhenValueDefaultTest() {
+    @DisplayName("valueDefault returnsDefaultValue")
+    void workWhenValueDefaultTest() {
         // 组合属性
         final Annotation annotation = ClassForTest2.class.getAnnotation(AnnotationForTest.class);
         final Method valueMethod = ReflectUtil.getMethod(AnnotationForTest.class, "value");
@@ -45,7 +54,8 @@ public class MirroredAnnotationAttributeTest {
     }
 
     @Test
-    public void workWhenValueNonDefaultTest() {
+    @DisplayName("valueNonDefault returnsLinkedValue")
+    void workWhenValueNonDefaultTest() {
         // 组合属性
         final Annotation annotation = ClassForTest1.class.getAnnotation(AnnotationForTest.class);
         final Method valueMethod = ReflectUtil.getMethod(AnnotationForTest.class, "value");

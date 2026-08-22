@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.annotation.scanner;
 import cc.hongz.ztools.core.collection.CollUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -12,10 +13,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FieldAnnotationScannerTest {
+/**
+ * {@link FieldAnnotationScanner} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("FieldAnnotationScanner 注解扫描器")
+class FieldAnnotationScannerTest {
 
     @Test
-    public void supportTest() {
+    @DisplayName("support acceptsFieldsOnly")
+    void supportTest() {
         AnnotationScanner scanner = new FieldAnnotationScanner();
         assertTrue(scanner.support(ReflectUtil.getField(Example.class, "id")));
         assertFalse(scanner.support(ReflectUtil.getMethod(Example.class, "getId")));
@@ -24,7 +32,8 @@ public class FieldAnnotationScannerTest {
     }
 
     @Test
-    public void getAnnotationsTest() {
+    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    void getAnnotationsTest() {
         AnnotationScanner scanner = new FieldAnnotationScanner();
         Field field = ReflectUtil.getField(Example.class, "id");
         assertNotNull(field);
@@ -35,7 +44,8 @@ public class FieldAnnotationScannerTest {
     }
 
     @Test
-    public void scanTest() {
+    @DisplayName("scan visitsEachAnnotation")
+    void scanTest() {
         AnnotationScanner scanner = new FieldAnnotationScanner();
         Field field = ReflectUtil.getField(Example.class, "id");
         Map<Integer, List<Annotation>> map = new HashMap<>();

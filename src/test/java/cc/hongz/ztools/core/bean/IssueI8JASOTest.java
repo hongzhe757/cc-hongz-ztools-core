@@ -3,13 +3,22 @@ package cc.hongz.ztools.core.bean;
 import cc.hongz.ztools.core.annotation.Alias;
 import lombok.Data;
 import lombok.Setter;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class IssueI8JASOTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("回归测试")
+class IssueI8JASOTest {
 
     @Test
-    public void copyTest() {
+    @DisplayName("copyProperties aliasFieldCopied")
+    void copyTest() {
         final UserOne userOne = new UserOne();
         userOne.setEmail("123@qq.com");
         final UserTwo userTwo = new UserTwo();

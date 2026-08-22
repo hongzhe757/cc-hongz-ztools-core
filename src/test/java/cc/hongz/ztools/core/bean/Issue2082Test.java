@@ -1,17 +1,22 @@
 package cc.hongz.ztools.core.bean;
 
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
- * https://github.com/chinabugotech/hutool/issues/2082<br>
- * 当setXXX有重载方法的时候，BeanDesc中会匹配到重载方法，增加类型检查来规避之
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
  */
-public class Issue2082Test {
+@DisplayName("回归测试")
+class Issue2082Test {
 
     @Test
-    public void toBeanTest() {
+    @DisplayName("toBean overloadedSetter idNull")
+    void toBeanTest() {
         TestBean2 testBean2 = new TestBean2();
         TestBean test = BeanUtil.toBean(testBean2, TestBean.class);
         assertNull(test.getId());

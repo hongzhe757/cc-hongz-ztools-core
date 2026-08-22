@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.annotation;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -13,12 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author huangchengxing
+ * 注解别名并发读取的回归测试.
+ *
+ * @author hongzhe.qin
  */
-public class TestIssueI8CLBJ {
+@DisplayName("注解别名并发读取")
+class TestIssueI8CLBJ {
 
     @Test
-    public void test() throws NoSuchFieldException {
+    @DisplayName("concurrent alias reading")
+    void test() throws NoSuchFieldException {
         Field field = Foo.class.getDeclaredField("name");
         assertNotNull(field);
         Annotation[] annotations = field.getDeclaredAnnotations();

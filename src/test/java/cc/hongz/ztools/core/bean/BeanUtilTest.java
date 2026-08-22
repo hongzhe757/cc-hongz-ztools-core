@@ -17,6 +17,7 @@ import cc.hongz.ztools.core.util.StrUtil;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.beans.PropertyDescriptor;
@@ -30,14 +31,16 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Bean工具单元测试
+ * {@link BeanUtil} 单元测试.
  *
- * @author Looly
+ * @author hongzhe.qin
  */
-public class BeanUtilTest {
+@DisplayName("Bean 工具")
+class BeanUtilTest {
 
     @Test
-    public void isBeanTest() {
+    @DisplayName("isBean hashMap withoutSetters returnsFalse")
+    void isBeanTest() {
 
         // HashMap不包含setXXX方法，不是bean
         final boolean isBean = BeanUtil.isBean(HashMap.class);
@@ -45,7 +48,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void fillBeanTest() {
+    @DisplayName("fillBean withValueProvider fillsNameAndAge")
+    void fillBeanTest() {
         final Person person = BeanUtil.fillBean(new Person(), new ValueProvider<String>() {
 
             @Override
@@ -72,7 +76,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void fillBeanWithMapIgnoreCaseTest() {
+    @DisplayName("fillBeanWithMapIgnoreCase ignoresCase")
+    void fillBeanWithMapIgnoreCaseTest() {
         final Map<String, Object> map = MapBuilder.<String, Object>create()
             .put("Name", "Joe")
             .put("aGe", 12)
@@ -85,7 +90,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void toBeanTest() {
+    @DisplayName("toBean beanToMap ignoresStaticFields")
+    void toBeanTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
         person.setOpenid("11213232");
@@ -104,7 +110,8 @@ public class BeanUtilTest {
      * 忽略转换错误测试
      */
     @Test
-    public void toBeanIgnoreErrorTest() {
+    @DisplayName("toBeanIgnoreError skipsInvalidField")
+    void toBeanIgnoreErrorTest() {
         final HashMap<String, Object> map = MapUtil.newHashMap();
         map.put("name", "Joe");
         // 错误的类型，此处忽略
@@ -117,7 +124,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void mapToBeanIgnoreCaseTest() {
+    @DisplayName("mapToBeanIgnoreCase matchesIgnoreCase")
+    void mapToBeanIgnoreCaseTest() {
         final HashMap<String, Object> map = MapUtil.newHashMap();
         map.put("Name", "Joe");
         map.put("aGe", 12);
@@ -128,7 +136,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void mapToBeanTest() {
+    @DisplayName("mapToBean withFieldMapping mapsAliases")
+    void mapToBeanTest() {
         final HashMap<String, Object> map = MapUtil.newHashMap();
         map.put("a_name", "Joe");
         map.put("b_age", 12);
@@ -147,7 +156,8 @@ public class BeanUtilTest {
      * 测试public类型的字段注入是否成功
      */
     @Test
-    public void mapToBeanTest2() {
+    @DisplayName("mapToBean withPublicFields injectsFields")
+    void mapToBeanTest2() {
         final HashMap<String, Object> map = MapUtil.newHashMap();
         map.put("name", "Joe");
         map.put("age", 12);
@@ -162,7 +172,8 @@ public class BeanUtilTest {
      * 测试在不忽略错误情况下，转换失败需要报错。
      */
     @Test
-    public void mapToBeanWinErrorTest() {
+    @DisplayName("mapToBean invalidValueThrows")
+    void mapToBeanWinErrorTest() {
         assertThrows(NumberFormatException.class, () -> {
             final Map<String, String> map = new HashMap<>();
             map.put("age", "哈哈");
@@ -171,7 +182,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void beanToMapTest() {
+    @DisplayName("beanToMap convertsBeanToMap")
+    void beanToMapTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
         person.setOpenid("11213232");
@@ -188,7 +200,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void beanToMapNullPropertiesTest() {
+    @DisplayName("beanToMap withNullProperties")
+    void beanToMapNullPropertiesTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
         person.setOpenid("11213232");
@@ -205,7 +218,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void beanToMapTest2() {
+    @DisplayName("beanToMap camelCaseKey")
+    void beanToMapTest2() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
         person.setOpenid("11213232");
@@ -217,7 +231,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void beanToMapWithValueEditTest() {
+    @DisplayName("beanToMap withFieldValueEditor")
+    void beanToMapWithValueEditTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
         person.setOpenid("11213232");
@@ -230,7 +245,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void beanToMapWithAliasTest() {
+    @DisplayName("beanToMap withAliasField")
+    void beanToMapWithAliasTest() {
         final SubPersonWithAlias person = new SubPersonWithAlias();
         person.setAge(14);
         person.setOpenid("11213232");
@@ -245,7 +261,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void mapToBeanWithAliasTest() {
+    @DisplayName("mapToBean withAliasField")
+    void mapToBeanWithAliasTest() {
         final Map<String, Object> map = MapUtil.newHashMap();
         map.put("aliasSubName", "sub名字");
         map.put("slow", true);
@@ -261,7 +278,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void beanToMapWithLocalDateTimeTest() {
+    @DisplayName("beanToMap preservesLocalDateTime")
+    void beanToMapWithLocalDateTimeTest() {
         final LocalDateTime now = LocalDateTime.now();
 
         final SubPerson person = new SubPerson();
@@ -278,7 +296,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void getPropertyTest() {
+    @DisplayName("getProperty readsNestedField")
+    void getPropertyTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
         person.setOpenid("11213232");
@@ -293,13 +312,15 @@ public class BeanUtilTest {
 
     @Test
     @SuppressWarnings("ConstantConditions")
-    public void getNullPropertyTest() {
+    @DisplayName("getProperty onNull returnsNull")
+    void getNullPropertyTest() {
         final Object property = BeanUtil.getProperty(null, "name");
         assertNull(property);
     }
 
     @Test
-    public void getPropertyDescriptorsTest() {
+    @DisplayName("getPropertyDescriptors returnsAllDescriptors")
+    void getPropertyDescriptorsTest() {
         final HashSet<Object> set = CollUtil.newHashSet();
         final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
         for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
@@ -314,7 +335,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyPropertiesTest() {
+    @DisplayName("copyProperties copiesToNewInstance")
+    void copyPropertiesTest() {
         final SubPerson person = new SubPerson();
         person.setAge(14);
         person.setOpenid("11213232");
@@ -330,7 +352,8 @@ public class BeanUtilTest {
 
     @Test
     @Disabled
-    public void multiThreadTest() {
+    @DisplayName("copyProperties multiThread clones")
+    void multiThreadTest() {
         final Student student = new Student();
         student.setName("张三");
         student.setAge(123);
@@ -360,7 +383,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyPropertiesHasBooleanTest() {
+    @DisplayName("copyProperties booleanFieldCopied")
+    void copyPropertiesHasBooleanTest() {
         final SubPerson p1 = new SubPerson();
         p1.setSlow(true);
 
@@ -376,7 +400,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyPropertiesIgnoreNullTest() {
+    @DisplayName("copyProperties ignoreNullValue keepsTarget")
+    void copyPropertiesIgnoreNullTest() {
         final SubPerson p1 = new SubPerson();
         p1.setSlow(true);
         p1.setName(null);
@@ -394,7 +419,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyPropertiesBeanToMapTest() {
+    @DisplayName("copyProperties beanToMap")
+    void copyPropertiesBeanToMapTest() {
         // 测试BeanToMap
         final SubPerson p1 = new SubPerson();
         p1.setSlow(true);
@@ -409,7 +435,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyPropertiesMapToMapTest() {
+    @DisplayName("copyProperties mapToMap")
+    void copyPropertiesMapToMapTest() {
         // 测试MapToMap
         final Map<String, Object> p1 = new HashMap<>();
         p1.put("isSlow", true);
@@ -424,7 +451,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyPropertiesMapToMapIgnoreNullTest() {
+    @DisplayName("copyProperties mapToMap ignoreNull")
+    void copyPropertiesMapToMapIgnoreNullTest() {
         // 测试MapToMap
         final Map<String, Object> p1 = new HashMap<>();
         p1.put("isSlow", true);
@@ -439,7 +467,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void trimBeanStrFieldsTest() {
+    @DisplayName("trimStrFields trimsStringFields")
+    void trimBeanStrFieldsTest() {
         final Person person = new Person();
         person.setAge(1);
         person.setName("  张三 ");
@@ -525,7 +554,8 @@ public class BeanUtilTest {
      * <a href="https://github.com/chinabugotech/hutool/issues/1173">#1173</a>
      */
     @Test
-    public void beanToBeanOverlayFieldTest() {
+    @DisplayName("copyProperties overlayTransientField")
+    void beanToBeanOverlayFieldTest() {
         final SubPersonWithOverlayTransientField source = new SubPersonWithOverlayTransientField();
         source.setName("zhangsan");
         source.setAge(20);
@@ -539,7 +569,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void beanToBeanTest() {
+    @DisplayName("toBean withoutGetter noError")
+    void beanToBeanTest() {
         // 修复对象无getter方法导致报错的问题
         final Page page1 = new Page();
         BeanUtil.toBean(page1, Page.class);
@@ -559,7 +590,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyBeanToBeanTest() {
+    @DisplayName("copyProperties aliasFieldCopied")
+    void copyBeanToBeanTest() {
         // 测试在copyProperties方法中alias是否有效
         final Food info = new Food();
         info.setBookID("0");
@@ -571,7 +603,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyBeanTest() {
+    @DisplayName("copyProperties withIgnoreProperties")
+    void copyBeanTest() {
         final Food info = new Food();
         info.setBookID("0");
         info.setCode("123");
@@ -581,12 +614,14 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyNullTest() {
+    @DisplayName("copyProperties nullSource returnsNull")
+    void copyNullTest() {
         assertNull(BeanUtil.copyProperties(null, Food.class));
     }
 
     @Test
-    public void copyBeanPropertiesFilterTest() {
+    @DisplayName("copyProperties withPropertiesFilter")
+    void copyBeanPropertiesFilterTest() {
         final Food info = new Food();
         info.setBookID("0");
         info.setCode("");
@@ -598,7 +633,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyBeanPropertiesFunctionFilterTest() {
+    @DisplayName("copyProperties ignorePropertiesByGetter")
+    void copyBeanPropertiesFunctionFilterTest() {
         //https://gitee.com/chinabugotech/hutool/pulls/590
         final Person o = new Person();
         o.setName("asd");
@@ -631,14 +667,16 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void setPropertiesTest() {
+    @DisplayName("setProperty nestedPath createsMap")
+    void setPropertiesTest() {
         final Map<String, Object> resultMap = MapUtil.newHashMap();
         BeanUtil.setProperty(resultMap, "codeList[0].name", "张三");
         assertEquals("{codeList=[{name=张三}]}", resultMap.toString());
     }
 
     @Test
-    public void beanCopyTest() {
+    @DisplayName("copyProperties genericIdCopied")
+    void beanCopyTest() {
         final Station station = new Station();
         station.setId(123456L);
 
@@ -660,7 +698,8 @@ public class BeanUtilTest {
 
 
     @Test
-    public void beanWithEnumSetTest() {
+    @DisplayName("copyProperties enumSetCopied")
+    void beanWithEnumSetTest() {
         final Vto v1 = new Vto();
         v1.setVersions(EnumSet.allOf(Version.class));
         final Vto v2 = BeanUtil.copyProperties(v1, Vto.class);
@@ -669,7 +708,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void enumSetTest() {
+    @DisplayName("enumSet createByCollUtil")
+    void enumSetTest() {
         final Collection<Version> objects = CollUtil.create(EnumSet.class, Version.class);
         assertNotNull(objects);
         assertTrue(EnumSet.class.isAssignableFrom(objects.getClass()));
@@ -687,7 +727,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyListTest() {
+    @DisplayName("copyToList convertsListElements")
+    void copyListTest() {
         final Student student = new Student();
         student.setName("张三");
         student.setAge(123);
@@ -710,7 +751,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void copyLargeListTest(){
+    @DisplayName("copyToList largeListPerformance")
+    void copyLargeListTest(){
         final SubPerson person = new SubPerson();
         person.setName("测试A11");
         person.setAge(14);
@@ -741,7 +783,8 @@ public class BeanUtilTest {
 
 
     @Test
-    public void toMapTest() {
+    @DisplayName("beanToMap withKeyEditor filtersKeys")
+    void toMapTest() {
         // 测试转map的时候返回key
         final PrivilegeIClassification a = new PrivilegeIClassification();
         a.setId("1");
@@ -771,7 +814,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void getFieldValue() {
+    @DisplayName("beanPath get arrayFieldValues")
+    void getFieldValue() {
         final TestPojo testPojo = new TestPojo();
         testPojo.setName("名字");
 
@@ -816,7 +860,8 @@ public class BeanUtilTest {
      * 当：copyOptions的 setFieldNameEditor 不为空的时候，有bug,这里进行修复；
      */
     @Test
-    public void beanToBeanCopyOptionsTest() {
+    @DisplayName("copyProperties withFieldNameEditor")
+    void beanToBeanCopyOptionsTest() {
         final ChildVo1 childVo1 = new ChildVo1();
         childVo1.setChild_address("中国北京五道口");
         childVo1.setChild_name("张三");
@@ -855,7 +900,8 @@ public class BeanUtilTest {
 
     @Test
     @Disabled("泛型集合转换边界用例：List<String> -> List<Integer> 需报错忽略，ztools 移植暂未覆盖")
-    public void issueI41WKPTest() {
+    @DisplayName("copyProperties genericListConversion")
+    void issueI41WKPTest() {
         final Test1 t1 = new Test1().setStrList(ListUtil.toList("list"));
         final Test2 t2_hu = new Test2();
         BeanUtil.copyProperties(t1, t2_hu, CopyOptions.create().setIgnoreError(true));
@@ -875,7 +921,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void issuesI53O9JTest() {
+    @DisplayName("copyProperties mapToBean emptyString")
+    void issuesI53O9JTest() {
         final Map<String, String> map = new HashMap<>();
         map.put("statusIdUpdateTime", "");
 
@@ -891,7 +938,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void valueProviderToBeanTest() {
+    @DisplayName("toBean withValueProvider mapping")
+    void valueProviderToBeanTest() {
         // https://gitee.com/chinabugotech/hutool/issues/I5B4R7
         final CopyOptions copyOptions = CopyOptions.create();
         final Map<String, String> filedMap = new HashMap<>();
@@ -938,7 +986,8 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void isCommonFieldsEqualTest() {
+    @DisplayName("isCommonFieldsEqual comparesFields")
+    void isCommonFieldsEqualTest() {
         final TestUserEntity userEntity = new TestUserEntity();
         final TestUserDTO userDTO = new TestUserDTO();
 
@@ -964,14 +1013,16 @@ public class BeanUtilTest {
     }
 
     @Test
-    public void hasGetterTest() {
+    @DisplayName("hasGetter object returnsFalse")
+    void hasGetterTest() {
         // https://gitee.com/chinabugotech/hutool/issues/I6M7Z7
         final boolean b = BeanUtil.hasGetter(Object.class);
         assertFalse(b);
     }
 
     @Test
-    public void issueI9VTZGTest() {
+    @DisplayName("isBean dict returnsFalse")
+    void issueI9VTZGTest() {
         final boolean bean = BeanUtil.isBean(Dict.class);
         assertFalse(bean);
     }
@@ -1021,7 +1072,8 @@ public class BeanUtilTest {
      */
     @Test
     @Disabled("泛型集合深拷贝边界用例：List<OrderItem> -> List<OrderItemDto> 需元素级转换，ztools 移植暂未覆盖")
-    public void issue4245Test() {
+    @DisplayName("copyProperties listWithProtectedSetter")
+    void issue4245Test() {
         final Order4245 order = new Order4245(
                 1L,
                 "01",
@@ -1048,7 +1100,8 @@ public class BeanUtilTest {
      * Test map conversion with protected setter bean
      */
     @Test
-    public void issue4245MapConvertTest() {
+    @DisplayName("beanToMap withProtectedSetter")
+    void issue4245MapConvertTest() {
         final OrderItem4245 item = new OrderItem4245(1L, "aa", 1);
         // Should not throw UnsupportedOperationException
         final Map<String, Object> map = BeanUtil.beanToMap(item);

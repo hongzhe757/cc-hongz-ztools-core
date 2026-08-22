@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.annotation;
 import cc.hongz.ztools.core.util.ObjectUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
@@ -12,10 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
-public class MirrorLinkAnnotationPostProcessorTest {
+/**
+ * {@link MirrorLinkAnnotationPostProcessor} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("MirrorLinkAnnotationPostProcessor 注解后处理器")
+class MirrorLinkAnnotationPostProcessorTest {
 
     @Test
-    public void processTest() {
+    @DisplayName("process wrapsMirroredAttributes")
+    void processTest() {
         MirrorLinkAnnotationPostProcessor processor = new MirrorLinkAnnotationPostProcessor();
 
         Map<Class<?>, SynthesizedAnnotation> annotationMap = new HashMap<>();

@@ -4,17 +4,26 @@ import cc.hongz.ztools.core.bean.copier.CopyOptions;
 import cc.hongz.ztools.core.map.MapUtil;
 import lombok.Builder;
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class BeanCopyMappingTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("字段映射拷贝")
+class BeanCopyMappingTest {
 
     /**
      * https://gitee.com/chinabugotech/hutool/issues/I4C48U <br>
      * 传递复制不要用注解别名，应该用动态映射
      */
     @Test
-    public void copyPropertiesTest() {
+    @DisplayName("copyProperties fieldMapping mapsCarToCarNo")
+    void copyPropertiesTest() {
         final CopyOptions copyOptions = CopyOptions.create()
                 .setFieldMapping(MapUtil.of("car", "carNo"));
 

@@ -1,18 +1,22 @@
 package cc.hongz.ztools.core.bean;
 
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
- * {@link DynaBean}单元测试
+ * {@link DynaBean} 单元测试.
  *
- * @author Looly
+ * @author hongzhe.qin
  */
-public class DynaBeanTest {
+@DisplayName("动态Bean")
+class DynaBeanTest {
 
     @Test
-    public void beanTest() {
+    @DisplayName("create wrapsInstance getSetInvoke")
+    void beanTest() {
         User user = new User();
         DynaBean bean = DynaBean.create(user);
         bean.set("name", "李华");
@@ -35,7 +39,8 @@ public class DynaBeanTest {
 
 
     @Test
-    public void beanByStaticClazzConstructorTest() {
+    @DisplayName("create byClass wrapsAndInvokes")
+    void beanByStaticClazzConstructorTest() {
         String name_before = "李华";
         int age_before = 12;
         DynaBean bean = DynaBean.create(User.class);
@@ -60,7 +65,8 @@ public class DynaBeanTest {
 
 
     @Test
-    public void beanByInstanceClazzConstructorTest() {
+    @DisplayName("new byClass wrapsAndInvokes")
+    void beanByInstanceClazzConstructorTest() {
         String name_before = "李华";
         int age_before = 12;
         DynaBean bean = new DynaBean(User.class);

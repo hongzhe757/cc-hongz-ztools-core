@@ -6,17 +6,22 @@ import cc.hongz.ztools.core.date.DateUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.Date;
 
 /**
- * 自定义某个字段的转换
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
  */
-public class IssueIBLTZWTest {
+@DisplayName("回归测试")
+class IssueIBLTZWTest {
     @Test
-    public void copyTest() {
+    @DisplayName("copyProperties customFieldConverter")
+    void copyTest() {
         TestBean bean = new TestBean();
         bean.setName("test");
         bean.setDate(DateUtil.parse("2025-02-17"));

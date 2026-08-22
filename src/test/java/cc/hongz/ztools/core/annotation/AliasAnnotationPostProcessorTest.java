@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.annotation;
 import cc.hongz.ztools.core.util.ObjectUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
@@ -12,10 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
-public class AliasAnnotationPostProcessorTest {
+/**
+ * {@link AliasAnnotationPostProcessor} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("AliasAnnotationPostProcessor 注解后处理器")
+class AliasAnnotationPostProcessorTest {
 
     @Test
-    public void processTest() {
+    @DisplayName("process wrapsAliasedAttribute")
+    void processTest() {
         AliasAnnotationPostProcessor processor = new AliasAnnotationPostProcessor();
 
         Map<Class<?>, SynthesizedAnnotation> annotationMap = new HashMap<>();

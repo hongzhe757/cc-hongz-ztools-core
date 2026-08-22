@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.annotation.scanner;
 import cc.hongz.ztools.core.util.ClassUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -11,10 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TypeAnnotationScannerTest {
+/**
+ * {@link TypeAnnotationScanner} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("TypeAnnotationScanner 注解扫描器")
+class TypeAnnotationScannerTest {
 
     @Test
-    public void supportTest() {
+    @DisplayName("support acceptsTypesOnly")
+    void supportTest() {
         AnnotationScanner scanner = new TypeAnnotationScanner();
         assertTrue(scanner.support(Example.class));
         assertFalse(scanner.support(ReflectUtil.getField(Example.class, "id")));
@@ -23,7 +31,8 @@ public class TypeAnnotationScannerTest {
     }
 
     @Test
-    public void getAnnotationsTest() {
+    @DisplayName("getAnnotations returnsMatchedAnnotations")
+    void getAnnotationsTest() {
         AnnotationScanner scanner = new TypeAnnotationScanner();
         List<Annotation> annotations = scanner.getAnnotations(Example.class);
         assertEquals(3, annotations.size());
@@ -55,7 +64,8 @@ public class TypeAnnotationScannerTest {
     }
 
     @Test
-    public void scanTest() {
+    @DisplayName("scan visitsEachAnnotation")
+    void scanTest() {
         Map<Integer, List<Annotation>> map = new HashMap<>();
 
         // 查找父类与父接口

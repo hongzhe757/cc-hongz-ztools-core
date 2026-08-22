@@ -1,12 +1,17 @@
 package cc.hongz.ztools.core.bean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
- * https://github.com/chinabugotech/hutool/issues/2009
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
  */
-public class Issue2009Test {
+@DisplayName("回归测试")
+class Issue2009Test {
 
     @SuppressWarnings("InnerClassMayBeStatic")
     public class BaseA {
@@ -66,7 +71,8 @@ public class Issue2009Test {
     }
 
     @Test
-    public void test() {
+    @DisplayName("copyProperties inheritedFieldCopied")
+    void test() {
         B b = new B("a string text");
         A a = new A();
         BeanUtil.copyProperties(b, a);

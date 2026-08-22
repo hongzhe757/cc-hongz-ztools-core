@@ -3,19 +3,28 @@ package cc.hongz.ztools.core.bean;
 import cc.hongz.ztools.core.bean.copier.CopyOptions;
 import cc.hongz.ztools.core.text.NamingCase;
 import lombok.Data;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Issue2202Test {
+/**
+ * {@link BeanUtil} 单元测试.
+ *
+ * @author hongzhe.qin
+ */
+@DisplayName("回归测试")
+class Issue2202Test {
 
     /**
      * https://github.com/chinabugotech/hutool/issues/2202
      */
     @Test
-    public void mapToBeanWithFieldNameEditorTest(){
+    @DisplayName("mapToBean fieldNameEditor camelCase")
+    void mapToBeanWithFieldNameEditorTest(){
         Map<String, String> headerMap = new HashMap<>(5);
         headerMap.put("wechatpay-serial", "serial");
         headerMap.put("wechatpay-nonce", "nonce");

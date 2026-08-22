@@ -5,6 +5,7 @@ import cc.hongz.ztools.core.lang.test.bean.UserInfoDict;
 import cc.hongz.ztools.core.util.ArrayUtil;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -15,16 +16,17 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link BeanPath} 单元测试
+ * {@link BeanPath} 单元测试.
  *
- * @author looly
+ * @author hongzhe.qin
  */
-public class BeanPathTest {
+@DisplayName("路径表达式")
+class BeanPathTest {
 
     Map<String, Object> tempMap;
 
     @BeforeEach
-    public void init() {
+    void init() {
         // ------------------------------------------------- 考试信息列表
         final ExamInfoDict examInfoDict = new ExamInfoDict();
         examInfoDict.setId(1);
@@ -59,7 +61,8 @@ public class BeanPathTest {
     }
 
     @Test
-    public void beanPathTest1() {
+    @DisplayName("beanPath dot notation parses parts")
+    void beanPathTest1() {
         final BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
         assertEquals("userInfo", pattern.patternParts.get(0));
         assertEquals("examInfoDict", pattern.patternParts.get(1));
@@ -69,7 +72,8 @@ public class BeanPathTest {
     }
 
     @Test
-    public void beanPathTest2() {
+    @DisplayName("beanPath bracket notation parses parts")
+    void beanPathTest2() {
         final BeanPath pattern = new BeanPath("[userInfo][examInfoDict][0][id]");
         assertEquals("userInfo", pattern.patternParts.get(0));
         assertEquals("examInfoDict", pattern.patternParts.get(1));
@@ -78,7 +82,8 @@ public class BeanPathTest {
     }
 
     @Test
-    public void beanPathTest3() {
+    @DisplayName("beanPath quoted bracket notation parses parts")
+    void beanPathTest3() {
         final BeanPath pattern = new BeanPath("['userInfo']['examInfoDict'][0]['id']");
         assertEquals("userInfo", pattern.patternParts.get(0));
         assertEquals("examInfoDict", pattern.patternParts.get(1));
@@ -87,14 +92,16 @@ public class BeanPathTest {
     }
 
     @Test
-    public void getTest() {
+    @DisplayName("get dot notation reads nested value")
+    void getTest() {
         final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
         final Object result = pattern.get(tempMap);
         assertEquals(1, result);
     }
 
     @Test
-    public void setTest() {
+    @DisplayName("set dot notation writes nested value")
+    void setTest() {
         final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
         pattern.set(tempMap, 2);
         final Object result = pattern.get(tempMap);
@@ -102,7 +109,8 @@ public class BeanPathTest {
     }
 
     @Test
-    public void getMapTest() {
+    @DisplayName("get multi property returns map")
+    void getMapTest() {
         final BeanPath pattern = BeanPath.create("userInfo[id, photoPath]");
         @SuppressWarnings("unchecked") final Map<String, Object> result = (Map<String, Object>) pattern.get(tempMap);
         assertEquals(1, result.get("id"));
@@ -110,7 +118,8 @@ public class BeanPathTest {
     }
 
     @Test
-    public void issue2362Test() {
+    @DisplayName("set auto creates list for index path")
+    void issue2362Test() {
         final Map<String, Object> map = new HashMap<>();
 
         BeanPath beanPath = BeanPath.create("list[0].name");
@@ -129,7 +138,8 @@ public class BeanPathTest {
     }
 
     @Test
-    public void appendArrayTest(){
+    @DisplayName("set appends array by index")
+    void appendArrayTest(){
         // issue#3008@Github
         final MyUser myUser = new MyUser();
         BeanPath.create("hobby[0]").set(myUser, "LOL");
@@ -140,7 +150,8 @@ public class BeanPathTest {
     }
 
     @Test
-    public void wildcardTest() {
+    @DisplayName("get wildcard returns id list")
+    void wildcardTest() {
         // 测试通配符 * 语法
         final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[*].id");
         final Object result = pattern.get(tempMap);

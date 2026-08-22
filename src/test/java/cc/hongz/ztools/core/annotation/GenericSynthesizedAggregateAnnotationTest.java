@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.annotation;
 
 import cc.hongz.ztools.core.util.ReflectUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
@@ -12,14 +13,16 @@ import java.util.Comparator;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 合成注解{@link GenericSynthesizedAggregateAnnotation}的测试用例
+ * {@link GenericSynthesizedAggregateAnnotation} 单元测试.
  *
- * @author huangchengxing
+ * @author hongzhe.qin
  */
-public class GenericSynthesizedAggregateAnnotationTest {
+@DisplayName("GenericSynthesizedAggregateAnnotation 合成聚合注解")
+class GenericSynthesizedAggregateAnnotationTest {
 
     @Test
-    public void baseSynthesisAnnotationWorkTest() {
+    @DisplayName("baseSynthesis aggregatesAnnotations")
+    void baseSynthesisAnnotationWorkTest() {
         // AnnotatedClass -> @ChildAnnotation -> @ParentAnnotation -> @GrandParentAnnotation
         //                                    -> @GrandParentAnnotation
         final GrandParentAnnotation grandParentAnnotation = ChildAnnotation.class.getAnnotation(GrandParentAnnotation.class);
@@ -55,7 +58,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void synthesisAnnotationAttributeTest() {
+    @DisplayName("synthesis resolvesAttributeValues")
+    void synthesisAnnotationAttributeTest() {
         final ChildAnnotation rootAnnotation = AnnotatedClass.class.getAnnotation(ChildAnnotation.class);
         GenericSynthesizedAggregateAnnotation syntheticMetaAnnotation = new GenericSynthesizedAggregateAnnotation(rootAnnotation);
         assertEquals(syntheticMetaAnnotation.getSource(), Collections.singletonList(rootAnnotation));
@@ -69,7 +73,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void syntheticAnnotationTest() {
+    @DisplayName("synthesize worksPerLevel")
+    void syntheticAnnotationTest() {
         final ChildAnnotation rootAnnotation = AnnotatedClass.class.getAnnotation(ChildAnnotation.class);
         GenericSynthesizedAggregateAnnotation syntheticMetaAnnotation = new GenericSynthesizedAggregateAnnotation(rootAnnotation);
 
@@ -111,7 +116,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void linkTest() {
+    @DisplayName("link synthesizesLink")
+    void linkTest() {
         final Method method = ReflectUtil.getMethod(AnnotationForLinkTest.class, "value");
         final SynthesizedAggregateAnnotation synthesizedAnnotationAggregator = new GenericSynthesizedAggregateAnnotation(method.getAnnotation(AliasFor.class));
         final Link link = synthesizedAnnotationAggregator.synthesize(Link.class);
@@ -120,7 +126,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void mirrorAttributeTest() {
+    @DisplayName("mirror resolvesMirroredValue")
+    void mirrorAttributeTest() {
         AnnotationForMirrorTest annotation = ClassForMirrorTest.class.getAnnotation(AnnotationForMirrorTest.class);
         SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
         AnnotationForMirrorTest syntheticAnnotation = synthetic.synthesize(AnnotationForMirrorTest.class);
@@ -141,7 +148,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void aliasForTest() {
+    @DisplayName("aliasFor resolvesAliasedValue")
+    void aliasForTest() {
         AnnotationForAliasForTest annotation = ClassForAliasForTest.class.getAnnotation(AnnotationForAliasForTest.class);
         SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
         MetaAnnotationForAliasForTest metaAnnotation = synthetic.synthesize(MetaAnnotationForAliasForTest.class);
@@ -158,7 +166,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void forceAliasForTest() {
+    @DisplayName("forceAliasFor resolvesValue")
+    void forceAliasForTest() {
         AnnotationForceForAliasForTest annotation = ClassForForceAliasForTest.class.getAnnotation(AnnotationForceForAliasForTest.class);
         SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
         MetaAnnotationForForceAliasForTest metaAnnotation = synthetic.synthesize(MetaAnnotationForForceAliasForTest.class);
@@ -175,7 +184,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void aliasForAndMirrorTest() {
+    @DisplayName("aliasForAndMirror resolvesValue")
+    void aliasForAndMirrorTest() {
         AnnotationForMirrorThenAliasForTest annotation = ClassForAliasForAndMirrorTest.class.getAnnotation(AnnotationForMirrorThenAliasForTest.class);
         SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
         MetaAnnotationForMirrorThenAliasForTest metaAnnotation = synthetic.synthesize(MetaAnnotationForMirrorThenAliasForTest.class);
@@ -186,7 +196,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void multiAliasForTest() {
+    @DisplayName("multiAliasFor resolvesChained")
+    void multiAliasForTest() {
         final AnnotationForMultiAliasForTest annotation = ClassForMultiAliasForTest.class.getAnnotation(AnnotationForMultiAliasForTest.class);
         final SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
 
@@ -200,7 +211,8 @@ public class GenericSynthesizedAggregateAnnotationTest {
     }
 
     @Test
-    public void implicitAliasTest() {
+    @DisplayName("implicitAlias resolvesImplicitValue")
+    void implicitAliasTest() {
         final AnnotationForImplicitAliasTest annotation = ClassForImplicitAliasTest.class.getAnnotation(AnnotationForImplicitAliasTest.class);
         final SynthesizedAggregateAnnotation synthetic = new GenericSynthesizedAggregateAnnotation(annotation);
 
