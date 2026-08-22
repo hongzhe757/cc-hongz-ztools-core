@@ -106,8 +106,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @return 当前实例
      */
     public T setFilter(final Predicate<Class<?>> newFilter) {
-        Assert.notNull(filter, "filter must not null");
-        this.filter = filter;
+        Assert.notNull(newFilter, "filter must not null");
+        this.filter = newFilter;
         return typedThis;
     }
 
@@ -145,7 +145,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @return 当前实例
      */
     protected T setIncludeSuperClass(final boolean newIncludeSuperClass) {
-        this.includeSuperClass = includeSuperClass;
+        this.includeSuperClass = newIncludeSuperClass;
         return typedThis;
     }
 
@@ -156,7 +156,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
      * @return 当前实例
      */
     protected T setIncludeInterfaces(final boolean newIncludeInterfaces) {
-        this.includeInterfaces = includeInterfaces;
+        this.includeInterfaces = newIncludeInterfaces;
         return typedThis;
     }
 
