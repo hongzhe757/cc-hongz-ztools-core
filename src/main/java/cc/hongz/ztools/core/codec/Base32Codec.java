@@ -3,10 +3,12 @@ package cc.hongz.ztools.core.codec;
 import java.util.Arrays;
 
 /**
- * Base32 - encodes and decodes RFC4648 Base32 (see https://datatracker.ietf.org/doc/html/rfc4648#section-6 )<br>
- * base32就是用32（2的5次方）个特定ASCII码来表示256个ASCII码。<br>
- * 所以，5个ASCII字符经过base32编码后会变为8个字符（公约数为40），长度增加3/5.不足8n用“=”补足。<br>
- * 根据RFC4648 Base32规范，支持两种模式：
+ * Base32 - encodes and decodes RFC4648 Base32 (see https://datatracker.ietf.org/doc/html/rfc4648#section-6 ).
+ *
+ * <p>
+ * base32 就是用 32（2 的 5 次方）个特定 ASCII 码来表示 256 个 ASCII 码。
+ * 所以，5 个 ASCII 字符经过 base32 编码后会变为 8 个字符（公约数为 40），长度增加 3/5，不足 8n 用“=”补足。
+ * 根据 RFC4648 Base32 规范，支持两种模式：
  * <ul>
  *     <li>Base 32 Alphabet                 (ABCDEFGHIJKLMNOPQRSTUVWXYZ234567)</li>
  *     <li>"Extended Hex" Base 32 Alphabet  (0123456789ABCDEFGHIJKLMNOPQRSTUV)</li>
@@ -17,199 +19,218 @@ import java.util.Arrays;
  */
 public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequence, byte[]> {
 
-	public static Base32Codec INSTANCE = new Base32Codec();
+    /**
+     * 单例.
+     */
+    public static final Base32Codec INSTANCE = new Base32Codec();
 
-	@Override
-	public String encode(byte[] data) {
-		return encode(data, false);
-	}
+    @Override
+    public String encode(final byte[] data) {
+        return encode(data, false);
+    }
 
-	/**
-	 * 编码数据
-	 *
-	 * @param data   数据
-	 * @param useHex 是否使用Hex Alphabet
-	 * @return 编码后的Base32字符串
-	 */
-	public String encode(byte[] data, boolean useHex) {
-		final Base32Encoder encoder = useHex ? Base32Encoder.HEX_ENCODER : Base32Encoder.ENCODER;
-		return encoder.encode(data);
-	}
+    /**
+     * 编码数据.
+     *
+     * @param data   数据
+     * @param useHex 是否使用 Hex Alphabet
+     * @return 编码后的 Base32 字符串
+     */
+    public String encode(final byte[] data, final boolean useHex) {
+        final Base32Encoder encoder = useHex ? Base32Encoder.HEX_ENCODER : Base32Encoder.ENCODER;
+        return encoder.encode(data);
+    }
 
-	@Override
-	public byte[] decode(CharSequence encoded) {
-		return decode(encoded, false);
-	}
+    @Override
+    public byte[] decode(final CharSequence encoded) {
+        return decode(encoded, false);
+    }
 
-	/**
-	 * 解码数据
-	 *
-	 * @param encoded base32字符串
-	 * @param useHex  是否使用Hex Alphabet
-	 * @return 解码后的内容
-	 */
-	public byte[] decode(CharSequence encoded, boolean useHex) {
-		final Base32Decoder decoder = useHex ? Base32Decoder.HEX_DECODER : Base32Decoder.DECODER;
-		return decoder.decode(encoded);
-	}
+    /**
+     * 解码数据.
+     *
+     * @param encoded base32 字符串
+     * @param useHex  是否使用 Hex Alphabet
+     * @return 解码后的内容
+     */
+    public byte[] decode(final CharSequence encoded, final boolean useHex) {
+        final Base32Decoder decoder = useHex ? Base32Decoder.HEX_DECODER : Base32Decoder.DECODER;
+        return decoder.decode(encoded);
+    }
 
-	/**
-	 * Bas32编码器
-	 */
-	public static class Base32Encoder implements Encoder<byte[], String> {
-		private static final String DEFAULT_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-		private static final String HEX_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUV";
-		private static final Character DEFAULT_PAD = '=';
-		private static final int[] BASE32_FILL = {-1, 4, 1, 6, 3};
+    /**
+     * Base32 编码器.
+     */
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public static class Base32Encoder implements Encoder<byte[], String> {
+        private static final String DEFAULT_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        private static final String HEX_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUV";
+        private static final Character DEFAULT_PAD = '=';
+        private static final int[] BASE32_FILL = {-1, 4, 1, 6, 3};
 
-		public static final Base32Encoder ENCODER = new Base32Encoder(DEFAULT_ALPHABET, DEFAULT_PAD);
-		public static final Base32Encoder HEX_ENCODER = new Base32Encoder(HEX_ALPHABET, DEFAULT_PAD);
+        /**
+         * 标准字母表编码器.
+         */
+        public static final Base32Encoder ENCODER = new Base32Encoder(DEFAULT_ALPHABET, DEFAULT_PAD);
 
-		private final char[] alphabet;
-		private final Character pad;
+        /**
+         * Hex 字母表编码器.
+         */
+        public static final Base32Encoder HEX_ENCODER = new Base32Encoder(HEX_ALPHABET, DEFAULT_PAD);
 
-		/**
-		 * 构造
-		 *
-		 * @param alphabet 自定义编码字母表，见 {@link #DEFAULT_ALPHABET}和 {@link #HEX_ALPHABET}
-		 * @param pad      补位字符
-		 */
-		public Base32Encoder(String alphabet, Character pad) {
-			this.alphabet = alphabet.toCharArray();
-			this.pad = pad;
-		}
+        private final char[] alphabet;
+        private final Character pad;
 
-		@Override
-		public String encode(byte[] data) {
-			int i = 0;
-			int index = 0;
-			int digit;
-			int currByte;
-			int nextByte;
+        /**
+         * 构造.
+         *
+         * @param alphabet 自定义编码字母表，见 {@link #DEFAULT_ALPHABET} 和 {@link #HEX_ALPHABET}
+         * @param pad      补位字符
+         */
+        public Base32Encoder(final String alphabet, final Character pad) {
+            this.alphabet = alphabet.toCharArray();
+            this.pad = pad;
+        }
 
-			int encodeLen = data.length * 8 / 5;
-			if (encodeLen != 0) {
-				encodeLen = encodeLen + 1 + BASE32_FILL[(data.length * 8) % 5];
-			}
+        @Override
+        public String encode(final byte[] data) {
+            int i = 0;
+            int index = 0;
+            int digit;
+            int currByte;
+            int nextByte;
 
-			StringBuilder base32 = new StringBuilder(encodeLen);
+            int encodeLen = data.length * 8 / 5;
+            if (encodeLen != 0) {
+                encodeLen = encodeLen + 1 + BASE32_FILL[(data.length * 8) % 5];
+            }
 
-			while (i < data.length) {
-				// unsign
-				currByte = (data[i] >= 0) ? data[i] : (data[i] + 256);
+            StringBuilder base32 = new StringBuilder(encodeLen);
 
-				/* Is the current digit going to span a byte boundary? */
-				if (index > 3) {
-					if ((i + 1) < data.length) {
-						nextByte = (data[i + 1] >= 0) ? data[i + 1] : (data[i + 1] + 256);
-					} else {
-						nextByte = 0;
-					}
+            while (i < data.length) {
+                // 转为无符号数
+                currByte = (data[i] >= 0) ? data[i] : (data[i] + 256);
 
-					digit = currByte & (0xFF >> index);
-					index = (index + 5) % 8;
-					digit <<= index;
-					digit |= nextByte >> (8 - index);
-					i++;
-				} else {
-					digit = (currByte >> (8 - (index + 5))) & 0x1F;
-					index = (index + 5) % 8;
-					if (index == 0) {
-						i++;
-					}
-				}
-				base32.append(alphabet[digit]);
-			}
+                // 当前数字是否会跨越字节边界
+                if (index > 3) {
+                    if ((i + 1) < data.length) {
+                        nextByte = (data[i + 1] >= 0) ? data[i + 1] : (data[i + 1] + 256);
+                    } else {
+                        nextByte = 0;
+                    }
 
-			if (null != pad) {
-				// 末尾补充不足长度的
-				while (base32.length() < encodeLen) {
-					base32.append(pad.charValue());
-				}
-			}
+                    digit = currByte & (0xFF >> index);
+                    index = (index + 5) % 8;
+                    digit <<= index;
+                    digit |= nextByte >> (8 - index);
+                    i++;
+                } else {
+                    digit = (currByte >> (8 - (index + 5))) & 0x1F;
+                    index = (index + 5) % 8;
+                    if (index == 0) {
+                        i++;
+                    }
+                }
+                base32.append(alphabet[digit]);
+            }
 
-			return base32.toString();
-		}
-	}
+            if (null != pad) {
+                // 末尾补充不足长度的字符
+                while (base32.length() < encodeLen) {
+                    base32.append(pad.charValue());
+                }
+            }
 
-	/**
-	 * Base32解码器
-	 */
-	public static class Base32Decoder implements Decoder<CharSequence, byte[]> {
-		private static final char BASE_CHAR = '0';
+            return base32.toString();
+        }
+    }
 
-		public static final Base32Decoder DECODER = new Base32Decoder(Base32Encoder.DEFAULT_ALPHABET);
-		public static final Base32Decoder HEX_DECODER = new Base32Decoder(Base32Encoder.HEX_ALPHABET);
+    /**
+     * Base32 解码器.
+     */
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public static class Base32Decoder implements Decoder<CharSequence, byte[]> {
+        private static final char BASE_CHAR = '0';
 
-		private final byte[] lookupTable;
+        /**
+         * 标准字母表解码器.
+         */
+        public static final Base32Decoder DECODER = new Base32Decoder(Base32Encoder.DEFAULT_ALPHABET);
 
-		/**
-		 * 构造
-		 *
-		 * @param alphabet 编码字母表
-		 */
-		public Base32Decoder(String alphabet) {
-			lookupTable = new byte[128];
-			Arrays.fill(lookupTable, (byte) -1);
+        /**
+         * Hex 字母表解码器.
+         */
+        public static final Base32Decoder HEX_DECODER = new Base32Decoder(Base32Encoder.HEX_ALPHABET);
 
-			final int length = alphabet.length();
+        private final byte[] lookupTable;
 
-			char c;
-			for (int i = 0; i < length; i++) {
-				c = alphabet.charAt(i);
-				lookupTable[c - BASE_CHAR] = (byte) i;
-				// 支持小写字母解码
-				if(c >= 'A' && c <= 'Z'){
-					lookupTable[Character.toLowerCase(c) - BASE_CHAR] = (byte) i;
-				}
-			}
-		}
+        /**
+         * 构造.
+         *
+         * @param alphabet 编码字母表
+         */
+        public Base32Decoder(final String alphabet) {
+            lookupTable = new byte[128];
+            Arrays.fill(lookupTable, (byte) -1);
 
-		@Override
-		public byte[] decode(CharSequence encoded) {
-			int i, index, lookup, offset, digit;
-			final String base32 = encoded.toString();
-			int len = base32.endsWith("=") ? base32.indexOf("=") * 5 / 8 : base32.length() * 5 / 8;
-			byte[] bytes = new byte[len];
+            final int length = alphabet.length();
 
-			for (i = 0, index = 0, offset = 0; i < base32.length(); i++) {
-				lookup = base32.charAt(i) - BASE_CHAR;
+            char c;
+            for (int i = 0; i < length; i++) {
+                c = alphabet.charAt(i);
+                lookupTable[c - BASE_CHAR] = (byte) i;
+                // 支持小写字母解码
+                if (c >= 'A' && c <= 'Z') {
+                    lookupTable[Character.toLowerCase(c) - BASE_CHAR] = (byte) i;
+                }
+            }
+        }
 
-				/* Skip chars outside the lookup table */
-				if (lookup < 0 || lookup >= lookupTable.length) {
-					continue;
-				}
+        @Override
+        public byte[] decode(final CharSequence encoded) {
+            int i, index, lookup, offset, digit;
+            final String base32 = encoded.toString();
+            int len = base32.endsWith("=") ? base32.indexOf("=") * 5 / 8 : base32.length() * 5 / 8;
+            byte[] bytes = new byte[len];
 
-				digit = lookupTable[lookup];
+            for (i = 0, index = 0, offset = 0; i < base32.length(); i++) {
+                lookup = base32.charAt(i) - BASE_CHAR;
 
-				/* If this digit is not in the table, ignore it */
-				if (digit < 0) {
-					continue;
-				}
+                // 跳过查找表之外的字符
+                if (lookup < 0 || lookup >= lookupTable.length) {
+                    continue;
+                }
 
-				if (index <= 3) {
-					index = (index + 5) % 8;
-					if (index == 0) {
-						bytes[offset] |= digit;
-						offset++;
-						if (offset >= bytes.length) {
-							break;
-						}
-					} else {
-						bytes[offset] |= digit << (8 - index);
-					}
-				} else {
-					index = (index + 5) % 8;
-					bytes[offset] |= (digit >>> index);
-					offset++;
+                digit = lookupTable[lookup];
 
-					if (offset >= bytes.length) {
-						break;
-					}
-					bytes[offset] |= digit << (8 - index);
-				}
-			}
-			return bytes;
-		}
-	}
+                // 如果该数字不在表中，忽略之
+                if (digit < 0) {
+                    continue;
+                }
+
+                if (index <= 3) {
+                    index = (index + 5) % 8;
+                    if (index == 0) {
+                        bytes[offset] |= digit;
+                        offset++;
+                        if (offset >= bytes.length) {
+                            break;
+                        }
+                    } else {
+                        bytes[offset] |= digit << (8 - index);
+                    }
+                } else {
+                    index = (index + 5) % 8;
+                    bytes[offset] |= (digit >>> index);
+                    offset++;
+
+                    if (offset >= bytes.length) {
+                        break;
+                    }
+                    bytes[offset] |= digit << (8 - index);
+                }
+            }
+            return bytes;
+        }
+    }
 }
