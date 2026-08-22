@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.io;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -17,21 +18,25 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author hongzhe.qin
  */
+@DisplayName("FileUtil 文件工具类")
 class FileUtilTest {
 
     // ======================== touch ========================
 
     @Test
+    @DisplayName("touch null 路径返回 null")
     void touchNullPathReturnsNull() {
         assertNull(FileUtil.touch((String) null));
     }
 
     @Test
+    @DisplayName("touch null 文件返回 null")
     void touchNullFileReturnsNull() {
         assertNull(FileUtil.touch((File) null));
     }
 
     @Test
+    @DisplayName("touch 创建文件")
     void touchCreatesFile(@TempDir final Path tempDir) {
         final File file = FileUtil.touch(tempDir.resolve("a.txt").toString());
         assertNotNull(file);
@@ -39,6 +44,7 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("touch 已存在文件")
     void touchExistingFile(@TempDir final Path tempDir) {
         final File file = FileUtil.touch(tempDir.resolve("b.txt").toFile());
         assertSame(file, FileUtil.touch(file));
@@ -47,6 +53,7 @@ class FileUtilTest {
     // ======================== getOutputStream ========================
 
     @Test
+    @DisplayName("getOutputStream 写入")
     void getOutputStreamWrites(@TempDir final Path tempDir) throws Exception {
         final File file = FileUtil.touch(tempDir.resolve("out.txt").toFile());
         final byte[] data = "data".getBytes(StandardCharsets.UTF_8);
@@ -59,12 +66,14 @@ class FileUtilTest {
     // ======================== file ========================
 
     @Test
+    @DisplayName("file 组合路径")
     void fileTest1() {
         final File file = FileUtil.file("d:/aaa", "bbb");
         assertNotNull(file);
     }
 
     @Test
+    @DisplayName("file 父目录穿越抛异常")
     void fileTest2ThrowsOnParentTraversal() {
         assertThrows(IllegalArgumentException.class, () -> {
             final File file = FileUtil.file("d:/aaa", "bbb");
@@ -75,6 +84,7 @@ class FileUtilTest {
     // ======================== normalize ========================
 
     @Test
+    @DisplayName("normalize 规范化路径")
     void normalizeTest() {
         assertEquals("/foo/", FileUtil.normalize("/foo//"));
         assertEquals("/foo/", FileUtil.normalize("/foo/./"));
@@ -88,29 +98,34 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("normalize Windows 路径")
     void normalizeWindowsPath() {
         assertEquals("C:/bar", FileUtil.normalize("C:\\foo\\..\\bar"));
         assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
     }
 
     @Test
+    @DisplayName("normalize classpath")
     void normalizeClassPath() {
         assertEquals("", FileUtil.normalize("classpath:"));
     }
 
     @Test
+    @DisplayName("normalize 相对路径")
     void normalizeRelativePaths() {
         assertEquals("../../bar", FileUtil.normalize("../../bar"));
         assertEquals("../a/b.csv", FileUtil.normalize("../a/b.csv"));
     }
 
     @Test
+    @DisplayName("normalize 家目录路径")
     void normalizeHomePath() {
         final String home = FileUtil.getUserHomePath().replace('\\', '/');
         assertEquals(home + "/bar/", FileUtil.normalize("~/foo/../bar/"));
     }
 
     @Test
+    @DisplayName("normalize 二次规范化")
     void doubleNormalizeTest() {
         final String normalize = FileUtil.normalize("/aa/b:/c");
         final String normalize2 = FileUtil.normalize(normalize);
@@ -121,6 +136,7 @@ class FileUtilTest {
     // ======================== getName / mainName / extName ========================
 
     @Test
+    @DisplayName("getName 获取文件名")
     void getNameTest() {
         String path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "/aaa/bbb/cc/ddd/";
         assertEquals("ddd", FileUtil.getName(path));
@@ -130,6 +146,7 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("mainName 获取主名")
     void mainNameTest() {
         String path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "/aaa/bbb/cc/ddd/";
         assertEquals("ddd", FileUtil.mainName(path));
@@ -139,6 +156,7 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("extName 获取扩展名")
     void extNameTest() {
         String path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd.jpg" : "~/Desktop/ddd.jpg";
         assertEquals("jpg", FileUtil.extName(path));
@@ -153,6 +171,7 @@ class FileUtilTest {
     // ======================== subPath ========================
 
     @Test
+    @DisplayName("subPath 取子路径")
     void subPathTest() {
         final Path path = Paths.get("/aaa/bbb/ccc/ddd/eee/fff");
 
@@ -165,6 +184,7 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("subPath 字符串取子路径")
     void subPathTest2() {
         String subPath = FileUtil.subPath("d:/aaa/bbb/", "d:/aaa/bbb/ccc/");
         assertEquals("ccc/", subPath);
@@ -179,6 +199,7 @@ class FileUtilTest {
     // ======================== getPathEle ========================
 
     @Test
+    @DisplayName("getPathEle 取路径元素")
     void getPathEle() {
         final Path path = Paths.get("/aaa/bbb/ccc/ddd/eee/fff");
 
@@ -193,6 +214,7 @@ class FileUtilTest {
     // ======================== isSub ========================
 
     @Test
+    @DisplayName("isSub 非子路径")
     void isSubTest() {
         final File file = new File("d:/test");
         final File file2 = new File("d:/test2/aaa");
@@ -200,6 +222,7 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("isSub 相同路径")
     void isSubSamePath() {
         File parent = new File("d:/home/user/docs");
         File sub = new File("d:/home/user/docs");
@@ -207,6 +230,7 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("isSub null 父路径抛异常")
     void isSubNullParentThrows() {
         assertThrows(IllegalArgumentException.class, () -> {
             FileUtil.isSub(null, new File("d:/any/path"));
@@ -214,6 +238,7 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("isSub null 子路径抛异常")
     void isSubNullSubThrows() {
         assertThrows(IllegalArgumentException.class, () -> {
             FileUtil.isSub(new File("d:/any/path"), null);
@@ -223,6 +248,7 @@ class FileUtilTest {
     // ======================== isAbsolutePath ========================
 
     @Test
+    @DisplayName("isAbsolutePath 判断绝对路径")
     void isAbsolutePathTest() {
         if (FileUtil.isWindows()) {
             assertTrue(FileUtil.isAbsolutePath("d:/test\\aaa.txt"));
@@ -233,6 +259,7 @@ class FileUtilTest {
     // ======================== lastIndexOfSeparator ========================
 
     @Test
+    @DisplayName("lastIndexOfSeparator 分隔符位置")
     void lastIndexOfSeparatorTest() {
         final String dir = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd" : "/aaa/bbb/cc/ddd";
         final int index = FileUtil.lastIndexOfSeparator(dir);
@@ -246,6 +273,7 @@ class FileUtilTest {
     // ======================== equals ========================
 
     @Test
+    @DisplayName("equals 文件相等")
     void equalsTest() {
         final File file1 = FileUtil.file("d:/hutool.jpg");
         final File file2 = FileUtil.file("d:/hutool.jpg");
@@ -255,6 +283,7 @@ class FileUtilTest {
     // ======================== mkdir ========================
 
     @Test
+    @DisplayName("mkdir 创建目录")
     void mkdirCreatesDir(@TempDir final Path tempDir) {
         final File newDir = new File(tempDir.toFile(), "sub1/sub2");
         assertNotNull(FileUtil.mkdir(newDir));
@@ -264,6 +293,7 @@ class FileUtilTest {
     // ======================== write/read string ========================
 
     @Test
+    @DisplayName("writeString/readString 读写")
     void writeAndReadString(@TempDir final Path tempDir) {
         final File file = new File(tempDir.toFile(), "hello.txt");
         FileUtil.writeString("hello world", file, StandardCharsets.UTF_8);
@@ -272,6 +302,7 @@ class FileUtilTest {
     }
 
     @Test
+    @DisplayName("writeLines/readLines 读写行")
     void writeAndReadLines(@TempDir final Path tempDir) {
         final File file = new File(tempDir.toFile(), "lines.txt");
         final List<String> lines = java.util.Arrays.asList("line1", "line2", "line3");
@@ -283,6 +314,7 @@ class FileUtilTest {
     // ======================== copy ========================
 
     @Test
+    @DisplayName("copy 拷贝文件")
     void copyFile(@TempDir final Path tempDir) {
         final File src = new File(tempDir.toFile(), "src.txt");
         FileUtil.writeString("copy me", src, StandardCharsets.UTF_8);
@@ -294,11 +326,13 @@ class FileUtilTest {
     // ======================== del ========================
 
     @Test
+    @DisplayName("del 不存在的文件")
     void delNonExistentFileReturnsTrue() {
         assertTrue(FileUtil.del(new File("non_existent_file_xyz_12345.txt")));
     }
 
     @Test
+    @DisplayName("del 删除文件")
     void delExistingFile(@TempDir final Path tempDir) {
         final File file = FileUtil.touch(tempDir.resolve("del.txt").toFile());
         assertTrue(file.exists());
@@ -309,6 +343,7 @@ class FileUtilTest {
     // ======================== rename ========================
 
     @Test
+    @DisplayName("rename 重命名")
     void renameFile(@TempDir final Path tempDir) {
         final File src = FileUtil.touch(tempDir.resolve("old.txt").toFile());
         final File renamed = FileUtil.rename(src, "new.txt", false);
@@ -319,6 +354,7 @@ class FileUtilTest {
     // ======================== checkSlip ========================
 
     @Test
+    @DisplayName("checkSlip 路径穿越")
     void checkSlipTest() {
         assertThrows(IllegalArgumentException.class, () -> {
             FileUtil.checkSlip(FileUtil.file("test/a"), FileUtil.file("test/../a"));
@@ -328,6 +364,7 @@ class FileUtilTest {
     // ======================== getMimeType ========================
 
     @Test
+    @DisplayName("getMimeType MIME 类型")
     void getMimeTypeTest() {
         assertEquals("image/jpeg", FileUtil.getMimeType("test.jpg"));
         assertEquals("text/html", FileUtil.getMimeType("test.html"));
@@ -337,6 +374,7 @@ class FileUtilTest {
     // ======================== loopFiles ========================
 
     @Test
+    @DisplayName("loopFiles 遍历文件")
     void loopFilesTest(@TempDir final Path tempDir) {
         FileUtil.touch(tempDir.resolve("a.txt").toFile());
         FileUtil.touch(tempDir.resolve("b.txt").toFile());
@@ -351,6 +389,7 @@ class FileUtilTest {
     // ======================== getParent ========================
 
     @Test
+    @DisplayName("getParent 取父目录")
     void getParentTest(@TempDir final Path tempDir) {
         final File dir = new File(tempDir.toFile(), "aaa/bbb/ccc");
         FileUtil.mkdir(dir);
@@ -363,6 +402,7 @@ class FileUtilTest {
     // ======================== getUserHomePath ========================
 
     @Test
+    @DisplayName("getUserHomePath 用户主目录")
     void getUserHomePathTest() {
         final String homePath = FileUtil.getUserHomePath();
         assertNotNull(homePath);
