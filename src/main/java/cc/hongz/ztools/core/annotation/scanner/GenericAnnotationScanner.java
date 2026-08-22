@@ -75,9 +75,9 @@ public class GenericAnnotationScanner implements AnnotationScanner {
      * @param enableScanSupperInterface 是否扫描父接口
      */
     public GenericAnnotationScanner(
-            boolean enableScanMetaAnnotation,
-            boolean enableScanSupperClass,
-            boolean enableScanSupperInterface) {
+            final boolean enableScanMetaAnnotation,
+            final boolean enableScanSupperClass,
+            final boolean enableScanSupperInterface) {
 
         this.metaScanner = enableScanMetaAnnotation ? new MetaAnnotationScanner() : new EmptyAnnotationScanner();
         this.typeScanner = new TypeAnnotationScanner(
@@ -123,10 +123,10 @@ public class GenericAnnotationScanner implements AnnotationScanner {
      * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
      */
     private void scanElements(
-            AnnotationScanner scanner,
-            BiConsumer<Integer, Annotation> consumer,
-            AnnotatedElement annotatedEle,
-            Predicate<Annotation> filter) {
+            final AnnotationScanner scanner,
+            final BiConsumer<Integer, Annotation> consumer,
+            final AnnotatedElement annotatedEle,
+            final Predicate<Annotation> filter) {
         // 扫描类上注解
         final ListValueMap<Integer, Annotation> classAnnotations = new ListValueMap<>(new LinkedHashMap<>());
         scanner.scan((index, annotation) -> {

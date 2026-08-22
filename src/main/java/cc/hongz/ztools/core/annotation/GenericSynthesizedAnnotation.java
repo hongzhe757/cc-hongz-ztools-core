@@ -36,7 +36,7 @@ public class GenericSynthesizedAnnotation<R, T extends Annotation> implements Sy
      * @param horizontalDistance 距离根对象的垂直距离
      */
     protected GenericSynthesizedAnnotation(
-        R root, T annotation, int verticalDistance, int horizontalDistance) {
+        final R root, final T annotation, final int verticalDistance, final int horizontalDistance) {
         this.root = root;
         this.annotation = annotation;
         this.verticalDistance = verticalDistance;

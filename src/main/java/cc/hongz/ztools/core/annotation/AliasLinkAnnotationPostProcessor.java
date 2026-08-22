@@ -52,9 +52,9 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
      */
     @Override
     protected void processLinkedAttribute(
-        AnnotationSynthesizer synthesizer, Link annotation,
-        SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
-        SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute) {
+        final AnnotationSynthesizer synthesizer, final Link annotation,
+        final SynthesizedAnnotation originalAnnotation, final AnnotationAttribute originalAttribute,
+        final SynthesizedAnnotation linkedAnnotation, final AnnotationAttribute linkedAttribute) {
         // 校验别名关系
         checkAliasRelation(annotation, originalAttribute, linkedAttribute);
         // 处理aliasFor类型的关系
@@ -70,7 +70,7 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
      * 对指定注解属性进行包装，若该属性已被包装过，则递归以其为根节点的树结构，对树上全部的叶子节点进行包装.
      */
     private void wrappingLinkedAttribute(
-        AnnotationSynthesizer synthesizer, AnnotationAttribute originalAttribute, AnnotationAttribute aliasAttribute, BinaryOperator<AnnotationAttribute> wrapping) {
+        final AnnotationSynthesizer synthesizer, final AnnotationAttribute originalAttribute, final AnnotationAttribute aliasAttribute, final BinaryOperator<AnnotationAttribute> wrapping) {
         // 不是包装属性
         if (!aliasAttribute.isWrapped()) {
             processAttribute(synthesizer, originalAttribute, aliasAttribute, wrapping);
@@ -87,8 +87,8 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
      * 获取指定注解属性，然后将其再进行一层包装.
      */
     private void processAttribute(
-        AnnotationSynthesizer synthesizer, AnnotationAttribute originalAttribute,
-        AnnotationAttribute target, BinaryOperator<AnnotationAttribute> wrapping) {
+        final AnnotationSynthesizer synthesizer, final AnnotationAttribute originalAttribute,
+        final AnnotationAttribute target, final BinaryOperator<AnnotationAttribute> wrapping) {
         Opt.ofNullable(target.getAnnotationType())
             .map(synthesizer::getSynthesizedAnnotation)
             .ifPresent(t -> t.replaceAttribute(target.getAttributeName(), old -> wrapping.apply(old, originalAttribute)));

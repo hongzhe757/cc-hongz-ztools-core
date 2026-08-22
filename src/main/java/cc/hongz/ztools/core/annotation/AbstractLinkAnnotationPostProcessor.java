@@ -72,9 +72,9 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
      * @param linkedAttribute    {@link Link}指向的{@code originalAnnotation}中的关联属性，该参数可能为空
      */
     protected abstract void processLinkedAttribute(
-            AnnotationSynthesizer synthesizer, Link annotation,
-            SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
-            SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute
+            final AnnotationSynthesizer synthesizer, final Link annotation,
+            final SynthesizedAnnotation originalAnnotation, final AnnotationAttribute originalAttribute,
+            final SynthesizedAnnotation linkedAnnotation, final AnnotationAttribute linkedAttribute
     );
 
     // =========================== @Link注解的处理 ===========================

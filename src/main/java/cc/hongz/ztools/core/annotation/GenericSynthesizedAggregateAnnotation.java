@@ -122,11 +122,11 @@ public class GenericSynthesizedAggregateAnnotation
      * @param annotationScanner        注解扫描器，该扫描器必须支持扫描注解类
      */
     public GenericSynthesizedAggregateAnnotation(
-        List<Annotation> source,
-        SynthesizedAnnotationSelector annotationSelector,
-        SynthesizedAnnotationAttributeProcessor attributeProcessor,
-        Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
-        AnnotationScanner annotationScanner) {
+        final List<Annotation> source,
+        final SynthesizedAnnotationSelector annotationSelector,
+        final SynthesizedAnnotationAttributeProcessor attributeProcessor,
+        final Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
+        final AnnotationScanner annotationScanner) {
         this(
             null, 0, 0,
             source, annotationSelector, attributeProcessor, annotationPostProcessors, annotationScanner
@@ -146,12 +146,12 @@ public class GenericSynthesizedAggregateAnnotation
      * @param annotationScanner        注解扫描器，该扫描器必须支持扫描注解类
      */
     GenericSynthesizedAggregateAnnotation(
-        Object root, int verticalDistance, int horizontalDistance,
-        List<Annotation> source,
-        SynthesizedAnnotationSelector annotationSelector,
-        SynthesizedAnnotationAttributeProcessor attributeProcessor,
-        Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
-        AnnotationScanner annotationScanner) {
+        final Object root, final int verticalDistance, final int horizontalDistance,
+        final List<Annotation> source,
+        final SynthesizedAnnotationSelector annotationSelector,
+        final SynthesizedAnnotationAttributeProcessor attributeProcessor,
+        final Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
+        final AnnotationScanner annotationScanner) {
         super(source, annotationSelector, annotationPostProcessors, annotationScanner);
         Assert.notNull(attributeProcessor, "attributeProcessor must not null");
 

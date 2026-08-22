@@ -45,9 +45,9 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
      */
     @Override
     protected void processLinkedAttribute(
-        AnnotationSynthesizer synthesizer, Link annotation,
-        SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
-        SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute) {
+        final AnnotationSynthesizer synthesizer, final Link annotation,
+        final SynthesizedAnnotation originalAnnotation, final AnnotationAttribute originalAttribute,
+        final SynthesizedAnnotation linkedAnnotation, final AnnotationAttribute linkedAttribute) {
 
         // 镜像属性必然成对出现，因此此处必定存在三种情况：
         // 1.两属性都不为镜像属性，此时继续进行后续处理；

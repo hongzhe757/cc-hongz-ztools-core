@@ -43,9 +43,9 @@ public enum BeanInfoCache {
      * @since 5.4.1
      */
     public Map<String, PropertyDescriptor> getPropertyDescriptorMap(
-            Class<?> beanClass,
-            boolean ignoreCase,
-            Func0<Map<String, PropertyDescriptor>> supplier) {
+            final Class<?> beanClass,
+            final boolean ignoreCase,
+            final Func0<Map<String, PropertyDescriptor>> supplier) {
         return getCache(ignoreCase).computeIfAbsent(beanClass, (key)->supplier.callWithRuntimeException());
     }
 

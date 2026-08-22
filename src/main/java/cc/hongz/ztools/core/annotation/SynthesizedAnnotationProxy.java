@@ -42,9 +42,9 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Annotation> T create(
-            Class<T> annotationType,
-            AnnotationAttributeValueProvider annotationAttributeValueProvider,
-            SynthesizedAnnotation annotation) {
+            final Class<T> annotationType,
+            final AnnotationAttributeValueProvider annotationAttributeValueProvider,
+            final SynthesizedAnnotation annotation) {
         if (ObjectUtil.isNull(annotation)) {
             return null;
         }
@@ -68,7 +68,7 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
      * @return 代理注解
      */
     public static <T extends Annotation> T create(
-            Class<T> annotationType, SynthesizedAnnotation annotation) {
+            final Class<T> annotationType, final SynthesizedAnnotation annotation) {
         return create(annotationType, annotation, annotation);
     }
 

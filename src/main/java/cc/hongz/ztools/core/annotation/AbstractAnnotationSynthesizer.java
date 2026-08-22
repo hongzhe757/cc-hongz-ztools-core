@@ -58,10 +58,10 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
      * @param annotationScanner        注解扫描器，该扫描器需要支持扫描注解类
      */
     protected AbstractAnnotationSynthesizer(
-        T source,
-        SynthesizedAnnotationSelector annotationSelector,
-        Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
-        AnnotationScanner annotationScanner) {
+        final T source,
+        final SynthesizedAnnotationSelector annotationSelector,
+        final Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
+        final AnnotationScanner annotationScanner) {
         Assert.notNull(source, "source must not null");
         Assert.notNull(annotationSelector, "annotationSelector must not null");
         Assert.notNull(annotationPostProcessors, "annotationPostProcessors must not null");
