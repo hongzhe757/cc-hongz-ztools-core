@@ -51,13 +51,13 @@ import java.util.Comparator;
  * @since 4.2.2
  */
 public class CompareToBuilder implements Builder<Integer> {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/** 当前比较状态 */
+    /** 当前比较状态. */
     private int comparison;
 
     /**
-     * 构造，构造后调用append方法增加比较项，然后调用{@link #toComparison()}获取结果
+     * 构造，构造后调用append方法增加比较项，然后调用{@link #toComparison()}获取结果.
      */
     public CompareToBuilder() {
         comparison = 0;
@@ -78,76 +78,76 @@ public class CompareToBuilder implements Builder<Integer> {
      *
      * @param lhs  第一个对象
      * @param rhs  第二个对象
-     * @return a negative integer, zero, or a positive integer as <code>lhs</code>
-     *  is less than, equal to, or greater than <code>rhs</code>
+     * @return 负整数、零或正整数，表示 <code>lhs</code>
+     *  表示 <code>lhs</code> 小于、等于或大于 <code>rhs</code>
      * @throws NullPointerException  if either (but not both) parameters are
      *  <code>null</code>
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      */
     public static int reflectionCompare(final Object lhs, final Object rhs) {
         return reflectionCompare(lhs, rhs, false, null);
     }
 
     /**
-     * <p>Compares two <code>Object</code>s via reflection.</p>
+     * <p>通过反射比较两个 Object.
      *
-     * <p>Fields can be private, thus <code>AccessibleObject.setAccessible</code>
-     * is used to bypass normal access control checks. This will fail under a
-     * security manager unless the appropriate permissions are set.</p>
+     * <p>字段可以为 private，因此使用 <code>AccessibleObject.setAccessible</code>
+     * 绕过正常的访问控制检查，在 security manager 下会失败，除非正确设置权限.
+     * 安全权限未正确设置时会失败.
      *
      * <ul>
-     * <li>Static fields will not be compared</li>
+     * <li>static 字段不比较</li>
      * <li>If <code>compareTransients</code> is <code>true</code>,
-     *     compares transient members.  Otherwise ignores them, as they
-     *     are likely derived fields.</li>
-     * <li>Superclass fields will be compared</li>
+     *     比较 transient 成员，否则忽略它们，因为它们
+     *     可能是派生字段.</li>
+     * <li>父类字段会参与比较</li>
      * </ul>
      *
      * <p>If both <code>lhs</code> and <code>rhs</code> are <code>null</code>,
-     * they are considered equal.</p>
+     * 它们被认为相等.
      *
-     * @param lhs  left-hand object
-     * @param rhs  right-hand object
-     * @param compareTransients  whether to compare transient fields
-     * @return a negative integer, zero, or a positive integer as <code>lhs</code>
-     *  is less than, equal to, or greater than <code>rhs</code>
+     * @param lhs 左侧对象
+     * @param rhs 右侧对象
+     * @param compareTransients 是否比较 transient 字段
+     * @return 负整数、零或正整数，表示 <code>lhs</code>
+     *  表示 <code>lhs</code> 小于、等于或大于 <code>rhs</code>
      * @throws NullPointerException  if either <code>lhs</code> or <code>rhs</code>
-     *  (but not both) is <code>null</code>
+     *  （但不是两者）为 <code>null</code>
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      */
     public static int reflectionCompare(final Object lhs, final Object rhs, final boolean compareTransients) {
         return reflectionCompare(lhs, rhs, compareTransients, null);
     }
 
     /**
-     * <p>Compares two <code>Object</code>s via reflection.</p>
+     * <p>通过反射比较两个 Object.
      *
-     * <p>Fields can be private, thus <code>AccessibleObject.setAccessible</code>
-     * is used to bypass normal access control checks. This will fail under a
-     * security manager unless the appropriate permissions are set.</p>
+     * <p>字段可以为 private，因此使用 <code>AccessibleObject.setAccessible</code>
+     * 绕过正常的访问控制检查，在 security manager 下会失败，除非正确设置权限.
+     * 安全权限未正确设置时会失败.
      *
      * <ul>
-     * <li>Static fields will not be compared</li>
+     * <li>static 字段不比较</li>
      * <li>If <code>compareTransients</code> is <code>true</code>,
-     *     compares transient members.  Otherwise ignores them, as they
-     *     are likely derived fields.</li>
-     * <li>Superclass fields will be compared</li>
+     *     比较 transient 成员，否则忽略它们，因为它们
+     *     可能是派生字段.</li>
+     * <li>父类字段会参与比较</li>
      * </ul>
      *
      * <p>If both <code>lhs</code> and <code>rhs</code> are <code>null</code>,
-     * they are considered equal.</p>
+     * 它们被认为相等.
      *
-     * @param lhs  left-hand object
-     * @param rhs  right-hand object
-     * @param excludeFields  Collection of String fields to exclude
-     * @return a negative integer, zero, or a positive integer as <code>lhs</code>
-     *  is less than, equal to, or greater than <code>rhs</code>
+     * @param lhs 左侧对象
+     * @param rhs 右侧对象
+     * @param excludeFields 要排除的 String 字段集合
+     * @return 负整数、零或正整数，表示 <code>lhs</code>
+     *  表示 <code>lhs</code> 小于、等于或大于 <code>rhs</code>
      * @throws NullPointerException  if either <code>lhs</code> or <code>rhs</code>
-     *  (but not both) is <code>null</code>
+     *  （但不是两者）为 <code>null</code>
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      * @since 2.2
      */
     public static int reflectionCompare(final Object lhs, final Object rhs, final Collection<String> excludeFields) {
@@ -155,32 +155,32 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Compares two <code>Object</code>s via reflection.</p>
+     * <p>通过反射比较两个 Object.
      *
-     * <p>Fields can be private, thus <code>AccessibleObject.setAccessible</code>
-     * is used to bypass normal access control checks. This will fail under a
-     * security manager unless the appropriate permissions are set.</p>
+     * <p>字段可以为 private，因此使用 <code>AccessibleObject.setAccessible</code>
+     * 绕过正常的访问控制检查，在 security manager 下会失败，除非正确设置权限.
+     * 安全权限未正确设置时会失败.
      *
      * <ul>
-     * <li>Static fields will not be compared</li>
+     * <li>static 字段不比较</li>
      * <li>If <code>compareTransients</code> is <code>true</code>,
-     *     compares transient members.  Otherwise ignores them, as they
-     *     are likely derived fields.</li>
-     * <li>Superclass fields will be compared</li>
+     *     比较 transient 成员，否则忽略它们，因为它们
+     *     可能是派生字段.</li>
+     * <li>父类字段会参与比较</li>
      * </ul>
      *
      * <p>If both <code>lhs</code> and <code>rhs</code> are <code>null</code>,
-     * they are considered equal.</p>
+     * 它们被认为相等.
      *
-     * @param lhs  left-hand object
-     * @param rhs  right-hand object
-     * @param excludeFields  array of fields to exclude
-     * @return a negative integer, zero, or a positive integer as <code>lhs</code>
-     *  is less than, equal to, or greater than <code>rhs</code>
+     * @param lhs 左侧对象
+     * @param rhs 右侧对象
+     * @param excludeFields 要排除的字段数组
+     * @return 负整数、零或正整数，表示 <code>lhs</code>
+     *  表示 <code>lhs</code> 小于、等于或大于 <code>rhs</code>
      * @throws NullPointerException  if either <code>lhs</code> or <code>rhs</code>
-     *  (but not both) is <code>null</code>
+     *  （但不是两者）为 <code>null</code>
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      * @since 2.2
      */
     public static int reflectionCompare(final Object lhs, final Object rhs, final String... excludeFields) {
@@ -188,35 +188,35 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Compares two <code>Object</code>s via reflection.</p>
+     * <p>通过反射比较两个 Object.
      *
-     * <p>Fields can be private, thus <code>AccessibleObject.setAccessible</code>
-     * is used to bypass normal access control checks. This will fail under a
-     * security manager unless the appropriate permissions are set.</p>
+     * <p>字段可以为 private，因此使用 <code>AccessibleObject.setAccessible</code>
+     * 绕过正常的访问控制检查，在 security manager 下会失败，除非正确设置权限.
+     * 安全权限未正确设置时会失败.
      *
      * <ul>
-     * <li>Static fields will not be compared</li>
+     * <li>static 字段不比较</li>
      * <li>If the <code>compareTransients</code> is <code>true</code>,
-     *     compares transient members.  Otherwise ignores them, as they
-     *     are likely derived fields.</li>
+     *     比较 transient 成员，否则忽略它们，因为它们
+     *     可能是派生字段.</li>
      * <li>Compares superclass fields up to and including <code>reflectUpToClass</code>.
-     *     If <code>reflectUpToClass</code> is <code>null</code>, compares all superclass fields.</li>
+     *     如果 <code>reflectUpToClass</code> 为 <code>null</code> 则比较所有父类字段.</li>
      * </ul>
      *
      * <p>If both <code>lhs</code> and <code>rhs</code> are <code>null</code>,
-     * they are considered equal.</p>
+     * 它们被认为相等.
      *
-     * @param lhs  left-hand object
-     * @param rhs  right-hand object
-     * @param compareTransients  whether to compare transient fields
-     * @param reflectUpToClass  last superclass for which fields are compared
-     * @param excludeFields  fields to exclude
-     * @return a negative integer, zero, or a positive integer as <code>lhs</code>
-     *  is less than, equal to, or greater than <code>rhs</code>
+     * @param lhs 左侧对象
+     * @param rhs 右侧对象
+     * @param compareTransients 是否比较 transient 字段
+     * @param reflectUpToClass 最后一个比较字段的父类
+     * @param excludeFields 要排除的字段
+     * @return 负整数、零或正整数，表示 <code>lhs</code>
+     *  表示 <code>lhs</code> 小于、等于或大于 <code>rhs</code>
      * @throws NullPointerException  if either <code>lhs</code> or <code>rhs</code>
-     *  (but not both) is <code>null</code>
+     *  （但不是两者）为 <code>null</code>
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      * @since 2.2 (2.0 as <code>reflectionCompare(Object, Object, boolean, Class)</code>)
      */
     public static int reflectionCompare(
@@ -246,15 +246,15 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to <code>builder</code> the comparison of <code>lhs</code>
-     * to <code>rhs</code> using the fields defined in <code>clazz</code>.</p>
+     * <p>向 builder 追加 <code>lhs</code> 与 <code>rhs</code> 的比较
+     * 使用 <code>clazz</code> 中定义的字段.
      *
-     * @param lhs  left-hand object
-     * @param rhs  right-hand object
-     * @param clazz  <code>Class</code> that defines fields to be compared
-     * @param builder  <code>CompareToBuilder</code> to append to
-     * @param useTransients  whether to compare transient fields
-     * @param excludeFields  fields to exclude
+     * @param lhs 左侧对象
+     * @param rhs 右侧对象
+     * @param clazz 定义要比较字段的 <code>Class</code>
+     * @param builder 要追加到的 <code>CompareToBuilder</code>
+     * @param useTransients 是否比较 transient 字段
+     * @param excludeFields 要排除的字段
      */
     private static void reflectionAppend(
         final Object lhs,
@@ -275,8 +275,8 @@ public class CompareToBuilder implements Builder<Integer> {
                 try {
                     builder.append(f.get(lhs), f.get(rhs));
                 } catch (final IllegalAccessException e) {
-                    // This can't happen. Would get a Security exception instead.
-                    // Throw a runtime exception in case the impossible happens.
+                    // 此情况不会发生，否则会得到 Security 异常
+                    // 抛出运行时异常以防不可能的情况发生
                     throw new InternalError("Unexpected IllegalAccessException");
                 }
             }
@@ -285,11 +285,11 @@ public class CompareToBuilder implements Builder<Integer> {
 
     //-----------------------------------------------------------------------
     /**
-     * <p>Appends to the <code>builder</code> the <code>compareTo(Object)</code>
-     * result of the superclass.</p>
+     * <p>向 builder 追加父类的 <code>compareTo(Object)</code>
+     * 结果.
      *
-     * @param superCompareTo  result of calling <code>super.compareTo(Object)</code>
-     * @return this - used to chain append calls
+     * @param superCompareTo 调用 <code>super.compareTo(Object)</code> 的结果
+     * @return this - 用于链式追加调用
      * @since 2.0
      */
     public CompareToBuilder appendSuper(final int superCompareTo) {
@@ -302,51 +302,51 @@ public class CompareToBuilder implements Builder<Integer> {
 
     //-----------------------------------------------------------------------
     /**
-     * <p>Appends to the <code>builder</code> the comparison of
-     * two <code>Object</code>s.</p>
+     * <p>向 builder 追加比较
+     * 两个 Object.
      *
      * <ol>
-     * <li>Check if <code>lhs == rhs</code></li>
-     * <li>Check if either <code>lhs</code> or <code>rhs</code> is <code>null</code>,
-     *     a <code>null</code> object is less than a non-<code>null</code> object</li>
-     * <li>Check the object contents</li>
+     * <li>检查 <code>lhs == rhs</code></li>
+     * <li>检查 <code>lhs</code> 或 <code>rhs</code> 是否为 <code>null</code>，
+     *     <code>null</code> 对象小于非 <code>null</code> 对象</li>
+     * <li>检查对象内容</li>
      * </ol>
      *
-     * <p><code>lhs</code> must either be an array or implement {@link Comparable}.</p>
+     * <p><code>lhs</code> 必须是数组或实现 {@link Comparable}.
      *
-     * @param lhs  left-hand object
-     * @param rhs  right-hand object
-     * @return this - used to chain append calls
+     * @param lhs 左侧对象
+     * @param rhs 右侧对象
+     * @return this - 用于链式追加调用
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      */
     public CompareToBuilder append(final Object lhs, final Object rhs) {
         return append(lhs, rhs, null);
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the comparison of
-     * two <code>Object</code>s.</p>
+     * <p>向 builder 追加比较
+     * 两个 Object.
      *
      * <ol>
-     * <li>Check if <code>lhs == rhs</code></li>
-     * <li>Check if either <code>lhs</code> or <code>rhs</code> is <code>null</code>,
-     *     a <code>null</code> object is less than a non-<code>null</code> object</li>
-     * <li>Check the object contents</li>
+     * <li>检查 <code>lhs == rhs</code></li>
+     * <li>检查 <code>lhs</code> 或 <code>rhs</code> 是否为 <code>null</code>，
+     *     <code>null</code> 对象小于非 <code>null</code> 对象</li>
+     * <li>检查对象内容</li>
      * </ol>
      *
-     * <p>If <code>lhs</code> is an array, array comparison methods will be used.
-     * Otherwise <code>comparator</code> will be used to compare the objects.
-     * If <code>comparator</code> is <code>null</code>, <code>lhs</code> must
-     * implement {@link Comparable} instead.</p>
+     * <p>如果 <code>lhs</code> 是数组，使用数组比较方法.
+     * 否则使用 <code>comparator</code> 比较对象.
+     * 如果 <code>comparator</code> 为 <code>null</code>，<code>lhs</code> 必须
+     * 改为实现 {@link Comparable}.
      *
-     * @param lhs  left-hand object
-     * @param rhs  right-hand object
-     * @param comparator  <code>Comparator</code> used to compare the objects,
-     *  <code>null</code> means treat lhs as <code>Comparable</code>
-     * @return this - used to chain append calls
+     * @param lhs 左侧对象
+     * @param rhs 右侧对象
+     * @param comparator  <code>Comparator</code> 用于比较对象的 <code>Comparator</code>，
+     *  <code>null</code> 表示将 lhs 视为 <code>Comparable</code>
+     * @return this - 用于链式追加调用
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      * @since 2.0
      */
     public CompareToBuilder append(final Object lhs, final Object rhs, final Comparator<?> comparator) {
@@ -365,9 +365,9 @@ public class CompareToBuilder implements Builder<Integer> {
             return this;
         }
         if (lhs.getClass().isArray()) {
-            // switch on type of array, to dispatch to the correct handler
-            // handles multi dimensional arrays
-            // throws a ClassCastException if rhs is not the correct array type
+            // 按数组类型分发到正确的处理器
+            // 处理多维数组
+            // 如果 rhs 不是正确的数组类型则抛出 ClassCastException
             if (lhs instanceof long[]) {
                 append((long[]) lhs, (long[]) rhs);
             } else if (lhs instanceof int[]) {
@@ -385,12 +385,12 @@ public class CompareToBuilder implements Builder<Integer> {
             } else if (lhs instanceof boolean[]) {
                 append((boolean[]) lhs, (boolean[]) rhs);
             } else {
-                // not an array of primitives
-                // throws a ClassCastException if rhs is not an array
+                // 不是基本类型数组
+                // 如果 rhs 不是数组则抛出 ClassCastException
                 append((Object[]) lhs, (Object[]) rhs, comparator);
             }
         } else {
-            // the simple case, not an array, just test the element
+            // 简单情况，非数组，直接测试元素
             if (comparator == null) {
                 @SuppressWarnings("unchecked") // assume this can be done; if not throw CCE as per Javadoc
                 final Comparable<Object> comparable = (Comparable<Object>) lhs;
@@ -406,12 +406,12 @@ public class CompareToBuilder implements Builder<Integer> {
 
     //-------------------------------------------------------------------------
     /**
-     * Appends to the <code>builder</code> the comparison of
-     * two <code>long</code>s.
+     * 向 builder 追加比较
+     * 两个 long 值.
      *
-     * @param lhs  left-hand value
-     * @param rhs  right-hand value
-     * @return this - used to chain append calls
+     * @param lhs 左侧值
+     * @param rhs 右侧值
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final long lhs, final long rhs) {
         if (comparison != 0) {
@@ -422,12 +422,12 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * Appends to the <code>builder</code> the comparison of
-     * two <code>int</code>s.
+     * 向 builder 追加比较
+     * 两个 int 值.
      *
-     * @param lhs  left-hand value
-     * @param rhs  right-hand value
-     * @return this - used to chain append calls
+     * @param lhs 左侧值
+     * @param rhs 右侧值
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final int lhs, final int rhs) {
         if (comparison != 0) {
@@ -438,12 +438,12 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * Appends to the <code>builder</code> the comparison of
-     * two <code>short</code>s.
+     * 向 builder 追加比较
+     * 两个 short 值.
      *
-     * @param lhs  left-hand value
-     * @param rhs  right-hand value
-     * @return this - used to chain append calls
+     * @param lhs 左侧值
+     * @param rhs 右侧值
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final short lhs, final short rhs) {
         if (comparison != 0) {
@@ -454,12 +454,12 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * Appends to the <code>builder</code> the comparison of
-     * two <code>char</code>s.
+     * 向 builder 追加比较
+     * 两个 char 值.
      *
-     * @param lhs  left-hand value
-     * @param rhs  right-hand value
-     * @return this - used to chain append calls
+     * @param lhs 左侧值
+     * @param rhs 右侧值
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final char lhs, final char rhs) {
         if (comparison != 0) {
@@ -470,12 +470,12 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * Appends to the <code>builder</code> the comparison of
-     * two <code>byte</code>s.
+     * 向 builder 追加比较
+     * 两个 byte 值.
      *
-     * @param lhs  left-hand value
-     * @param rhs  right-hand value
-     * @return this - used to chain append calls
+     * @param lhs 左侧值
+     * @param rhs 右侧值
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final byte lhs, final byte rhs) {
         if (comparison != 0) {
@@ -486,17 +486,17 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the comparison of
-     * two <code>double</code>s.</p>
+     * <p>向 builder 追加比较
+     * 两个 double 值.
      *
-     * <p>This handles NaNs, Infinities, and <code>-0.0</code>.</p>
+     * <p>This handles NaNs, Infinities, and <code>-0.0</code>.
      *
      * <p>It is compatible with the hash code generated by
-     * <code>HashCodeBuilder</code>.</p>
+     * <code>HashCodeBuilder</code>.
      *
-     * @param lhs  left-hand value
-     * @param rhs  right-hand value
-     * @return this - used to chain append calls
+     * @param lhs 左侧值
+     * @param rhs 右侧值
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final double lhs, final double rhs) {
         if (comparison != 0) {
@@ -507,17 +507,17 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the comparison of
-     * two <code>float</code>s.</p>
+     * <p>向 builder 追加比较
+     * 两个 float 值.
      *
-     * <p>This handles NaNs, Infinities, and <code>-0.0</code>.</p>
+     * <p>This handles NaNs, Infinities, and <code>-0.0</code>.
      *
      * <p>It is compatible with the hash code generated by
-     * <code>HashCodeBuilder</code>.</p>
+     * <code>HashCodeBuilder</code>.
      *
-     * @param lhs  left-hand value
-     * @param rhs  right-hand value
-     * @return this - used to chain append calls
+     * @param lhs 左侧值
+     * @param rhs 右侧值
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final float lhs, final float rhs) {
         if (comparison != 0) {
@@ -528,12 +528,12 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * Appends to the <code>builder</code> the comparison of
-     * two <code>booleans</code>s.
+     * 向 builder 追加比较
+     * 两个 boolean 值.
      *
-     * @param lhs  left-hand value
-     * @param rhs  right-hand value
-     * @return this - used to chain append calls
+     * @param lhs 左侧值
+     * @param rhs 右侧值
+     * @return this - 用于链式追加调用
       */
     public CompareToBuilder append(final boolean lhs, final boolean rhs) {
         if (comparison != 0) {
@@ -552,50 +552,50 @@ public class CompareToBuilder implements Builder<Integer> {
 
     //-----------------------------------------------------------------------
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>Object</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 Object 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a short length array is less than a long length array</li>
-     *  <li>Check array contents element by element using {@link #append(Object, Object, Comparator)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(Object, Object, Comparator)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * <p>This method will also will be called for the top level of multi-dimensional,
-     * ragged, and multi-typed arrays.</p>
+     * <p>此方法也会被调用用于多维、
+     * 不规则和多类型数组的顶层.
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      */
     public CompareToBuilder append(final Object[] lhs, final Object[] rhs) {
         return append(lhs, rhs, null);
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>Object</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 Object 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a short length array is less than a long length array</li>
-     *  <li>Check array contents element by element using {@link #append(Object, Object, Comparator)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(Object, Object, Comparator)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * <p>This method will also will be called for the top level of multi-dimensional,
-     * ragged, and multi-typed arrays.</p>
+     * <p>此方法也会被调用用于多维、
+     * 不规则和多类型数组的顶层.
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
      * @param comparator  <code>Comparator</code> to use to compare the array elements,
-     *  <code>null</code> means to treat <code>lhs</code> elements as <code>Comparable</code>.
-     * @return this - used to chain append calls
+     *  <code>null</code> 表示将 <code>lhs</code> 元素视为 <code>Comparable</code>.
+     * @return this - 用于链式追加调用
      * @throws ClassCastException  if <code>rhs</code> is not assignment-compatible
-     *  with <code>lhs</code>
+     *  与 <code>lhs</code> 赋值不兼容
      * @since 2.0
      */
     public CompareToBuilder append(final Object[] lhs, final Object[] rhs, final Comparator<?> comparator) {
@@ -624,19 +624,19 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>long</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 long 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a shorter length array is less than a longer length array</li>
-     *  <li>Check array contents element by element using {@link #append(long, long)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(long, long)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final long[] lhs, final long[] rhs) {
         if (comparison != 0) {
@@ -664,19 +664,19 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>int</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 int 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a shorter length array is less than a longer length array</li>
-     *  <li>Check array contents element by element using {@link #append(int, int)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(int, int)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final int[] lhs, final int[] rhs) {
         if (comparison != 0) {
@@ -704,19 +704,19 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>short</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 short 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a shorter length array is less than a longer length array</li>
-     *  <li>Check array contents element by element using {@link #append(short, short)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(short, short)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final short[] lhs, final short[] rhs) {
         if (comparison != 0) {
@@ -744,19 +744,19 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>char</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 char 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a shorter length array is less than a longer length array</li>
-     *  <li>Check array contents element by element using {@link #append(char, char)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(char, char)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final char[] lhs, final char[] rhs) {
         if (comparison != 0) {
@@ -784,19 +784,19 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>byte</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 byte 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a shorter length array is less than a longer length array</li>
-     *  <li>Check array contents element by element using {@link #append(byte, byte)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(byte, byte)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final byte[] lhs, final byte[] rhs) {
         if (comparison != 0) {
@@ -824,19 +824,19 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>double</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 double 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a shorter length array is less than a longer length array</li>
-     *  <li>Check array contents element by element using {@link #append(double, double)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(double, double)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final double[] lhs, final double[] rhs) {
         if (comparison != 0) {
@@ -864,19 +864,19 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>float</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 float 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a shorter length array is less than a longer length array</li>
-     *  <li>Check array contents element by element using {@link #append(float, float)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(float, float)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final float[] lhs, final float[] rhs) {
         if (comparison != 0) {
@@ -904,19 +904,19 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * <p>Appends to the <code>builder</code> the deep comparison of
-     * two <code>boolean</code> arrays.</p>
+     * <p>向 builder 追加深度比较
+     * 两个 boolean 数组.
      *
      * <ol>
-     *  <li>Check if arrays are the same using <code>==</code></li>
-     *  <li>Check if for <code>null</code>, <code>null</code> is less than non-<code>null</code></li>
-     *  <li>Check array length, a shorter length array is less than a longer length array</li>
-     *  <li>Check array contents element by element using {@link #append(boolean, boolean)}</li>
+     *  <li>使用 <code>==</code> 检查数组是否相同</li>
+     *  <li>检查 null，null 小于非 null</li>
+     *  <li>检查数组长度，短数组小于长数组</li>
+     *  <li>使用 {@link #append(boolean, boolean)} 逐元素检查数组内容</li>
      * </ol>
      *
-     * @param lhs  left-hand array
-     * @param rhs  right-hand array
-     * @return this - used to chain append calls
+     * @param lhs 左侧数组
+     * @param rhs 右侧数组
+     * @return this - 用于链式追加调用
      */
     public CompareToBuilder append(final boolean[] lhs, final boolean[] rhs) {
         if (comparison != 0) {
@@ -945,12 +945,12 @@ public class CompareToBuilder implements Builder<Integer> {
 
     //-----------------------------------------------------------------------
     /**
-     * Returns a negative integer, a positive integer, or zero as
-     * the <code>builder</code> has judged the "left-hand" side
-     * as less than, greater than, or equal to the "right-hand"
-     * side.
+     * 返回负整数、正整数或零，表示
+     * builder 判断左侧
+     * 小于、大于或等于右侧
+     * （比较结果）.
      *
-     * @return final comparison result
+     * @return 最终比较结果
      * @see #build()
      */
     public int toComparison() {
@@ -958,12 +958,12 @@ public class CompareToBuilder implements Builder<Integer> {
     }
 
     /**
-     * Returns a negative Integer, a positive Integer, or zero as
-     * the <code>builder</code> has judged the "left-hand" side
-     * as less than, greater than, or equal to the "right-hand"
-     * side.
+     * 返回负 Integer、正 Integer 或零，表示
+     * builder 判断左侧
+     * 小于、大于或等于右侧
+     * （比较结果）.
      *
-     * @return final comparison result as an Integer
+     * @return 最终比较结果 as an Integer
      * @see #toComparison()
      * @since 3.0
      */
