@@ -105,13 +105,11 @@ public class GenericAnnotationScanner implements AnnotationScanner {
         // 注解元素是类
         if (annotatedEle instanceof Class) {
             scanElements(typeScanner, consumer, annotatedEle, targetFilter);
-        }
-        // 注解元素是方法
-        else if (annotatedEle instanceof Method) {
+        } else if (annotatedEle instanceof Method) {
+            // 注解元素是方法
             scanElements(methodScanner, consumer, annotatedEle, targetFilter);
-        }
-        // 注解元素是其他类型
-        else {
+        } else {
+            // 注解元素是其他类型
             scanElements(elementScanner, consumer, annotatedEle, targetFilter);
         }
     }

@@ -43,8 +43,11 @@ import java.util.stream.Collectors;
  * @author looly
  * @since 4.0.9
  */
-public class AnnotationUtil {
+public final class AnnotationUtil {
 
+
+    private AnnotationUtil() {
+    }
     /**
      * 元注解.
      */

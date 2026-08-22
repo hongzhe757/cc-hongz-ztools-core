@@ -23,6 +23,12 @@ public class CacheableAnnotationAttribute implements AnnotationAttribute {
     private final Annotation annotation;
     private final Method attribute;
 
+    /**
+     * 构造.
+     *
+     * @param annotation 注解
+     * @param attribute  注解属性
+     */
     public CacheableAnnotationAttribute(final Annotation annotation,  final Method attribute) {
         Assert.notNull(annotation, "annotation must not null");
         Assert.notNull(attribute, "attribute must not null");

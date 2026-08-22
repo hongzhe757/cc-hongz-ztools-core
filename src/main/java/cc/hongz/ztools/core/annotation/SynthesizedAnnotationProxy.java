@@ -82,6 +82,7 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
         return ClassUtil.isAssignable(SyntheticProxyAnnotation.class, annotationType);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     SynthesizedAnnotationProxy(final AnnotationAttributeValueProvider annotationAttributeValueProvider,  final SynthesizedAnnotation annotation) {
         Assert.notNull(annotationAttributeValueProvider, "annotationAttributeValueProvider must not null");
         Assert.notNull(annotation, "annotation must not null");

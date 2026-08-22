@@ -11,6 +11,12 @@ import cc.hongz.ztools.core.lang.Assert;
  */
 public class MirroredAnnotationAttribute extends AbstractWrappedAnnotationAttribute {
 
+    /**
+     * 构造.
+     *
+     * @param origin 原始属性
+     * @param linked 关联属性
+     */
     public MirroredAnnotationAttribute(final AnnotationAttribute origin,  final AnnotationAttribute linked) {
         super(origin, linked);
     }

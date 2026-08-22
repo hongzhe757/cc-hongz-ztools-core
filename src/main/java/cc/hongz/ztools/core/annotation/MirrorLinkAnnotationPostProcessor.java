@@ -90,16 +90,14 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
                 "attribute [{}] cannot mirror for [{}], because it's already mirrored for [{}]",
                 original.getAttribute(), mirror.getAttribute(), ((MirroredAnnotationAttribute)original).getLinked()
             );
-        }
-        // 镜像字段已经跟其他字段形成镜像
-        else if (!originalAttributeMirrored && mirrorAttributeMirrored) {
+        } else if (!originalAttributeMirrored && mirrorAttributeMirrored) {
+            // 镜像字段已经跟其他字段形成镜像
             errorMsg = CharSequenceUtil.format(
                 "attribute [{}] cannot mirror for [{}], because it's already mirrored for [{}]",
                 mirror.getAttribute(), original.getAttribute(), ((MirroredAnnotationAttribute)mirror).getLinked()
             );
-        }
-        // 两者都形成了镜像，但是都未指向对方，理论上不会存在该情况
-        else {
+        } else {
+            // 两者都形成了镜像，但是都未指向对方，理论上不会存在该情况
             errorMsg = CharSequenceUtil.format(
                 "attribute [{}] cannot mirror for [{}], because [{}] already mirrored for [{}] and  [{}] already mirrored for [{}]",
                 mirror.getAttribute(), original.getAttribute(),

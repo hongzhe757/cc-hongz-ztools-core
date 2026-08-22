@@ -10,6 +10,9 @@ import cc.hongz.ztools.core.map.reference.WeakKeyValueConcurrentMap;
  * @author Looly
  */
 public enum BeanDescCache {
+    /**
+     * 单例.
+     */
     INSTANCE;
 
     private final WeakKeyValueConcurrentMap<Class<?>, BeanDesc> bdCache = new WeakKeyValueConcurrentMap<>();

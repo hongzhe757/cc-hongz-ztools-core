@@ -19,8 +19,11 @@ import java.util.Map;
  * @author fastjson2, Looly
  * @since 5.8.38
  */
-public class RecordUtil {
+public final class RecordUtil {
 
+
+    private RecordUtil() {
+    }
     private static volatile Class<?> RECORD_CLASS;
 
     private static volatile Method METHOD_GET_RECORD_COMPONENTS;
@@ -33,6 +36,7 @@ public class RecordUtil {
      * @param clazz 类
      * @return 是否为Record类
      */
+    @SuppressWarnings("checkstyle:MagicNumber")
     public static boolean isRecord(final Class<?> clazz) {
         if (JdkUtil.JVM_VERSION < 14) {
             // JDK14+支持Record类
@@ -63,7 +67,7 @@ public class RecordUtil {
      * @param recordClass Record类
      * @return 字段数组
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "checkstyle:MagicNumber"})
     public static Map.Entry<String, Type>[] getRecordComponents(final Class<?> recordClass) {
         if (JdkUtil.JVM_VERSION < 14) {
             // JDK14+支持Record类

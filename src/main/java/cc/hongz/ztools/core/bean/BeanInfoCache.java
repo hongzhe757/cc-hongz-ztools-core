@@ -14,6 +14,9 @@ import java.util.Map;
  * @author Looly
  */
 public enum BeanInfoCache {
+    /**
+     * 单例.
+     */
     INSTANCE;
 
     private final WeakKeyValueConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> pdCache = new WeakKeyValueConcurrentMap<>();

@@ -16,8 +16,11 @@ import java.lang.invoke.SerializedLambda;
  * @author looly, Scen
  * @since 5.6.3
  */
-public class LambdaUtil {
+public final class LambdaUtil {
 
+
+    private LambdaUtil() {
+    }
     private static final WeakKeyValueConcurrentMap<String, SerializedLambda> cache = new WeakKeyValueConcurrentMap<>();
 
     /**
@@ -69,7 +72,7 @@ public class LambdaUtil {
      * @return 返回解析后的结果
      */
     public static <T> SerializedLambda resolve(final Func1<T, ?> func) {
-        return _resolve(func);
+        return resolve(func);
     }
 
     /**
@@ -82,7 +85,7 @@ public class LambdaUtil {
      * @since 5.7.23
      */
     public static <R> SerializedLambda resolve(final Func0<R> func) {
-        return _resolve(func);
+        return resolve(func);
     }
 
     /**
@@ -201,7 +204,7 @@ public class LambdaUtil {
      * @param func 需要解析的 lambda 对象
      * @return 返回解析后的结果
      */
-    private static SerializedLambda _resolve(final Serializable func) {
+    private static SerializedLambda resolve(final Serializable func) {
         return cache.computeIfAbsent(func.getClass().getName(), (key) -> ReflectUtil.invoke(func, "writeReplace"));
     }
     //endregion

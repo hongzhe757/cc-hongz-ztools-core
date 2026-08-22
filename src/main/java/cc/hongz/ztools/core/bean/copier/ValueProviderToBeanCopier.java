@@ -72,7 +72,7 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
             }
 
             // 获取目标字段真实类型
-            final Type fieldType = TypeUtil.getActualType(this.targetType ,tDesc.getFieldType());
+            final Type fieldType = TypeUtil.getActualType(this.targetType, tDesc.getFieldType());
 
             // 检查目标对象属性是否过滤属性
             Object sValue = source.value(tFieldName, fieldType);

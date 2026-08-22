@@ -208,8 +208,12 @@ public abstract class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V
     @Override
     public void clear() {
         this.raw.clear();
-        while (lastKeyQueue.poll() != null) ;
-        while (lastValueQueue.poll() != null) ;
+        while (lastKeyQueue.poll() != null) {
+            // 清空队列中残留的引用
+        }
+        while (lastValueQueue.poll() != null) {
+            // 清空队列中残留的引用
+        }
     }
 
     @Override

@@ -47,8 +47,11 @@ import java.util.stream.Collectors;
  * @author Looly
  * @since 3.1.2
  */
-public class BeanUtil {
+public final class BeanUtil {
 
+
+    private BeanUtil() {
+    }
     /**
      * 判断是否为可读的Bean对象，判定方法是：.
      *
@@ -653,6 +656,7 @@ public class BeanUtil {
      * @return Map
      * @since 5.8.0
      */
+    @SuppressWarnings("checkstyle:MagicNumber")
     public static Map<String, Object> beanToMap(final Object bean,  final String... properties) {
         int mapSize = 16;
         Editor<String> keyEditor = null;
