@@ -3,6 +3,7 @@ package cc.hongz.ztools.core.codec;
 import cc.hongz.ztools.core.util.CharsetUtil;
 import cc.hongz.ztools.core.util.RandomUtil;
 import cc.hongz.ztools.core.util.StrUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -20,11 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Base64 编码")
 class Base64Test {
 
     /**
      * 验证 {@link Base64#encode(byte[])} 对 null 返回 null.
      */
+    @DisplayName("验证 encode 对 null 返回 null")
     @Test
     void encodeNullReturnsNull() {
         assertNull(Base64.encode((byte[]) null));
@@ -33,6 +36,7 @@ class Base64Test {
     /**
      * 验证字节数组往返编解码.
      */
+    @DisplayName("验证字节数组往返编解码")
     @Test
     void encodeBytesRoundTrip() {
         final byte[] raw = "hello".getBytes(StandardCharsets.UTF_8);
@@ -44,6 +48,7 @@ class Base64Test {
     /**
      * 验证 URL Safe 编码不含 {@code +} 与 {@code /}.
      */
+    @DisplayName("验证 URL Safe 编码不含 + 与 /")
     @Test
     void encodeUrlSafe() {
         final byte[] raw = new byte[] {(byte) 0xFB, (byte) 0xEF, (byte) 0xBE};
@@ -55,6 +60,7 @@ class Base64Test {
     /**
      * 验证 {@link Base64#isBase64(CharSequence)} 对合法 Base64 返回 true.
      */
+    @DisplayName("验证 isBase64 对合法 Base64 返回 true")
     @Test
     void isBase64Valid() {
         final String sample = Base64.encode(
@@ -65,6 +71,7 @@ class Base64Test {
     /**
      * 验证 {@link Base64#isBase64(CharSequence)} 对非法 padding 位置返回 false.
      */
+    @DisplayName("验证 isBase64 对非法 padding 位置返回 false")
     @Test
     void isBase64InvalidPadding() {
         final String valid = "dW1kb3MzejR3bmljM2J6=djAyZzcwbWk5M213Nnk3cWQ3eDJwOHFuNXJsYmMwaXhxbmg0dmxrcmN0anRkbmd3"
@@ -75,6 +82,7 @@ class Base64Test {
     /**
      * 验证 UTF-8 字符串编解码.
      */
+    @DisplayName("验证 UTF-8 字符串编解码")
     @Test
     void encodeAndDecodeUtf8() {
         final String text = "伦家是一个非常长的字符串66";
@@ -86,6 +94,7 @@ class Base64Test {
     /**
      * 验证无 padding 编解码.
      */
+    @DisplayName("验证无 padding 编解码")
     @Test
     void encodeAndDecodeWithoutPadding() {
         final String text = "伦家是一个非常长的字符串66";
@@ -97,6 +106,7 @@ class Base64Test {
     /**
      * 验证单字符 {@code :} 编解码.
      */
+    @DisplayName("验证单字符编解码")
     @Test
     void encodeAndDecodeSingleChar() {
         final String text = ":";
@@ -107,6 +117,7 @@ class Base64Test {
     /**
      * 验证 GBK 编解码.
      */
+    @DisplayName("验证 GBK 编解码")
     @Test
     void encodeAndDecodeGbk() {
         final String text = "订购成功立即生效，30天内可观看专区中除单独计费影片外的所有内容，到期自动取消。";
@@ -117,6 +128,7 @@ class Base64Test {
     /**
      * 验证 emoji 编解码.
      */
+    @DisplayName("验证 emoji 编解码")
     @Test
     void encodeAndDecodeEmoji() {
         final String text = "😄";
@@ -127,6 +139,7 @@ class Base64Test {
     /**
      * 验证与 JDK {@link java.util.Base64} 编码结果一致.
      */
+    @DisplayName("验证与 JDK Base64 编码结果一致")
     @Test
     void encodeMatchesJdk() {
         final String jdk = java.util.Base64.getEncoder().encodeToString("111".getBytes(StandardCharsets.UTF_8));

@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Hashids 编码")
 class HashidsTest {
 
     /**
      * 验证 Hex 编码与解码（含 {@code 0x} / {@code 0X} 前缀）.
      */
+    @DisplayName("Hex 编码与解码（含 0x/0X 前缀）")
     @Test
     void hexEncodeDecode() {
         final Hashids hashids = Hashids.create("my awesome salt".toCharArray());

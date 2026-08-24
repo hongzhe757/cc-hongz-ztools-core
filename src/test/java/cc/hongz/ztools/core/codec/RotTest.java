@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author hongzhe.qin
  */
+@DisplayName("ROT 编码")
 class RotTest {
 
     /**
      * 验证 ROT13 往返编解码.
      */
+    @DisplayName("ROT13 往返编解码")
     @Test
     void rot13RoundTrip() {
         final String plain = "1f2e9df6131b480b9fdddc633cf24996";

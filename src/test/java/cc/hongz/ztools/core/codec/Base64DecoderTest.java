@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -14,11 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Base64 解码器")
 class Base64DecoderTest {
 
     /**
      * 验证字符串解码与 {@link Base64#decodeStr(CharSequence)} 一致.
      */
+    @DisplayName("验证字符串解码与 Base64.decodeStr 一致")
     @Test
     void decodeStrMatchesFacade() {
         final String encoded = "aGVsbG8=";
@@ -29,6 +32,7 @@ class Base64DecoderTest {
     /**
      * 验证 {@link Base64Decoder#isBase64Code(byte)} 对 padding 字符.
      */
+    @DisplayName("验证 isBase64Code 对 padding 字符")
     @Test
     void isBase64CodePadding() {
         assertTrue(Base64Decoder.isBase64Code((byte) '='));
@@ -39,6 +43,7 @@ class Base64DecoderTest {
     /**
      * 验证带非 Base64 杂质时可截断解码.
      */
+    @DisplayName("验证带非 Base64 杂质时可截断解码")
     @Test
     void decodeWithTrailingGarbage() {
         final byte[] in = "aGVsbG8=!!!".getBytes(StandardCharsets.US_ASCII);
@@ -48,6 +53,7 @@ class Base64DecoderTest {
     /**
      * 验证子数组解码.
      */
+    @DisplayName("验证子数组解码")
     @Test
     void decodeSlice() {
         final byte[] in = "XXaGVsbG8=YY".getBytes(StandardCharsets.US_ASCII);

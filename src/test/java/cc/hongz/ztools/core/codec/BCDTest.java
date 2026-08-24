@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author hongzhe.qin
  */
+@DisplayName("BCD 编码")
 class BCDTest {
 
     /**
      * 验证字符串转 BCD 再转回字符串.
      */
+    @DisplayName("验证字符串转 BCD 再转回字符串")
     @Test
     void strToBcdAndBack() {
         final String text = "123456ABCDEF";

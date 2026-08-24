@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Punycode 编码")
 class PunyCodeTest {
 
     /**
      * 验证含中文标签的编解码.
      */
+    @DisplayName("含中文标签的编解码")
     @Test
     void encodeDecodeLabel() {
         final String text = "Hutool编码器";
@@ -28,6 +31,7 @@ class PunyCodeTest {
     /**
      * 验证纯 ASCII 标签无需编码.
      */
+    @DisplayName("纯 ASCII 标签无需编码")
     @Test
     void encodeAsciiUnchanged() {
         assertEquals("Hutool", PunyCode.encode("Hutool"));
@@ -36,6 +40,7 @@ class PunyCodeTest {
     /**
      * 验证中文顶级域完整域名编解码.
      */
+    @DisplayName("中文顶级域完整域名编解码")
     @Test
     void encodeDecodeDomainChineseTld() {
         final String domain = "赵新虎.中国";
@@ -45,6 +50,7 @@ class PunyCodeTest {
     /**
      * 验证中文标签 + {@code .com} 域名编码格式.
      */
+    @DisplayName("中文标签 + .com 域名编码格式")
     @Test
     void encodeDecodeDomainCom() {
         final String domain = "赵新虎.com";
@@ -55,6 +61,7 @@ class PunyCodeTest {
     /**
      * 验证大写 {@code .COM} 后缀保留大小写.
      */
+    @DisplayName("大写 .COM 后缀保留大小写")
     @Test
     void encodeDecodeDomainComUpperCase() {
         final String domain = "赵新虎.COM";

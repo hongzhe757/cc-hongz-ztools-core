@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.codec;
 
 import cc.hongz.ztools.core.util.StrUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -16,11 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Base16 编码器")
 class Base16CodecTest {
 
     /**
      * 验证小写 Hex 往返编解码.
      */
+    @DisplayName("验证小写 Hex 往返编解码")
     @Test
     void encodeDecodeLower() {
         final byte[] raw = "hello".getBytes(StandardCharsets.UTF_8);
@@ -32,6 +35,7 @@ class Base16CodecTest {
     /**
      * 验证大写 Hex 往返编解码.
      */
+    @DisplayName("验证大写 Hex 往返编解码")
     @Test
     void encodeDecodeUpper() {
         final byte[] raw = new byte[] {0x01, (byte) 0xFF};
@@ -43,6 +47,7 @@ class Base16CodecTest {
     /**
      * 验证奇数位 Hex 解码时前补 0.
      */
+    @DisplayName("验证奇数位 Hex 解码前补 0")
     @Test
     void decodeOddLengthHex() {
         assertArrayEquals(new byte[] {0x0A}, Base16Codec.CODEC_LOWER.decode("a"));
@@ -51,6 +56,7 @@ class Base16CodecTest {
     /**
      * 验证 {@link Base16Codec#toUnicodeHex(char)} 输出格式.
      */
+    @DisplayName("验证 Unicode 转义输出格式")
     @Test
     void toUnicodeHex() {
         assertEquals("\\u4f60", Base16Codec.CODEC_LOWER.toUnicodeHex('你'));
@@ -59,6 +65,7 @@ class Base16CodecTest {
     /**
      * 验证解码前去除空白.
      */
+    @DisplayName("验证解码前去除空白")
     @Test
     void decodeIgnoresWhitespace() {
         final byte[] raw = new byte[] {0x12, 0x34};
@@ -68,6 +75,7 @@ class Base16CodecTest {
     /**
      * 验证空输入解码返回 null.
      */
+    @DisplayName("验证空输入解码返回 null")
     @Test
     void decodeEmptyReturnsNull() {
         assertNull(Base16Codec.CODEC_LOWER.decode(StrUtil.EMPTY));

@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,11 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author hongzhe.qin
  */
+@DisplayName("消息摘要")
 class DigestCodecTest {
 
     /**
      * 验证 {@link DigestCodec#md5Hex(byte[])} 对 null 返回 null.
      */
+    @DisplayName("MD5 对 null 返回 null")
     @Test
     void md5NullReturnsNull() {
         assertNull(DigestCodec.md5Hex((byte[]) null));
@@ -24,6 +27,7 @@ class DigestCodecTest {
     /**
      * 验证空串 MD5 Hex.
      */
+    @DisplayName("空串 MD5 Hex")
     @Test
     void md5Empty() {
         assertEquals("d41d8cd98f00b204e9800998ecf8427e", DigestCodec.md5Hex(""));
@@ -32,6 +36,7 @@ class DigestCodecTest {
     /**
      * 验证 {@code hello} MD5 Hex.
      */
+    @DisplayName("hello MD5 Hex")
     @Test
     void md5Hello() {
         assertEquals("5d41402abc4b2a76b9719d911017c592", DigestCodec.md5Hex("hello"));
@@ -40,6 +45,7 @@ class DigestCodecTest {
     /**
      * 验证 {@code hello} SHA-256 Hex.
      */
+    @DisplayName("hello SHA-256 Hex")
     @Test
     void sha256Hello() {
         assertEquals(
@@ -50,6 +56,7 @@ class DigestCodecTest {
     /**
      * 验证字节数组 SHA-256 长度为 64 位 Hex.
      */
+    @DisplayName("字节数组 SHA-256 长度为 64 位 Hex")
     @Test
     void sha256Bytes() {
         final byte[] raw = {0x01, 0x02, 0x03};

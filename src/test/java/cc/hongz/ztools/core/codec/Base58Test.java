@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -14,11 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Base58 编码")
 class Base58Test {
 
     /**
      * 验证标准 Base58 编解码.
      */
+    @DisplayName("验证标准 Base58 编解码")
     @Test
     void encodeAndDecode() {
         final byte[] raw = "hello world".getBytes(StandardCharsets.UTF_8);
@@ -29,6 +32,7 @@ class Base58Test {
     /**
      * 验证带版本前缀的 Checked 编码.
      */
+    @DisplayName("验证带版本前缀的 Checked 编码")
     @Test
     void encodeCheckedWithVersion() {
         final byte[] raw = "hello world".getBytes(StandardCharsets.UTF_8);
@@ -38,6 +42,7 @@ class Base58Test {
     /**
      * 验证无版本位的 Checked 编码.
      */
+    @DisplayName("验证无版本位的 Checked 编码")
     @Test
     void encodeCheckedWithoutVersion() {
         final byte[] raw = "hello world".getBytes(StandardCharsets.UTF_8);
@@ -47,6 +52,7 @@ class Base58Test {
     /**
      * 验证 Checked 解码（含与不含版本前缀）.
      */
+    @DisplayName("验证 Checked 解码")
     @Test
     void decodeChecked() {
         final byte[] expected = "hello world".getBytes(StandardCharsets.UTF_8);

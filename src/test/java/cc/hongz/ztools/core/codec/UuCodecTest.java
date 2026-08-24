@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.codec;
 
 import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.util.RandomUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -19,11 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("UUencode 编码")
 class UuCodecTest {
 
     /**
      * 验证 {@link UuCodec#encode(byte[])} 对 null 返回 null.
      */
+    @DisplayName("编码对 null 返回 null")
     @Test
     void encodeNullReturnsNull() {
         assertNull(UuCodec.encode(null));
@@ -33,6 +36,7 @@ class UuCodecTest {
     /**
      * 验证 {@link UuCodec#decode(CharSequence)} 对 null 返回 null.
      */
+    @DisplayName("解码对 null 返回 null")
     @Test
     void decodeNullReturnsNull() {
         assertNull(UuCodec.decode(null));
@@ -41,6 +45,7 @@ class UuCodecTest {
     /**
      * 验证数据体往返编解码.
      */
+    @DisplayName("数据体往返编解码")
     @Test
     void bodyRoundTrip() {
         final byte[] raw = new byte[] {'t', 'e', 's', 't', ' ', 'd', 'a', 't', 'a', 0, (byte) 0xFF};
@@ -50,6 +55,7 @@ class UuCodecTest {
     /**
      * 验证 1 字节与 2 字节块往返.
      */
+    @DisplayName("1 字节与 2 字节块往返")
     @Test
     void shortChunkRoundTrip() {
         assertArrayEquals(new byte[] {0x41}, UuCodec.decodeBody(UuCodec.encodeBody(new byte[] {0x41})));
@@ -59,6 +65,7 @@ class UuCodecTest {
     /**
      * 验证超过 45 字节时拆成多行.
      */
+    @DisplayName("超过 45 字节时拆成多行")
     @Test
     void multiLineEncoding() {
         final byte[] raw = new byte[100];
@@ -74,6 +81,7 @@ class UuCodecTest {
     /**
      * 验证完整 UU 文件（含 begin/end）往返.
      */
+    @DisplayName("完整 UU 文件（含 begin/end）往返")
     @Test
     void fileRoundTrip() {
         final byte[] raw = new byte[100];
@@ -89,6 +97,7 @@ class UuCodecTest {
     /**
      * 验证默认文件名 {@code file}.
      */
+    @DisplayName("默认文件名 file")
     @Test
     void defaultFileName() {
         final String encoded = UuCodec.encode(new byte[] {1, 2, 3});
@@ -98,6 +107,7 @@ class UuCodecTest {
     /**
      * 验证空数据编码含零长度行.
      */
+    @DisplayName("空数据编码含零长度行")
     @Test
     void encodeEmpty() {
         assertEquals(" \n", UuCodec.encodeBody(new byte[0]));
@@ -107,6 +117,7 @@ class UuCodecTest {
     /**
      * 验证随机长度数据往返.
      */
+    @DisplayName("随机长度数据往返")
     @Test
     void randomRoundTrip() {
         final int len = RandomUtil.randomInt(1, 200);

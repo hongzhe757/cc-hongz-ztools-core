@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -13,11 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Quoted-Printable 编码")
 class QuotedPrintableTest {
 
     /**
      * 验证 {@link QuotedPrintable#encode(byte[])} 对 null 返回 null.
      */
+    @DisplayName("对 null 返回 null")
     @Test
     void encodeNullReturnsNull() {
         assertNull(QuotedPrintable.encode((byte[]) null));
@@ -27,6 +30,7 @@ class QuotedPrintableTest {
     /**
      * 验证空格与等号被编码.
      */
+    @DisplayName("空格与等号被编码")
     @Test
     void encodeSpecialChars() {
         assertEquals("hello=20world=3D", QuotedPrintable.encode("hello world="));
@@ -35,6 +39,7 @@ class QuotedPrintableTest {
     /**
      * 验证软换行 {@code =\r\n} 解码忽略.
      */
+    @DisplayName("软换行解码时忽略")
     @Test
     void decodeSoftLineBreak() {
         assertEquals("hello world", QuotedPrintable.decodeStr("hello=20=\r\nworld"));
@@ -43,6 +48,7 @@ class QuotedPrintableTest {
     /**
      * 验证 UTF-8 中文往返编解码.
      */
+    @DisplayName("UTF-8 中文往返编解码")
     @Test
     void roundTripUtf8() {
         final String text = "MIME 邮件编码测试";
@@ -53,6 +59,7 @@ class QuotedPrintableTest {
     /**
      * 验证字节级解码.
      */
+    @DisplayName("字节级解码")
     @Test
     void decodeBytes() {
         final byte[] raw = "A".getBytes(StandardCharsets.US_ASCII);

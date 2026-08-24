@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.codec;
 
 import cc.hongz.ztools.core.exceptions.UtilException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -16,11 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("yEnc 编码")
 class YEncTest {
 
     /**
      * 验证 {@link YEnc#encode(byte[])} 对 null 返回 null.
      */
+    @DisplayName("编码对 null 返回 null")
     @Test
     void encodeNullReturnsNull() {
         assertNull(YEnc.encode(null));
@@ -31,6 +34,7 @@ class YEncTest {
     /**
      * 验证 {@link YEnc#decode(CharSequence)} / {@link YEnc#decodeBody(CharSequence)} 对 null 返回 null.
      */
+    @DisplayName("解码对 null 返回 null")
     @Test
     void decodeNullReturnsNull() {
         assertNull(YEnc.decode(null));
@@ -40,6 +44,7 @@ class YEncTest {
     /**
      * 验证空数据体编码为空串.
      */
+    @DisplayName("空数据体编码为空串")
     @Test
     void encodeEmptyBody() {
         assertEquals("", YEnc.encodeBody(new byte[0]));
@@ -49,6 +54,7 @@ class YEncTest {
     /**
      * 验证含需转义字节的 yEnc 数据体往返.
      */
+    @DisplayName("含需转义字节的 yEnc 数据体往返")
     @Test
     void bodyRoundTripWithEscapes() {
         final byte[] raw = {0, 9, 10, 13, 61, 4, 100, (byte) 0xFF};
@@ -58,6 +64,7 @@ class YEncTest {
     /**
      * 验证行首 {@code .} 需转义（原始字节 4 在行首时）.
      */
+    @DisplayName("行首 . 需转义")
     @Test
     void lineStartDotEscape() {
         final byte[] raw = {4, 5, 6};
@@ -69,6 +76,7 @@ class YEncTest {
     /**
      * 验证自定义行宽折行后仍可解码.
      */
+    @DisplayName("自定义行宽折行后仍可解码")
     @Test
     void customLineLength() {
         final byte[] raw = new byte[20];
@@ -83,6 +91,7 @@ class YEncTest {
     /**
      * 验证完整 yEnc 文件（含 CRC）往返.
      */
+    @DisplayName("完整 yEnc 文件（含 CRC）往返")
     @Test
     void fileRoundTrip() {
         final byte[] raw = new byte[256];
@@ -98,6 +107,7 @@ class YEncTest {
     /**
      * 验证仅数据体解码（无头尾）.
      */
+    @DisplayName("仅数据体解码（无头尾）")
     @Test
     void decodeBodyWithoutHeaders() {
         final byte[] raw = "plain body".getBytes();
@@ -107,6 +117,7 @@ class YEncTest {
     /**
      * 验证 CRC32 与头尾声明一致.
      */
+    @DisplayName("CRC32 与头尾声明一致")
     @Test
     void crc32MatchesHeader() {
         final byte[] raw = "yEnc sample".getBytes();
@@ -118,6 +129,7 @@ class YEncTest {
     /**
      * 验证 CRC 不匹配时抛出 {@link UtilException}.
      */
+    @DisplayName("CRC 不匹配时抛出异常")
     @Test
     void crcMismatchThrows() {
         final byte[] raw = "bad crc".getBytes();
@@ -128,6 +140,7 @@ class YEncTest {
     /**
      * 验证非法转义序列抛出异常.
      */
+    @DisplayName("非法转义序列抛出异常")
     @Test
     void invalidEscapeThrows() {
         assertThrows(UtilException.class, () -> YEnc.decodeBody("abc="));
@@ -136,6 +149,7 @@ class YEncTest {
     /**
      * 验证多种字节值往返.
      */
+    @DisplayName("多种字节值往返")
     @Test
     void roundTripVariousSizes() {
         final byte[] raw = {0x00, 0x01, 0x2E, 0x3D, 0x7F};

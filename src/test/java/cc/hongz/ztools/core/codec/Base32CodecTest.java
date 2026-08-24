@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -12,11 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Base32 编码器")
 class Base32CodecTest {
 
     /**
      * 验证标准 Base32 往返.
      */
+    @DisplayName("验证标准 Base32 往返")
     @Test
     void standardRoundTrip() {
         final byte[] raw = "Base32Codec".getBytes(StandardCharsets.UTF_8);
@@ -27,6 +30,7 @@ class Base32CodecTest {
     /**
      * 验证 Hex 字母表变体往返.
      */
+    @DisplayName("验证 Hex 字母表变体往返")
     @Test
     void hexAlphabetRoundTrip() {
         final byte[] raw = new byte[] {0x01, 0x02, (byte) 0xFE};
@@ -37,6 +41,7 @@ class Base32CodecTest {
     /**
      * 验证与 {@link Base32} 门面结果一致.
      */
+    @DisplayName("验证与 Base32 门面结果一致")
     @Test
     void matchesFacade() {
         final String text = "facade";

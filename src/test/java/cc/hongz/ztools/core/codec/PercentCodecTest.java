@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.codec;
 
 import cc.hongz.ztools.core.util.CharsetUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author hongzhe.qin
  */
+@DisplayName("百分号编码")
 class PercentCodecTest {
 
     /**
@@ -25,6 +27,7 @@ class PercentCodecTest {
     /**
      * 验证未保留字符不被编码.
      */
+    @DisplayName("未保留字符不被编码")
     @Test
     void encodeUnreservedChars() {
         final PercentCodec codec = PercentCodec.of(UNRESERVED);
@@ -34,6 +37,7 @@ class PercentCodecTest {
     /**
      * 验证空格与特殊字符被百分号编码.
      */
+    @DisplayName("空格与特殊字符被百分号编码")
     @Test
     void encodeReservedChars() {
         final PercentCodec codec = PercentCodec.of(UNRESERVED);
@@ -43,6 +47,7 @@ class PercentCodecTest {
     /**
      * 验证 {@code encodeSpaceAsPlus} 与 JDK {@link URLEncoder} 结果一致.
      */
+    @DisplayName("encodeSpaceAsPlus 与 JDK URLEncoder 结果一致")
     @Test
     void encodeSpaceAsPlusMatchesUrlEncoder() throws UnsupportedEncodingException {
         final String text = "行吧行吧 cargo:1.0,\"Deta-ils:[{";
@@ -53,6 +58,7 @@ class PercentCodecTest {
     /**
      * 验证自定义安全字符 {@code %} 不被二次编码.
      */
+    @DisplayName("自定义安全字符 % 不被二次编码")
     @Test
     void encodeWithCustomSafeChar() {
         final PercentCodec codec = PercentCodec.of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=-._~");

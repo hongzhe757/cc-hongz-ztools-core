@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -12,11 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author hongzhe.qin
  */
+@DisplayName("GZIP Base64")
 class GzipBase64Test {
 
     /**
      * 验证 {@link GzipBase64#encode(byte[])} 对 null 返回 null.
      */
+    @DisplayName("对 null 返回 null")
     @Test
     void encodeNullReturnsNull() {
         assertNull(GzipBase64.encode((byte[]) null));
@@ -26,6 +29,7 @@ class GzipBase64Test {
     /**
      * 验证字符串 GZIP+Base64 往返.
      */
+    @DisplayName("字符串 GZIP+Base64 往返")
     @Test
     void roundTripText() {
         final String text = "重复文本用于验证 GZIP 压缩后再 Base64 编码。";
@@ -37,6 +41,7 @@ class GzipBase64Test {
     /**
      * 验证字节数组往返.
      */
+    @DisplayName("字节数组往返")
     @Test
     void roundTripBytes() {
         final byte[] raw = new byte[256];
@@ -49,6 +54,7 @@ class GzipBase64Test {
     /**
      * 验证空字节数组往返.
      */
+    @DisplayName("空字节数组往返")
     @Test
     void roundTripEmpty() {
         final byte[] raw = new byte[0];

@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.codec;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,11 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author hongzhe.qin
  */
+@DisplayName("HTML 转义")
 class HtmlEscapeTest {
 
     /**
      * 验证 null 输入返回 null.
      */
+    @DisplayName("null 输入返回 null")
     @Test
     void nullReturnsNull() {
         assertNull(HtmlEscape.escape(null));
@@ -24,6 +27,7 @@ class HtmlEscapeTest {
     /**
      * 验证 HTML4 不转义单引号.
      */
+    @DisplayName("HTML4 不转义单引号")
     @Test
     void escapeKeepsApostrophe() {
         assertEquals("it's &lt;ok&gt;", HtmlEscape.escape("it's <ok>"));
@@ -32,6 +36,7 @@ class HtmlEscapeTest {
     /**
      * 验证反转义往返.
      */
+    @DisplayName("反转义往返")
     @Test
     void unescapeRoundTrip() {
         final String raw = "<div>&amp;</div>";
