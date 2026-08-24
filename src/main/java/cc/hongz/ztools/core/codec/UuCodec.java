@@ -10,6 +10,7 @@ import cc.hongz.ztools.core.util.StrUtil;
  *
  * @author hongzhe.qin
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class UuCodec {
 
     /**

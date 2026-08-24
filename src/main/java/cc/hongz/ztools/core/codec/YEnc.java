@@ -18,6 +18,7 @@ import java.util.zip.CRC32;
  *
  * @author hongzhe.qin
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class YEnc {
 
     /**
