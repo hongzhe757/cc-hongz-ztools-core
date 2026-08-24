@@ -104,8 +104,8 @@ public class ZipReader implements Closeable {
      * @param maxSizeDiff 检查ZipBomb文件差异倍数
      * @return this
      */
-    public ZipReader setMaxSizeDiff(final int maxSizeDiff) {
-        this.maxSizeDiff = maxSizeDiff;
+    public ZipReader setMaxSizeDiff(final int newMaxSizeDiff) {
+        this.maxSizeDiff = newMaxSizeDiff;
         return this;
     }
 
@@ -119,10 +119,10 @@ public class ZipReader implements Closeable {
      */
     public InputStream get(final String path) {
         if (null != this.zipFile) {
-            final ZipFile zipFile = this.zipFile;
-            final ZipEntry entry = zipFile.getEntry(path);
+            final ZipFile theZipFile = this.zipFile;
+            final ZipEntry entry = theZipFile.getEntry(path);
             if (null != entry) {
-                return ZipUtil.getStream(zipFile, entry);
+                return ZipUtil.getStream(theZipFile, entry);
             }
         } else {
             try {
