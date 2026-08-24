@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author hongzhe.qin
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class QuotedPrintable {
 
     /**
