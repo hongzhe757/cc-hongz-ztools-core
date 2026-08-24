@@ -22,7 +22,7 @@ public class AvgPartition<T> extends Partition<T> {
      * @param list  被分区的列表
      * @param limit 分区个数
      */
-    public AvgPartition(List<T> list, int limit) {
+    public AvgPartition(final List<T> list, final int limit) {
         super(list, list.size() / (limit <= 0 ? 1 : limit));
         Assert.isTrue(limit > 0, "Partition limit must be > 0");
         this.limit = limit;
@@ -30,12 +30,12 @@ public class AvgPartition<T> extends Partition<T> {
     }
 
     @Override
-    public List<T> get(int index) {
+    public List<T> get(final int index) {
         final int size = this.size;
-        final int remainder = this.remainder;
-        int start = index * size + Math.min(index, remainder);
+        final int remainderValue = this.remainder;
+        int start = index * size + Math.min(index, remainderValue);
         int end = start + size;
-        if (index + 1 <= remainder) {
+        if (index + 1 <= remainderValue) {
             end += 1;
         }
         return list.subList(start, end);

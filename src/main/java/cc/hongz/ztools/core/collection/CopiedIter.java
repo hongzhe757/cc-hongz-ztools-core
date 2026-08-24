@@ -21,48 +21,48 @@ import java.util.List;
  * @since 3.0.7
  */
 public class CopiedIter<E> implements IterableIter<E>, Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final Iterator<E> listIterator;
+    private final Iterator<E> listIterator;
 
-	/**
-	 * 根据已有{@link Iterator}，返回新的{@code CopiedIter}
-	 *
-	 * @param iterator {@link Iterator}
-	 * @param <E>      元素类型
-	 * @return {@code CopiedIter}
-	 */
-	public static <E> CopiedIter<E> copyOf(Iterator<E> iterator) {
-		return new CopiedIter<>(iterator);
-	}
+    /**
+     * 根据已有{@link Iterator}，返回新的{@code CopiedIter}。
+     *
+     * @param iterator {@link Iterator}
+     * @param <E>      元素类型
+     * @return {@code CopiedIter}
+     */
+    public static <E> CopiedIter<E> copyOf(final Iterator<E> iterator) {
+        return new CopiedIter<>(iterator);
+    }
 
-	/**
-	 * 构造
-	 *
-	 * @param iterator 被复制的Iterator
-	 */
-	public CopiedIter(Iterator<E> iterator) {
-		final List<E> eleList = ListUtil.toList(iterator);
-		this.listIterator = eleList.iterator();
-	}
+    /**
+     * 构造。
+     *
+     * @param iterator 被复制的Iterator
+     */
+    public CopiedIter(final Iterator<E> iterator) {
+        final List<E> eleList = ListUtil.toList(iterator);
+        this.listIterator = eleList.iterator();
+    }
 
-	@Override
-	public boolean hasNext() {
-		return this.listIterator.hasNext();
-	}
+    @Override
+    public boolean hasNext() {
+        return this.listIterator.hasNext();
+    }
 
-	@Override
-	public E next() {
-		return this.listIterator.next();
-	}
+    @Override
+    public E next() {
+        return this.listIterator.next();
+    }
 
-	/**
-	 * 此对象不支持移除元素
-	 *
-	 * @throws UnsupportedOperationException 当调用此方法时始终抛出此异常
-	 */
-	@Override
-	public void remove() throws UnsupportedOperationException {
-		throw new UnsupportedOperationException("This is a read-only iterator.");
-	}
+    /**
+     * 此对象不支持移除元素。
+     *
+     * @throws UnsupportedOperationException 当调用此方法时始终抛出此异常
+     */
+    @Override
+    public void remove() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("This is a read-only iterator.");
+    }
 }

@@ -9,7 +9,15 @@ import cc.hongz.ztools.core.util.ArrayUtil;
 import cc.hongz.ztools.core.util.ObjectUtil;
 import cc.hongz.ztools.core.util.PageUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.RandomAccess;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -19,6 +27,7 @@ import java.util.function.Consumer;
  *
  * @author looly
  */
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class ListUtil {
 
     /**
@@ -28,7 +37,7 @@ public class ListUtil {
      * @param isLinked 是否新建LinkedList
      * @return List对象
      */
-    public static <T> List<T> list(boolean isLinked) {
+    public static <T> List<T> list(final boolean isLinked) {
         return isLinked ? new LinkedList<>() : new ArrayList<>();
     }
 
@@ -41,7 +50,7 @@ public class ListUtil {
      * @return List对象
      */
     @SafeVarargs
-    public static <T> List<T> list(boolean isLinked, T... values) {
+    public static <T> List<T> list(final boolean isLinked, final T... values) {
         if (ArrayUtil.isEmpty(values)) {
             return list(isLinked);
         }
@@ -58,7 +67,7 @@ public class ListUtil {
      * @param collection 集合
      * @return List对象
      */
-    public static <T> List<T> list(boolean isLinked, Collection<T> collection) {
+    public static <T> List<T> list(final boolean isLinked, final Collection<T> collection) {
         if (null == collection) {
             return list(isLinked);
         }
@@ -73,7 +82,7 @@ public class ListUtil {
      * @param iterable {@link Iterable}
      * @return List对象
      */
-    public static <T> List<T> list(boolean isLinked, Iterable<T> iterable) {
+    public static <T> List<T> list(final boolean isLinked, final Iterable<T> iterable) {
         if (null == iterable) {
             return list(isLinked);
         }
@@ -88,7 +97,7 @@ public class ListUtil {
      * @param iter     {@link Iterator}
      * @return ArrayList对象
      */
-    public static <T> List<T> list(boolean isLinked, Iterator<T> iter) {
+    public static <T> List<T> list(final boolean isLinked, final Iterator<T> iter) {
         final List<T> list = list(isLinked);
         if (null != iter) {
             while (iter.hasNext()) {
@@ -106,7 +115,7 @@ public class ListUtil {
      * @param enumration {@link Enumeration}
      * @return ArrayList对象
      */
-    public static <T> List<T> list(boolean isLinked, Enumeration<T> enumration) {
+    public static <T> List<T> list(final boolean isLinked, final Enumeration<T> enumration) {
         final List<T> list = list(isLinked);
         if (null != enumration) {
             while (enumration.hasMoreElements()) {
@@ -124,7 +133,7 @@ public class ListUtil {
      * @return ArrayList对象
      */
     @SafeVarargs
-    public static <T> ArrayList<T> toList(T... values) {
+    public static <T> ArrayList<T> toList(final T... values) {
         return (ArrayList<T>) list(false, values);
     }
 
@@ -136,7 +145,7 @@ public class ListUtil {
      * @return LinkedList
      */
     @SafeVarargs
-    public static <T> LinkedList<T> toLinkedList(T... values) {
+    public static <T> LinkedList<T> toLinkedList(final T... values) {
         return (LinkedList<T>) list(true, values);
     }
 
@@ -148,7 +157,7 @@ public class ListUtil {
      * @return 不可修改List
      */
     @SafeVarargs
-    public static <T> List<T> of(T... ts) {
+    public static <T> List<T> of(final T... ts) {
         if (ArrayUtil.isEmpty(ts)) {
             return Collections.emptyList();
         }
@@ -162,7 +171,7 @@ public class ListUtil {
      * @param collection 集合
      * @return {@link CopyOnWriteArrayList}
      */
-    public static <T> CopyOnWriteArrayList<T> toCopyOnWriteArrayList(Collection<T> collection) {
+    public static <T> CopyOnWriteArrayList<T> toCopyOnWriteArrayList(final Collection<T> collection) {
         return (null == collection) ? (new CopyOnWriteArrayList<>()) : (new CopyOnWriteArrayList<>(collection));
     }
 
@@ -173,7 +182,7 @@ public class ListUtil {
      * @param collection 集合
      * @return ArrayList对象
      */
-    public static <T> ArrayList<T> toList(Collection<T> collection) {
+    public static <T> ArrayList<T> toList(final Collection<T> collection) {
         return (ArrayList<T>) list(false, collection);
     }
 
@@ -184,7 +193,7 @@ public class ListUtil {
      * @param iterable {@link Iterable}
      * @return ArrayList对象
      */
-    public static <T> ArrayList<T> toList(Iterable<T> iterable) {
+    public static <T> ArrayList<T> toList(final Iterable<T> iterable) {
         return (ArrayList<T>) list(false, iterable);
     }
 
@@ -195,7 +204,7 @@ public class ListUtil {
      * @param iterator {@link Iterator}
      * @return ArrayList对象
      */
-    public static <T> ArrayList<T> toList(Iterator<T> iterator) {
+    public static <T> ArrayList<T> toList(final Iterator<T> iterator) {
         return (ArrayList<T>) list(false, iterator);
     }
 
@@ -206,7 +215,7 @@ public class ListUtil {
      * @param enumeration {@link Enumeration}
      * @return ArrayList对象
      */
-    public static <T> ArrayList<T> toList(Enumeration<T> enumeration) {
+    public static <T> ArrayList<T> toList(final Enumeration<T> enumeration) {
         return (ArrayList<T>) list(false, enumeration);
     }
 
@@ -219,7 +228,7 @@ public class ListUtil {
      * @param list     列表
      * @return 分页后的段落内容
      */
-    public static <T> List<T> page(int pageNo, int pageSize, List<T> list) {
+    public static <T> List<T> page(final int pageNo, final int pageSize, final List<T> list) {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>(0);
         }
@@ -256,7 +265,7 @@ public class ListUtil {
      * @param pageSize         每页的条目数
      * @param pageListConsumer 单页数据函数式返回
      */
-    public static <T> void page(List<T> list, int pageSize, Consumer<List<T>> pageListConsumer) {
+    public static <T> void page(final List<T> list, final int pageSize, final Consumer<List<T>> pageListConsumer) {
         if (list == null || list.isEmpty() || pageSize <= 0) {
             return;
         }
@@ -280,7 +289,7 @@ public class ListUtil {
      * @param c    {@link Comparator}
      * @return 原list
      */
-    public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
+    public static <T> List<T> sort(final List<T> list, final Comparator<? super T> c) {
         if (list == null || list.isEmpty()) {
             return list;
         }
@@ -296,7 +305,7 @@ public class ListUtil {
      * @param property 属性名
      * @return 排序后的List
      */
-    public static <T> List<T> sortByProperty(List<T> list, String property) {
+    public static <T> List<T> sortByProperty(final List<T> list, final String property) {
         return sort(list, new PropertyComparator<>(property));
     }
 
@@ -306,7 +315,7 @@ public class ListUtil {
      * @param list List
      * @return 排序后的List
      */
-    public static List<String> sortByPinyin(List<String> list) {
+    public static List<String> sortByPinyin(final List<String> list) {
         return sort(list, new PinyinComparator());
     }
 
@@ -317,7 +326,7 @@ public class ListUtil {
      * @param list 被反转的List
      * @return 反转后的List
      */
-    public static <T> List<T> reverse(List<T> list) {
+    public static <T> List<T> reverse(final List<T> list) {
         Collections.reverse(list);
         return list;
     }
@@ -329,7 +338,7 @@ public class ListUtil {
      * @param list 被反转的List
      * @return 反转后的List
      */
-    public static <T> List<T> reverseNew(List<T> list) {
+    public static <T> List<T> reverseNew(final List<T> list) {
         if (list == null) {
             return null;
         }
@@ -353,7 +362,7 @@ public class ListUtil {
      * @param element 新元素
      * @return 原List
      */
-    public static <T> List<T> setOrAppend(List<T> list, int index, T element) {
+    public static <T> List<T> setOrAppend(final List<T> list, final int index, final T element) {
         Assert.notNull(list, "List must be not null !");
         if (index < list.size()) {
             list.set(index, element);
@@ -372,7 +381,7 @@ public class ListUtil {
      * @param element 新元素
      * @return 原List
      */
-    public static <T> List<T> setOrPadding(List<T> list, int index, T element) {
+    public static <T> List<T> setOrPadding(final List<T> list, final int index, final T element) {
         return setOrPadding(list, index, element, null);
     }
 
@@ -386,7 +395,8 @@ public class ListUtil {
      * @param paddingElement 填充的值
      * @return 原List
      */
-    public static <T> List<T> setOrPadding(List<T> list, int index, T element, T paddingElement) {
+    public static <T> List<T> setOrPadding(final List<T> list, final int index, final T element,
+            final T paddingElement) {
         return setOrPadding(list, index, element, paddingElement, (list.size() + 1) * 10);
     }
 
@@ -401,7 +411,8 @@ public class ListUtil {
      * @param indexLimit     最大索引限制
      * @return 原List
      */
-    public static <T> List<T> setOrPadding(List<T> list, int index, T element, T paddingElement, int indexLimit) {
+    public static <T> List<T> setOrPadding(final List<T> list, final int index, final T element, final T paddingElement,
+            final int indexLimit) {
         Assert.notNull(list, "List must be not null !");
         final int size = list.size();
         if (index < size) {
@@ -429,7 +440,7 @@ public class ListUtil {
      * @param end   结束位置（不包含）
      * @return 截取后的数组
      */
-    public static <T> List<T> sub(List<T> list, int start, int end) {
+    public static <T> List<T> sub(final List<T> list, final int start, final int end) {
         return sub(list, start, end, 1);
     }
 
@@ -443,7 +454,7 @@ public class ListUtil {
      * @param step  步进
      * @return 截取后的数组
      */
-    public static <T> List<T> sub(List<T> list, int start, int end, int step) {
+    public static <T> List<T> sub(final List<T> list, final int start, final int end, final int step) {
         if (list == null) {
             return null;
         }
@@ -452,33 +463,36 @@ public class ListUtil {
         }
 
         final int size = list.size();
-        if (start < 0) {
-            start += size;
+        int startIndex = start;
+        int endIndex = end;
+        int stepSize = step;
+        if (startIndex < 0) {
+            startIndex += size;
         }
-        if (end < 0) {
-            end += size;
+        if (endIndex < 0) {
+            endIndex += size;
         }
-        if (start == size) {
+        if (startIndex == size) {
             return new ArrayList<>(0);
         }
-        if (start > end) {
-            int tmp = start;
-            start = end;
-            end = tmp;
+        if (startIndex > endIndex) {
+            int tmp = startIndex;
+            startIndex = endIndex;
+            endIndex = tmp;
         }
-        if (end > size) {
-            if (start >= size) {
+        if (endIndex > size) {
+            if (startIndex >= size) {
                 return new ArrayList<>(0);
             }
-            end = size;
+            endIndex = size;
         }
 
-        if (step < 1) {
-            step = 1;
+        if (stepSize < 1) {
+            stepSize = 1;
         }
 
         final List<T> result = new ArrayList<>();
-        for (int i = start; i < end; i += step) {
+        for (int i = startIndex; i < endIndex; i += stepSize) {
             result.add(list.get(i));
         }
         return result;
@@ -492,7 +506,7 @@ public class ListUtil {
      * @param matcher 匹配器，为空则全部匹配
      * @return 最后一个位置
      */
-    public static <T> int lastIndexOf(List<T> list, Matcher<T> matcher) {
+    public static <T> int lastIndexOf(final List<T> list, final Matcher<T> matcher) {
         if (null != list) {
             final int size = list.size();
             if (size > 0) {
@@ -514,7 +528,7 @@ public class ListUtil {
      * @param matcher 匹配器，为空则全部匹配
      * @return 位置数组
      */
-    public static <T> int[] indexOfAll(List<T> list, Matcher<T> matcher) {
+    public static <T> int[] indexOfAll(final List<T> list, final Matcher<T> matcher) {
         if (list == null || list.isEmpty()) {
             return new int[0];
         }
@@ -539,7 +553,7 @@ public class ListUtil {
      * @param <T>  元素类型
      * @return 不可修改List
      */
-    public static <T> List<T> unmodifiable(List<T> list) {
+    public static <T> List<T> unmodifiable(final List<T> list) {
         if (null == list) {
             return null;
         }
@@ -564,7 +578,7 @@ public class ListUtil {
      * @param size 每个段的长度
      * @return 分段列表
      */
-    public static <T> List<List<T>> partition(List<T> list, int size) {
+    public static <T> List<List<T>> partition(final List<T> list, final int size) {
         if (list == null || list.isEmpty()) {
             return empty();
         }
@@ -581,7 +595,7 @@ public class ListUtil {
      * @param size 每个段的长度
      * @return 分段列表
      */
-    public static <T> List<List<T>> split(List<T> list, int size) {
+    public static <T> List<List<T>> split(final List<T> list, final int size) {
         return partition(list, size);
     }
 
@@ -593,7 +607,7 @@ public class ListUtil {
      * @param limit 要均分成几个list
      * @return 分段列表
      */
-    public static <T> List<List<T>> splitAvg(List<T> list, int limit) {
+    public static <T> List<List<T>> splitAvg(final List<T> list, final int limit) {
         if (list == null || list.isEmpty()) {
             return empty();
         }
@@ -610,7 +624,7 @@ public class ListUtil {
      * @param element     需交换元素
      * @param targetIndex 目标索引
      */
-    public static <T> void swapTo(List<T> list, T element, Integer targetIndex) {
+    public static <T> void swapTo(final List<T> list, final T element, final Integer targetIndex) {
         if (list != null && !list.isEmpty()) {
             final int index = list.indexOf(element);
             if (index >= 0) {
@@ -627,7 +641,7 @@ public class ListUtil {
      * @param element       需交换元素
      * @param targetElement 目标元素
      */
-    public static <T> void swapElement(List<T> list, T element, T targetElement) {
+    public static <T> void swapElement(final List<T> list, final T element, final T targetElement) {
         if (list != null && !list.isEmpty()) {
             final int targetIndex = list.indexOf(targetElement);
             if (targetIndex >= 0) {
@@ -645,7 +659,7 @@ public class ListUtil {
      * @param <T>         列表和元素的通用类型
      * @return 更新后的列表
      */
-    public static <T> List<T> move(List<T> list, T element, int newPosition) {
+    public static <T> List<T> move(final List<T> list, final T element, final int newPosition) {
         Assert.notNull(list);
         if (!list.contains(element)) {
             list.add(newPosition, element);
@@ -667,7 +681,7 @@ public class ListUtil {
      * @param zipper 合并函数
      * @return 合并后的新列表
      */
-    public static <A, B, R> List<R> zip(List<A> listA, List<B> listB, BiFunction<A, B, R> zipper) {
+    public static <A, B, R> List<R> zip(final List<A> listA, final List<B> listB, final BiFunction<A, B, R> zipper) {
         if ((listA == null || listA.isEmpty()) || (listB == null || listB.isEmpty())) {
             return new ArrayList<>();
         }
