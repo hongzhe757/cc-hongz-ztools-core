@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.collection;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -11,9 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link ConcurrentHashSet} 单元测试.
  */
+@DisplayName("ConcurrentHashSet 线程安全集合")
 class ConcurrentHashSetTest {
 
     @Test
+    @DisplayName("添加与包含判断")
     void addAndContains() {
         ConcurrentHashSet<String> set = new ConcurrentHashSet<>();
         assertTrue(set.add("a"));
@@ -22,6 +25,7 @@ class ConcurrentHashSetTest {
     }
 
     @Test
+    @DisplayName("移除元素")
     void removeElement() {
         ConcurrentHashSet<String> set = new ConcurrentHashSet<>();
         set.add("x");
@@ -30,6 +34,7 @@ class ConcurrentHashSetTest {
     }
 
     @Test
+    @DisplayName("大小与空判断")
     void sizeAndIsEmpty() {
         ConcurrentHashSet<Integer> set = new ConcurrentHashSet<>();
         assertTrue(set.isEmpty());
@@ -40,6 +45,7 @@ class ConcurrentHashSetTest {
     }
 
     @Test
+    @DisplayName("从 Iterable 构造")
     void constructFromIterable() {
         ConcurrentHashSet<String> set = new ConcurrentHashSet<>(Arrays.asList("a", "b", "c"));
         assertEquals(3, set.size());
@@ -49,6 +55,7 @@ class ConcurrentHashSetTest {
     }
 
     @Test
+    @DisplayName("清空")
     void clear() {
         ConcurrentHashSet<String> set = new ConcurrentHashSet<>();
         set.add("a");
@@ -59,6 +66,7 @@ class ConcurrentHashSetTest {
     }
 
     @Test
+    @DisplayName("迭代器遍历")
     void iteratorWorks() {
         ConcurrentHashSet<String> set = new ConcurrentHashSet<>();
         set.add("hello");
@@ -66,6 +74,7 @@ class ConcurrentHashSetTest {
     }
 
     @Test
+    @DisplayName("重复添加返回 false")
     void duplicateAddReturnsFalse() {
         ConcurrentHashSet<String> set = new ConcurrentHashSet<>();
         assertTrue(set.add("dup"));
