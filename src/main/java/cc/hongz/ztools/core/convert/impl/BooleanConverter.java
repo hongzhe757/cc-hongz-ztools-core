@@ -6,7 +6,7 @@ import cc.hongz.ztools.core.util.BooleanUtil;
 /**
  * 布尔转换器
  *
- * <p>
+ * <p>。
  * 对象转为boolean，规则如下：
  * </p>
  * <pre>
@@ -15,18 +15,21 @@ import cc.hongz.ztools.core.util.BooleanUtil;
  * </pre>
  *
  * @author Looly
- */
+ */ 
 public class BooleanConverter extends AbstractConverter<Boolean> {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected Boolean convertInternal(Object value) {
-		if (value instanceof Number) {
-			// 0为false，其它数字为true
-			return 0 != ((Number) value).doubleValue();
-		}
-		//Object不可能出现Primitive类型，故忽略
-		return BooleanUtil.toBoolean(convertToStr(value));
-	}
+    /**
+     * 内部转换。
+     */
+    @Override
+    protected Boolean convertInternal(final Object value) {
+        if (value instanceof Number) {
+            // 0为false，其它数字为true
+            return 0 != ((Number) value).doubleValue();
+        }
+        //Object不可能出现Primitive类型，故忽略
+        return BooleanUtil.toBoolean(convertToStr(value));
+    }
 
 }

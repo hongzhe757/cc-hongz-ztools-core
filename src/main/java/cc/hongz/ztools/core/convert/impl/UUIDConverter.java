@@ -5,18 +5,21 @@ import java.util.UUID;
 import cc.hongz.ztools.core.convert.AbstractConverter;
 
 /**
- * UUID对象转换器转换器
+ * UUID对象转换器转换器。
  *
  * @author Looly
  * @since 4.0.10
  *
  */
 public class UUIDConverter extends AbstractConverter<UUID> {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected UUID convertInternal(Object value) {
-		return UUID.fromString(convertToStr(value));
-	}
+    /**
+     * 内部转换。
+     */
+    @Override
+    protected UUID convertInternal(final Object value) {
+        return UUID.fromString(convertToStr(value));
+    }
 
 }

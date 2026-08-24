@@ -6,16 +6,19 @@ import cc.hongz.ztools.core.convert.AbstractConverter;
 import cc.hongz.ztools.core.util.CharsetUtil;
 
 /**
- * 编码对象转换器
+ * 编码对象转换器。
  * @author Looly
  *
  */
-public class CharsetConverter extends AbstractConverter<Charset>{
-	private static final long serialVersionUID = 1L;
+public class CharsetConverter extends AbstractConverter<Charset> {
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected Charset convertInternal(Object value) {
-		return CharsetUtil.charset(convertToStr(value));
-	}
+    /**
+     * 内部转换。
+     */
+    @Override
+    protected Charset convertInternal(final Object value) {
+        return CharsetUtil.charset(convertToStr(value));
+    }
 
 }
