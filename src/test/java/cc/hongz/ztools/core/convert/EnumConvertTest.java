@@ -1,56 +1,60 @@
 package cc.hongz.ztools.core.convert;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Enum转换单元测试
+ * Enum转换单元测试。
  */
+@DisplayName("EnumConvert 枚举转换")
 public class EnumConvertTest {
 
-	@Test
-	public void convertTest(){
-		TestEnum bbb = Convert.convert(TestEnum.class, "BBB");
-		assertEquals(TestEnum.B, bbb);
+    @Test
+    @DisplayName("convert 转枚举")
+    public void convertTest() {
+        TestEnum bbb = Convert.convert(TestEnum.class, "BBB");
+        assertEquals(TestEnum.B, bbb);
 
-		bbb = Convert.convert(TestEnum.class, 22);
-		assertEquals(TestEnum.B, bbb);
-	}
+        bbb = Convert.convert(TestEnum.class, 22);
+        assertEquals(TestEnum.B, bbb);
+    }
 
-	@Test
-	public void toEnumTest(){
-		TestEnum ccc = Convert.toEnum(TestEnum.class, "CCC");
-		assertEquals(TestEnum.C, ccc);
+    @Test
+    @DisplayName("toEnum 转枚举")
+    public void toEnumTest() {
+        TestEnum ccc = Convert.toEnum(TestEnum.class, "CCC");
+        assertEquals(TestEnum.C, ccc);
 
-		ccc = Convert.toEnum(TestEnum.class, 33);
-		assertEquals(TestEnum.C, ccc);
-	}
+        ccc = Convert.toEnum(TestEnum.class, 33);
+        assertEquals(TestEnum.C, ccc);
+    }
 
-	enum TestEnum {
-		A, B, C;
+    enum TestEnum {
+        A, B, C;
 
-		public static TestEnum parse(String str) {
-			switch (str) {
-				case "AAA":
-					return A;
-				case "BBB":
-					return B;
-				case "CCC":
-					return C;
-			}
-			return null;
-		}
+        public static TestEnum parse(String str) {
+            switch (str) {
+                case "AAA":
+                    return A;
+                case "BBB":
+                    return B;
+                case "CCC":
+                    return C;
+            }
+            return null;
+        }
 
-		public static TestEnum parseByNumber(int i) {
-			switch (i) {
-				case 11:
-					return A;
-				case 22:
-					return B;
-				case 33:
-					return C;
-			}
-			return null;
-		}
-	}
+        public static TestEnum parseByNumber(int i) {
+            switch (i) {
+                case 11:
+                    return A;
+                case 22:
+                    return B;
+                case 33:
+                    return C;
+            }
+            return null;
+        }
+    }
 }

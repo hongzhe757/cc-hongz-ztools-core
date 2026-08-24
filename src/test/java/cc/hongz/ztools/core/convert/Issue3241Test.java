@@ -13,13 +13,17 @@
 package cc.hongz.ztools.core.convert;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
+@DisplayName("Issue3241 科学计数法转 BigDecimal")
 public class Issue3241Test {
-	@Test
-	public void toBigDecimalTest() {
-		assertEquals(new BigDecimal("9.0E+7"), Convert.toBigDecimal("9.0E+7"));
-	}
+
+    @Test
+    @DisplayName("科学计数法转 BigDecimal")
+    public void toBigDecimalTest() {
+        assertEquals(new BigDecimal("9.0E+7"), Convert.toBigDecimal("9.0E+7"));
+    }
 }

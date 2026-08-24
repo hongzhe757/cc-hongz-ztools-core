@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.convert;
 
 import cc.hongz.ztools.core.convert.impl.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -18,17 +19,20 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 各 Converter impl 单元测试.
  */
+@DisplayName("Converters 各转换器实现")
 class ConvertersTest {
 
     // ==================== PrimitiveConverter ====================
 
     @Test
+    @DisplayName("PrimitiveConverter - int")
     void primitiveConverter_int() {
         PrimitiveConverter c = new PrimitiveConverter(int.class);
         assertEquals(Integer.valueOf(42), c.convert(42L, null));
     }
 
     @Test
+    @DisplayName("PrimitiveConverter - boolean")
     void primitiveConverter_boolean() {
         PrimitiveConverter c = new PrimitiveConverter(boolean.class);
         assertEquals(true, c.convert(1, null));
@@ -38,6 +42,7 @@ class ConvertersTest {
     // ==================== BooleanConverter ====================
 
     @Test
+    @DisplayName("BooleanConverter - true 值")
     void booleanConverter_trueValues() {
         BooleanConverter c = new BooleanConverter();
         assertTrue(c.convert("true", null));
@@ -45,6 +50,7 @@ class ConvertersTest {
     }
 
     @Test
+    @DisplayName("BooleanConverter - false 值")
     void booleanConverter_falseValues() {
         BooleanConverter c = new BooleanConverter();
         assertFalse(c.convert("false", null));
@@ -54,6 +60,7 @@ class ConvertersTest {
     // ==================== CharacterConverter ====================
 
     @Test
+    @DisplayName("CharacterConverter - char")
     void characterConverter_char() {
         CharacterConverter c = new CharacterConverter();
         assertEquals('A', c.convert("A", null));
@@ -62,18 +69,21 @@ class ConvertersTest {
     // ==================== NumberConverter ====================
 
     @Test
+    @DisplayName("NumberConverter - 整数")
     void numberConverter() {
         NumberConverter c = new NumberConverter(Integer.class);
         assertEquals(Integer.valueOf(123), c.convert("123", null));
     }
 
     @Test
+    @DisplayName("NumberConverter - 小数")
     void numberConverter_decimal() {
         NumberConverter c = new NumberConverter(Double.class);
         assertEquals(3.14, ((Number) c.convert("3.14", null)).doubleValue(), 0.001);
     }
 
     @Test
+    @DisplayName("NumberConverter - BigDecimal")
     void numberConverter_bigDecimal() {
         NumberConverter c = new NumberConverter(BigDecimal.class);
         assertEquals(0, new BigDecimal("99.99").compareTo((BigDecimal) c.convert("99.99", null)));
@@ -82,6 +92,7 @@ class ConvertersTest {
     // ==================== StringConverter ====================
 
     @Test
+    @DisplayName("StringConverter - 字符串")
     void stringConverter() {
         StringConverter c = new StringConverter();
         assertEquals("hello", c.convert("hello", null));
@@ -91,6 +102,7 @@ class ConvertersTest {
     // ==================== ClassConverter ====================
 
     @Test
+    @DisplayName("ClassConverter - 类")
     void classConverter() {
         ClassConverter c = new ClassConverter();
         assertEquals(String.class, c.convert("java.lang.String", null));
@@ -99,6 +111,7 @@ class ConvertersTest {
     // ==================== CharsetConverter ====================
 
     @Test
+    @DisplayName("CharsetConverter - 字符集")
     void charsetConverter() {
         CharsetConverter c = new CharsetConverter();
         assertEquals(Charset.forName("UTF-8"), c.convert("UTF-8", null));
@@ -107,6 +120,7 @@ class ConvertersTest {
     // ==================== LocaleConverter ====================
 
     @Test
+    @DisplayName("LocaleConverter - 地区")
     void localeConverter() {
         LocaleConverter c = new LocaleConverter();
         assertEquals(Locale.CHINA, c.convert("zh_CN", null));
@@ -115,6 +129,7 @@ class ConvertersTest {
     // ==================== CurrencyConverter ====================
 
     @Test
+    @DisplayName("CurrencyConverter - 货币")
     void currencyConverter() {
         CurrencyConverter c = new CurrencyConverter();
         assertEquals(Currency.getInstance("CNY"), c.convert("CNY", null));
@@ -123,6 +138,7 @@ class ConvertersTest {
     // ==================== UUIDConverter ====================
 
     @Test
+    @DisplayName("UUIDConverter - UUID")
     void uuidConverter() {
         UUIDConverter c = new UUIDConverter();
         UUID uuid = UUID.randomUUID();
@@ -132,6 +148,7 @@ class ConvertersTest {
     // ==================== URLConverter ====================
 
     @Test
+    @DisplayName("URLConverter - URL")
     void urlConverter() throws Exception {
         URLConverter c = new URLConverter();
         URL url = new URL("https://example.com");
@@ -141,6 +158,7 @@ class ConvertersTest {
     // ==================== URIConverter ====================
 
     @Test
+    @DisplayName("URIConverter - URI")
     void uriConverter() throws Exception {
         URIConverter c = new URIConverter();
         URI uri = new URI("https://example.com");
@@ -150,6 +168,7 @@ class ConvertersTest {
     // ==================== PathConverter ====================
 
     @Test
+    @DisplayName("PathConverter - 路径")
     void pathConverter() {
         PathConverter c = new PathConverter();
         assertEquals(Paths.get("/tmp/test"), c.convert("/tmp/test", null));
@@ -158,6 +177,7 @@ class ConvertersTest {
     // ==================== TimeZoneConverter ====================
 
     @Test
+    @DisplayName("TimeZoneConverter - 时区")
     void timeZoneConverter() {
         TimeZoneConverter c = new TimeZoneConverter();
         TimeZone tz = TimeZone.getTimeZone("Asia/Shanghai");
@@ -167,6 +187,7 @@ class ConvertersTest {
     // ==================== DurationConverter ====================
 
     @Test
+    @DisplayName("DurationConverter - 时长")
     void durationConverter() {
         DurationConverter c = new DurationConverter();
         Duration d = Duration.ofHours(2);
@@ -176,6 +197,7 @@ class ConvertersTest {
     // ==================== PeriodConverter ====================
 
     @Test
+    @DisplayName("PeriodConverter - 周期")
     void periodConverter() {
         PeriodConverter c = new PeriodConverter();
         Period p = Period.ofMonths(3);
@@ -185,6 +207,7 @@ class ConvertersTest {
     // ==================== CalendarConverter ====================
 
     @Test
+    @DisplayName("CalendarConverter - 日历")
     void calendarConverter() {
         CalendarConverter c = new CalendarConverter();
         Date now = new Date();
@@ -196,6 +219,7 @@ class ConvertersTest {
     // ==================== OptConverter ====================
 
     @Test
+    @DisplayName("OptConverter - Opt")
     void optConverter() {
         OptConverter c = new OptConverter();
         assertNotNull(c.convert("test", null));
@@ -204,6 +228,7 @@ class ConvertersTest {
     // ==================== OptionalConverter ====================
 
     @Test
+    @DisplayName("OptionalConverter - Optional")
     void optionalConverter() {
         OptionalConverter c = new OptionalConverter();
         assertEquals(Optional.of("test"), c.convert("test", null));

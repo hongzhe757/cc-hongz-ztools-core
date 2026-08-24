@@ -13,22 +13,26 @@
 package cc.hongz.ztools.core.convert;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@DisplayName("ToBytes 转字节数组")
 public class ToBytesTest {
-	@Test
-	public void toBytesTest() {
-		final List<Byte> byteList = new ArrayList<>();
-		byteList.add((byte) 1);
-		byteList.add((byte) 2);
-		byteList.add((byte) 3);
 
-		final byte[] bytes = Convert.convert(byte[].class, byteList);
-		assertEquals(1, bytes[0]);
-		assertEquals(2, bytes[1]);
-		assertEquals(3, bytes[2]);
-	}
+    @Test
+    @DisplayName("Byte 列表转 byte 数组")
+    public void toBytesTest() {
+        final List<Byte> byteList = new ArrayList<>();
+        byteList.add((byte) 1);
+        byteList.add((byte) 2);
+        byteList.add((byte) 3);
+
+        final byte[] bytes = Convert.convert(byte[].class, byteList);
+        assertEquals(1, bytes[0]);
+        assertEquals(2, bytes[1]);
+        assertEquals(3, bytes[2]);
+    }
 }
