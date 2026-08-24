@@ -53,6 +53,9 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
     }
 
     @Override
+    /**
+     * 转为字符串。
+     */
     protected String convertToStr(final Object value) {
         return StrUtil.trim(super.convertToStr(value));
     }

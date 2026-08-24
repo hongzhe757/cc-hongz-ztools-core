@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.convert.impl;
 
 import cc.hongz.ztools.core.convert.AbstractConverter;
 import cc.hongz.ztools.core.convert.ConvertException;
+import cc.hongz.ztools.core.lang.EnumItem;
 import cc.hongz.ztools.core.map.MapUtil;
 import cc.hongz.ztools.core.map.WeakConcurrentMap;
 import cc.hongz.ztools.core.util.ClassUtil;
@@ -82,7 +83,6 @@ public class EnumConverter extends AbstractConverter<Object> {
             return null;
         }
 
-        /* EnumItem not ported yet
         if (EnumItem.class.isAssignableFrom(enumClass)) {
             final EnumItem first = (EnumItem) EnumUtil.getEnumAt(enumClass, 0);
             if (null != first) {
@@ -93,7 +93,6 @@ public class EnumConverter extends AbstractConverter<Object> {
                 }
             }
         }
-*/
 
         // 用户自定义方法
         // 查找枚举中所有返回值为目标枚举对象的方法，如果发现方法参数匹配，就执行之

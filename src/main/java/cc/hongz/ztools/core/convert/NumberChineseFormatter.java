@@ -669,6 +669,9 @@ public class NumberChineseFormatter {
         }
     }
 
+    /**
+     * 补前导零。
+     */
     private static void addPreZero(final StringBuilder chineseStr) {
         if (StrUtil.isEmpty(chineseStr)) {
             return;

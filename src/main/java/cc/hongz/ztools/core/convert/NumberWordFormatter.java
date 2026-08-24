@@ -147,19 +147,31 @@ public class NumberWordFormatter {
         return lm.toString().trim() + xs + "ONLY";
     }
 
+    /**
+     * 解析 10-19 数字。
+     */
     private static String parseTeen(final String s) {
         return NUMBER_TEEN[Integer.parseInt(s) - 10];
     }
 
+    /**
+     * 解析十位数字。
+     */
     private static String parseTen(final String s) {
         return NUMBER_TEN[Integer.parseInt(s.substring(0, 1)) - 1];
     }
 
+    /**
+     * 解析单位。
+     */
     private static String parseMore(final int i) {
         return NUMBER_MORE[i];
     }
 
     // 两位
+    /**
+     * 两位数字转英文。
+     */
     private static String transTwo(final String s) {
         String value;
         String sValue = s;
@@ -184,6 +196,9 @@ public class NumberWordFormatter {
 
     // 制作叁位的数
     // s.length = 3
+    /**
+     * 三位数字转英文。
+     */
     private static String transThree(final String s) {
         String value;
         if (s.startsWith("0")) { // 是否小於100
@@ -196,6 +211,9 @@ public class NumberWordFormatter {
         return value;
     }
 
+    /**
+     * 解析最后一位数字。
+     */
     private static String parseLast(final String s) {
         return NUMBER[Integer.parseInt(s.substring(s.length() - 1))];
     }

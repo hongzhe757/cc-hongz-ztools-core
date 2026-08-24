@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.convert.impl;
 
+import cc.hongz.ztools.core.bean.BeanUtil;
 import cc.hongz.ztools.core.convert.AbstractConverter;
 import cc.hongz.ztools.core.convert.ConvertException;
 import cc.hongz.ztools.core.convert.ConverterRegistry;
@@ -58,10 +59,9 @@ public class EntryConverter extends AbstractConverter<Map.Entry<?, ?>> {
         } else if (value instanceof CharSequence) {
             final CharSequence str = (CharSequence) value;
             map = strToMap(str);
-        } /* BeanUtil not ported yet:
-        else if (BeanUtil.isReadableBean(value.getClass())) {
+        } else if (BeanUtil.isReadableBean(value.getClass())) {
             map = BeanUtil.beanToMap(value);
-        }*/
+        }
 
         if (null != map) {
             return mapToEntry(pairType, keyType, valueType, map);

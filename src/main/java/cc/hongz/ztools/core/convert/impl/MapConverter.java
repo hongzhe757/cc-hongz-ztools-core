@@ -78,6 +78,9 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
         return map;
     }
 
+    /**
+     * Map 转 Map。
+     */
     private void convertMapToMap(final Map<?, ?> srcMap, final Map<Object, Object> targetMap) {
         final ConverterRegistry convert = ConverterRegistry.getInstance();
         srcMap.forEach((key, value) -> {

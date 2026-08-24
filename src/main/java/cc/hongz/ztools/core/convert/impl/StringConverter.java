@@ -41,6 +41,9 @@ public class StringConverter extends AbstractConverter<String> {
         return convertToStr(value);
     }
 
+    /**
+     * Clob 转字符串。
+     */
     private static String clobToStr(final Clob clob) {
         StringBuilder sb = new StringBuilder();
         try (Reader reader = clob.getCharacterStream();
@@ -55,6 +58,9 @@ public class StringConverter extends AbstractConverter<String> {
         return sb.toString();
     }
 
+    /**
+     * Blob 转字符串。
+     */
     private static String blobToStr(final Blob blob) {
         StringBuilder sb = new StringBuilder();
         try (InputStream in = blob.getBinaryStream();
@@ -69,6 +75,9 @@ public class StringConverter extends AbstractConverter<String> {
         return sb.toString();
     }
 
+    /**
+     * Node 转字符串。
+     */
     private static String nodeToStr(final org.w3c.dom.Node node) {
         return node.getTextContent();
     }
