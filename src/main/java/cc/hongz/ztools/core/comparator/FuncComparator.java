@@ -17,7 +17,7 @@ public class FuncComparator<T> extends NullComparator<T> {
      * @param nullGreater 是否{@code null}在后
      * @param func        比较项获取函数
      */
-    public FuncComparator(boolean nullGreater, Function<T, Comparable<?>> func) {
+    public FuncComparator(final boolean nullGreater, final Function<T, Comparable<?>> func) {
         this(nullGreater, true, func);
     }
 

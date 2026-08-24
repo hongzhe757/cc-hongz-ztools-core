@@ -4,7 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Bean属性排序器.<br>
+ * Bean属性排序器.
+ * <p>
  * 支持读取Bean多层次下的属性.
  *
  * @param <T> 被比较的Bean
@@ -18,7 +19,7 @@ public class PropertyComparator<T> extends FuncComparator<T> {
      *
      * @param property 属性名
      */
-    public PropertyComparator(String property) {
+    public PropertyComparator(final String property) {
         this(property, true);
     }
 
@@ -28,7 +29,7 @@ public class PropertyComparator<T> extends FuncComparator<T> {
      * @param property      属性名
      * @param isNullGreater null值是否排在后（从小到大排序）
      */
-    public PropertyComparator(String property, boolean isNullGreater) {
+    public PropertyComparator(final String property, final boolean isNullGreater) {
         this(property, true, isNullGreater);
     }
 
@@ -39,7 +40,7 @@ public class PropertyComparator<T> extends FuncComparator<T> {
      * @param compareSelf   在字段值相同情况下，是否比较对象本身
      * @param isNullGreater null值是否排在后（从小到大排序）
      */
-    public PropertyComparator(String property, final boolean compareSelf, boolean isNullGreater) {
+    public PropertyComparator(final String property, final boolean compareSelf, final boolean isNullGreater) {
         super(isNullGreater, compareSelf, (bean) -> getProperty(bean, property));
     }
 
@@ -51,7 +52,7 @@ public class PropertyComparator<T> extends FuncComparator<T> {
      * @return 属性值
      */
     @SuppressWarnings("unchecked")
-    private static Comparable<?> getProperty(Object bean, String property) {
+    private static Comparable<?> getProperty(final Object bean, final String property) {
         if (null == bean || null == property || property.isEmpty()) {
             return null;
         }

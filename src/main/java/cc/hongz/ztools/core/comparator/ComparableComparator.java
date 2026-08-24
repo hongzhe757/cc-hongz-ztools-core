@@ -12,7 +12,7 @@ import java.util.Comparator;
 public class ComparableComparator<E extends Comparable<? super E>> implements Comparator<E>, Serializable {
     private static final long serialVersionUID = 3020871676147289162L;
 
-    /** 单例 */
+    /** 单例。 */
     @SuppressWarnings("rawtypes")
     public static final ComparableComparator INSTANCE = new ComparableComparator<>();
 

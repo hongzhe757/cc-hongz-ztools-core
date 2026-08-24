@@ -15,12 +15,15 @@ public class PinyinComparator implements Comparator<String>, Serializable {
 
     final Collator collator;
 
+    /**
+     * 构造.
+     */
     public PinyinComparator() {
         collator = Collator.getInstance(Locale.CHINESE);
     }
 
     @Override
-    public int compare(String o1, String o2) {
+    public int compare(final String o1, final String o2) {
         return collator.compare(o1, o2);
     }
 }

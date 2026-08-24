@@ -1,0 +1,55 @@
+package cc.hongz.ztools.core.comparator;
+
+import java.io.Serializable;
+import java.util.Comparator;
+
+/**
+ * 反转比较器。
+ *
+ * @param <E> 被比较对象类型
+ * @author Looly
+ */
+public class ReverseComparator<E> implements Comparator<E>, Serializable {
+    private static final long serialVersionUID = 8083701245147495562L;
+
+    /**
+     * 原始比较器。
+     */
+    private final Comparator<? super E> comparator;
+
+    /**
+     * 构造。
+     *
+     * @param comparator 原始比较器
+     */
+    @SuppressWarnings("unchecked")
+    public ReverseComparator(final Comparator<? super E> comparator) {
+        this.comparator = (null == comparator) ? ComparableComparator.INSTANCE : comparator;
+    }
+
+    //-----------------------------------------------------------------------------------------------------
+    @Override
+    public int compare(final E o1, final E o2) {
+        return comparator.compare(o2, o1);
+    }
+
+    @Override
+    public int hashCode() {
+        return "ReverseComparator".hashCode() ^ comparator.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (null == object) {
+            return false;
+        }
+        if (object.getClass().equals(this.getClass())) {
+            final ReverseComparator<?> thatrc = (ReverseComparator<?>) object;
+            return comparator.equals(thatrc.comparator);
+        }
+        return false;
+    }
+}
