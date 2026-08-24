@@ -8,7 +8,6 @@ import cc.hongz.ztools.core.io.resource.Resource;
 import cc.hongz.ztools.core.io.resource.StringResource;
 import cc.hongz.ztools.core.map.MapUtil;
 import cc.hongz.ztools.core.util.ArrayUtil;
-import cc.hongz.ztools.core.util.CharsetUtil;
 import cc.hongz.ztools.core.util.ClassLoaderUtil;
 import cc.hongz.ztools.core.util.ObjectUtil;
 import cc.hongz.ztools.core.util.URLUtil;
@@ -149,7 +148,7 @@ public final class JavaSourceCompiler {
      * @param options 编译参数
      * @return 类加载器
      */
-    public ClassLoader compile(List<String> options) {
+    public ClassLoader compile(final List<String> options) {
         final List<File> classPath = getClassPath();
         final URL[] urLs = URLUtil.getURLs(
                 classPath.toArray(new File[0]));
@@ -163,16 +162,17 @@ public final class JavaSourceCompiler {
                 new JavaClassFileManager(ucl,
                         CompilerUtil.getFileManager());
 
-        if (null == options) {
-            options = new ArrayList<>();
+        List<String> optionList = options;
+        if (null == optionList) {
+            optionList = new ArrayList<>();
         }
         if (!classPath.isEmpty()) {
             final List<String> cp = CollUtil.map(classPath,
                     File::getAbsolutePath, true);
             final String separator =
                     FileUtil.isWindows() ? ";" : ":";
-            options.add("-cp");
-            options.add(CollUtil.join(cp, separator));
+            optionList.add("-cp");
+            optionList.add(CollUtil.join(cp, separator));
         }
 
         final DiagnosticCollector<? super JavaFileObject>
@@ -182,7 +182,7 @@ public final class JavaSourceCompiler {
                 getJavaFileObject();
         final CompilationTask task = CompilerUtil.getTask(
                 javaFileManager, diagnosticCollector,
-                options, javaFileObjectList);
+                optionList, javaFileObjectList);
         try {
             if (task.call()) {
                 return javaFileManager.getClassLoader(
