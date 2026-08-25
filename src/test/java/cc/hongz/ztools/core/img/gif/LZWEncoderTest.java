@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.img.gif;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -13,11 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("LZWEncoder LZW 编码器单元测试")
 class LZWEncoderTest {
 
     /**
      * 验证 {@link LZWEncoder#encode(java.io.OutputStream)} 对索引像素写出 LZW 数据块.
      */
+    @DisplayName("对索引像素写出 LZW 数据块")
     @Test
     void encodeWritesCompressedData() throws Exception {
         final int width = 4;

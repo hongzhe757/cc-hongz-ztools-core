@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.img;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("Img 图像编辑器单元测试")
 class ImgTest {
 
     /**
@@ -47,6 +49,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#from(Image)} 创建 Img 实例.
      */
+    @DisplayName("从 Image 创建 Img 实例")
     @Test
     void fromImage() {
         final Img img = Img.from((Image) createTestImage());
@@ -56,6 +59,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#scale(float)} 缩放图片.
      */
+    @DisplayName("按比例缩放图片")
     @Test
     void scaleByFactor() {
         final BufferedImage result = writeAndRead(Img.from((Image) createTestImage()).scale(0.5f));
@@ -66,6 +70,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#scale(int, int)} 按指定宽高缩放.
      */
+    @DisplayName("按指定宽高缩放图片")
     @Test
     void scaleToSize() {
         final BufferedImage result = writeAndRead(Img.from((Image) createTestImage()).scale(200, 160));
@@ -76,6 +81,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#cut(Rectangle)} 使用 Rectangle 切割.
      */
+    @DisplayName("使用 Rectangle 切割图片")
     @Test
     void cutWithRectangle() {
         final BufferedImage result = writeAndRead(Img.from((Image) createTestImage()).cut(new Rectangle(0, 0, 30, 20)));
@@ -86,6 +92,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#round} 圆角处理.
      */
+    @DisplayName("圆角处理")
     @Test
     void round() {
         final Img img = Img.from((Image) createTestImage());
@@ -98,6 +105,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#gray} 转灰度.
      */
+    @DisplayName("转灰度")
     @Test
     void gray() {
         final BufferedImage result = writeAndRead(Img.from((Image) createTestImage()).gray());
@@ -107,6 +115,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#binary} 二值化.
      */
+    @DisplayName("二值化")
     @Test
     void binary() {
         final BufferedImage result = writeAndRead(Img.from((Image) createTestImage()).binary());
@@ -116,6 +125,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#rotate} 旋转图片.
      */
+    @DisplayName("旋转图片")
     @Test
     void rotate() {
         final BufferedImage result = writeAndRead(Img.from((Image) createTestImage()).rotate(90));
@@ -125,6 +135,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#flip} 翻转图片.
      */
+    @DisplayName("翻转图片")
     @Test
     void flip() {
         final BufferedImage result = writeAndRead(Img.from((Image) createTestImage()).flip());
@@ -135,6 +146,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#pressText} 添加文字水印.
      */
+    @DisplayName("添加文字水印")
     @Test
     void pressText() {
         final Img img = Img.from((Image) createTestImage());
@@ -147,6 +159,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#pressImage} 添加图片水印.
      */
+    @DisplayName("添加图片水印")
     @Test
     void pressImage() {
         final BufferedImage watermark = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
@@ -159,6 +172,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#write(ByteArrayOutputStream)} 输出到流.
      */
+    @DisplayName("输出到字节流")
     @Test
     void writeToStream() {
         final Img img = Img.from((Image) createTestImage());
@@ -170,6 +184,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#setQuality} 设置质量参数.
      */
+    @DisplayName("设置图片质量参数")
     @Test
     void setQuality() {
         final Img img = Img.from((Image) createTestImage());
@@ -180,6 +195,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#setBackgroundColor} 设置背景色.
      */
+    @DisplayName("设置图片背景色")
     @Test
     void setBackgroundColor() {
         final Img img = Img.from((Image) createTestImage());
@@ -190,6 +206,7 @@ class ImgTest {
     /**
      * 验证链式调用.
      */
+    @DisplayName("链式调用多个操作")
     @Test
     void chainOperations() {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -204,6 +221,7 @@ class ImgTest {
     /**
      * 验证 {@link Img#stroke} 描边.
      */
+    @DisplayName("描边")
     @Test
     void stroke() {
         final Img img = Img.from((Image) createTestImage());
@@ -215,6 +233,7 @@ class ImgTest {
     /**
      * 验证 {@link ScaleType} 枚举值.
      */
+    @DisplayName("验证 ScaleType 枚举值")
     @Test
     void scaleTypeEnum() {
         assertEquals(5, ScaleType.values().length);

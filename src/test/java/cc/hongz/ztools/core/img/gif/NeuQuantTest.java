@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.img.gif;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -15,11 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("NeuQuant 神经量化单元测试")
 class NeuQuantTest {
 
     /**
      * 验证 {@link NeuQuant#process()} 对小型像素数组生成调色板.
      */
+    @DisplayName("生成调色板")
     @Test
     void processReturnsColorMap() {
         final byte[] pixels = new byte[3 * 4 * 4];
@@ -37,6 +40,7 @@ class NeuQuantTest {
     /**
      * 验证 {@link NeuQuant#colorMap()} 返回 768 字节 RGB 调色板.
      */
+    @DisplayName("返回 768 字节 RGB 调色板")
     @Test
     void colorMapLength() {
         final byte[] pixels = new byte[3 * 2 * 2];
@@ -51,6 +55,7 @@ class NeuQuantTest {
     /**
      * 验证 {@link NeuQuant#map(int, int, int)} 返回有效调色板索引.
      */
+    @DisplayName("返回有效调色板索引")
     @Test
     void mapReturnsIndexInRange() {
         final byte[] pixels = new byte[3 * 2 * 2];

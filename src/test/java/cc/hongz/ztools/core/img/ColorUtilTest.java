@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.img;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("ColorUtil 颜色工具单元测试")
 class ColorUtilTest {
 
     // ========================= toHex =========================
@@ -26,6 +28,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#toHex(Color)} 将 Color 转为 16 进制.
      */
+    @DisplayName("Color 转 16 进制")
     @Test
     void toHexFromColor() {
         assertEquals("#FF0000", ColorUtil.toHex(Color.RED));
@@ -38,6 +41,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#toHex(int, int, int)} 将 RGB 分量转为 16 进制.
      */
+    @DisplayName("RGB 分量转 16 进制")
     @Test
     void toHexFromRgb() {
         assertEquals("#FCF6D6", ColorUtil.toHex(252, 246, 214));
@@ -48,6 +52,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#toHex(int, int, int)} 对越界值抛出异常.
      */
+    @DisplayName("越界 RGB 抛异常")
     @Test
     void toHexOutOfRange() {
         assertThrows(IllegalArgumentException.class, () -> ColorUtil.toHex(-1, 0, 0));
@@ -60,6 +65,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#hexToColor(String)} 将 16 进制转为 Color.
      */
+    @DisplayName("16 进制转 Color")
     @Test
     void hexToColorBasic() {
         assertEquals(Color.RED, ColorUtil.hexToColor("#FF0000"));
@@ -69,6 +75,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#hexToColor(String)} 不带 # 前缀也能解析.
      */
+    @DisplayName("不带 # 前缀解析")
     @Test
     void hexToColorWithoutHash() {
         final Color c = ColorUtil.hexToColor("00FF00");
@@ -82,6 +89,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#getColor(int)} 将 RGB 整数值转为 Color.
      */
+    @DisplayName("RGB 整数值转 Color")
     @Test
     void getColorFromInt() {
         final Color c = ColorUtil.getColor(0xFF0000);
@@ -95,6 +103,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#getColor(String)} 解析颜色英文名.
      */
+    @DisplayName("按颜色英文名解析")
     @Test
     void getColorByName() {
         assertEquals(Color.RED, ColorUtil.getColor("red"));
@@ -116,6 +125,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#getColor(String)} 解析 16 进制形式.
      */
+    @DisplayName("按 16 进制形式解析")
     @Test
     void getColorByHex() {
         assertEquals(Color.RED, ColorUtil.getColor("#FF0000"));
@@ -125,6 +135,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#getColor(String)} 解析 RGB 逗号形式.
      */
+    @DisplayName("按 RGB 逗号形式解析")
     @Test
     void getColorByRgbString() {
         final Color c = ColorUtil.getColor("255,0,0");
@@ -137,6 +148,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#getColor(String)} 对空白/null 返回 null.
      */
+    @DisplayName("空白或 null 返回 null")
     @Test
     void getColorByBlankName() {
         assertNull(ColorUtil.getColor(""));
@@ -147,6 +159,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#getColor(String)} 解析暗金色和亮金色.
      */
+    @DisplayName("解析暗金色和亮金色")
     @Test
     void getColorGold() {
         assertNotNull(ColorUtil.getColor("DARKGOLD"));
@@ -158,6 +171,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#add(Color, Color)} 叠加两色.
      */
+    @DisplayName("叠加两色")
     @Test
     void addColors() {
         final Color result = ColorUtil.add(Color.RED, Color.BLUE);
@@ -171,6 +185,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#getMainColor(BufferedImage, int[]...)} 获取主色调.
      */
+    @DisplayName("获取主色调")
     @Test
     void getMainColorBasic() {
         final BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
@@ -186,6 +201,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#getMainColor(BufferedImage, int[]...)} 带过滤色.
      */
+    @DisplayName("带过滤色获取主色调")
     @Test
     void getMainColorWithFilter() {
         final BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
@@ -204,6 +220,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#randomColor()} 返回非 null 颜色.
      */
+    @DisplayName("随机颜色非 null")
     @Test
     void randomColorNotNull() {
         assertNotNull(ColorUtil.randomColor());
@@ -212,6 +229,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#randomColor(Random)} 使用指定 Random 生成颜色.
      */
+    @DisplayName("使用指定 Random 生成颜色")
     @Test
     void randomColorWithRandom() {
         final Color c1 = ColorUtil.randomColor(new Random(42));
@@ -222,6 +240,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#randomColor(Random)} 在 random 为 null 时使用默认随机源.
      */
+    @DisplayName("null Random 使用默认随机源")
     @Test
     void randomColorWithNullRandom() {
         assertNotNull(ColorUtil.randomColor(null));
@@ -232,6 +251,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#maxDistance(Color)} 对 null 返回默认最大色差.
      */
+    @DisplayName("null 颜色返回默认最大色差")
     @Test
     void maxDistanceNullColor() {
         assertEquals(443, ColorUtil.maxDistance(null));
@@ -240,6 +260,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#maxDistance(Color)} 对具体颜色返回正数.
      */
+    @DisplayName("具体颜色返回正数")
     @Test
     void maxDistanceWithColor() {
         assertTrue(ColorUtil.maxDistance(Color.RED) > 0);
@@ -250,6 +271,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#computeColorDistance(Color, Color)} 同色距离为 0.
      */
+    @DisplayName("同色距离为 0")
     @Test
     void computeColorDistanceSameColor() {
         final Color red = Color.RED;
@@ -259,6 +281,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#computeColorDistance(Color, Color)} 对 null 返回默认色差.
      */
+    @DisplayName("null 颜色返回默认色差")
     @Test
     void computeColorDistanceNull() {
         assertEquals(443, ColorUtil.computeColorDistance(null, Color.RED));
@@ -270,6 +293,7 @@ class ColorUtilTest {
     /**
      * 验证 {@link ColorUtil#randomColor(Color, int)} 在合理色差下返回与背景有足够距离的颜色.
      */
+    @DisplayName("合理色差下返回有足够距离的颜色")
     @Test
     void randomColorWithMinDistanceSuccess() {
         final Color bg = Color.WHITE;
@@ -280,6 +304,7 @@ class ColorUtilTest {
     /**
      * 验证最小色差不小于阈值时 {@link ColorUtil#randomColor(Color, int)} 抛出异常.
      */
+    @DisplayName("色差阈值过大抛异常")
     @Test
     void randomColorWithMinDistanceTooLarge() {
         assertThrows(IllegalArgumentException.class,

@@ -19,6 +19,7 @@ import java.util.Random;
  * @author hongzhe.qin
  * @since 4.5.2
  */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class ColorUtil {
 
     /**
@@ -40,7 +41,7 @@ public final class ColorUtil {
      * @param color {@link Color}
      * @return 16进制的颜色值，例如#fcf6d6
      */
-    public static String toHex(Color color) {
+    public static String toHex(final Color color) {
         return toHex(color.getRed(), color.getGreen(), color.getBlue());
     }
 
@@ -52,7 +53,7 @@ public final class ColorUtil {
      * @param b 蓝(B)
      * @return 返回字符串形式的 十六进制颜色码
      */
-    public static String toHex(int r, int g, int b) {
+    public static String toHex(final int r, final int g, final int b) {
         if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
             throw new IllegalArgumentException("RGB must be 0~255!");
         }
@@ -65,7 +66,7 @@ public final class ColorUtil {
      * @param hex 16进制的颜色值，例如#fcf6d6
      * @return {@link Color}
      */
-    public static Color hexToColor(String hex) {
+    public static Color hexToColor(final String hex) {
         return getColor(Integer.parseInt(StrUtil.removePrefix(hex, "#"), 16));
     }
 
@@ -75,7 +76,7 @@ public final class ColorUtil {
      * @param rgb RGB值
      * @return {@link Color}
      */
-    public static Color getColor(int rgb) {
+    public static Color getColor(final int rgb) {
         return new Color(rgb);
     }
 
@@ -91,48 +92,48 @@ public final class ColorUtil {
      * @param colorName 颜色的英文名，16进制表示或RGB表示
      * @return {@link Color}
      */
-    public static Color getColor(String colorName) {
+    public static Color getColor(final String colorName) {
         if (StrUtil.isBlank(colorName)) {
             return null;
         }
-        colorName = colorName.toUpperCase();
+        String resolvedColorName = colorName.toUpperCase();
 
-        if ("BLACK".equals(colorName)) {
+        if ("BLACK".equals(resolvedColorName)) {
             return Color.BLACK;
-        } else if ("WHITE".equals(colorName)) {
+        } else if ("WHITE".equals(resolvedColorName)) {
             return Color.WHITE;
-        } else if ("LIGHTGRAY".equals(colorName) || "LIGHT_GRAY".equals(colorName)) {
+        } else if ("LIGHTGRAY".equals(resolvedColorName) || "LIGHT_GRAY".equals(resolvedColorName)) {
             return Color.LIGHT_GRAY;
-        } else if ("GRAY".equals(colorName)) {
+        } else if ("GRAY".equals(resolvedColorName)) {
             return Color.GRAY;
-        } else if ("DARKGRAY".equals(colorName) || "DARK_GRAY".equals(colorName)) {
+        } else if ("DARKGRAY".equals(resolvedColorName) || "DARK_GRAY".equals(resolvedColorName)) {
             return Color.DARK_GRAY;
-        } else if ("RED".equals(colorName)) {
+        } else if ("RED".equals(resolvedColorName)) {
             return Color.RED;
-        } else if ("PINK".equals(colorName)) {
+        } else if ("PINK".equals(resolvedColorName)) {
             return Color.PINK;
-        } else if ("ORANGE".equals(colorName)) {
+        } else if ("ORANGE".equals(resolvedColorName)) {
             return Color.ORANGE;
-        } else if ("YELLOW".equals(colorName)) {
+        } else if ("YELLOW".equals(resolvedColorName)) {
             return Color.YELLOW;
-        } else if ("GREEN".equals(colorName)) {
+        } else if ("GREEN".equals(resolvedColorName)) {
             return Color.GREEN;
-        } else if ("MAGENTA".equals(colorName)) {
+        } else if ("MAGENTA".equals(resolvedColorName)) {
             return Color.MAGENTA;
-        } else if ("CYAN".equals(colorName)) {
+        } else if ("CYAN".equals(resolvedColorName)) {
             return Color.CYAN;
-        } else if ("BLUE".equals(colorName)) {
+        } else if ("BLUE".equals(resolvedColorName)) {
             return Color.BLUE;
-        } else if ("DARKGOLD".equals(colorName) || "DARK_GOLD".equals(colorName)) {
+        } else if ("DARKGOLD".equals(resolvedColorName) || "DARK_GOLD".equals(resolvedColorName)) {
             return hexToColor("#9e7e67");
-        } else if ("LIGHTGOLD".equals(colorName) || "LIGHT_GOLD".equals(colorName)) {
+        } else if ("LIGHTGOLD".equals(resolvedColorName) || "LIGHT_GOLD".equals(resolvedColorName)) {
             return hexToColor("#ac9c85");
-        } else if (StrUtil.startWith(colorName, '#')) {
-            return hexToColor(colorName);
-        } else if (StrUtil.startWith(colorName, '$')) {
-            return hexToColor("#" + colorName.substring(1));
+        } else if (StrUtil.startWith(resolvedColorName, '#')) {
+            return hexToColor(resolvedColorName);
+        } else if (StrUtil.startWith(resolvedColorName, '$')) {
+            return hexToColor("#" + resolvedColorName.substring(1));
         } else {
-            final List<String> rgb = StrUtil.split(colorName, ',');
+            final List<String> rgb = StrUtil.split(resolvedColorName, ',');
             if (3 == rgb.size()) {
                 final Integer r = Convert.toInt(rgb.get(0), null);
                 final Integer g = Convert.toInt(rgb.get(1), null);
@@ -154,7 +155,7 @@ public final class ColorUtil {
      * @param color2 颜色2
      * @return 叠加后的颜色
      */
-    public static Color add(Color color1, Color color2) {
+    public static Color add(final Color color1, final Color color2) {
         double r1 = color1.getRed();
         double g1 = color1.getGreen();
         double b1 = color1.getBlue();
@@ -249,7 +250,7 @@ public final class ColorUtil {
      * @param rgbFilters 过滤多种颜色
      * @return {@link String} #ffffff
      */
-    public static String getMainColor(BufferedImage image, int[]... rgbFilters) {
+    public static String getMainColor(final BufferedImage image, final int[]... rgbFilters) {
         int r, g, b;
         Map<String, Long> countMap = new HashMap<>();
         int width = image.getWidth();
@@ -297,7 +298,7 @@ public final class ColorUtil {
      * @param rgbFilters 颜色过滤器
      * @return 是否匹配
      */
-    private static boolean matchFilters(int r, int g, int b, int[]... rgbFilters) {
+    private static boolean matchFilters(final int r, final int g, final int b, final int[]... rgbFilters) {
         if (ArrayUtil.isNotEmpty(rgbFilters)) {
             for (int[] rgbFilter : rgbFilters) {
                 if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {

@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.img;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
@@ -25,11 +26,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("ImgUtil 图片工具单元测试")
 class ImgUtilTest {
 
     /**
      * 验证 {@link ImgUtil#createGraphics(BufferedImage, Color)} 创建 Graphics2D.
      */
+    @DisplayName("创建带背景色的 Graphics2D")
     @Test
     void createGraphicsWithBackground() {
         final BufferedImage image = new BufferedImage(20, 10, BufferedImage.TYPE_INT_RGB);
@@ -41,6 +44,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#createGraphics(BufferedImage, Color)} 在 color 为 null 时不填充背景.
      */
+    @DisplayName("创建无背景色的 Graphics2D")
     @Test
     void createGraphicsWithoutBackground() {
         final BufferedImage image = new BufferedImage(20, 10, BufferedImage.TYPE_INT_RGB);
@@ -52,6 +56,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#writePng(java.awt.Image, java.io.OutputStream)} 与 {@link ImgUtil#read(java.io.InputStream)} 往返一致.
      */
+    @DisplayName("写 PNG 再读回往返一致")
     @Test
     void writePngAndReadRoundTrip() throws Exception {
         final BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
@@ -72,6 +77,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#writePng(java.awt.Image, java.io.OutputStream)} 对非 BufferedImage 走转换分支.
      */
+    @DisplayName("非 BufferedImage 写 PNG")
     @Test
     void writePngNonBufferedImage() throws Exception {
         final int[] pixels = new int[100];
@@ -86,6 +92,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#read(java.io.InputStream)} 对非法内容抛出 {@link IllegalArgumentException}.
      */
+    @DisplayName("读取非法图片内容抛异常")
     @Test
     void readUnsupportedImage() {
         assertThrows(IllegalArgumentException.class,
@@ -95,6 +102,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#getPointBaseCentre(Rectangle, int, int)} 计算居中偏移坐标.
      */
+    @DisplayName("计算居中偏移坐标")
     @Test
     void getPointBaseCentre() {
         final Rectangle rect = new Rectangle(0, 0, 4, 4);
@@ -104,6 +112,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#randomColor()} 返回非 null.
      */
+    @DisplayName("随机颜色返回非 null")
     @Test
     void randomColorDefault() {
         assertNotNull(ImgUtil.randomColor());
@@ -112,6 +121,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#randomColor(Color, int)} 与背景保持足够色差.
      */
+    @DisplayName("随机颜色与背景保持色差")
     @Test
     void randomColorWithMinDistance() {
         final Color fg = ImgUtil.randomColor(Color.BLACK, 30);
@@ -121,6 +131,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#randomColor(Random)} 使用指定 Random.
      */
+    @DisplayName("使用指定 Random 生成随机颜色")
     @Test
     void randomColorWithRandom() {
         assertNotNull(ImgUtil.randomColor(new Random(1)));
@@ -131,6 +142,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#toHex(Color)} 将 Color 转为 16 进制.
      */
+    @DisplayName("Color 转 16 进制")
     @Test
     void toHex() {
         assertEquals("#FF0000", ImgUtil.toHex(Color.RED));
@@ -143,6 +155,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#scale(Image, int, int, Color)} 缩放图片.
      */
+    @DisplayName("缩放图片")
     @Test
     void scaleToSize() {
         final BufferedImage src = createRedImage(100, 80);
@@ -155,6 +168,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#cut(Image, int, int, int)} 切割圆形区域.
      */
+    @DisplayName("切割圆形区域")
     @Test
     void cutCircle() {
         final BufferedImage src = createRedImage(100, 80);
@@ -167,6 +181,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#rotate(Image, int)} 旋转图片.
      */
+    @DisplayName("旋转图片")
     @Test
     void rotate() {
         final BufferedImage src = createRedImage(100, 80);
@@ -179,6 +194,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#toBytes(Image, String)} 将图片转为字节数组.
      */
+    @DisplayName("图片转字节数组")
     @Test
     void toBytes() {
         final BufferedImage src = createRedImage(10, 10);
@@ -192,6 +208,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#copyImage(BufferedImage, int)} 复制图片.
      */
+    @DisplayName("复制图片")
     @Test
     void copyImage() {
         final BufferedImage src = createRedImage(10, 10);
@@ -206,6 +223,7 @@ class ImgUtilTest {
     /**
      * 验证 {@link ImgUtil#createImage(String, Font, Color, Color, javax.imageio.stream.ImageOutputStream)} 创建文字图片.
      */
+    @DisplayName("创建文字图片")
     @Test
     void createImage() throws Exception {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();

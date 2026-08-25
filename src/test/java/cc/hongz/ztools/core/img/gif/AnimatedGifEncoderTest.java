@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.img.gif;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("AnimatedGifEncoder GIF 编码器单元测试")
 class AnimatedGifEncoderTest {
 
     private static BufferedImage blueFrame() {
@@ -34,6 +36,7 @@ class AnimatedGifEncoderTest {
      * 验证 {@link AnimatedGifEncoder#start(java.io.OutputStream)}、{@link AnimatedGifEncoder#setDelay(int)}、
      * {@link AnimatedGifEncoder#addFrame(BufferedImage)}、{@link AnimatedGifEncoder#finish()} 输出合法 GIF.
      */
+    @DisplayName("编码单帧 GIF")
     @Test
     void encodeSingleFrameGif() throws Exception {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -53,6 +56,7 @@ class AnimatedGifEncoderTest {
      *
      * @param tempDir JUnit 临时目录
      */
+    @DisplayName("通过文件路径启动编码")
     @Test
     void startWithFilePath(@TempDir final Path tempDir) throws Exception {
         final String path = tempDir.resolve("out.gif").toString();
@@ -67,6 +71,7 @@ class AnimatedGifEncoderTest {
     /**
      * 验证 {@link AnimatedGifEncoder#setSize(int, int)} 在首帧前设定画布尺寸.
      */
+    @DisplayName("首帧前设定画布尺寸")
     @Test
     void setSizeBeforeFirstFrame() throws Exception {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -81,6 +86,7 @@ class AnimatedGifEncoderTest {
      * 验证 {@link AnimatedGifEncoder#setRepeat(int)}、{@link AnimatedGifEncoder#setFrameRate(float)}、
      * {@link AnimatedGifEncoder#setQuality(int)} 等配置方法不抛异常.
      */
+    @DisplayName("配置方法不抛异常")
     @Test
     void configurationMethods() throws Exception {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -100,6 +106,7 @@ class AnimatedGifEncoderTest {
     /**
      * 验证多帧 GIF 编码.
      */
+    @DisplayName("编码多帧 GIF")
     @Test
     void encodeMultipleFrames() throws Exception {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -115,6 +122,7 @@ class AnimatedGifEncoderTest {
     /**
      * 验证未调用 start 时 {@link AnimatedGifEncoder#addFrame(BufferedImage)} 返回 false.
      */
+    @DisplayName("未 start 时 addFrame 返回 false")
     @Test
     void addFrameBeforeStartFails() {
         final AnimatedGifEncoder encoder = new AnimatedGifEncoder();
@@ -124,6 +132,7 @@ class AnimatedGifEncoderTest {
     /**
      * 验证 {@link AnimatedGifEncoder#start(java.io.OutputStream)} 对 null 返回 false.
      */
+    @DisplayName("null 流 start 返回 false")
     @Test
     void startNullStreamFails() {
         assertFalse(new AnimatedGifEncoder().start((java.io.OutputStream) null));
@@ -132,6 +141,7 @@ class AnimatedGifEncoderTest {
     /**
      * 验证未 start 时 {@link AnimatedGifEncoder#finish()} 返回 false.
      */
+    @DisplayName("未 start 时 finish 返回 false")
     @Test
     void finishWithoutStartFails() {
         assertFalse(new AnimatedGifEncoder().finish());

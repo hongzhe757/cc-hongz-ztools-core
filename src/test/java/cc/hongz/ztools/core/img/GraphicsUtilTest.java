@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.img;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.awt.AlphaComposite;
@@ -22,11 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("GraphicsUtil 图形工具单元测试")
 class GraphicsUtilTest {
 
     /**
      * 验证 {@link GraphicsUtil#createGraphics(BufferedImage, Color)} 创建 Graphics2D 并填充背景.
      */
+    @DisplayName("创建 Graphics2D 并填充背景")
     @Test
     void createGraphicsWithBackground() {
         final BufferedImage image = new BufferedImage(100, 40, BufferedImage.TYPE_INT_RGB);
@@ -38,6 +41,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#createGraphics(BufferedImage, Color)} 在 color 为 null 时不填充背景.
      */
+    @DisplayName("color 为 null 不填充背景")
     @Test
     void createGraphicsWithoutBackground() {
         final BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
@@ -49,6 +53,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#getCenterY(Graphics, int)} 返回垂直居中 Y 坐标.
      */
+    @DisplayName("返回垂直居中 Y 坐标")
     @Test
     void getCenterY() {
         final BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
@@ -61,6 +66,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawStringColourful(Graphics, String, Font, int, int)} 逐字随机色绘制.
      */
+    @DisplayName("逐字随机色绘制")
     @Test
     void drawStringColourfulBasic() {
         final BufferedImage image = new BufferedImage(100, 40, BufferedImage.TYPE_INT_RGB);
@@ -72,6 +78,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawStringColourful(Graphics, String, Font, int, int, Color)} 与背景保持色差.
      */
+    @DisplayName("与背景保持色差绘制")
     @Test
     void drawStringColourfulWithBackground() {
         final BufferedImage image = new BufferedImage(100, 40, BufferedImage.TYPE_INT_RGB);
@@ -83,6 +90,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawStringColourful(Graphics, String, Font, int, int, Color, int)} 指定最小色差.
      */
+    @DisplayName("指定最小色差绘制")
     @Test
     void drawStringColourfulWithCompareColor() {
         final BufferedImage image = new BufferedImage(100, 40, BufferedImage.TYPE_INT_RGB);
@@ -94,6 +102,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawString(Graphics, String, Font, Color, int, int)} 固定颜色绘制.
      */
+    @DisplayName("固定颜色绘制")
     @Test
     void drawStringFixedColor() {
         final BufferedImage image = new BufferedImage(100, 40, BufferedImage.TYPE_INT_RGB);
@@ -105,6 +114,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawString(Graphics, String, Font, Color, int, int, Color, int)} 随机色与色差约束.
      */
+    @DisplayName("随机色与色差约束绘制")
     @Test
     void drawStringWithCompareColor() {
         final BufferedImage image = new BufferedImage(100, 40, BufferedImage.TYPE_INT_RGB);
@@ -116,6 +126,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawString(Graphics, String, Font, Color, Rectangle)} 基于矩形居中绘制.
      */
+    @DisplayName("基于矩形居中绘制")
     @Test
     void drawStringWithRectangle() {
         final BufferedImage image = new BufferedImage(100, 40, BufferedImage.TYPE_INT_RGB);
@@ -128,6 +139,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawString(Graphics, String, Font, Color, Point)} 基于坐标绘制.
      */
+    @DisplayName("基于坐标绘制")
     @Test
     void drawStringWithPoint() {
         final BufferedImage image = new BufferedImage(100, 40, BufferedImage.TYPE_INT_RGB);
@@ -139,6 +151,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawImg(Graphics, java.awt.Image, Point)} 按点绘制图片.
      */
+    @DisplayName("按点绘制图片")
     @Test
     void drawImgWithPoint() {
         final BufferedImage image = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
@@ -151,6 +164,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#drawImg(Graphics, java.awt.Image, Rectangle)} 按矩形绘制图片.
      */
+    @DisplayName("按矩形绘制图片")
     @Test
     void drawImgWithRectangle() {
         final BufferedImage image = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
@@ -163,6 +177,7 @@ class GraphicsUtilTest {
     /**
      * 验证 {@link GraphicsUtil#setAlpha(Graphics2D, float)} 设置透明度.
      */
+    @DisplayName("设置透明度")
     @Test
     void setAlpha() {
         final BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);

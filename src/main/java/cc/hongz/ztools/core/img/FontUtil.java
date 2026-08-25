@@ -41,7 +41,7 @@ public final class FontUtil {
      * @param size 字体大小
      * @return 字体
      */
-    public static Font createSansSerifFont(int size) {
+    public static Font createSansSerifFont(final int size) {
         return createFont(Font.SANS_SERIF, size);
     }
 
@@ -52,7 +52,7 @@ public final class FontUtil {
      * @param size 字体大小
      * @return 字体
      */
-    public static Font createFont(String name, int size) {
+    public static Font createFont(final String name, final int size) {
         return new Font(name, Font.PLAIN, size);
     }
 
@@ -63,7 +63,7 @@ public final class FontUtil {
      * @param fontFile 字体文件
      * @return {@link Font}
      */
-    public static Font createFont(File fontFile) {
+    public static Font createFont(final File fontFile) {
         try {
             return Font.createFont(Font.TRUETYPE_FONT, fontFile);
         } catch (FontFormatException e) {
@@ -84,7 +84,7 @@ public final class FontUtil {
      * @param fontStream 字体流
      * @return {@link Font}
      */
-    public static Font createFont(InputStream fontStream) {
+    public static Font createFont(final InputStream fontStream) {
         try {
             return Font.createFont(Font.TRUETYPE_FONT, fontStream);
         } catch (FontFormatException e) {

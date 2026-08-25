@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.img;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.awt.Dimension;
@@ -18,11 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author hongzhe.qin
  */
+@DisplayName("FontUtil 字体工具单元测试")
 class FontUtilTest {
 
     /**
      * 验证 {@link FontUtil#createFont()} 返回默认字体.
      */
+    @DisplayName("返回默认字体")
     @Test
     void createFontDefault() {
         assertNotNull(FontUtil.createFont());
@@ -31,6 +34,7 @@ class FontUtilTest {
     /**
      * 验证 {@link FontUtil#createSansSerifFont(int)} 返回指定大小的 SansSerif 字体.
      */
+    @DisplayName("返回指定大小 SansSerif 字体")
     @Test
     void createSansSerifFont() {
         final Font font = FontUtil.createSansSerifFont(24);
@@ -42,6 +46,7 @@ class FontUtilTest {
     /**
      * 验证 {@link FontUtil#createFont(String, int)} 返回指定名称和大小的字体.
      */
+    @DisplayName("返回指定名称和大小字体")
     @Test
     void createFontWithNameAndSize() {
         final Font font = FontUtil.createFont("Serif", 18);
@@ -53,6 +58,7 @@ class FontUtilTest {
     /**
      * 验证 {@link FontUtil#getDimension(FontMetrics, String)} 返回正宽与高.
      */
+    @DisplayName("返回正宽与高")
     @Test
     void getDimension() {
         final BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
