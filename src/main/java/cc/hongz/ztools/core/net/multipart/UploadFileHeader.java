@@ -3,7 +3,6 @@ package cc.hongz.ztools.core.net.multipart;
 import cc.hongz.ztools.core.io.FileUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 
-import lombok.Getter;
 
 /**
  * 上传的文件的头部信息.<br>
@@ -12,7 +11,6 @@ import lombok.Getter;
  * @author jodd.org
  * @since 5.7.0
  */
-@Getter
 public class UploadFileHeader {
 
     /**
@@ -61,6 +59,82 @@ public class UploadFileHeader {
      */
     UploadFileHeader(final String dataHeader) {
         processHeaderString(dataHeader);
+    }
+
+    /**
+     * Returns {@code true} if uploaded data are correctly marked as a file.<br>
+     * This is true if header contains string 'filename'.
+     *
+     * @return 是否为文件
+     */
+    public boolean isFile() {
+        return isFile;
+    }
+
+    /**
+     * 返回表单字段名。
+     *
+     * @return 表单字段名
+     */
+    public String getFormFieldName() {
+        return formFieldName;
+    }
+
+    /**
+     * 返回表单中的文件名，来自客户端传入。
+     *
+     * @return 表单文件名
+     */
+    public String getFormFileName() {
+        return formFileName;
+    }
+
+    /**
+     * 获取文件名，不包括路径。
+     *
+     * @return 文件名
+     */
+    public String getFileName() {
+        return fileName;
+    }
+
+    /**
+     * Returns uploaded content type. It is usually in the following form:<br>
+     * mime_type/mime_subtype.
+     *
+     * @return content type
+     * @see #getMimeType()
+     * @see #getMimeSubtype()
+     */
+    public String getContentType() {
+        return contentType;
+    }
+
+    /**
+     * Returns file types MIME.
+     *
+     * @return types MIME
+     */
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    /**
+     * Returns file sub type MIME.
+     *
+     * @return sub type MIME
+     */
+    public String getMimeSubtype() {
+        return mimeSubtype;
+    }
+
+    /**
+     * Returns content disposition. Usually it is 'form-data'.
+     *
+     * @return content disposition
+     */
+    public String getContentDisposition() {
+        return contentDisposition;
     }
 
     /**

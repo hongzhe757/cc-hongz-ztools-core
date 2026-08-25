@@ -3,9 +3,6 @@ package cc.hongz.ztools.core.text;
 import cc.hongz.ztools.core.map.SafeConcurrentHashMap;
 import cc.hongz.ztools.core.util.StrUtil;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -896,14 +893,10 @@ public class AntPathMatcher {
         private static class PatternInfo {
 
             private final String pattern;
-            @Getter
             private int uriVars;
-            @Getter
             private int singleWildcards;
-            @Getter
             private int doubleWildcards;
             private boolean catchAllPattern;
-            @Getter
             private boolean prefixPattern;
             private Integer length;
 
@@ -951,6 +944,42 @@ public class AntPathMatcher {
             }
 
             /**
+             * 获取 URI 变量数.
+             *
+             * @return URI 变量数
+             */
+            public int getUriVars() {
+                return this.uriVars;
+            }
+
+            /**
+             * 获取单通配符数.
+             *
+             * @return 单通配符数
+             */
+            public int getSingleWildcards() {
+                return this.singleWildcards;
+            }
+
+            /**
+             * 获取双通配符数.
+             *
+             * @return 双通配符数
+             */
+            public int getDoubleWildcards() {
+                return this.doubleWildcards;
+            }
+
+            /**
+             * 是否为前缀模式.
+             *
+             * @return 是否为前缀模式
+             */
+            public boolean isPrefixPattern() {
+                return this.prefixPattern;
+            }
+
+            /**
              * 是否最不具体（匹配所有）.
              *
              * @return 是否最不具体
@@ -988,14 +1017,21 @@ public class AntPathMatcher {
     /**
      * 路径分隔符模式缓存.
      */
-    @Getter
-    @RequiredArgsConstructor
     private static class PathSeparatorPatternCache {
 
         /**
          * 路径分隔符.
          */
         private final String pathSeparator;
+
+        /**
+         * 构造.
+         *
+         * @param pathSeparator 路径分隔符
+         */
+        PathSeparatorPatternCache(final String pathSeparator) {
+            this.pathSeparator = pathSeparator;
+        }
 
         /**
          * 获取以单通配符结尾的模式.
