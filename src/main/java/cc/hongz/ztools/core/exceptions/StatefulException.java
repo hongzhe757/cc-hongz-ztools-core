@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.exceptions;
 import cc.hongz.ztools.core.util.StrUtil;
 
 /**
- * 带业务状态码的运行时异常（Hutool 阶段 1 迁入）.
+ * 带业务状态码的运行时异常.
  *
  * @author xiaoleilu
  */

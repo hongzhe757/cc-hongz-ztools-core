@@ -13,7 +13,7 @@ import java.util.Set;
  * <p>设计模式：工具类（Utility Class），私有构造禁止实例化。
  *
  * @author looly
- * @author hongzhe.qin (migrated & enhanced)
+ * @author hongzhe.qin (enhanced)
  * @since 4.1.16
  */
 public final class BooleanUtil {

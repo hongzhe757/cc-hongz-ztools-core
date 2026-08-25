@@ -37,7 +37,7 @@ import java.util.jar.JarFile;
  * </pre>
  *
  * <p>
- * 对齐 Hutool {@code cc.hongz.ztools.core.util.URLUtil}，encode/decode 委托给
+ * encode/decode 委托给
  * {@link URLEncodeUtil} 和 {@link URLDecoder}，基于 RFC3986 + {@link cc.hongz.ztools.core.codec.PercentCodec} 实现。
  * </p>
  *

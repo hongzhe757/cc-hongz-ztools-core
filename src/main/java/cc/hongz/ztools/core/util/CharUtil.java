@@ -3,12 +3,11 @@ package cc.hongz.ztools.core.util;
 /**
  * 字符工具类.
  * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.util.CharUtil}，
  * 合并了 {@code CharPool} 常量和 {@code ASCIIStrCache} 缓存能力。
  * 部分工具来自于 Apache Commons 系列。
  *
  * @author looly
- * @author hongzhe.qin (migrated &amp; enhanced)
+ * @author hongzhe.qin (enhanced)
  * @since 4.0.1
  */
 public final class CharUtil {

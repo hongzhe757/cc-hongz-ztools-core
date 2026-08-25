@@ -5,9 +5,6 @@ import cc.hongz.ztools.core.util.IdUtil;
 
 /**
  * ID相关常量.
- * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.lang.id.IdConstants}。
- *
  * @author Looly
  */
 public final class IdConstants {

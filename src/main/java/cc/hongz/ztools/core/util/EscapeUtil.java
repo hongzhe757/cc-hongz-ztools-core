@@ -11,9 +11,6 @@ import cc.hongz.ztools.core.text.escape.XmlUnescape;
  * escape采用ISO Latin字符集对指定的字符串进行编码.<br>
  * 所有的空格符、标点符号、特殊字符以及其他非ASCII字符都将被转化成%xx格式的字符编码
  * (xx等于该字符在字符集表里面的编码的16进制数字).
- * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.util.EscapeUtil}.
- *
  * @author xiaoleilu
  */
 public final class EscapeUtil {

@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.exceptions;
 import cc.hongz.ztools.core.util.StrUtil;
 
 /**
- * 可选依赖缺失或加载失败异常（Hutool 阶段 1 迁入）.
+ * 可选依赖缺失或加载失败异常.
  *
  * @author xiaoleilu
  * @since 4.0.10

@@ -13,10 +13,9 @@ import java.nio.charset.UnsupportedCharsetException;
  * 字符集工具类.
  * <p>
  * 提供字符集的常量定义、解析、字符串编码转换及系统编码探测等功能。
- * 迁移自 hutool CharsetUtil。
  *
  * @author xiaoleilu
- * @author hongzhe.qin (migrated &amp; enhanced)
+ * @author hongzhe.qin (enhanced)
  */
 public final class CharsetUtil {
 

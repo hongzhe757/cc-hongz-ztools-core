@@ -10,9 +10,6 @@ import cc.hongz.ztools.core.util.StrUtil;
 /**
  * {@link ParameterizedType} 接口实现，用于重新定义泛型类型.
  *
- * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.lang.ParameterizedTypeImpl}。
- *
  * @author Looly
  * @since 4.5.7
  */

@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * 文件类型判断工具类（自 Hutool {@code cc.hongz.ztools.core.io.FileTypeUtil} 迁入，并合并 ivics {@code FileTypeUtils}）.
+ * 文件类型判断工具类.
  *
  * <p>此工具根据文件的前几位 bytes 猜测文件类型，对于文本、zip 判断不准确，对于视频、图片类型判断准确。</p>
  *

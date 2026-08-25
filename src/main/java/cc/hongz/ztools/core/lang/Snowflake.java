@@ -20,9 +20,6 @@ import java.util.Date;
  * 符号位（1bit）- 时间戳相对值（41bit）- 数据中心标志（5bit）- 机器标志（5bit）- 递增序号（12bit）
  * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000
  * </pre>
- * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.lang.Snowflake}。
- *
  * @author Looly
  */
 public class Snowflake implements Serializable {

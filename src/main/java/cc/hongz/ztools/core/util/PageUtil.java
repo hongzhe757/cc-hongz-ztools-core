@@ -4,7 +4,7 @@ import cc.hongz.ztools.core.lang.DefaultSegment;
 import cc.hongz.ztools.core.lang.Segment;
 
 /**
- * 分页计算工具类（Hutool 阶段 1 迁入）.
+ * 分页计算工具类.
  * <p>
  * 提供起止下标、总页数、分页条（彩虹算法）等，可配合 {@link Segment} 使用.
  *

@@ -18,12 +18,11 @@ import java.util.Map;
 /**
  * 针对 {@link Type} 的工具类.
  * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.util.TypeUtil}。
  * <br>
  * 聚焦泛型参数解析和 Type → Class 转换。
  *
  * @author Looly
- * @author hongzhe.qin (migrated &amp; enhanced)
+ * @author hongzhe.qin (enhanced)
  * @since 3.0.8
  */
 public final class TypeUtil {

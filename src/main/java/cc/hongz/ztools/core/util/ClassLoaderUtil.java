@@ -13,11 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link ClassLoader} 工具类.
- * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.util.ClassLoaderUtil}。
- *
  * @author Looly
- * @author hongzhe.qin (migrated &amp; enhanced)
+ * @author hongzhe.qin (enhanced)
  * @since 3.0.9
  */
 public final class ClassLoaderUtil {

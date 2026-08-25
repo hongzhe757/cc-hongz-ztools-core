@@ -1,7 +1,7 @@
 package cc.hongz.ztools.core.exceptions;
 
 /**
- * {@link java.lang.reflect.InvocationTargetException} 的运行时包装（Hutool 阶段 1 迁入）.
+ * {@link java.lang.reflect.InvocationTargetException} 的运行时包装.
  *
  * @author looly
  * @since 5.8.1

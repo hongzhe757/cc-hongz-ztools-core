@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * 文件类型魔数封装（自 Hutool {@code cc.hongz.ztools.core.io.FileMagicNumber} 迁入）.
+ * 文件类型魔数封装.
  *
  * <p>每个枚举常量对应一种文件的魔数字节、MIME 类型与扩展名；{@link #getMagicNumber(byte[])} 用于按文件头识别类型。</p>
  *

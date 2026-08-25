@@ -1,7 +1,7 @@
 package cc.hongz.ztools.core.io;
 
 /**
- * MIME 类型与扩展名常量（自 ivics 迁入，与 {@link FileTypeUtil} 同属 IO 包）.
+ * MIME 类型与扩展名常量.
  *
  * @author hongzhe.qin
  */

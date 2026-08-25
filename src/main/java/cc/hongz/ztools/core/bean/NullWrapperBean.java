@@ -2,8 +2,6 @@ package cc.hongz.ztools.core.bean;
 
 /**
  * 为了解决反射过程中，需要传递 null 参数，但是会丢失参数类型而设立的包装类.
- * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.bean.NullWrapperBean}。
  *
  * @param <T> Null 值对应的类型
  * @author Lillls

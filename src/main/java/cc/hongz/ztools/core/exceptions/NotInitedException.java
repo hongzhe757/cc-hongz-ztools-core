@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.exceptions;
 import cc.hongz.ztools.core.util.StrUtil;
 
 /**
- * 组件或上下文未初始化异常（Hutool 阶段 1 迁入）.
+ * 组件或上下文未初始化异常.
  *
  * @author xiaoleilu
  */

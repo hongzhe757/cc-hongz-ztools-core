@@ -9,9 +9,6 @@ import java.util.Random;
  * NanoId，一个小型、安全、对 URL友好的唯一字符串 ID 生成器.
  * <p>
  * 此实现的逻辑基于JavaScript的NanoId实现，见：https://github.com/ai/nanoid
- * <p>
- * 迁移自 hutool {@code cc.hongz.ztools.core.lang.id.NanoId}。
- *
  * @author David Klebanoff
  */
 public final class NanoId {

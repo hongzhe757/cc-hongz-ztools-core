@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.DoubleAdder;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
- * 字节与基本类型互转工具类（Hutool 阶段 1 迁入）.
+ * 字节与基本类型互转工具类.
  * <p>
  * 支持大端/小端序；与 {@link HexUtil}、codec 包配套使用.
  *
