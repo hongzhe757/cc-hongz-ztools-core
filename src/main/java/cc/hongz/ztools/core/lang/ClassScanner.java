@@ -283,6 +283,11 @@ public class ClassScanner implements Serializable {
         return Collections.unmodifiableSet(this.classesOfLoadError);
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
     // ----------------------------------------------------------------------------------------- Private methods
 
     /**
