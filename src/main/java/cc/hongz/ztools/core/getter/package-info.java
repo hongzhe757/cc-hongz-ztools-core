@@ -1,5 +1,5 @@
 /**
- * getXXX方法的接口和抽象实现
+ * getXXX方法的接口和抽象实现。
  *
  * @author looly
  *
