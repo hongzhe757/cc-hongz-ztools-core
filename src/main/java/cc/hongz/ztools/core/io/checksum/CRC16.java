@@ -15,6 +15,9 @@ import java.util.zip.Checksum;
 public class CRC16 implements Checksum, Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * CRC16Checksum 实现。
+     */
     private final CRC16Checksum crc16;
 
     /**

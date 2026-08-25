@@ -11,6 +11,9 @@ package cc.hongz.ztools.core.io.checksum.crc16;
 public class CRC16USB extends CRC16Checksum {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * CRC16 多项式常量。
+     */
     private static final int WC_POLY = 0xa001;
 
     @Override

@@ -14,8 +14,19 @@ import java.util.zip.Checksum;
 public class CRC8 implements Checksum, Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 初始值。
+     */
     private final short init;
+
+    /**
+     * CRC 查找表。
+     */
     private final short[] crcTable = new short[256];
+
+    /**
+     * 当前校验值。
+     */
     private short value;
 
     /**
