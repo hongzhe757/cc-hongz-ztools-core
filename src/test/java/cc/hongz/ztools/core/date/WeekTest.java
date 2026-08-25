@@ -1,14 +1,18 @@
 package cc.hongz.ztools.core.date;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("Week 星期")
+
 public class WeekTest {
 
     @Test
+    @DisplayName("解析星期")
     public void ofTest() {
         //测试别名及大小写
         assertEquals(Week.SUNDAY, Week.of("sun"));
@@ -39,6 +43,7 @@ public class WeekTest {
     }
 
     @Test
+    @DisplayName("解析中文星期")
     public void ofChineseTest() {
         assertEquals(Week.SUNDAY, Week.of("星期日"));
         assertEquals(Week.SUNDAY, Week.of("周日"));
@@ -63,6 +68,7 @@ public class WeekTest {
     }
 
     @Test
+    @DisplayName("解析星期别名")
     public void ofTest2() {
         assertEquals(Week.SUNDAY, Week.of(DayOfWeek.SUNDAY));
         assertEquals(Week.MONDAY, Week.of(DayOfWeek.MONDAY));
@@ -74,6 +80,7 @@ public class WeekTest {
     }
 
     @Test
+    @DisplayName("转 JDK DayOfWeek")
     public void toJdkDayOfWeekTest() {
         assertEquals(DayOfWeek.MONDAY, Week.MONDAY.toJdkDayOfWeek());
         assertEquals(DayOfWeek.TUESDAY, Week.TUESDAY.toJdkDayOfWeek());

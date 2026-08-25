@@ -13,10 +13,14 @@
 package cc.hongz.ztools.core.date;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+@DisplayName("IssueI7XMYW 年龄")
 
 public class IssueI7XMYWTest {
     @Test
+    @DisplayName("计算年龄")
     public void ageTest() {
         DateTime date1 = DateUtil.parse("2023-08-31");
         assertEquals(49, DateUtil.age(DateUtil.parse("1973-08-31"), date1));

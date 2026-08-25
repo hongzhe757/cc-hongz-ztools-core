@@ -12,12 +12,16 @@
 
 package cc.hongz.ztools.core.date;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@DisplayName("IssueI7QI6R 解析日期")
+
 public class IssueI7QI6RTest {
     @Test
+    @DisplayName("解析日期")
     public void parseTest() {
         assertThrows(DateException.class, () -> {
             DateUtil.parse("2023-08-04 1");
@@ -25,6 +29,7 @@ public class IssueI7QI6RTest {
     }
 
     @Test
+    @DisplayName("解析日期（另一种）")
     public void parseTest2() {
         assertThrows(DateException.class, () -> {
             DateUtil.parse("2023-08-04-1");

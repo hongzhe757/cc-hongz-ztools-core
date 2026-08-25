@@ -1,12 +1,16 @@
 package cc.hongz.ztools.core.date;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.TimeZone;
 
+@DisplayName("Issue3798 解析日期")
+
 public class Issue3798Test {
     @Test
+    @DisplayName("解析日期")
     void parseTest() {
         final String iso_datetime1 = "2000-01-01T12:00:00+08:00";
         final DateTime parse1 = DateUtil.parse(iso_datetime1);

@@ -3,17 +3,22 @@ package cc.hongz.ztools.core.date.chinese;
 import cc.hongz.ztools.core.date.ChineseDate;
 import cc.hongz.ztools.core.date.DateUtil;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+@DisplayName("SolarTerms 节气")
 
 public class SolarTermsTest {
 
     @Test
+    @DisplayName("获取节气序号")
     public void getTermTest1(){
         final int term = SolarTerms.getTerm(1987, 3);
         assertEquals(4, term);
     }
 
     @Test
+    @DisplayName("获取节气名称")
     public void getTermTest() {
 
         assertEquals("小寒", SolarTerms.getTerm(2021, 1, 5));
@@ -67,6 +72,7 @@ public class SolarTermsTest {
 
 
     @Test
+    @DisplayName("按日期获取节气")
     public void getTermByDateTest() {
         assertEquals("春分", SolarTerms.getTerm(DateUtil.parseDate("2021-03-20")));
         assertEquals("处暑", SolarTerms.getTerm(DateUtil.parseDate("2022-08-23")));
@@ -74,6 +80,7 @@ public class SolarTermsTest {
 
 
     @Test
+    @DisplayName("按农历获取节气")
     public void getTermByChineseDateTest() {
         assertEquals("清明", SolarTerms.getTerm(new ChineseDate(2021, 2, 23)));
         assertEquals("秋分", SolarTerms.getTerm(new ChineseDate(2022, 8, 28)));

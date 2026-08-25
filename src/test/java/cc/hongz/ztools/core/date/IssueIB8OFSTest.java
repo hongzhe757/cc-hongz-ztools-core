@@ -2,12 +2,16 @@ package cc.hongz.ztools.core.date;
 
 import cc.hongz.ztools.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+@DisplayName("IssueIB8OFS 日期范围")
+
 public class IssueIB8OFSTest {
     @Test
+    @DisplayName("日期范围")
     void rangeTest() {
         DateRange startRange = DateUtil.range(
             DateUtil.parse("2017-01-01"),

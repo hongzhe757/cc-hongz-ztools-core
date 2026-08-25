@@ -1,13 +1,17 @@
 package cc.hongz.ztools.core.date;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
+@DisplayName("Zodiac 星座与生肖")
+
 public class ZodiacTest {
 
     @Test
+    @DisplayName("获取星座")
     public void getZodiacTest() {
         assertEquals("摩羯座", Zodiac.getZodiac(Month.JANUARY, 19));
         assertEquals("水瓶座", Zodiac.getZodiac(Month.JANUARY, 20));
@@ -21,6 +25,7 @@ public class ZodiacTest {
     }
 
     @Test
+    @DisplayName("获取生肖")
     public void getChineseZodiacTest() {
         assertEquals("狗", Zodiac.getChineseZodiac(1994));
         assertEquals("狗", Zodiac.getChineseZodiac(2018));

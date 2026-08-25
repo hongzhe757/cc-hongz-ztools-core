@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.date;
 
 import cc.hongz.ztools.core.date.BetweenFormatter.Level;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
@@ -12,11 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * DateBetween / DateRange / BetweenFormatter 单元测试
  */
+@DisplayName("DateBetween 日期相差与范围")
 public class DateBetweenAndRangeTest {
 
 	// ==================== DateBetween ====================
 
 	@Test
+	@DisplayName("相差年")
 	public void betweenYearTest() {
 		Date start = DateUtil.parse("2017-02-01 12:23:46");
 		Date end = DateUtil.parse("2018-02-01 12:23:46");
@@ -36,6 +39,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("相差年（二）")
 	public void betweenYearTest2() {
 		Date start = DateUtil.parse("2000-02-29");
 		Date end = DateUtil.parse("2018-02-28");
@@ -44,6 +48,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("相差年（三）")
 	public void betweenYearTest3() {
 		Date start = DateUtil.parse("20170301");
 		Date end = DateUtil.parse("2024-02-29 14:56:18");
@@ -52,6 +57,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("相差月")
 	public void betweenMonthTest() {
 		Date start = DateUtil.parse("2017-02-01 12:23:46");
 		Date end = DateUtil.parse("2018-02-01 12:23:46");
@@ -71,6 +77,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("相差分钟")
 	public void betweenMinuteTest() {
 		Date date1 = DateUtil.parse("2017-03-01 20:33:23");
 		Date date2 = DateUtil.parse("2017-03-01 23:33:23");
@@ -79,6 +86,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("相差周")
 	public void betweenWeeksTest() {
 		final long betweenWeek = DateUtil.betweenWeek(
 				DateUtil.parse("2020-11-21"),
@@ -92,6 +100,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("相差年 issue")
 	public void betweenYear_issueI97U3J() {
 		String dateStr1 = "2024-02-29 23:59:59";
 		Date sdate = DateUtil.parse(dateStr1);
@@ -102,6 +111,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("防御性拷贝")
 	public void between_defensiveCopy() {
 		Date b = new Date(1609459200000L); // 2021-01-01 00:00:00
 		Date e = new Date(1609545600000L); // 2021-01-02 00:00:00
@@ -113,6 +123,7 @@ public class DateBetweenAndRangeTest {
 	// ==================== BetweenFormatter ====================
 
 	@Test
+	@DisplayName("格式化间隔")
 	public void betweenFormatter_formatTest() {
 		long betweenMs = DateUtil.betweenMs(DateUtil.parse("2017-01-01 22:59:59"), DateUtil.parse("2017-01-02 23:59:58"));
 		BetweenFormatter formater = new BetweenFormatter(betweenMs, Level.MILLISECOND, 1);
@@ -120,6 +131,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("格式化间隔英文")
 	public void betweenFormatter_formatTestEn() {
 		java.util.function.Function<Level, String> levelFormatterEn = level -> {
 			switch (level) {
@@ -138,6 +150,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("格式化间隔英文（二）")
 	public void betweenFormatter_formatTestEn2() {
 		java.util.function.Function<Level, String> levelFormatterEn = level -> {
 			switch (level) {
@@ -157,6 +170,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("格式化时间差")
 	public void betweenFormatter_formatBetweenTest() {
 		long betweenMs = DateUtil.betweenMs(DateUtil.parse("2018-07-16 11:23:19"), DateUtil.parse("2018-07-16 11:23:20"));
 		BetweenFormatter formater = new BetweenFormatter(betweenMs, Level.SECOND, 1);
@@ -164,6 +178,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("格式化时间差（二）")
 	public void betweenFormatter_formatBetweenTest2() {
 		long betweenMs = DateUtil.betweenMs(DateUtil.parse("2018-07-16 12:25:23"), DateUtil.parse("2018-07-16 11:23:20"));
 		BetweenFormatter formater = new BetweenFormatter(betweenMs, Level.SECOND, 5);
@@ -171,6 +186,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("格式化间隔（二）")
 	public void betweenFormatter_formatTest2() {
 		BetweenFormatter formater = new BetweenFormatter(584, Level.SECOND, 1);
 		assertEquals("0秒", formater.toString());
@@ -179,6 +195,7 @@ public class DateBetweenAndRangeTest {
 	// ==================== DateRange (rangeToList) ====================
 
 	@Test
+	@DisplayName("范围转列表")
 	public void rangeToList_issue3783() {
 		final Date start = DateUtil.parse("2024-01-01");
 		final Date end = DateUtil.parse("2024-02-01");
@@ -188,6 +205,7 @@ public class DateBetweenAndRangeTest {
 	}
 
 	@Test
+	@DisplayName("范围转列表负步长")
 	public void rangeToList_issue3783_negativeStep() {
 		final Date start = DateUtil.parse("2024-01-01");
 		final Date end = DateUtil.parse("2024-02-01");

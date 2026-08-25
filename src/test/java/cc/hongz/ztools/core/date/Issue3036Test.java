@@ -12,12 +12,16 @@
 
 package cc.hongz.ztools.core.date;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@DisplayName("Issue3036 星座")
+
 public class Issue3036Test {
     @Test
+    @DisplayName("获取星座")
     public void getZodiacTest() {
         assertThrows(IllegalArgumentException.class, () -> {
             DateUtil.getZodiac(Month.UNDECIMBER.getValue(), 10);

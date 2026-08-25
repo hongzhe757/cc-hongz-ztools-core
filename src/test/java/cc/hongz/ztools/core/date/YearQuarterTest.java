@@ -14,9 +14,12 @@ import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+@DisplayName("YearQuarter 年季")
 
 public class YearQuarterTest {
 
@@ -26,6 +29,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { 1, 2, 3, 4 })
+    @DisplayName("有效年份和季度值创建")
     void of_ValidYearAndQuarterValue_CreatesYearQuarter(int quarter) {
         {
             int year = 2024;
@@ -52,6 +56,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { -1, 0, 5, 108 })
+    @DisplayName("有效年份无效季度值抛异常")
     void of_ValidYearAndInvalidQuarterValue_DateTimeException(int quarter) {
         int year = 2024;
         assertThrows(DateTimeException.class, () -> {
@@ -61,6 +66,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { Year.MIN_VALUE - 1, Year.MAX_VALUE + 1 })
+    @DisplayName("无效年份有效季度值抛异常")
     void of_InvalidYearAndValidQuarterValue_DateTimeException(int year) {
         assertThrows(DateTimeException.class, () -> {
             YearQuarter.of(year, 1);
@@ -77,6 +83,7 @@ public class YearQuarterTest {
     }
 
     @Test
+    @DisplayName("无效年份和季度值抛异常")
     void of_InvalidYearAndInvalidQuarterValue_DateTimeException() {
         final int[] years = { Year.MIN_VALUE - 1, Year.MAX_VALUE + 1 };
         final int[] quarters = { -1, 0, 5, 108 };
@@ -100,6 +107,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { 1, 2, 3, 4 })
+    @DisplayName("有效年份和季度创建")
     void of_ValidYearAndQuarter_CreatesYearQuarter(int quarterValue) {
         {
             int year = 2024;
@@ -128,6 +136,7 @@ public class YearQuarterTest {
     }
 
     @Test
+    @DisplayName("有效年份空季度抛空指针异常")
     void of_ValidYearAndNullQuarter_NullPointerException() {
         int year = 2024;
         assertThrows(NullPointerException.class, () -> {
@@ -137,6 +146,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { Year.MIN_VALUE - 1, Year.MAX_VALUE + 1 })
+    @DisplayName("无效年份有效季度抛异常")
     void of_InvalidYearAndValidQuarter_DateTimeException(int year) {
         assertThrows(DateTimeException.class, () -> {
             YearQuarter.of(year, Quarter.Q1);
@@ -153,6 +163,7 @@ public class YearQuarterTest {
     }
 
     @Test
+    @DisplayName("无效年份空季度抛异常")
     void of_InvalidYearAndNullQuarter_DateTimeException() {
         final int[] years = { Year.MIN_VALUE - 1, Year.MAX_VALUE + 1 };
         for (int year : years) {
@@ -178,6 +189,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("有效 LocalDate 创建 Q1")
     void of_ValidLocalDate_CreatesYearQuarter_Q1(int year) {
         {
             LocalDate date = YearMonth.of(year, 1).atDay(1);
@@ -230,6 +242,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("有效 LocalDate 创建 Q2")
     void of_ValidLocalDate_CreatesYearQuarter_Q2(int year) {
         {
             LocalDate date = YearMonth.of(year, 4).atDay(1);
@@ -282,6 +295,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("有效 LocalDate 创建 Q3")
     void of_ValidLocalDate_CreatesYearQuarter_Q3(int year) {
         {
             LocalDate date = YearMonth.of(year, 7).atDay(1);
@@ -334,6 +348,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("有效 LocalDate 创建 Q4")
     void of_ValidLocalDate_CreatesYearQuarter_Q4(int year) {
         {
             LocalDate date = YearMonth.of(year, 10).atDay(1);
@@ -380,6 +395,7 @@ public class YearQuarterTest {
     }
 
     @Test
+    @DisplayName("空 LocalDate 抛空指针异常")
     void of_NullLocalDate_NullPointerException() {
         LocalDate date = null;
         assertThrows(NullPointerException.class, () -> {
@@ -403,6 +419,7 @@ public class YearQuarterTest {
             1,
             999999,
     })
+    @DisplayName("有效 Date 创建")
     void of_ValidDate_CreatesYearQuarter(int year) {
         {
             Date date = new Date(year - 1900, 1 - 1, 1);
@@ -463,6 +480,7 @@ public class YearQuarterTest {
     }
 
     @Test
+    @DisplayName("空 Date 抛空指针异常")
     void of_NullDate_NullPointerException() {
         Date date = null;
         assertThrows(NullPointerException.class, () -> {
@@ -485,6 +503,7 @@ public class YearQuarterTest {
             1,
             999999,
     })
+    @DisplayName("有效 Calendar 创建")
     void of_ValidCalendar_CreatesYearQuarter(int year) {
         Calendar date = Calendar.getInstance();
         {
@@ -546,6 +565,7 @@ public class YearQuarterTest {
     }
 
     @Test
+    @DisplayName("空 Calendar 抛空指针异常")
     void of_NullCalendar_NullPointerException() {
         Calendar date = null;
         assertThrows(NullPointerException.class, () -> {
@@ -568,6 +588,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("有效 YearMonth 创建 Q1")
     void of_ValidYearMonth_CreatesYearMonth_Q1(int year) {
         {
             YearMonth yearMonth = YearMonth.of(year, 1);
@@ -599,6 +620,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("有效 YearMonth 创建 Q2")
     void of_ValidYearMonth_CreatesYearMonth_Q2(int year) {
         {
             YearMonth yearMonth = YearMonth.of(year, 4);
@@ -630,6 +652,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("有效 YearMonth 创建 Q3")
     void of_ValidYearMonth_CreatesYearMonth_Q3(int year) {
         {
             YearMonth yearMonth = YearMonth.of(year, 7);
@@ -661,6 +684,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("有效 YearMonth 创建 Q4")
     void of_ValidYearMonth_CreatesYearMonth_Q4(int year) {
         {
             YearMonth yearMonth = YearMonth.of(year, 10);
@@ -692,6 +716,7 @@ public class YearQuarterTest {
             Year.MIN_VALUE,
             Year.MAX_VALUE,
     })
+    @DisplayName("空 YearMonth 创建")
     void of_NullYearMonth_CreatesYearMonth_Q4(int year) {
         YearMonth yearMonth = null;
         assertThrows(NullPointerException.class,
@@ -708,6 +733,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { 1949, 1990, 2000, 2008, 2023, 2024, Year.MIN_VALUE, Year.MAX_VALUE })
+    @DisplayName("获取首末日期")
     void test_getFirstDate_And_getLastDate(int year) {
         {
             final int quarterValue = 1;
@@ -761,6 +787,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { 1949, 1990, 2000, 2008, 2023, 2024, Year.MIN_VALUE, Year.MAX_VALUE })
+    @DisplayName("获取首末年月")
     void test_firstYearMonth_And_lastYearMonth(int year) {
         YearQuarter yq;
 
@@ -793,6 +820,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { 1949, 1990, 2000, 2008, 2023, 2024, Year.MIN_VALUE, Year.MAX_VALUE })
+    @DisplayName("获取首末月")
     void testFirstMonthAndLastMonth(int year) {
         YearQuarter q1 = YearQuarter.of(year, 1);
         assertEquals(1, q1.firstMonthValue());
@@ -828,6 +856,7 @@ public class YearQuarterTest {
     // ================================
 
     @Test
+    @DisplayName("比较大小")
     void testCompareTo() {
         int year1;
         int quarter1;
@@ -890,6 +919,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { Year.MIN_VALUE + 25, Year.MAX_VALUE - 25, -1, 0, 1, 1949, 1990, 2000, 2008, 2023, 2024 })
+    @DisplayName("加减小季度")
     void testPlusQuartersAndMinusQuarters(int year) {
         for (int quarter = 1; quarter <= 4; quarter++) {
             YearQuarter yq1 = YearQuarter.of(year, quarter);
@@ -913,6 +943,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { Year.MIN_VALUE + 1, Year.MAX_VALUE - 1, -1, 0, 1, 1900, 1990, 2000, 2023, 2024 })
+    @DisplayName("上下季度")
     void test_nextQuarter_And_lastQuarter(int year) {
         int quarter;
 
@@ -959,6 +990,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { Year.MIN_VALUE + 100, Year.MAX_VALUE - 100, -1, 0, 1, 1949, 1990, 2000, 2008, 2023, 2024 })
+    @DisplayName("加减年份")
     void test_PlusYearsAndMinusYears(int year) {
         for (int yearToAdd = -100; yearToAdd <= 100; yearToAdd++) {
             YearQuarter q1 = YearQuarter.of(year, Quarter.Q1);
@@ -975,6 +1007,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { Year.MIN_VALUE + 1, Year.MAX_VALUE - 1, -1, 0, 1, 1900, 1990, 2000, 2023, 2024 })
+    @DisplayName("上下年份")
     void test_nextYear_And_lastYear(int year) {
         int quarter;
 
@@ -1025,6 +1058,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { -1, 0, 1, 1900, 2000, 2023, 2024, Year.MAX_VALUE, Year.MIN_VALUE })
+    @DisplayName("同年比较")
     void test_compareTo_sameYear(int year) {
         YearQuarter yq1 = YearQuarter.of(year, 1);
         YearQuarter yq2 = YearQuarter.of(year, 2);
@@ -1058,6 +1092,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { -1, 0, 1, 1900, 2000, 2023, 2024, Year.MAX_VALUE, Year.MIN_VALUE })
+    @DisplayName("同年是否之前")
     void test_isBefore_sameYear(int year) {
         YearQuarter yq1 = YearQuarter.of(year, 1);
         YearQuarter yq2 = YearQuarter.of(year, 2);
@@ -1087,6 +1122,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { -1, 0, 1, 1900, 2000, 2023, 2024, Year.MAX_VALUE, Year.MIN_VALUE })
+    @DisplayName("同年是否之后")
     void test_isAfter_sameYear(int year) {
         YearQuarter yq1 = YearQuarter.of(year, 1);
         YearQuarter yq2 = YearQuarter.of(year, 2);
@@ -1115,6 +1151,7 @@ public class YearQuarterTest {
     }
 
     @Test
+    @DisplayName("空值比较")
     void test_compareTo_null() {
         YearQuarter yq = YearQuarter.of(2024, 4);
         assertThrows(NullPointerException.class,
@@ -1128,6 +1165,7 @@ public class YearQuarterTest {
 
     @ParameterizedTest
     @ValueSource(ints = { -1, 0, 1, 1900, 2000, 2023, 2024, Year.MAX_VALUE - 1, Year.MIN_VALUE + 1 })
+    @DisplayName("跨年比较")
     void test_compareTo_differentYear(int year) {
         for (int quarter1 = 1; quarter1 <= 4; quarter1++) {
             YearQuarter yq = YearQuarter.of(year, quarter1);

@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.date;
 
 import cc.hongz.ztools.core.date.format.FastDateFormat;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * FastDateFormat 单元测试
  */
+@DisplayName("FastDateFormat 快速日期格式")
 public class FastDateFormatTest {
 	private static final TimeZone timezone = TimeZone.getTimeZone("Etc/Utc");
 
@@ -20,6 +22,7 @@ public class FastDateFormatTest {
 	}
 
 	@Test
+	@DisplayName("年份")
 	public void yearTest() {
 		Date date = DateUtil.date(0L);
 
@@ -35,6 +38,7 @@ public class FastDateFormatTest {
 
 	@SuppressWarnings("SuspiciousDateFormat")
 	@Test
+	@DisplayName("周年份")
 	public void weekYearTest() {
 		Date date = DateUtil.date(0L);
 		assertEquals("70", new SimpleDateFormat("YY").format(date));

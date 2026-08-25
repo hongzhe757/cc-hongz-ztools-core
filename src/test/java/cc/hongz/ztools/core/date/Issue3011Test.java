@@ -1,12 +1,16 @@
 package cc.hongz.ztools.core.date;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
+@DisplayName("Issue3011 同月判断")
+
 public class Issue3011Test {
     @Test
+    @DisplayName("是否同一月")
     public void isSameMonthTest() {
         // https://github.com/chinabugotech/hutool/issues/3011
         // 判断是否同一个月，还需考虑公元前和公元后的的情况

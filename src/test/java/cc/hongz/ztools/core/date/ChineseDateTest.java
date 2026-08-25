@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.date;
 
 import cc.hongz.ztools.core.date.chinese.GanZhi;
 import cc.hongz.ztools.core.date.chinese.SolarTerms;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -11,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * ChineseDate / GanZhi / SolarTerms 单元测试
  */
+@DisplayName("ChineseDate 农历日期")
 public class ChineseDateTest {
 
 	// ==================== ChineseDate ====================
 
 	@Test
+	@DisplayName("农历基础")
 	public void chineseDate_basic() {
 		ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-01-25"));
 		assertEquals("2020-01-25 00:00:00", date.getGregorianDate().toString());
@@ -32,6 +35,7 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("除夕")
 	public void chineseDate_lunarNewYearEve() {
 		ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-01-14"));
 		assertEquals("己亥猪年 腊月二十", date.toString());
@@ -41,12 +45,14 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("toString 普通")
 	public void chineseDate_toStringNormal() {
 		ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-03-1"));
 		assertEquals("2020-02-08", date.toStringNormal());
 	}
 
 	@Test
+	@DisplayName("解析 1996")
 	public void chineseDate_parse1996() {
 		ChineseDate date = new ChineseDate(DateUtil.parseDate("1996-07-14"));
 		assertEquals("丙子鼠年 五月廿九", date.toString());
@@ -55,6 +61,7 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("获取农历月")
 	public void chineseDate_getChineseMonth() {
 		ChineseDate chineseDate = new ChineseDate(2020, 6, 15);
 		assertEquals("2020-08-04 00:00:00", chineseDate.getGregorianDate().toString());
@@ -70,6 +77,7 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("1991 农历")
 	public void chineseDate_1991() {
 		ChineseDate date = new ChineseDate(DateUtil.parseDate("1991-09-14"));
 		assertEquals("辛未羊年 八月初七", date.toString());
@@ -78,6 +86,7 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("闰月")
 	public void chineseDate_leapMonth() {
 		ChineseDate c1 = new ChineseDate(DateUtil.parse("2028-05-28"));
 		ChineseDate c2 = new ChineseDate(DateUtil.parse("2028-06-27"));
@@ -86,12 +95,14 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("获取农历月（二）")
 	public void chineseDate_getChineseMonthTest2() {
 		ChineseDate springFestival = new ChineseDate(DateUtil.parseDate("2022-02-01"));
 		assertEquals("一月", springFestival.getChineseMonth());
 	}
 
 	@Test
+	@DisplayName("1970-01-01")
 	public void chineseDate_day19700101() {
 		Date date = DateUtil.parse("1970-01-01");
 		ChineseDate chineseDate = new ChineseDate(date);
@@ -103,6 +114,7 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("1900-01-31")
 	public void chineseDate_day19000131() {
 		Date date = DateUtil.parse("1900-01-31");
 		ChineseDate chineseDate = new ChineseDate(date);
@@ -110,6 +122,7 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("获取公历日期")
 	public void chineseDate_getGregorianDate() {
 		ChineseDate chineseDate = new ChineseDate(1998, 5, 1);
 		assertEquals("1998-06-24 00:00:00", chineseDate.getGregorianDate().toString());
@@ -121,29 +134,34 @@ public class ChineseDateTest {
 	// ==================== GanZhi ====================
 
 	@Test
+	@DisplayName("干支年份")
 	public void ganzhi_ofYear() {
 		assertEquals("庚子", GanZhi.getGanzhiOfYear(2020));
 	}
 
 	@Test
+	@DisplayName("干支公历")
 	public void ganzhi_cyclicalYMD_gregorian() {
 		ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate("1993-01-06"));
 		assertEquals("壬申年癸丑月丁亥日", chineseDate.getCyclicalYMD());
 	}
 
 	@Test
+	@DisplayName("干支农历")
 	public void ganzhi_cyclicalYMD_lunar() {
 		ChineseDate chineseDate = new ChineseDate(1992, 12, 14);
 		assertEquals("壬申年癸丑月丁亥日", chineseDate.getCyclicalYMD());
 	}
 
 	@Test
+	@DisplayName("干支 2020")
 	public void ganzhi_cyclicalYMD_2020() {
 		ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate("2020-08-28"));
 		assertEquals("庚子年甲申月癸卯日", chineseDate.getCyclicalYMD());
 	}
 
 	@Test
+	@DisplayName("干支 1905")
 	public void ganzhi_cyclicalYMD_1905() {
 		ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate("1905-08-28"));
 		assertEquals("乙巳年甲申月己亥日", chineseDate.getCyclicalYMD());
@@ -152,11 +170,13 @@ public class ChineseDateTest {
 	// ==================== SolarTerms ====================
 
 	@Test
+	@DisplayName("节气序号")
 	public void solarTerms_getTerm_int() {
 		assertEquals(4, SolarTerms.getTerm(1987, 3));
 	}
 
 	@Test
+	@DisplayName("2021 全节气")
 	public void solarTerms_getTerm_all2021() {
 		assertEquals("小寒", SolarTerms.getTerm(2021, 1, 5));
 		assertEquals("大寒", SolarTerms.getTerm(2021, 1, 20));
@@ -185,12 +205,14 @@ public class ChineseDateTest {
 	}
 
 	@Test
+	@DisplayName("按日期节气")
 	public void solarTerms_getTerm_byDate() {
 		assertEquals("春分", SolarTerms.getTerm(DateUtil.parseDate("2021-03-20")));
 		assertEquals("处暑", SolarTerms.getTerm(DateUtil.parseDate("2022-08-23")));
 	}
 
 	@Test
+	@DisplayName("按农历节气")
 	public void solarTerms_getTerm_byChineseDate() {
 		assertEquals("清明", SolarTerms.getTerm(new ChineseDate(2021, 2, 23)));
 		assertEquals("秋分", SolarTerms.getTerm(new ChineseDate(2022, 8, 28)));

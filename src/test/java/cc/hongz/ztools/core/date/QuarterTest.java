@@ -1,14 +1,18 @@
 package cc.hongz.ztools.core.date;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.MonthDay;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Quarter 季度")
+
 public class QuarterTest {
 
     @Test
+    @DisplayName("第一季度")
     void testQ1() {
         Quarter quarter = Quarter.of(1);
         assertSame(Quarter.Q1, quarter);
@@ -44,6 +48,7 @@ public class QuarterTest {
     }
 
     @Test
+    @DisplayName("第二季度")
     void testQ2() {
         Quarter quarter = Quarter.of(2);
         assertSame(Quarter.Q2, quarter);
@@ -79,6 +84,7 @@ public class QuarterTest {
     }
 
     @Test
+    @DisplayName("第三季度")
     void testQ3() {
         Quarter quarter = Quarter.of(3);
         assertSame(Quarter.Q3, quarter);
@@ -116,6 +122,7 @@ public class QuarterTest {
     }
 
     @Test
+    @DisplayName("第四季度")
     void testQ4() {
         Quarter quarter = Quarter.of(4);
         assertSame(Quarter.Q4, quarter);
@@ -152,6 +159,7 @@ public class QuarterTest {
     }
 
     @Test
+    @DisplayName("加正数季度")
     void testPlusZeroAndPositiveRealNumbers() {
         for (int i = 0; i < 100; i += 4) {
             assertEquals(Quarter.Q1, Quarter.Q1.plus(i));
@@ -180,6 +188,7 @@ public class QuarterTest {
     }
 
     @Test
+    @DisplayName("加负数季度")
     void testPlusZeroAndNegativeNumber() {
         for (int i = 0; i > -100; i -= 4) {
             assertEquals(Quarter.Q1, Quarter.Q1.plus(i));

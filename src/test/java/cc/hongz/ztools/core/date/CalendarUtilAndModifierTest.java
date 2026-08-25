@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.date;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
@@ -11,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * CalendarUtil / DateModifier (truncate/ceiling) 单元测试
  */
+@DisplayName("CalendarUtil 日历与修改器")
 public class CalendarUtilAndModifierTest {
 
 	// ==================== CalendarUtil ====================
 
 	@Test
+	@DisplayName("格式化农历日期")
 	public void formatChineseDate() {
 		Calendar calendar = Objects.requireNonNull(DateUtil.parse("2018-02-24 12:13:14")).toCalendar();
 		final String chineseDate = CalendarUtil.formatChineseDate(calendar, false);
@@ -25,6 +28,7 @@ public class CalendarUtilAndModifierTest {
 	}
 
 	@Test
+	@DisplayName("严格解析")
 	public void parseStrictTest() {
 		assertThrows(IllegalArgumentException.class, () -> {
 			final Calendar calendar = CalendarUtil.parse("2021-09-27 00:00:112323", false,
@@ -36,6 +40,7 @@ public class CalendarUtilAndModifierTest {
 	// ==================== DateModifier - truncate ====================
 
 	@Test
+	@DisplayName("截断")
 	public void truncateTest() {
 		String dateStr = "2017-03-01 22:33:23.123";
 		Date date = DateUtil.parse(dateStr);
@@ -86,6 +91,7 @@ public class CalendarUtilAndModifierTest {
 	}
 
 	@Test
+	@DisplayName("截断到月内星期")
 	public void truncateDayOfWeekInMonthTest() {
 		String dateStr = "2017-03-01 22:33:23.123";
 		Date date = DateUtil.parse(dateStr);
@@ -96,6 +102,7 @@ public class CalendarUtilAndModifierTest {
 	// ==================== DateModifier - ceiling ====================
 
 	@Test
+	@DisplayName("向上取整")
 	public void ceilingTest() {
 		String dateStr = "2017-03-01 22:33:23.123";
 		Date date = DateUtil.parse(dateStr);

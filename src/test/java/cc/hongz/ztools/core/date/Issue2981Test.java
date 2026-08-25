@@ -1,7 +1,10 @@
 package cc.hongz.ztools.core.date;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+@DisplayName("Issue2981 解析 UTC")
 
 public class Issue2981Test {
     /**
@@ -10,6 +13,7 @@ public class Issue2981Test {
      */
     @SuppressWarnings("DataFlowIssue")
     @Test
+    @DisplayName("解析 UTC 日期")
     public void parseUTCTest() {
         final String str1 = "2019-01-01T00:00:00.000Z";
         final String str2 = "2019-01-01T00:00:00.000";

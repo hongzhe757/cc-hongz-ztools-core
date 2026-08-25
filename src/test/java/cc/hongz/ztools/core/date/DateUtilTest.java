@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.date;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
@@ -12,17 +13,20 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author hongzhe.qin
  */
+@DisplayName("DateUtil 日期工具")
 class DateUtilTest {
 
 	// ==================== date / now / today ====================
 
 	@Test
+	@DisplayName("date 非空")
 	void date_returnsNonNull() {
 		DateTime dt = DateUtil.date();
 		assertNotNull(dt);
 	}
 
 	@Test
+	@DisplayName("date 从 Date")
 	void date_fromDate() {
 		Date now = new Date();
 		DateTime dt = DateUtil.date(now);
@@ -30,11 +34,13 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("date 从空 Date")
 	void date_fromDateNull() {
 		assertNull(DateUtil.date((Date) null));
 	}
 
 	@Test
+	@DisplayName("date 从 long")
 	void date_fromLong() {
 		long ts = System.currentTimeMillis();
 		DateTime dt = DateUtil.date(ts);
@@ -42,6 +48,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("date 从 Calendar")
 	void date_fromCalendar() {
 		Calendar cal = Calendar.getInstance();
 		DateTime dt = DateUtil.date(cal);
@@ -49,11 +56,13 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("date 从空 Calendar")
 	void date_fromCalendarNull() {
 		assertNull(DateUtil.date((Calendar) null));
 	}
 
 	@Test
+	@DisplayName("now 非空")
 	void now_returnsNonEmpty() {
 		String now = DateUtil.now();
 		assertNotNull(now);
@@ -63,6 +72,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("today 非空")
 	void today_returnsNonEmpty() {
 		String today = DateUtil.today();
 		assertNotNull(today);
@@ -73,12 +83,14 @@ class DateUtilTest {
 	// ==================== current ====================
 
 	@Test
+	@DisplayName("当前时间接近系统")
 	void current_closeToSystemTime() {
 		long cur = DateUtil.current();
 		assertTrue(Math.abs(cur - System.currentTimeMillis()) < 100);
 	}
 
 	@Test
+	@DisplayName("当前秒接近系统")
 	void currentSeconds_closeToSystemTime() {
 		long curSec = DateUtil.currentSeconds();
 		long expected = System.currentTimeMillis() / 1000;
@@ -88,6 +100,7 @@ class DateUtilTest {
 	// ==================== year / month / day ====================
 
 	@Test
+	@DisplayName("年")
 	void year() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 2023);
@@ -95,6 +108,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("月")
 	void month() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, Calendar.MARCH);
@@ -103,6 +117,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("日")
 	void dayOfMonth() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, 15);
@@ -112,6 +127,7 @@ class DateUtilTest {
 	// ==================== format ====================
 
 	@Test
+	@DisplayName("格式化日期时间")
 	void formatDateTime() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15, 10, 30, 45);
@@ -121,6 +137,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("格式化日期")
 	void formatDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15);
@@ -129,6 +146,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("格式化时间")
 	void formatTime() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15, 10, 30, 45);
@@ -137,6 +155,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("自定义格式")
 	void format_customPattern() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15, 10, 30, 45);
@@ -147,6 +166,7 @@ class DateUtilTest {
 	// ==================== parse ====================
 
 	@Test
+	@DisplayName("解析标准格式")
 	void parse_standardFormat() {
 		Date date = DateUtil.parse("2023-06-15 10:30:45");
 		assertNotNull(date);
@@ -158,12 +178,14 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("解析日期")
 	void parse_dateOnly() {
 		Date date = DateUtil.parse("2023-06-15");
 		assertNotNull(date);
 	}
 
 	@Test
+	@DisplayName("带格式解析")
 	void parse_withFormat() {
 		Date date = DateUtil.parse("2023/06/15", "yyyy/MM/dd");
 		assertNotNull(date);
@@ -173,6 +195,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("空解析返回空")
 	void parse_null_returnsNull() {
 		assertNull(DateUtil.parse((String) null));
 	}
@@ -180,6 +203,7 @@ class DateUtilTest {
 	// ==================== beginOf / endOf ====================
 
 	@Test
+	@DisplayName("开始日")
 	void beginOfDay() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15, 10, 30, 45);
@@ -193,6 +217,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("结束日")
 	void endOfDay() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15, 10, 30, 45);
@@ -206,6 +231,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("开始月")
 	void beginOfMonth() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15, 10, 30, 45);
@@ -217,6 +243,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("结束月")
 	void endOfMonth() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15);
@@ -228,6 +255,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("开始年")
 	void beginOfYear() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15, 10, 30, 45);
@@ -241,6 +269,7 @@ class DateUtilTest {
 	// ==================== offset ====================
 
 	@Test
+	@DisplayName("偏移日")
 	void offset_day() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15);
@@ -251,6 +280,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("偏移日负")
 	void offset_day_negative() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15);
@@ -261,6 +291,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("偏移月")
 	void offsetMonth() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15);
@@ -273,6 +304,7 @@ class DateUtilTest {
 	// ==================== between ====================
 
 	@Test
+	@DisplayName("相差日")
 	void betweenDay() {
 		Date d1 = DateUtil.parse("2023-06-01");
 		Date d2 = DateUtil.parse("2023-06-15");
@@ -281,6 +313,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("相差时")
 	void betweenHour() {
 		Date d1 = DateUtil.parse("2023-06-15 00:00:00");
 		Date d2 = DateUtil.parse("2023-06-15 12:00:00");
@@ -289,6 +322,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("相差分")
 	void betweenMinute() {
 		Date d1 = DateUtil.parse("2023-06-15 10:00:00");
 		Date d2 = DateUtil.parse("2023-06-15 10:30:00");
@@ -299,21 +333,25 @@ class DateUtilTest {
 	// ==================== isLeapYear ====================
 
 	@Test
+	@DisplayName("闰年 2024")
 	void isLeapYear_2024_true() {
 		assertTrue(DateUtil.isLeapYear(2024));
 	}
 
 	@Test
+	@DisplayName("非闰年 2023")
 	void isLeapYear_2023_false() {
 		assertFalse(DateUtil.isLeapYear(2023));
 	}
 
 	@Test
+	@DisplayName("闰年 2000")
 	void isLeapYear_2000_true() {
 		assertTrue(DateUtil.isLeapYear(2000));
 	}
 
 	@Test
+	@DisplayName("非闰年 1900")
 	void isLeapYear_1900_false() {
 		assertFalse(DateUtil.isLeapYear(1900));
 	}
@@ -321,6 +359,7 @@ class DateUtilTest {
 	// ==================== age ====================
 
 	@Test
+	@DisplayName("年龄")
 	void age() {
 		Date birthday = DateUtil.parse("2000-01-01");
 		Date now = DateUtil.parse("2023-06-15");
@@ -332,6 +371,7 @@ class DateUtilTest {
 	// ==================== isEqual ====================
 
 	@Test
+	@DisplayName("同日相等")
 	void isEqual_sameDate() {
 		Date d1 = DateUtil.parse("2023-06-15");
 		Date d2 = DateUtil.parse("2023-06-15");
@@ -339,6 +379,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("异日相等")
 	void isEqual_differentDate() {
 		Date d1 = DateUtil.parse("2023-06-15");
 		Date d2 = DateUtil.parse("2023-06-16");
@@ -348,6 +389,7 @@ class DateUtilTest {
 	// ==================== getQuarter ====================
 
 	@Test
+	@DisplayName("季度")
 	void quarter() {
 		Date d1 = DateUtil.parse("2023-01-15");
 		assertEquals(1, DateUtil.quarter(d1));
@@ -365,6 +407,7 @@ class DateUtilTest {
 	// ==================== dayOfWeek ====================
 
 	@Test
+	@DisplayName("星期")
 	void dayOfWeek() {
 		// 2023-06-15 是星期四
 		Date date = DateUtil.parse("2023-06-15");
@@ -375,6 +418,7 @@ class DateUtilTest {
 	// ==================== lastDayOfMonth ====================
 
 	@Test
+	@DisplayName("六月最后一天")
 	void lastDayOfMonth_june() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.JUNE, 15);
@@ -383,6 +427,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("闰二月最后一天")
 	void lastDayOfMonth_february_leap() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2024, Calendar.FEBRUARY, 1);
@@ -391,6 +436,7 @@ class DateUtilTest {
 	}
 
 	@Test
+	@DisplayName("非闰二月最后一天")
 	void lastDayOfMonth_february_nonLeap() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(2023, Calendar.FEBRUARY, 1);
