@@ -50,6 +50,9 @@ public class CRC8 implements Checksum, Serializable {
         }
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final byte[] buffer, final int offset, final int len) {
         for (int i = 0; i < len; i++) {
@@ -67,16 +70,25 @@ public class CRC8 implements Checksum, Serializable {
         update(buffer, 0, buffer.length);
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final int b) {
         update(new byte[] { (byte) b }, 0, 1);
     }
 
+    /**
+     * 获取校验值。
+     */
     @Override
     public long getValue() {
         return value & 0xff;
     }
 
+    /**
+     * 重置校验和。
+     */
     @Override
     public void reset() {
         value = init;

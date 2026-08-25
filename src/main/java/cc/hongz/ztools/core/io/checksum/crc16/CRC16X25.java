@@ -16,17 +16,26 @@ public class CRC16X25 extends CRC16Checksum {
      */
     private static final int WC_POLY = 0x8408;
 
+    /**
+     * 重置校验和。
+     */
     @Override
     public void reset() {
         this.wCRCin = 0xffff;
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final byte[] b, final int off, final int len) {
         super.update(b, off, len);
         wCRCin ^= 0xffff;
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final int b) {
         wCRCin ^= (b & 0x00ff);

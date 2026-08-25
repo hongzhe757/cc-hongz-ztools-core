@@ -57,21 +57,33 @@ public class CRC16 implements Checksum, Serializable {
         return crc16.getHexValue(isPadding);
     }
 
+    /**
+     * 获取校验值。
+     */
     @Override
     public long getValue() {
         return crc16.getValue();
     }
 
+    /**
+     * 重置校验和。
+     */
     @Override
     public void reset() {
         crc16.reset();
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final byte[] b, final int off, final int len) {
         crc16.update(b, off, len);
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final int b) {
         crc16.update(b);

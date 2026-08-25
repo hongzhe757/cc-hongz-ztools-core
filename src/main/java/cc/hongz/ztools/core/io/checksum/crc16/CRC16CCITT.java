@@ -16,6 +16,9 @@ public class CRC16CCITT extends CRC16Checksum {
      */
     private static final int WC_POLY = 0x8408;
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final int b) {
         wCRCin ^= (b & 0x00ff);

@@ -16,12 +16,18 @@ public class CRC16DNP extends CRC16Checksum {
      */
     private static final int WC_POLY = 0xA6BC;
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final byte[] b, final int off, final int len) {
         super.update(b, off, len);
         wCRCin ^= 0xffff;
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final int b) {
         wCRCin ^= (b & 0x00ff);

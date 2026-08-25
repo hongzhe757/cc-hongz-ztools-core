@@ -15,11 +15,17 @@ public class CRC16Ansi extends CRC16Checksum {
      */
     private static final int WC_POLY = 0xa001;
 
+    /**
+     * 重置校验和。
+     */
     @Override
     public void reset() {
         this.wCRCin = 0xffff;
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final int b) {
         int hi = wCRCin >> 8;

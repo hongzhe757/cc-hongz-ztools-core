@@ -17,11 +17,17 @@ public class CRC16Modbus extends CRC16Checksum {
      */
     private static final int WC_POLY = 0xa001;
 
+    /**
+     * 重置校验和。
+     */
     @Override
     public void reset() {
         this.wCRCin = 0xffff;
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final int b) {
         wCRCin ^= (b & 0x00ff);

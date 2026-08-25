@@ -28,6 +28,9 @@ public abstract class CRC16Checksum implements Checksum, Serializable {
         reset();
     }
 
+    /**
+     * 获取校验值。
+     */
     @Override
     public long getValue() {
         return wCRCin;
@@ -56,6 +59,9 @@ public abstract class CRC16Checksum implements Checksum, Serializable {
         return hex;
     }
 
+    /**
+     * 重置校验和。
+     */
     @Override
     public void reset() {
         wCRCin = 0x0000;
@@ -69,6 +75,9 @@ public abstract class CRC16Checksum implements Checksum, Serializable {
         update(b, 0, b.length);
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final byte[] b, final int off, final int len) {
         for (int i = off; i < off + len; i++) {

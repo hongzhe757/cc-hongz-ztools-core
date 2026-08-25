@@ -16,12 +16,18 @@ public class CRC16XModem extends CRC16Checksum {
      */
     private static final int WC_POLY = 0x1021;
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final byte[] b, final int off, final int len) {
         super.update(b, off, len);
         wCRCin &= 0xffff;
     }
 
+    /**
+     * 更新校验和。
+     */
     @Override
     public void update(final int b) {
         for (int i = 0; i < 8; i++) {
