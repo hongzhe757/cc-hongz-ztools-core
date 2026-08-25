@@ -174,7 +174,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * {@link Date}类型时间转为{@link DateTime}.<br>
+     * {@link Date}类型时间转为{@link DateTime}.。 <br>
      * 如果date本身为DateTime对象，则返回强转后的对象，否则新建一个DateTime对象
      *
      * @param date Long类型Date（Unix时间戳），如果传入{@code null}，返回{@code null}
@@ -206,7 +206,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * Long类型时间转为{@link DateTime}.<br>
+     * Long类型时间转为{@link DateTime}.。 <br>
      * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
      *
      * @param date Long类型Date（Unix时间戳）
@@ -217,7 +217,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * {@link Calendar}类型时间转为{@link DateTime}.<br>
+     * {@link Calendar}类型时间转为{@link DateTime}.。 <br>
      * 始终根据已有{@link Calendar} 产生新的{@link DateTime}对象
      *
      * @param calendar {@link Calendar}，如果传入{@code null}，返回{@code null}
@@ -231,7 +231,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * {@link TemporalAccessor}类型时间转为{@link DateTime}.<br>
+     * {@link TemporalAccessor}类型时间转为{@link DateTime}.。 <br>
      * 始终根据已有{@link TemporalAccessor} 产生新的{@link DateTime}对象
      *
      * @param temporalAccessor {@link TemporalAccessor},常用子类： {@link LocalDateTime}、 LocalDate，
@@ -338,7 +338,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 获得指定日期是所在年份的第几周.<br>
+     * 获得指定日期是所在年份的第几周.。 <br>
      * 此方法返回值与一周的第一天有关，比如：<br>
      * 2016年1月3日为周日，如果一周的第一天为周日，那这天是第二周（返回2）<br>
      * 如果一周的第一天为周一，那这天是第一周（返回1）<br>
@@ -353,7 +353,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 获得指定日期是所在月份的第几周.<br>
+     * 获得指定日期是所在月份的第几周.。 <br>
      *
      * @param date 日期
      * @return 周
@@ -363,7 +363,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 获得指定日期是这个日期所在月份的第几天.<br>
+     * 获得指定日期是这个日期所在月份的第几天.。 <br>
      *
      * @param date 日期
      * @return 天
@@ -416,7 +416,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 获得指定日期的小时数部分.<br>
+     * 获得指定日期的小时数部分.。 <br>
      *
      * @param date          日期
      * @param is24HourClock 是否24小时制
@@ -427,7 +427,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 获得指定日期的分钟数部分.<br>
+     * 获得指定日期的分钟数部分.。 <br>
      * 例如：10:04:15.250 =》 4
      *
      * @param date 日期
@@ -438,7 +438,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 获得指定日期的秒数部分.<br>
+     * 获得指定日期的秒数部分.。 <br>
      *
      * @param date 日期
      * @return 秒数
@@ -448,7 +448,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 获得指定日期的毫秒数部分.<br>
+     * 获得指定日期的毫秒数部分.。 <br>
      *
      * @param date 日期
      * @return 毫秒数
@@ -562,7 +562,7 @@ public final class DateUtil extends CalendarUtil {
     /**
      * 同{@link #minute(Date)}, 使用当前日期.
      *
-     * @return 当前日期的分钟数部分.<br>
+     * @return 当前日期的分钟数部分. <br>
      */
     public static int thisMinute() {
         return minute(date());
@@ -571,7 +571,7 @@ public final class DateUtil extends CalendarUtil {
     /**
      * 同{@link #second(Date)}, 使用当前日期.
      *
-     * @return 当前日期的秒数部分.<br>
+     * @return 当前日期的秒数部分. <br>
      */
     public static int thisSecond() {
         return second(date());
@@ -580,7 +580,7 @@ public final class DateUtil extends CalendarUtil {
     /**
      * 同{@link #millisecond(Date)}, 使用当前日期.
      *
-     * @return 当前日期的毫秒数部分.<br>
+     * @return 当前日期的毫秒数部分. <br>
      */
     public static int thisMillisecond() {
         return millisecond(date());
@@ -588,7 +588,7 @@ public final class DateUtil extends CalendarUtil {
     // -------------------------------------------------------------- Part of Date end
 
     /**
-     * 获得指定日期年份和季节.<br>
+     * 获得指定日期年份和季节.。 <br>
      * 格式：[20131]表示2013年第一季度
      *
      * @param date 日期
@@ -599,7 +599,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 获得指定日期区间内的年份和季节.<br>
+     * 获得指定日期区间内的年份和季节.。 <br>
      *
      * @param startDate 起始日期（包含）
      * @param endDate   结束日期（包含）
@@ -614,7 +614,7 @@ public final class DateUtil extends CalendarUtil {
     // ------------------------------------ Format start ----------------------------------------------
 
     /**
-     * 格式化日期时间.<br>
+     * 格式化日期时间.。 <br>
      * 格式 yyyy-MM-dd HH:mm:ss
      *
      * @param localDateTime 被格式化的日期
@@ -705,7 +705,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 格式化日期时间.<br>
+     * 格式化日期时间.。 <br>
      * 格式 yyyy-MM-dd HH:mm:ss
      *
      * @param date 被格式化的日期
@@ -719,7 +719,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 格式化日期部分（不包括时间）.<br>
+     * 格式化日期部分（不包括时间）.。 <br>
      * 格式 yyyy-MM-dd
      *
      * @param date 被格式化的日期
@@ -733,7 +733,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 格式化时间.<br>
+     * 格式化时间.。 <br>
      * 格式 HH:mm:ss
      *
      * @param date 被格式化的日期
@@ -748,7 +748,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 格式化为Http的标准日期格式.<br>
+     * 格式化为Http的标准日期格式.。 <br>
      * 标准日期格式遵循RFC 1123规范，格式类似于：Fri, 31 Dec 1999 23:59:59 GMT
      *
      * @param date 被格式化的日期
@@ -786,7 +786,7 @@ public final class DateUtil extends CalendarUtil {
     // ------------------------------------ Parse start ----------------------------------------------
 
     /**
-     * 构建LocalDateTime对象.<br>
+     * 构建LocalDateTime对象.。 <br>
      * 格式：yyyy-MM-dd HH:mm:ss
      *
      * @param dateStr 时间字符串（带格式）
@@ -883,7 +883,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 通过给定的日期格式解析日期时间字符串.<br>
+     * 通过给定的日期格式解析日期时间字符串.。 <br>
      * 传入的日期格式会逐个尝试，直到解析成功，返回{@link DateTime}对象，否则抛出{@link DateException}异常。
      *
      * @param str           日期时间字符串，非空
@@ -965,7 +965,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 解析UTC时间，格式：.<br>
+     * 解析UTC时间，格式：.。 <br>
      * <ol>
      * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
      * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
@@ -986,7 +986,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 解析ISO8601时间，格式：.<br>
+     * 解析ISO8601时间，格式：.。 <br>
      * <ol>
      * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
      * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
@@ -1082,7 +1082,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 解析CST时间，格式：.<br>
+     * 解析CST时间，格式：.。 <br>
      * <ol>
      * <li>EEE MMM dd HH:mm:ss z yyyy（例如：Wed Aug 01 00:00:00 CST 2012）</li>
      * </ol>
@@ -1098,7 +1098,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 解析RFC2822时间，格式：.<br>
+     * 解析RFC2822时间，格式：.。 <br>
      * <ol>
      * <li>EEE MMM dd HH:mm:ss z yyyy（例如：Wed Aug 01 00:00:00 CST 2012）</li>
      * </ol>
@@ -1127,7 +1127,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 将日期字符串转换为{@link DateTime}对象，格式：.<br>
+     * 将日期字符串转换为{@link DateTime}对象，格式：.。 <br>
      * <ol>
      * <li>yyyy-MM-dd HH:mm:ss</li>
      * <li>yyyy/MM/dd HH:mm:ss</li>
@@ -1264,7 +1264,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 修改日期为某个时间字段结束时间.<br>
+     * 修改日期为某个时间字段结束时间.。 <br>
      * 可选是否归零毫秒。
      *
      * <p>
@@ -1670,7 +1670,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 判断两个日期相差的天数.<br>
+     * 判断两个日期相差的天数.。 <br>
      *
      * <pre>
      * 有时候我们计算相差天数的时候需要忽略时分秒。
@@ -1720,7 +1720,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 计算两个日期相差月数.<br>
+     * 计算两个日期相差月数.。 <br>
      * 在非重置情况下，如果起始日期的天大于结束日期的天，月数要少算1（不足1个月）
      *
      * @param beginDate 起始日期
@@ -1734,7 +1734,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 计算两个日期相差年数.<br>
+     * 计算两个日期相差年数.。 <br>
      * 在非重置情况下，如果起始日期的月大于结束日期的月，年数要少算1（不足1年）
      *
      * @param beginDate 起始日期
@@ -1794,7 +1794,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 当前日期是否在日期指定范围内.<br>
+     * 当前日期是否在日期指定范围内.。 <br>
      * 起始日期和结束日期可以互换
      *
      * @param date      被检查的日期
@@ -1812,7 +1812,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 是否为相同时间.<br>
+     * 是否为相同时间.。 <br>
      * 此方法比较两个日期的时间戳是否相同
      *
      * @param date1 日期1
@@ -1903,7 +1903,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 计时器.<br>
+     * 计时器.。 <br>
      * 计算某个过程花费的时间，精确到毫秒
      *
      * @return Timer
@@ -1914,7 +1914,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 计时器.<br>
+     * 计时器.。 <br>
      * 计算某个过程花费的时间，精确到毫秒
      *
      * @param isNano 是否使用纳秒计数，false则使用毫秒
@@ -2073,7 +2073,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * HH:mm:ss 时间格式字符串转为秒数.<br>
+     * HH:mm:ss 时间格式字符串转为秒数.。 <br>
      * 参考：<a href="https://github.com/iceroot">https://github.com/iceroot</a>
      *
      * @param timeStr 字符串时分秒(HH:mm:ss)格式
@@ -2096,7 +2096,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 秒数转为时间格式(HH:mm:ss).<br>
+     * 秒数转为时间格式(HH:mm:ss).。 <br>
      * 参考：<a href="https://github.com/iceroot">https://github.com/iceroot</a>
      *
      * @param seconds 需要转换的秒数
@@ -2420,7 +2420,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 创建{@link SimpleDateFormat}，注意此对象非线程安全！.<br>
+     * 创建{@link SimpleDateFormat}，注意此对象非线程安全！.。 <br>
      * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
      *
      * @param pattern 表达式
@@ -2432,7 +2432,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 创建{@link SimpleDateFormat}，注意此对象非线程安全！.<br>
+     * 创建{@link SimpleDateFormat}，注意此对象非线程安全！.。 <br>
      * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
      *
      * @param pattern  表达式
@@ -2483,7 +2483,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 检查两个时间段是否有时间重叠.<br>
+     * 检查两个时间段是否有时间重叠.。 <br>
      * 重叠指两个时间段是否有交集，注意此方法时间段重合时如：
      * <ul>
      *     <li>此方法未纠正开始时间小于结束时间</li>
@@ -2530,7 +2530,7 @@ public final class DateUtil extends CalendarUtil {
     // ------------------------------------------------------------------------ Private method start
 
     /**
-     * 标准化日期，默认处理以空格区分的日期时间格式，空格前为日期，空格后为时间：.<br>
+     * 标准化日期，默认处理以空格区分的日期时间格式，空格前为日期，空格后为时间：.。 <br>
      * 将以下字符替换为"-"
      *
      * <pre>
