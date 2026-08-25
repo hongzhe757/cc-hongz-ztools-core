@@ -64,92 +64,92 @@ public final class DateUtil extends CalendarUtil {
     private static final Pattern TIME_UNIT_PATTERN = Pattern.compile("[时分秒]");
 
     /**
-     * Number of milliseconds per second.
+     * 每秒毫秒数。
      */
     private static final int MILLIS_PER_SECOND = 1000;
 
     /**
-     * Number of seconds per minute.
+     * 每分钟秒数。
      */
     private static final int SECONDS_PER_MINUTE = 60;
 
     /**
-     * Number of seconds per hour.
+     * 每小时秒数。
      */
     private static final int SECONDS_PER_HOUR = 3600;
 
     /**
-     * Threshold for two-digit number padding (values below this are zero-padded).
+     * 两位数补零阈值，小于此值则补零。
      */
     private static final int TWO_DIGIT_THRESHOLD = 10;
 
     /**
-     * Number of nanoseconds per second.
+     * 每秒纳秒数。
      */
     private static final double NANOS_PER_SECOND = 1_000_000_000.0;
 
     /**
-     * String length of a millisecond-precision Unix timestamp (13 digits).
+     * 毫秒精度 Unix 时间戳字符串长度（13 位）。
      */
     private static final int TIMESTAMP_MILLIS_LENGTH = 13;
 
     /**
-     * Maximum number of fractional second digits (milliseconds) to retain after a dot.
+     * 小数点后保留的秒小数位数上限（毫秒）。
      */
     private static final int MAX_MILLIS_DIGITS = 3;
 
     /**
-     * Number of characters kept after the decimal dot in a timestamp (1 for dot + 3 for millis).
+     * 时间戳小数点后保留的字符数（1 位点 + 3 位毫秒）。
      */
     private static final int DOT_AND_MILLIS_LENGTH = 1 + MAX_MILLIS_DIGITS;
 
     /**
-     * Number of single-quote characters in {@link DatePattern#UTC_PATTERN}.
+     * {@link DatePattern#UTC_PATTERN} 中的单引号字符数。
      */
     private static final int UTC_PATTERN_QUOTE_COUNT = 4;
 
     /**
-     * Maximum number of additional millisecond digits beyond standard 3 in UTC patterns.
+     * UTC 模式中超出标准 3 位的额外毫秒位数上限。
      */
     private static final int UTC_MS_MAX_EXTRA_LENGTH = 6;
 
     /**
-     * Character count for the zone-offset hour part (e.g. "08" in "+08:00").
+     * 时区偏移小时部分的字符数（如 "+08:00" 中的 "08"）。
      */
     private static final int ZONE_OFFSET_HOUR_LENGTH = 2;
 
     /**
-     * Character count for the zone-offset minute part (e.g. "00" in "+08:00").
+     * 时区偏移分钟部分的字符数（如 "+08:00" 中的 "00"）。
      */
     private static final int ZONE_OFFSET_MINUTE_LENGTH = 2;
 
     /**
-     * Length of the UTC simple format with minute precision and zone offset (e.g. "2025-07-28T20:00+08:00").
+     * 带分钟精度和时区偏移的 UTC 简单格式长度（如 "2025-07-28T20:00+08:00"）。
      */
     private static final int UTC_SIMPLE_MINUTE_WITH_OFFSET_LENGTH = 22;
 
     /**
-     * Number of characters to check from the end for the colon in a UTC offset.
+     * 从末尾检查 UTC 偏移中冒号的字符数。
      */
     private static final int UTC_OFFSET_COLON_POS_FROM_END = 3;
 
     /**
-     * Number of characters for the seconds part in a UTC pattern (":ss").
+     * UTC 模式中秒部分的字符数（":ss"）。
      */
     private static final int UTC_SECONDS_PART_LENGTH = 2;
 
     /**
-     * Number of characters for the minutes-and-seconds part in a UTC pattern (":mm:ss").
+     * UTC 模式中分秒部分的字符数（":mm:ss"）。
      */
     private static final int UTC_MINUTES_SECONDS_LENGTH = 5;
 
     /**
-     * Number of date-and-time parts after splitting by space (date + time = 2).
+     * 按空格分割后的日期时间部分数（日期 + 时间 = 2）。
      */
     private static final int DATE_AND_TIME_PARTS = 2;
 
     /**
-     * Private constructor to prevent instantiation of this utility class.
+     * 私有构造器，防止实例化工具类。
      */
     private DateUtil() {
     }
