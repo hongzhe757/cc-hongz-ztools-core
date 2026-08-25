@@ -17,9 +17,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class SystemClock {
 
-    /** 时钟更新间隔，单位毫秒。 */
+    /**
+     * 时钟更新间隔，单位毫秒。
+     */
     private final long period;
-    /** 现在时刻的毫秒数。 */
+
+    /**
+     * 现在时刻的毫秒数。
+     */
     private volatile long now;
 
     /**

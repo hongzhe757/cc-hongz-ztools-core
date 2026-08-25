@@ -57,6 +57,10 @@ public class StopWatch {
      * 秒表唯一标识，用于多个秒表对象的区分。
      */
     private final String id;
+
+    /**
+     * 任务列表。
+     */
     private List<TaskInfo> taskList;
 
     /**
@@ -420,7 +424,14 @@ public class StopWatch {
      */
     public static final class TaskInfo {
 
+        /**
+         * 任务名称。
+         */
         private final String taskName;
+
+        /**
+         * 任务耗时（纳秒）。
+         */
         private final long timeNanos;
 
         /**

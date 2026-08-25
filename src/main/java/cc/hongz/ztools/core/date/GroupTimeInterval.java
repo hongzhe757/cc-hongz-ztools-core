@@ -16,7 +16,14 @@ import java.util.Map;
 public class GroupTimeInterval implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 是否使用纳秒计数，false则使用毫秒。
+     */
     private final boolean isNano;
+
+    /**
+     * 分组计时 map。
+     */
     protected final Map<String, Long> groupMap;
 
     /**

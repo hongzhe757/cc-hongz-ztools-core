@@ -19,19 +19,38 @@ import java.time.temporal.ChronoField;
  */
 public enum Quarter {
 
-    /** 第一季度。 */
+    /**
+     * 第一季度。
+     */
     Q1(1),
-    /** 第二季度。 */
+    /**
+     * 第二季度。
+     */
     Q2(2),
-    /** 第三季度。 */
+    /**
+     * 第三季度。
+     */
     Q3(3),
-    /** 第四季度。 */
+    /**
+     * 第四季度。
+     */
     Q4(4);
 
     // ---------------------------------------------------------------
+
+    /**
+     * 季度值。
+     */
     private final int value;
 
+    /**
+     * 该季度第一个月。
+     */
     private final int firstMonth;
+
+    /**
+     * 该季度最后一个月。
+     */
     private final int lastMonth;
 
     Quarter(final int value) {
