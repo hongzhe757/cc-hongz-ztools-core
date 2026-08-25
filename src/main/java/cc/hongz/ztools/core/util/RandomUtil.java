@@ -21,7 +21,7 @@ import cc.hongz.ztools.core.lang.WeightRandom;
 import cc.hongz.ztools.core.lang.WeightRandom.WeightObj;
 
 /**
- * 随机工具类（captcha 最小子集 + 阶段 1 UUID/ByteUtil 测试依赖）.
+ * 随机工具类。
  *
  * <p>
  * 设计模式：工具类（Utility Class），私有构造禁止实例化，基于 ThreadLocalRandom 生成随机值.
