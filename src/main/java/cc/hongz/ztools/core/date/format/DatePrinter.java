@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * 日期格式化输出接口<br>
- * Thanks to Apache Commons Lang 3.5
+ * 感谢 Apache Commons Lang 3.5
  * @author Looly
  * @since 2.16.2
  */

@@ -26,19 +26,19 @@ import java.util.TimeZone;
  * {@link #getDateTimeInstance(int, int, TimeZone, Locale)}
  * </p>
  *
- * Thanks to Apache Commons Lang 3.5
+ * 感谢 Apache Commons Lang 3.5
  * @since 2.16.2
  */
 public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	private static final long serialVersionUID = 8097890768636183236L;
 
-	/** FULL locale dependent date or time style. */
+	/** FULL 依赖地域的日期或时间样式。 */
 	public static final int FULL = DateFormat.FULL;
-	/** LONG locale dependent date or time style. */
+	/** LONG 依赖地域的日期或时间样式。 */
 	public static final int LONG = DateFormat.LONG;
-	/** MEDIUM locale dependent date or time style. */
+	/** MEDIUM 依赖地域的日期或时间样式。 */
 	public static final int MEDIUM = DateFormat.MEDIUM;
-	/** SHORT locale dependent date or time style. */
+	/** SHORT 依赖地域的日期或时间样式。 */
 	public static final int SHORT = DateFormat.SHORT;
 
 	private static final FormatCache<FastDateFormat> CACHE = new FormatCache<FastDateFormat>(){

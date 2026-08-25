@@ -54,7 +54,7 @@ public enum Week {
 
     // ---------------------------------------------------------------
     /**
-     * Weeks aliases.
+     * 星期别名。
      */
     private static final String[] ALIASES = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
     private static final Week[] ENUMS = Week.values();

@@ -7,11 +7,11 @@ import java.util.TimeZone;
 public abstract class AbstractDateBasic implements DateBasic, Serializable {
 	private static final long serialVersionUID = 6333136319870641818L;
 
-	/** The pattern */
+	/** 日期格式模式。 */
 	protected final  String pattern;
-	/** The time zone. */
+	/** 时区。 */
 	protected final TimeZone timeZone;
-	/** The locale. */
+	/** 地域。 */
 	protected final Locale locale;
 
 	/**

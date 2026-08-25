@@ -13,14 +13,14 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 日期格式化器缓存<br>
- * Thanks to Apache Commons Lang 3.5
+ * 感谢 Apache Commons Lang 3.5
  *
  * @since 2.16.2
  */
 abstract class FormatCache<F extends Format> {
 
 	/**
-	 * No date or no time. Used in same parameters as DateFormat.SHORT or DateFormat.LONG
+	 * 无日期或无时间。与 DateFormat.SHORT 或 DateFormat.LONG 相同的参数使用。
 	 */
 	static final int NONE = -1;
 
@@ -81,7 +81,7 @@ abstract class FormatCache<F extends Format> {
 
 	/**
 	 * <p>
-	 * Gets a date/time formatter instance using the specified style, time zone and locale.
+	 * 使用指定样式、时区和地域获取日期时间格式化器实例。
 	 * </p>
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT, null indicates no date in format
@@ -102,7 +102,7 @@ abstract class FormatCache<F extends Format> {
 
 	/**
 	 * <p>
-	 * Gets a date formatter instance using the specified style, time zone and locale.
+	 * 使用指定样式、时区和地域获取日期格式化器实例。
 	 * </p>
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
@@ -118,7 +118,7 @@ abstract class FormatCache<F extends Format> {
 
 	/**
 	 * <p>
-	 * Gets a time formatter instance using the specified style, time zone and locale.
+	 * 使用指定样式、时区和地域获取时间格式化器实例。
 	 * </p>
 	 *
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
@@ -134,7 +134,7 @@ abstract class FormatCache<F extends Format> {
 
 	/**
 	 * <p>
-	 * Gets a date/time format for the specified styles and locale.
+	 * 获取指定样式和地域的日期时间格式。
 	 * </p>
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT, null indicates no date in format

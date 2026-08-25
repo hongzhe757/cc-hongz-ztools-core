@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * {@link java.text.SimpleDateFormat} 的线程安全版本，用于将 {@link Date} 格式化输出<br>
- * Thanks to Apache Commons Lang 3.5
+ * 感谢 Apache Commons Lang 3.5
  *
  * @see FastDateParser
  */
@@ -67,7 +67,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	/**
 	 * <p>
-	 * Returns a list of Rules given a pattern.
+	 * 返回给定模式的 Rules 列表。
 	 * </p>
 	 *
 	 * @return a {@code List} of Rule objects
@@ -210,7 +210,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	/**
 	 * <p>
-	 * Performs the parsing of tokens.
+	 * 执行 token 的解析。
 	 * </p>
 	 *
 	 * @param pattern  the pattern
@@ -355,7 +355,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	}
 
 	/**
-	 * Creates a String representation of the given Calendar by applying the rules of this printer to it.
+	 * 通过应用此打印器的规则创建给定 Calendar 的字符串表示。
 	 *
 	 * @param c the Calender to apply the rules to.
 	 * @return a String representation of the given Calendar.
@@ -366,7 +366,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	/**
 	 * <p>
-	 * Performs the formatting by applying the rules to the specified calendar.
+	 * 通过将规则应用到指定日历执行格式化。
 	 * </p>
 	 *
 	 * @param calendar the calendar to format
@@ -399,7 +399,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	// -----------------------------------------------------------------------
 
 	/**
-	 * Create the object after serialization. This implementation reinitializes the transient properties.
+	 * 反序列化后创建对象。此实现重新初始化 transient 属性。
 	 *
 	 * @param in ObjectInputStream from which the object is being deserialized.
 	 * @throws IOException            if there is an IO issue.
@@ -411,7 +411,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	}
 
 	/**
-	 * Appends two digits to the given buffer.
+	 * 向给定缓冲区追加两位数字。
 	 *
 	 * @param buffer the buffer to append to.
 	 * @param value  the value to append digits from.
@@ -424,7 +424,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	private static final int MAX_DIGITS = 10; // log10(Integer.MAX_VALUE) ~= 9.3
 
 	/**
-	 * Appends all digits to the given buffer.
+	 * 向给定缓冲区追加所有数字。
 	 *
 	 * @param buffer the buffer to append to.
 	 * @param value  the value to append digits from.
@@ -503,14 +503,14 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 */
 	private interface Rule {
 		/**
-		 * Returns the estimated length of the result.
+		 * 返回结果的估计长度。
 		 *
 		 * @return the estimated length
 		 */
 		int estimateLength();
 
 		/**
-		 * Appends the value of the specified calendar to the output buffer based on the rule implementation.
+		 * 基于规则实现将指定日历的值追加到输出缓冲区。
 		 *
 		 * @param buf      the output buffer
 		 * @param calendar calendar to be appended
@@ -526,7 +526,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 */
 	private interface NumberRule extends Rule {
 		/**
-		 * Appends the specified value to the output buffer based on the rule implementation.
+		 * 基于规则实现将指定值追加到输出缓冲区。
 		 *
 		 * @param buffer the output buffer
 		 * @param value  the value to be appended
@@ -544,7 +544,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final char mValue;
 
 		/**
-		 * Constructs a new instance of {@code CharacterLiteral} to hold the specified value.
+		 * 构造一个新的 {@code CharacterLiteral} 实例以保存指定值。
 		 *
 		 * @param value the character literal
 		 */
@@ -572,7 +572,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final String mValue;
 
 		/**
-		 * Constructs a new instance of {@code StringLiteral} to hold the specified value.
+		 * 构造一个新的 {@code StringLiteral} 实例以保存指定值。
 		 *
 		 * @param value the string literal
 		 */
@@ -607,7 +607,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final String[] mValues;
 
 		/**
-		 * Constructs an instance of {@code TextField} with the specified field and values.
+		 * 用指定字段和值构造一个 {@code TextField} 实例。
 		 *
 		 * @param field  the field
 		 * @param values the field values
@@ -650,7 +650,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final int mField;
 
 		/**
-		 * Constructs an instance of {@code UnpadedNumberField} with the specified field.
+		 * 用指定字段构造一个 {@code UnpadedNumberField} 实例。
 		 *
 		 * @param field the field
 		 */
@@ -698,7 +698,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		static final UnpaddedMonthField INSTANCE = new UnpaddedMonthField();
 
 		/**
-		 * Constructs an instance of {@code UnpaddedMonthField}.
+		 * 构造一个 {@code UnpaddedMonthField} 实例。
 		 */
 		UnpaddedMonthField() {
 		}
@@ -742,7 +742,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final int mSize;
 
 		/**
-		 * Constructs an instance of {@code PaddedNumberField}.
+		 * 构造一个 {@code PaddedNumberField} 实例。
 		 *
 		 * @param field the field
 		 * @param size  size of the output field
@@ -790,7 +790,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final int mField;
 
 		/**
-		 * Constructs an instance of {@code TwoDigitNumberField} with the specified field.
+		 * 用指定字段构造一个 {@code TwoDigitNumberField} 实例。
 		 *
 		 * @param field the field
 		 */
@@ -836,7 +836,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		static final TwoDigitYearField INSTANCE = new TwoDigitYearField();
 
 		/**
-		 * Constructs an instance of {@code TwoDigitYearField}.
+		 * 构造一个 {@code TwoDigitYearField} 实例。
 		 */
 		TwoDigitYearField() {
 		}
@@ -875,7 +875,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		static final TwoDigitMonthField INSTANCE = new TwoDigitMonthField();
 
 		/**
-		 * Constructs an instance of {@code TwoDigitMonthField}.
+		 * 构造一个 {@code TwoDigitMonthField} 实例。
 		 */
 		TwoDigitMonthField() {
 		}
@@ -914,7 +914,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final NumberRule mRule;
 
 		/**
-		 * Constructs an instance of {@code TwelveHourField} with the specified {@code NumberRule}.
+		 * 用指定的 {@code NumberRule} 构造一个 {@code TwelveHourField} 实例。
 		 *
 		 * @param rule the rule
 		 */
@@ -960,7 +960,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final NumberRule mRule;
 
 		/**
-		 * Constructs an instance of {@code TwentyFourHourField} with the specified {@code NumberRule}.
+		 * 用指定的 {@code NumberRule} 构造一个 {@code TwentyFourHourField} 实例。
 		 *
 		 * @param rule the rule
 		 */
@@ -1065,7 +1065,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	/**
 	 * <p>
-	 * Gets the time zone display name, using a cache for performance.
+	 * 获取时区显示名称，使用缓存提升性能。
 	 * </p>
 	 *
 	 * @param tz       the zone to query
@@ -1100,7 +1100,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final String mDaylight;
 
 		/**
-		 * Constructs an instance of {@code TimeZoneNameRule} with the specified properties.
+		 * 用指定属性构造一个 {@code TimeZoneNameRule} 实例。
 		 *
 		 * @param timeZone the time zone
 		 * @param locale   the locale
@@ -1151,7 +1151,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		final boolean mColon;
 
 		/**
-		 * Constructs an instance of {@code TimeZoneNumberRule} with the specified properties.
+		 * 用指定属性构造一个 {@code TimeZoneNumberRule} 实例。
 		 *
 		 * @param colon add colon between HH and MM in the output if {@code true}
 		 */
@@ -1209,7 +1209,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		static final Iso8601_Rule ISO8601_HOURS_COLON_MINUTES = new Iso8601_Rule(6);
 
 		/**
-		 * Factory method for Iso8601_Rules.
+		 * Iso8601_Rules 的工厂方法。
 		 *
 		 * @param tokenLen a token indicating the length of the TimeZone String to be formatted.
 		 * @return a Iso8601_Rule that can format TimeZone String of length {@code tokenLen}. If no such rule exists, an IllegalArgumentException will be thrown.
@@ -1230,7 +1230,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		final int length;
 
 		/**
-		 * Constructs an instance of {@code Iso8601_Rule} with the specified properties.
+		 * 用指定属性构造一个 {@code Iso8601_Rule} 实例。
 		 *
 		 * @param length The number of characters in output (unless Z is output)
 		 */
@@ -1293,7 +1293,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		private final Locale mLocale;
 
 		/**
-		 * Constructs an instance of {@code TimeZoneDisplayKey} with the specified properties.
+		 * 用指定属性构造一个 {@code TimeZoneDisplayKey} 实例。
 		 *
 		 * @param timeZone the time zone
 		 * @param daylight adjust the style for daylight saving time if {@code true}

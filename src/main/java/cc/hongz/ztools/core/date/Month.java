@@ -82,7 +82,7 @@ public enum Month {
 
     // ---------------------------------------------------------------
     /**
-     * Months aliases.
+     * 月份别名。
      */
     private static final String[] ALIASES = {"jan", "feb", "mar", "apr", "may", "jun",
             "jul", "aug", "sep", "oct", "nov", "dec"};

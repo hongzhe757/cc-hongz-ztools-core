@@ -16,17 +16,17 @@ import java.util.TimeZone;
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public final class TimeZoneUtil {
     /**
-     * A public version of {@link java.util.TimeZone}'s package private {@code GMT_ID} field.
+     * {@link java.util.TimeZone} 的包私有 {@code GMT_ID} 字段的公共版本。
      */
     public static final String GMT_ID = "GMT";
 
     /**
-     * The GMT time zone.
+     * GMT 时区。
      */
     public static final TimeZone GMT = getTimeZone(GMT_ID);
 
     /**
-     * Delegates to {@link TimeZone#getTimeZone(String)} after mapping an ID if it's in {@link ZoneId#SHORT_IDS}.
+     * 如果 ID 在 {@link ZoneId#SHORT_IDS} 中，则先映射 ID 再委托给 {@link TimeZone#getTimeZone(String)}。
      * <p>
      * On Java 25, calling {@link TimeZone#getTimeZone(String)} with an ID in {@link ZoneId#SHORT_IDS}
      * writes a message to {@link System#err} in the form:
@@ -54,7 +54,7 @@ public final class TimeZoneUtil {
     }
 
     /**
-     * Returns the given TimeZone if non-{@code null}, otherwise {@link TimeZone#getDefault()}.
+     * 如果给定时区非 {@code null} 则返回它，否则返回 {@link TimeZone#getDefault()}。
      *
      * @param timeZone a locale or {@code null}.
      * @return the given locale if non-{@code null}, otherwise {@link TimeZone#getDefault()}.

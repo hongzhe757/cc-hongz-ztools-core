@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * 日期解析接口，用于解析日期字符串为 {@link Date} 对象<br>
- * Thanks to Apache Commons Lang 3.5
+ * 感谢 Apache Commons Lang 3.5
  * @since 2.16.2
  */
 public interface DateParser extends DateBasic{
@@ -35,7 +35,7 @@ public interface DateParser extends DateBasic{
 	/**
 	 * 根据给定格式更新{@link Calendar}
 	 * Upon success, the ParsePosition index is updated to indicate how much of the source text was consumed.
-	 * Not all source text needs to be consumed.
+	 * 并非所有源文本都需要被消费。
 	 * Upon parse failure, ParsePosition error index is updated to the offset of the source text which does not match the supplied format.
 	 *
 	 * @param source 被转换的日期字符串
