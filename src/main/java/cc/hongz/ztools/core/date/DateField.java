@@ -80,7 +80,7 @@ public enum DateField {
     /**
      * 小时，用于24小时制。
      *
-     * @see Calendar#HOUR
+     * @see Calendar#HOUR_OF_DAY
      */
     HOUR_OF_DAY(Calendar.HOUR_OF_DAY),
     /**
