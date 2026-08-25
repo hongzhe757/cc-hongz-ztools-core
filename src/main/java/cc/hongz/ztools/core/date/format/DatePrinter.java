@@ -4,75 +4,75 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * 日期格式化输出接口<br>
+ * 日期格式化输出接口。 <br>
  * 感谢 Apache Commons Lang 3.5
  * @author Looly
  * @since 2.16.2
  */
 public interface DatePrinter extends DateBasic {
 
-	/**
-	 * 格式化日期表示的毫秒数
-	 *
-	 * @param millis 日期毫秒数
-	 * @return the formatted string
-	 * @since 2.1
-	 */
-	String format(long millis);
+    /**
+     * 格式化日期表示的毫秒数。
+     *
+     * @param millis 日期毫秒数
+     * @return 格式化后的字符串
+     * @since 2.1
+     */
+    String format(long millis);
 
-	/**
-	 * 使用 {@code GregorianCalendar} 格式化 {@code Date}
-	 *
-	 * @param date 日期 {@link Date}
-	 * @return 格式化后的字符串
-	 */
-	String format(Date date);
+    /**
+     * 使用 {@code GregorianCalendar} 格式化 {@code Date}。
+     *
+     * @param date 日期 {@link Date}
+     * @return 格式化后的字符串
+     */
+    String format(Date date);
 
-	/**
-	 * <p>
-	 * Formats a {@code Calendar} object.
-	 * </p>
-	 * 格式化 {@link Calendar}
-	 *
-	 * @param calendar {@link Calendar}
-	 * @return 格式化后的字符串
-	 */
-	String format(Calendar calendar);
+    /**
+     * <p>
+     * 格式化 {@code Calendar} 对象。
+     * </p>
+     * 格式化 {@link Calendar}
+     *
+     * @param calendar {@link Calendar}
+     * @return 格式化后的字符串
+     */
+    String format(Calendar calendar);
 
-	/**
-	 * <p>
-	 * Formats a millisecond {@code long} value into the supplied {@code Appendable}.
-	 * </p>
-	 *
-	 * @param millis the millisecond value to format
-	 * @param buf the buffer to format into
-	 * @param <B> the Appendable class type, usually StringBuilder or StringBuffer.
-	 * @return the specified string buffer
-	 */
-	<B extends Appendable> B format(long millis, B buf);
+    /**
+     * <p>
+     * 将毫秒 {@code long} 值格式化到提供的 {@code Appendable}。
+     * </p>
+     *
+     * @param millis 要格式化的毫秒值
+     * @param buf 要格式化到的缓冲区
+     * @param <B> Appendable 类类型，通常是 StringBuilder 或 StringBuffer。
+     * @return 指定的字符串缓冲区
+     */
+    <B extends Appendable> B format(long millis, B buf);
 
-	/**
-	 * <p>
-	 * Formats a {@code Date} object into the supplied {@code Appendable} using a {@code GregorianCalendar}.
-	 * </p>
-	 *
-	 * @param date the date to format
-	 * @param buf the buffer to format into
-	 * @param <B> the Appendable class type, usually StringBuilder or StringBuffer.
-	 * @return the specified string buffer
-	 */
-	<B extends Appendable> B format(Date date, B buf);
+    /**
+     * <p>
+     * 使用 {@code GregorianCalendar} 将 {@code Date} 对象格式化到提供的 {@code Appendable}。
+     * </p>
+     *
+     * @param date 要格式化的日期
+     * @param buf 要格式化到的缓冲区
+     * @param <B> Appendable 类类型，通常是 StringBuilder 或 StringBuffer。
+     * @return 指定的字符串缓冲区
+     */
+    <B extends Appendable> B format(Date date, B buf);
 
-	/**
-	 * <p>
-	 * Formats a {@code Calendar} object into the supplied {@code Appendable}.
-	 * </p>
-	 * The TimeZone set on the Calendar is only used to adjust the time offset. The TimeZone specified during the construction of the Parser will determine the TimeZone used in the formatted string.
-	 *
-	 * @param calendar the calendar to format
-	 * @param buf the buffer to format into
-	 * @param <B> the Appendable class type, usually StringBuilder or StringBuffer.
-	 * @return the specified string buffer
-	 */
-	<B extends Appendable> B format(Calendar calendar, B buf);
+    /**
+     * <p>
+     * 将 {@code Calendar} 对象格式化到提供的 {@code Appendable}。
+     * </p>
+     * Calendar 上设置的 TimeZone 仅用于调整时间偏移。构造 Parser 时指定的 TimeZone 将决定格式化字符串中使用的 TimeZone。
+     *
+     * @param calendar 要格式化的日历
+     * @param buf 要格式化到的缓冲区
+     * @param <B> Appendable 类类型，通常是 StringBuilder 或 StringBuffer。
+     * @return 指定的字符串缓冲区
+     */
+    <B extends Appendable> B format(Calendar calendar, B buf);
 }
