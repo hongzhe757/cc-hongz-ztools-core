@@ -17,7 +17,7 @@ import cc.hongz.ztools.core.net.NetUtil;
  * 1. 唯一性ID生成器：UUID、ObjectId（MongoDB）、Snowflake、NanoId
  * </pre>
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.util.IdUtil}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.util.IdUtil}。
  *
  * @author looly
  */

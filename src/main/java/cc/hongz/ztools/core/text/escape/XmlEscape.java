@@ -6,7 +6,7 @@ import cc.hongz.ztools.core.text.replacer.ReplacerChain;
 /**
  * XML特殊字符转义.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.text.escape.XmlEscape}.
+ * 迁移自 hutool {@code cc.hongz.ztools.core.text.escape.XmlEscape}.
  *
  * @author looly
  */

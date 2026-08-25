@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 针对 {@link Type} 的工具类.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.util.TypeUtil}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.util.TypeUtil}。
  * <br>
  * 聚焦泛型参数解析和 Type → Class 转换。
  *

@@ -3,7 +3,7 @@ package cc.hongz.ztools.core.util;
 /**
  * 字符工具类.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.util.CharUtil}，
+ * 迁移自 hutool {@code cc.hongz.ztools.core.util.CharUtil}，
  * 合并了 {@code CharPool} 常量和 {@code ASCIIStrCache} 缓存能力。
  * 部分工具来自于 Apache Commons 系列。
  *

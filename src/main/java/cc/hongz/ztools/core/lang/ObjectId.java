@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * 参考：http://blog.csdn.net/qxc1281/article/details/54021882
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.lang.ObjectId}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.lang.ObjectId}。
  *
  * @author looly
  * @since 4.0.0

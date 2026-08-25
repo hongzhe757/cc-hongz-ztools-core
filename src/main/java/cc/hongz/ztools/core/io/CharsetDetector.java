@@ -13,7 +13,7 @@ import java.nio.charset.CharsetDecoder;
 /**
  * 编码探测器.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.io.CharsetDetector}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.io.CharsetDetector}。
  *
  * @author looly
  * @author hongzhe.qin (migrated &amp; enhanced)

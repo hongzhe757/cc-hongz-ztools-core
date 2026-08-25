@@ -21,7 +21,7 @@ import java.util.Date;
  * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000
  * </pre>
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.lang.Snowflake}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.lang.Snowflake}。
  *
  * @author Looly
  */

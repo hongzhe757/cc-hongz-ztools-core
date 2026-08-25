@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 类工具类.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.util.ClassUtil}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.util.ClassUtil}。
  *
  * @author xiaoleilu
  * @author hongzhe.qin (migrated &amp; enhanced)

@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 /**
  * 枚举工具类.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.util.EnumUtil}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.util.EnumUtil}。
  *
  * @author looly
  */

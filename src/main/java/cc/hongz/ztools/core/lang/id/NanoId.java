@@ -10,7 +10,7 @@ import java.util.Random;
  * <p>
  * 此实现的逻辑基于JavaScript的NanoId实现，见：https://github.com/ai/nanoid
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.lang.id.NanoId}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.lang.id.NanoId}。
  *
  * @author David Klebanoff
  */

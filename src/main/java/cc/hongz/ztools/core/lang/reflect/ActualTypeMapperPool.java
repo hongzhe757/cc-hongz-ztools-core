@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 泛型变量和泛型实际类型映射关系缓存.
  *
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.lang.reflect.ActualTypeMapperPool}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.lang.reflect.ActualTypeMapperPool}。
  *
  * @author Looly
  * @since 5.4.2

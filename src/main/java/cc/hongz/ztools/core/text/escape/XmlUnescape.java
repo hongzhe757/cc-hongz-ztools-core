@@ -6,7 +6,7 @@ import cc.hongz.ztools.core.text.replacer.ReplacerChain;
 /**
  * XML的UNESCAPE.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.text.escape.XmlUnescape}.
+ * 迁移自 hutool {@code cc.hongz.ztools.core.text.escape.XmlUnescape}.
  *
  * @author looly
  */

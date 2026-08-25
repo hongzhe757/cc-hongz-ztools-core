@@ -31,7 +31,7 @@ import java.util.jar.JarFile;
 /**
  * 类扫描器.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.lang.ClassScanner}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.lang.ClassScanner}。
  *
  * @author looly
  * @author hongzhe.qin (migrated &amp; enhanced)

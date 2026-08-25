@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * 键值对对象，只能在构造时传入键值.
  * <p>
- * 迁移自 hutool {@code cn.hutool.core.lang.Pair}。
+ * 迁移自 hutool {@code cc.hongz.ztools.core.lang.Pair}。
  *
  * @param <K> 键类型
  * @param <V> 值类型
