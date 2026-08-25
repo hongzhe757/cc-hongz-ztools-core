@@ -10,7 +10,7 @@ import java.util.function.Function;
  * @since 5.4.3
  */
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class SpliteratorUtil {
+public final class SpliteratorUtil {
 
     /**
      * 使用给定的转换函数，转换源{@link Spliterator}为新类型的{@link Spliterator}。

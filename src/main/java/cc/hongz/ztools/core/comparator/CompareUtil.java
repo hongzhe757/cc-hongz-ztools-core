@@ -10,7 +10,7 @@ import java.util.function.Function;
  * @author looly
  */
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class CompareUtil {
+public final class CompareUtil {
 
     /**
      * 获取自然排序器，即默认排序器。

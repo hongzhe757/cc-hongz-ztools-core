@@ -12,7 +12,7 @@ import java.util.Date;
  * @since 4.4.3
  */
 @SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "checkstyle:MagicNumber"})
-public class Zodiac {
+public final class Zodiac {
 
     /** 星座分隔时间日。 */
     private static final int[] DAY_ARR = new int[] { 20, 19, 21, 20, 21, 22, 23, 23, 23, 24, 23, 22 };

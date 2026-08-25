@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 5.7.15
  */
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class RingIndexUtil {
+public final class RingIndexUtil {
 
     /**
      * 通过cas操作 实现对指定值内的回环累加。

@@ -12,7 +12,7 @@ import cc.hongz.ztools.core.lang.Assert;
  * @since 4.4.1
  */
 @SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "checkstyle:MagicNumber"})
-public class Rot {
+public final class Rot {
 
     private static final char aCHAR = 'a';
     private static final char zCHAR = 'z';

@@ -35,7 +35,7 @@ import java.util.function.Function;
  * @since 3.1.0
  */
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class IterUtil {
+public final class IterUtil {
 
     /**
      * 获取{@link Iterator}。

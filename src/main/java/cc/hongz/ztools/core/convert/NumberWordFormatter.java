@@ -12,7 +12,7 @@ import cc.hongz.ztools.core.util.StrUtil;
  * @since 3.0.9
  */
 @SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "checkstyle:MagicNumber"})
-public class NumberWordFormatter {
+public final class NumberWordFormatter {
 
     private static final String[] NUMBER = new String[] { "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN",
         "EIGHT", "NINE" };

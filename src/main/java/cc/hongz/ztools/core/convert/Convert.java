@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @author xiaoleilu
  */
 @SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "checkstyle:MagicNumber"})
-public class Convert {
+public final class Convert {
 
     /**
      * 转换为字符串。

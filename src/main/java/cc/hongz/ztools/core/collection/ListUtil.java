@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * @author looly
  */
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class ListUtil {
+public final class ListUtil {
 
     /**
      * 新建一个空List.

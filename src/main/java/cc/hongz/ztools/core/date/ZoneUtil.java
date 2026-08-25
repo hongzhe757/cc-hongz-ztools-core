@@ -10,7 +10,7 @@ import java.util.TimeZone;
  * @since 5.7.15
  */
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class ZoneUtil {
+public final class ZoneUtil {
 
     /**
      * {@link ZoneId}转换为{@link TimeZone}，{@code null}则返回系统默认值。

@@ -12,7 +12,7 @@ import java.util.Set;
  * @since 5.8.1
  */
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
-public class CastUtil {
+public final class CastUtil {
     /**
      * 泛型集合向上转型。
      * <p>

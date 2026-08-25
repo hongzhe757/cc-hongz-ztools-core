@@ -24,7 +24,7 @@ import java.util.Map;
  * @author fanqun, looly
  **/
 @SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "checkstyle:MagicNumber"})
-public class NumberChineseFormatter {
+public final class NumberChineseFormatter {
 
     /**
      * 中文形式，奇数位置是简体，偶数位置是记账繁体，0共用。
