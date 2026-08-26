@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.io.file;
 
 import cc.hongz.ztools.core.io.FileUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -14,8 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link FileWriter} 单元测试.
  */
+@DisplayName("FileWriter 单元测试")
 class FileWriterTest {
 
+    @DisplayName("写字符串")
     @Test
     void writeStringTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "write.txt");
@@ -25,6 +28,7 @@ class FileWriterTest {
         assertEquals("hello writer", FileUtil.readString(file, StandardCharsets.UTF_8));
     }
 
+    @DisplayName("写行")
     @Test
     void writeLinesTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "lines.txt");
@@ -36,6 +40,7 @@ class FileWriterTest {
         assertEquals(lines, result);
     }
 
+    @DisplayName("追加字符串")
     @Test
     void appendStringTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "append.txt");
@@ -47,6 +52,7 @@ class FileWriterTest {
         assertEquals("first second", FileUtil.readString(file, StandardCharsets.UTF_8));
     }
 
+    @DisplayName("写字节")
     @Test
     void writeBytesTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "bytes.txt");
@@ -57,6 +63,7 @@ class FileWriterTest {
         assertArrayEquals(data, java.nio.file.Files.readAllBytes(file.toPath()));
     }
 
+    @DisplayName("从路径写")
     @Test
     void writeFromPathTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "frompath.txt");
@@ -66,6 +73,7 @@ class FileWriterTest {
         assertEquals("path writer", FileUtil.readString(file, StandardCharsets.UTF_8));
     }
 
+    @DisplayName("创建")
     @Test
     void createTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "create.txt");

@@ -1,6 +1,7 @@
 package cc.hongz.ztools.core.io.file;
 
 import cc.hongz.ztools.core.io.FileUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -13,8 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link PathUtil} 单元测试.
  */
+@DisplayName("PathUtil 单元测试")
 class PathUtilTest {
 
+    @DisplayName("exists")
     @Test
     void existsTest(@TempDir final Path tempDir) throws Exception {
         final Path file = tempDir.resolve("a.txt");
@@ -23,6 +26,7 @@ class PathUtilTest {
         assertFalse(PathUtil.exists(tempDir.resolve("non.txt"), false));
     }
 
+    @DisplayName("isDirectory")
     @Test
     void isDirectoryTest(@TempDir final Path tempDir) throws Exception {
         assertTrue(PathUtil.isDirectory(tempDir));
@@ -31,6 +35,7 @@ class PathUtilTest {
         assertFalse(PathUtil.isDirectory(file));
     }
 
+    @DisplayName("mkdir")
     @Test
     void mkdirTest(@TempDir final Path tempDir) {
         final Path dir = tempDir.resolve("sub1/sub2/sub3");
@@ -38,6 +43,7 @@ class PathUtilTest {
         assertTrue(Files.isDirectory(dir));
     }
 
+    @DisplayName("拷贝文件")
     @Test
     void copyFileTest(@TempDir final Path tempDir) throws Exception {
         final Path src = tempDir.resolve("src.txt");
@@ -48,6 +54,7 @@ class PathUtilTest {
         assertArrayEquals(Files.readAllBytes(src), Files.readAllBytes(dest));
     }
 
+    @DisplayName("移动")
     @Test
     void moveTest(@TempDir final Path tempDir) throws Exception {
         final Path src = tempDir.resolve("move_src.txt");
@@ -59,6 +66,7 @@ class PathUtilTest {
         assertEquals("data", new String(Files.readAllBytes(dest)));
     }
 
+    @DisplayName("删除文件")
     @Test
     void delFileTest(@TempDir final Path tempDir) throws Exception {
         final Path file = tempDir.resolve("del.txt");
@@ -68,6 +76,7 @@ class PathUtilTest {
         assertFalse(Files.exists(file));
     }
 
+    @DisplayName("遍历文件")
     @Test
     void loopFilesTest(@TempDir final Path tempDir) throws Exception {
         Files.createFile(tempDir.resolve("a.txt"));
@@ -80,6 +89,7 @@ class PathUtilTest {
         assertEquals(3, files.size());
     }
 
+    @DisplayName("equals")
     @Test
     void equalsTest(@TempDir final Path tempDir) throws Exception {
         final Path file1 = tempDir.resolve("f.txt");

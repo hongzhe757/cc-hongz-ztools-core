@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.io.file;
 
 import cc.hongz.ztools.core.io.FileUtil;
 import cc.hongz.ztools.core.io.IORuntimeException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -14,8 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link FileCopier} 单元测试.
  */
+@DisplayName("FileCopier 单元测试")
 class FileCopierTest {
 
+    @DisplayName("拷贝文件")
     @Test
     void copyFileTest(@TempDir final Path tempDir) throws Exception {
         final File src = new File(tempDir.toFile(), "src.txt");
@@ -29,6 +32,7 @@ class FileCopierTest {
         assertEquals("copy me", FileUtil.readString(dest, StandardCharsets.UTF_8));
     }
 
+    @DisplayName("拷贝文件到目录")
     @Test
     void copyFileToDirTest(@TempDir final Path tempDir) throws Exception {
         final File src = new File(tempDir.toFile(), "src.txt");
@@ -45,6 +49,7 @@ class FileCopierTest {
         assertEquals("to dir", FileUtil.readString(copiedFile, StandardCharsets.UTF_8));
     }
 
+    @DisplayName("拷贝目录")
     @Test
     void copyDirTest(@TempDir final Path tempDir) throws Exception {
         final File srcDir = new File(tempDir.toFile(), "srcdir");
@@ -63,6 +68,7 @@ class FileCopierTest {
         assertEquals("b", FileUtil.readString(new File(destDir, "b.txt"), StandardCharsets.UTF_8));
     }
 
+    @DisplayName("拷贝子目录抛异常")
     @Test
     void copySubDirThrows(@TempDir final Path tempDir) throws Exception {
         final File parentDir = new File(tempDir.toFile(), "parent");
@@ -76,6 +82,7 @@ class FileCopierTest {
         });
     }
 
+    @DisplayName("从路径创建")
     @Test
     void createFromPathTest(@TempDir final Path tempDir) throws Exception {
         final Path src = tempDir.resolve("src.txt");

@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.io.file;
 
 import cc.hongz.ztools.core.io.FileUtil;
 import cc.hongz.ztools.core.io.LineHandler;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -15,8 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * {@link FileReader} 单元测试.
  */
+@DisplayName("FileReader 单元测试")
 class FileReaderTest {
 
+    @DisplayName("读取字符串")
     @Test
     void readStringTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "test.txt");
@@ -26,6 +29,7 @@ class FileReaderTest {
         assertEquals("hello world", reader.readString());
     }
 
+    @DisplayName("按行读取")
     @Test
     void readLinesTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "lines.txt");
@@ -37,6 +41,7 @@ class FileReaderTest {
         assertEquals(lines, result);
     }
 
+    @DisplayName("读取字节")
     @Test
     void readBytesTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "bytes.txt");
@@ -47,6 +52,7 @@ class FileReaderTest {
         assertArrayEquals(data, reader.readBytes());
     }
 
+    @DisplayName("从路径读取")
     @Test
     void readFromPathTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "path.txt");
@@ -56,6 +62,7 @@ class FileReaderTest {
         assertEquals("path content", reader.readString());
     }
 
+    @DisplayName("按行处理读取")
     @Test
     void readLinesWithHandlerTest(@TempDir final Path tempDir) throws Exception {
         final File file = new File(tempDir.toFile(), "handler.txt");
