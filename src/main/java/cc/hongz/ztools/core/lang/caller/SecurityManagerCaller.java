@@ -13,8 +13,16 @@ import cc.hongz.ztools.core.util.ArrayUtil;
 public class SecurityManagerCaller extends SecurityManager implements Caller, Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 偏移量。
+     */
     private static final int OFFSET = 1;
 
+    /**
+     * 获得调用者。
+     *
+     * @return 调用者
+     */
     @Override
     public Class<?> getCaller() {
         final Class<?>[] context = getClassContext();
@@ -24,6 +32,11 @@ public class SecurityManagerCaller extends SecurityManager implements Caller, Se
         return null;
     }
 
+    /**
+     * 获得调用者的调用者。
+     *
+     * @return 调用者的调用者
+     */
     @Override
     public Class<?> getCallerCaller() {
         final Class<?>[] context = getClassContext();
@@ -33,6 +46,12 @@ public class SecurityManagerCaller extends SecurityManager implements Caller, Se
         return null;
     }
 
+    /**
+     * 获得指定层级的调用者。
+     *
+     * @param depth 层级
+     * @return 第几级调用者
+     */
     @Override
     public Class<?> getCaller(final int depth) {
         final Class<?>[] context = getClassContext();
@@ -42,6 +61,12 @@ public class SecurityManagerCaller extends SecurityManager implements Caller, Se
         return null;
     }
 
+    /**
+     * 是否被指定类调用。
+     *
+     * @param clazz 调用者类
+     * @return 是否被调用
+     */
     @Override
     public boolean isCalledBy(final Class<?> clazz) {
         final Class<?>[] classes = getClassContext();

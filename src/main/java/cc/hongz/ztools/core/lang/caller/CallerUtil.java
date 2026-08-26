@@ -14,6 +14,9 @@ public final class CallerUtil {
     private CallerUtil() {
     }
 
+    /**
+     * 调用者实现实例。
+     */
     private static final Caller INSTANCE;
 
     static {

@@ -11,8 +11,16 @@ import cc.hongz.ztools.core.exceptions.UtilException;
  */
 public class StackTraceCaller implements Caller, Serializable {
     private static final long serialVersionUID = 1L;
+    /**
+     * 偏移量。
+     */
     private static final int OFFSET = 2;
 
+    /**
+     * 获得调用者。
+     *
+     * @return 调用者
+     */
     @Override
     public Class<?> getCaller() {
         final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -27,6 +35,11 @@ public class StackTraceCaller implements Caller, Serializable {
         }
     }
 
+    /**
+     * 获得调用者的调用者。
+     *
+     * @return 调用者的调用者
+     */
     @Override
     public Class<?> getCallerCaller() {
         final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -41,6 +54,12 @@ public class StackTraceCaller implements Caller, Serializable {
         }
     }
 
+    /**
+     * 获得指定层级的调用者。
+     *
+     * @param depth 层级
+     * @return 第几级调用者
+     */
     @Override
     public Class<?> getCaller(final int depth) {
         final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -55,6 +74,12 @@ public class StackTraceCaller implements Caller, Serializable {
         }
     }
 
+    /**
+     * 是否被指定类调用。
+     *
+     * @param clazz 调用者类
+     * @return 是否被调用
+     */
     @Override
     public boolean isCalledBy(final Class<?> clazz) {
         final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
