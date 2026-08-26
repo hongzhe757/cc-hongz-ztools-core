@@ -23,7 +23,8 @@ import java.util.function.UnaryOperator;
  *
  * @author huangchengxing
  */
-public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnotationScanner<T>> implements AnnotationScanner {
+public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnotationScanner<T>>
+        implements AnnotationScanner {
 
     /**
      * 是否允许扫描父类.
@@ -192,7 +193,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
                 // 处理层级索引和注解
                 final Annotation[] targetAnnotations = getAnnotationsFromTargetClass(annotatedEle, index, targetClass);
                 for (final Annotation annotation : targetAnnotations) {
-                    if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) && targetFilter.test(annotation)) {
+                    if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType())
+                            && targetFilter.test(annotation)) {
                         consumer.accept(index, annotation);
                     }
                 }

@@ -102,7 +102,8 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
         } else {
             // 两者都形成了镜像，但是都未指向对方，理论上不会存在该情况
             errorMsg = CharSequenceUtil.format(
-                "attribute [{}] cannot mirror for [{}], because [{}] already mirrored for [{}] and  [{}] already mirrored for [{}]",
+                "attribute [{}] cannot mirror for [{}], because [{}] already mirrored for [{}]"
+                        + " and  [{}] already mirrored for [{}]",
                 mirror.getAttribute(), original.getAttribute(),
                 mirror.getAttribute(), ((MirroredAnnotationAttribute) mirror).getLinked(),
                 original.getAttribute(), ((MirroredAnnotationAttribute) original).getLinked()
@@ -124,8 +125,10 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
         // 镜像属性上必须存在对应的注解
         final Link mirrorAttributeAnnotation = getLinkAnnotation(mirror, RelationType.MIRROR_FOR);
         Assert.isTrue(
-            ObjectUtil.isNotNull(mirrorAttributeAnnotation) && RelationType.MIRROR_FOR.equals(mirrorAttributeAnnotation.type()),
-            "mirror attribute [{}] of original attribute [{}] must marked by @Link, and also @LinkType.type() must is [{}]",
+            ObjectUtil.isNotNull(mirrorAttributeAnnotation)
+                    && RelationType.MIRROR_FOR.equals(mirrorAttributeAnnotation.type()),
+            "mirror attribute [{}] of original attribute [{}] must marked by @Link, and also @LinkType.type()"
+                    + " must is [{}]",
             mirror.getAttribute(), original.getAttribute(), RelationType.MIRROR_FOR
         );
         checkLinkedSelf(original, mirror);

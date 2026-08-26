@@ -39,11 +39,13 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
         if (null != copyOptions.editable) {
             // 检查限制类是否为target的父类或接口
             Assert.isTrue(copyOptions.editable.isInstance(source),
-                    "Source class [{}] not assignable to Editable class [{}]", actualEditable.getName(), copyOptions.editable.getName());
+                    "Source class [{}] not assignable to Editable class [{}]", actualEditable.getName(),
+                    copyOptions.editable.getName());
             actualEditable = copyOptions.editable;
         }
 
-        final Map<String, PropDesc> sourcePropDescMap = BeanUtil.getBeanDesc(actualEditable).getPropMap(copyOptions.ignoreCase);
+        final Map<String, PropDesc> sourcePropDescMap = BeanUtil.getBeanDesc(actualEditable)
+                .getPropMap(copyOptions.ignoreCase);
         sourcePropDescMap.forEach((sFieldName, sDesc) -> {
             if (null == sFieldName || false == sDesc.isReadable(copyOptions.transientSupport)) {
                 // 字段空或不可读，跳过

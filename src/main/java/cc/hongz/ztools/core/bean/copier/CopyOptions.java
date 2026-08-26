@@ -405,7 +405,8 @@ public class CopyOptions implements Serializable {
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected Object convertField(final Type targetType,  final Object fieldValue) {
-        if ((targetType instanceof Class && Date.class.isAssignableFrom((Class<?>) targetType)) && null != this.formatIfDate) {
+        if ((targetType instanceof Class && Date.class.isAssignableFrom((Class<?>) targetType))
+                && null != this.formatIfDate) {
             return new DateConverter((Class) targetType, this.formatIfDate).convert(fieldValue, null);
         }
 

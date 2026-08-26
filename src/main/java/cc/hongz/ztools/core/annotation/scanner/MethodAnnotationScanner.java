@@ -17,7 +17,8 @@ import java.util.stream.Stream;
  *
  * @author huangchengxing
  */
-public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<MethodAnnotationScanner> implements AnnotationScanner {
+public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<MethodAnnotationScanner>
+        implements AnnotationScanner {
 
     /**
      * 构造一个类注解扫描器，仅扫描该方法上直接声明的注解.

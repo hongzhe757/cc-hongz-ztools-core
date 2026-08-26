@@ -345,14 +345,16 @@ public class BeanPath implements Serializable {
                 if (CharUtil.BRACKET_END == c) {
                     // 中括号（数字下标）结束
                     if (false == isNumStart) {
-                        throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find ']' but no '[' !", expression, i));
+                        throw new IllegalArgumentException(StrUtil.format(
+                                "Bad expression '{}':{}, we find ']' but no '[' !", expression, i));
                     }
                     isNumStart = false;
                     // 中括号结束加入下标
                 } else {
                     if (isNumStart) {
                         // 非结束中括号情况下发现起始中括号报错（中括号未关闭）
-                        throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find '[' but no ']' !", expression, i));
+                        throw new IllegalArgumentException(StrUtil.format(
+                                "Bad expression '{}':{}, we find '[' but no ']' !", expression, i));
                     } else if (CharUtil.BRACKET_START == c) {
                         // 数字下标开始
                         isNumStart = true;
@@ -371,7 +373,8 @@ public class BeanPath implements Serializable {
 
         // 末尾边界符检查
         if (isNumStart) {
-            throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find '[' but no ']' !", expression, length - 1));
+            throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find '[' but no ']' !",
+                    expression, length - 1));
         } else {
             if (builder.length() > 0) {
                 localPatternParts.add(builder.toString());

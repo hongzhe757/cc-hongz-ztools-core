@@ -116,7 +116,8 @@ public interface Hierarchical extends Comparable<Hierarchical> {
         class NearestAndOldestPrioritySelector implements Selector {
             @Override
             public <T extends Hierarchical> T choose(final T oldAnnotation,  final T newAnnotation) {
-                return newAnnotation.getVerticalDistance() < oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+                return newAnnotation.getVerticalDistance() < oldAnnotation.getVerticalDistance()
+                        ? newAnnotation : oldAnnotation;
             }
         }
 
@@ -126,7 +127,8 @@ public interface Hierarchical extends Comparable<Hierarchical> {
         class NearestAndNewestPrioritySelector implements Selector {
             @Override
             public <T extends Hierarchical> T choose(final T oldAnnotation,  final T newAnnotation) {
-                return newAnnotation.getVerticalDistance() <= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+                return newAnnotation.getVerticalDistance() <= oldAnnotation.getVerticalDistance()
+                        ? newAnnotation : oldAnnotation;
             }
         }
 
@@ -136,7 +138,8 @@ public interface Hierarchical extends Comparable<Hierarchical> {
         class FarthestAndOldestPrioritySelector implements Selector {
             @Override
             public <T extends Hierarchical> T choose(final T oldAnnotation,  final T newAnnotation) {
-                return newAnnotation.getVerticalDistance() > oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+                return newAnnotation.getVerticalDistance() > oldAnnotation.getVerticalDistance()
+                        ? newAnnotation : oldAnnotation;
             }
         }
 
@@ -146,7 +149,8 @@ public interface Hierarchical extends Comparable<Hierarchical> {
         class FarthestAndNewestPrioritySelector implements Selector {
             @Override
             public <T extends Hierarchical> T choose(final T oldAnnotation,  final T newAnnotation) {
-                return newAnnotation.getVerticalDistance() >= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+                return newAnnotation.getVerticalDistance() >= oldAnnotation.getVerticalDistance()
+                        ? newAnnotation : oldAnnotation;
             }
         }
 

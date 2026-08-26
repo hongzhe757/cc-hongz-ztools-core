@@ -87,7 +87,8 @@ public class MetaAnnotationScanner implements AnnotationScanner {
             final Predicate<Annotation> filter) {
         final Predicate<Annotation> targetFilter = ObjectUtil.defaultIfNull(filter, a -> t -> true);
         Set<Class<? extends Annotation>> accessed = new HashSet<>();
-        final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList((Class<? extends Annotation>) annotatedEle));
+        final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(
+                CollUtil.newArrayList((Class<? extends Annotation>) annotatedEle));
         int distance = 0;
         do {
             final List<Class<? extends Annotation>> annotationTypes = deque.removeFirst();

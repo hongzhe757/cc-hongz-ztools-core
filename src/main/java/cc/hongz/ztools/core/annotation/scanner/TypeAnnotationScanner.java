@@ -14,7 +14,8 @@ import java.util.function.UnaryOperator;
  *
  * @author huangchengxing
  */
-public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnnotationScanner> implements AnnotationScanner {
+public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnnotationScanner>
+        implements AnnotationScanner {
 
     /**
      * 构造一个类注解扫描器.

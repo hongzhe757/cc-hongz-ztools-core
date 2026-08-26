@@ -75,14 +75,16 @@ public final class AnnotationUtil {
      * 键：注解查询键（被注解元素 + 目标注解类型）<br>
      * 值：原生注解对象，或NULL_ANNOTATION_SENTINEL（表示不存在）
      */
-    private static final WeakKeyConcurrentMap<AnnotationLookupKey, Annotation> L1_ANNOTATION_CACHE = new WeakKeyConcurrentMap<>();
+    private static final WeakKeyConcurrentMap<AnnotationLookupKey, Annotation> L1_ANNOTATION_CACHE =
+            new WeakKeyConcurrentMap<>();
 
     /**
      * L2 合成注解缓存（别名/聚合场景）.
      * 键：注解查询键（被注解元素 + 目标注解类型）<br>
      * 值：合成注解对象，或NULL_ANNOTATION_SENTINEL（表示不存在）
      */
-    private static final WeakKeyConcurrentMap<AnnotationLookupKey, Annotation> L2_SYNTHESIZED_ANNOTATION_CACHE = new WeakKeyConcurrentMap<>();
+    private static final WeakKeyConcurrentMap<AnnotationLookupKey, Annotation> L2_SYNTHESIZED_ANNOTATION_CACHE =
+            new WeakKeyConcurrentMap<>();
 
     /**
      * 注解查询缓存键，唯一标识一次注解查询操作.

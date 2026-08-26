@@ -19,8 +19,10 @@ public enum BeanInfoCache {
      */
     INSTANCE;
 
-    private final WeakKeyValueConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> pdCache = new WeakKeyValueConcurrentMap<>();
-    private final WeakKeyValueConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = new WeakKeyValueConcurrentMap<>();
+    private final WeakKeyValueConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> pdCache =
+            new WeakKeyValueConcurrentMap<>();
+    private final WeakKeyValueConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache =
+            new WeakKeyValueConcurrentMap<>();
 
     /**
      * 获得属性名和{@link PropertyDescriptor}Map映射.
