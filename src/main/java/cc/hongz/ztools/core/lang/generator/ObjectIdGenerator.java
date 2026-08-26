@@ -10,6 +10,11 @@ import cc.hongz.ztools.core.lang.ObjectId;
  */
 public class ObjectIdGenerator implements Generator<String> {
 
+    /**
+     * 生成新的对象。
+     *
+     * @return 新的对象
+     */
     @Override
     public String next() {
         return ObjectId.next();

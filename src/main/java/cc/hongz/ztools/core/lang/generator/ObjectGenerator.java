@@ -11,6 +11,9 @@ import cc.hongz.ztools.core.util.ReflectUtil;
  */
 public class ObjectGenerator<T> implements Generator<T> {
 
+    /**
+     * 对象类型。
+     */
     private final Class<T> clazz;
 
     /**
@@ -22,6 +25,11 @@ public class ObjectGenerator<T> implements Generator<T> {
         this.clazz = clazz;
     }
 
+    /**
+     * 生成新的对象。
+     *
+     * @return 新的对象
+     */
     @Override
     public T next() {
         return ReflectUtil.newInstanceIfPossible(this.clazz);

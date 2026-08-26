@@ -12,6 +12,9 @@ import cc.hongz.ztools.core.lang.Snowflake;
  */
 public class SnowflakeGenerator implements Generator<Long> {
 
+    /**
+     * 雪花算法实例。
+     */
     private final Snowflake snowflake;
 
     /**
@@ -31,6 +34,11 @@ public class SnowflakeGenerator implements Generator<Long> {
         snowflake = new Snowflake(workerId, dataCenterId);
     }
 
+    /**
+     * 生成新的对象。
+     *
+     * @return 新的对象
+     */
     @Override
     public Long next() {
         return this.snowflake.nextId();
