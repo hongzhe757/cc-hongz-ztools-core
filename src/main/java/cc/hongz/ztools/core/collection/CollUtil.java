@@ -62,13 +62,8 @@ import java.util.function.Supplier;
  *
  * @author xiaoleilu
  */
-public final class CollUtil {
-
-    /**
-     * 私有构造，禁止实例化.
-     */
-    private CollUtil() {
-    }
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
+public class CollUtil {
 
     /**
      * 默认加载因子。
