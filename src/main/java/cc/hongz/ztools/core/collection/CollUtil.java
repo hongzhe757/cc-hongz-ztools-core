@@ -1,12 +1,15 @@
 package cc.hongz.ztools.core.collection;
 
+import cc.hongz.ztools.core.bean.BeanUtil;
 import cc.hongz.ztools.core.collection.ArrayIter;
+import cc.hongz.ztools.core.collection.EnumerationIter;
 import cc.hongz.ztools.core.collection.IterUtil;
 import cc.hongz.ztools.core.collection.ListUtil;
 import cc.hongz.ztools.core.comparator.CompareUtil;
 import cc.hongz.ztools.core.comparator.PinyinComparator;
 import cc.hongz.ztools.core.comparator.PropertyComparator;
 import cc.hongz.ztools.core.convert.Convert;
+import cc.hongz.ztools.core.convert.ConverterRegistry;
 import cc.hongz.ztools.core.exceptions.UtilException;
 import cc.hongz.ztools.core.lang.Assert;
 import cc.hongz.ztools.core.lang.Editor;
@@ -16,10 +19,13 @@ import cc.hongz.ztools.core.lang.func.Func1;
 import cc.hongz.ztools.core.lang.hash.Hash32;
 import cc.hongz.ztools.core.map.MapUtil;
 import cc.hongz.ztools.core.util.ArrayUtil;
+import cc.hongz.ztools.core.util.CharUtil;
 import cc.hongz.ztools.core.util.ObjectUtil;
 import cc.hongz.ztools.core.util.ReflectUtil;
 import cc.hongz.ztools.core.util.StrUtil;
+import cc.hongz.ztools.core.util.TypeUtil;
 
+import java.lang.reflect.Type;
 import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
@@ -1964,6 +1970,153 @@ public class CollUtil {
         return list;
     }
 
+    /**
+     * 以 conjunction 为分隔符将集合转换为字符串。 <br>
+     * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
+     *
+     * @param <T>         集合元素类型
+     * @param iterator    集合
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     * @deprecated 请使用IterUtil#join(Iterator, CharSequence)
+     */
+    @Deprecated
+    public static <T> String join(final Iterator<T> iterator, final CharSequence conjunction) {
+        return IterUtil.join(iterator, conjunction);
+    }
+
+    /**
+     * 获取集合中指定字段值列表。
+     *
+     * @param <T>         元素类型
+     * @param collection  Bean集合或Map集合
+     * @param fieldName   字段名或map的键
+     * @param elementType 元素类型类
+     * @return 字段值列表
+     * @since 4.5.6
+     */
+    public static <T> List<T> getFieldValues(final Iterable<?> collection, final String fieldName,
+            final Class<T> elementType) {
+        final List<Object> fieldValues = getFieldValues(collection, fieldName);
+        return Convert.toList(elementType, fieldValues);
+    }
+
+    /**
+     * 将指定对象全部加入到集合中。 <br>
+     * 提供的对象如果为集合类型，会自动转换为目标元素类型
+     *
+     * @param <T>        元素类型
+     * @param collection 被加入的集合
+     * @param value      对象，可能为Iterator、Iterable、Enumeration、Array
+     * @return 被加入集合
+     */
+    public static <T> Collection<T> addAll(final Collection<T> collection, final Object value) {
+        return addAll(collection, value, TypeUtil.getTypeArgument(collection.getClass()));
+    }
+
+    /**
+     * 将指定对象全部加入到集合中。 <br>
+     * 提供的对象如果为集合类型，会自动转换为目标元素类型。 <br>
+     * 如果为String，支持类似于[1,2,3,4] 或者 1,2,3,4 这种格式
+     *
+     * @param <T>         元素类型
+     * @param collection  被加入的集合
+     * @param value       对象，可能为Iterator、Iterable、Enumeration、Array，或者与集合元素类型一致
+     * @param elementType 元素类型，为空时，使用Object类型来接纳所有类型
+     * @return 被加入集合
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T> Collection<T> addAll(final Collection<T> collection, final Object value, final Type elementType) {
+        if (null == collection || null == value) {
+            return collection;
+        }
+        Type resolvedElementType = elementType;
+        if (TypeUtil.isUnknown(resolvedElementType)) {
+            // 元素类型为空时，使用Object类型来接纳所有类型
+            resolvedElementType = Object.class;
+        }
+
+        Iterator iter;
+        if (value instanceof Iterator) {
+            iter = (Iterator) value;
+        } else if (value instanceof Iterable) {
+            if (value instanceof Map && BeanUtil.isBean(TypeUtil.getClass(resolvedElementType))) {
+                // 如果值为Map，而目标为一个Bean，则Map应整体转换为Bean，而非拆分成Entry转换
+                iter = new ArrayIter<>(new Object[]{value});
+            } else {
+                iter = ((Iterable) value).iterator();
+            }
+        } else if (value instanceof Enumeration) {
+            iter = new EnumerationIter<>((Enumeration) value);
+        } else if (ArrayUtil.isArray(value)) {
+            iter = new ArrayIter<>(value);
+        } else if (value instanceof CharSequence) {
+            // String按照逗号分隔的列表对待
+            final String arrayStr = StrUtil.unWrap((CharSequence) value, '[', ']');
+            iter = StrUtil.splitTrim(arrayStr, CharUtil.COMMA).iterator();
+        } else {
+            // 其它类型按照单一元素处理
+            iter = CollUtil.newArrayList(value).iterator();
+        }
+
+        final ConverterRegistry convert = ConverterRegistry.getInstance();
+        while (iter.hasNext()) {
+            collection.add(convert.convert(resolvedElementType, iter.next()));
+        }
+
+        return collection;
+    }
+
+    /**
+     * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理。 <br>
+     * 和JDK8中的map.forEach不同的是，此方法支持index
+     *
+     * @param <K>        Key类型
+     * @param <V>        Value类型
+     * @param map        {@link Map}
+     * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
+     */
+    public static <K, V> void forEach(final Map<K, V> map, final KVConsumer<K, V> kvConsumer) {
+        if (map == null) {
+            return;
+        }
+        int index = 0;
+        for (final Entry<K, V> entry : map.entrySet()) {
+            kvConsumer.accept(entry.getKey(), entry.getValue(), index);
+            index++;
+        }
+    }
+
+    /**
+     * 根据元素的指定字段名分组，非Bean都放在第一个分组中。
+     *
+     * @param <T>        元素类型
+     * @param collection 集合
+     * @param fieldName  元素Bean中的字段名，非Bean都放在第一个分组中
+     * @return 分组列表
+     */
+    public static <T> List<List<T>> groupByField(final Collection<T> collection, final String fieldName) {
+        return group(collection, new Hash32<T>() {
+            private final List<Object> fieldNameList = new ArrayList<>();
+
+            @Override
+            public int hash32(final T t) {
+                if (null == t || !BeanUtil.isBean(t.getClass())) {
+                    // 非Bean放在同一子分组中
+                    return 0;
+                }
+                final Object value = ReflectUtil.getFieldValue(t, fieldName);
+                final int hash = fieldNameList.indexOf(value);
+                if (hash < 0) {
+                    fieldNameList.add(value);
+                    return fieldNameList.size() - 1;
+                } else {
+                    return hash;
+                }
+            }
+        });
+    }
+
     // ---------------------------------------------------------------------- Consumer interface
 
     /**
@@ -1981,5 +2134,23 @@ public class CollUtil {
          * @param index 参数在集合中的索引
          */
         void accept(T value, int index);
+    }
+
+    /**
+     * 针对两个参数做相应的操作，例如Map中的KEY和VALUE。
+     *
+     * @param <K> KEY类型
+     * @param <V> VALUE类型
+     */
+    @FunctionalInterface
+    public interface KVConsumer<K, V> extends Serializable {
+        /**
+         * 接受并处理一对参数。
+         *
+         * @param key   键
+         * @param value 值
+         * @param index 参数在集合中的索引
+         */
+        void accept(K key, V value, int index);
     }
 }
