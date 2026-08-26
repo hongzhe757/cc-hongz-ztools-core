@@ -1,6 +1,9 @@
 package cc.hongz.ztools.core.text.csv;
 
+import cc.hongz.ztools.core.bean.BeanUtil;
 import cc.hongz.ztools.core.collection.ArrayIter;
+import cc.hongz.ztools.core.collection.CollUtil;
+import cc.hongz.ztools.core.convert.Convert;
 import cc.hongz.ztools.core.io.FileUtil;
 import cc.hongz.ztools.core.io.IORuntimeException;
 import cc.hongz.ztools.core.io.IoUtil;
@@ -254,6 +257,54 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
             }
             // 2、写内容
             this.write(csvData.getRows());
+            flush();
+        }
+        return this;
+    }
+
+    /**
+     * 将一个Bean集合写出到Writer，并自动生成表头。
+     *
+     * @param beans Bean集合
+     * @return this
+     */
+    public CsvWriter writeBeans(final Iterable<?> beans) {
+        return writeBeans(beans, (String[]) null);
+    }
+
+    /**
+     * 将一个Bean集合写出到Writer，并自动生成表头。
+     *
+     * @param beans      Bean集合
+     * @param properties Bean 中指定的可以导出的属性
+     * @return this
+     */
+    public CsvWriter writeBeans(final Iterable<?> beans, final String... properties) {
+        return writeBeans(beans, true, properties);
+    }
+
+    /**
+     * 将一个Bean集合写出到Writer，并自动生成表头。
+     *
+     * @param beans           Bean集合
+     * @param writeHeaderLine 是否写出表头，即Bean的字段名称列表作为首行
+     * @param properties      Bean 中指定的可以导出的属性
+     * @return this
+     * @since 5.8.29
+     */
+    @SuppressWarnings("resource")
+    public CsvWriter writeBeans(final Iterable<?> beans, final boolean writeHeaderLine, final String... properties) {
+        if (CollUtil.isNotEmpty(beans)) {
+            boolean isFirst = writeHeaderLine;
+            Map<String, Object> map;
+            for (final Object bean : beans) {
+                map = BeanUtil.beanToMap(bean, properties);
+                if (isFirst) {
+                    writeHeaderLine(map.keySet().toArray(new String[0]));
+                    isFirst = false;
+                }
+                writeLine(Convert.toStrArray(map.values()));
+            }
             flush();
         }
         return this;

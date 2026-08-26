@@ -223,6 +223,42 @@ public class CsvBaseReader implements Serializable {
     }
 
     /**
+     * 从Reader中读取CSV数据并转换为Bean列表，读取后关闭Reader。 <br>
+     * 此方法默认识别首行为标题行。
+     *
+     * @param <T>    Bean类型
+     * @param reader Reader
+     * @param clazz  Bean类型
+     * @return Bean列表
+     */
+    public <T> List<T> read(final Reader reader, final Class<T> clazz) {
+        // 此方法必须包含标题
+        this.config.setContainsHeader(true);
+
+        final List<T> result = new ArrayList<>();
+        read(reader, (row) -> result.add(row.toBean(clazz)));
+        return result;
+    }
+
+    /**
+     * 从字符串中读取CSV数据并转换为Bean列表，读取后关闭Reader。 <br>
+     * 此方法默认识别首行为标题行。
+     *
+     * @param <T>    Bean类型
+     * @param csvStr csv字符串
+     * @param clazz  Bean类型
+     * @return Bean列表
+     */
+    public <T> List<T> read(final String csvStr, final Class<T> clazz) {
+        // 此方法必须包含标题
+        this.config.setContainsHeader(true);
+
+        final List<T> result = new ArrayList<>();
+        read(new StringReader(csvStr), (row) -> result.add(row.toBean(clazz)));
+        return result;
+    }
+
+    /**
      * 从Reader中读取CSV数据，读取后关闭Reader.
      *
      * @param reader     Reader

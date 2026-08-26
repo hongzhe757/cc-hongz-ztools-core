@@ -8,6 +8,7 @@ import cc.hongz.ztools.core.io.resource.Resource;
 import cc.hongz.ztools.core.io.resource.StringResource;
 import cc.hongz.ztools.core.map.MapUtil;
 import cc.hongz.ztools.core.util.ArrayUtil;
+import cc.hongz.ztools.core.util.CharsetUtil;
 import cc.hongz.ztools.core.util.ClassLoaderUtil;
 import cc.hongz.ztools.core.util.ObjectUtil;
 import cc.hongz.ztools.core.util.URLUtil;
@@ -21,8 +22,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Java 源码编译器.
@@ -236,5 +240,30 @@ public final class JavaSourceCompiler {
             }
         }
         return list;
+    }
+
+    /**
+     * 通过源码Map获得Java文件对象。
+     *
+     * @param sourceCodeMap 源码Map
+     * @return Java文件对象集合
+     */
+    private Collection<JavaFileObject> getJavaFileObjectByMap(final Map<String, String> sourceCodeMap) {
+        if (MapUtil.isNotEmpty(sourceCodeMap)) {
+            return sourceCodeMap.entrySet().stream()
+                    .map(entry -> new JavaSourceFileObject(entry.getKey(), entry.getValue(), CharsetUtil.CHARSET_UTF_8))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptySet();
+    }
+
+    /**
+     * 通过.java文件创建Java文件对象。
+     *
+     * @param file .java文件
+     * @return Java文件对象
+     */
+    private JavaFileObject getJavaFileObjectByJavaFile(final File file) {
+        return new JavaSourceFileObject(file.toURI());
     }
 }

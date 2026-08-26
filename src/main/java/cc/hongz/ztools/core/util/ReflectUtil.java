@@ -910,6 +910,42 @@ public final class ReflectUtil {
     }
 
     /**
+     * 实例化对象。
+     *
+     * @param <T>        对象类型
+     * @param clazz      类
+     * @param paramTypes 构造函数参数类型
+     * @param params     构造函数参数
+     * @return 对象
+     * @throws UtilException 包装各类异常
+     * @since 5.8.47
+     */
+    public static <T> T newInstance(final Class<T> clazz, final Class<?>[] paramTypes, final Object[] params)
+            throws UtilException {
+        if (ArrayUtil.isEmpty(params)) {
+            final Constructor<T> constructor = getConstructor(clazz);
+            if (null == constructor) {
+                throw new UtilException("No constructor for [{}]", clazz);
+            }
+            try {
+                return constructor.newInstance();
+            } catch (Exception e) {
+                throw new UtilException(e, "Instance class [{}] error!", clazz);
+            }
+        }
+
+        final Constructor<T> constructor = getConstructor(clazz, paramTypes);
+        if (null == constructor) {
+            throw new UtilException("No Constructor matched for parameter types: [{}]", new Object[]{paramTypes});
+        }
+        try {
+            return constructor.newInstance(params);
+        } catch (Exception e) {
+            throw new UtilException(e, "Instance class [{}] error!", clazz);
+        }
+    }
+
+    /**
      * 尝试遍历并调用此类的所有构造方法，直到构造成功并返回.
      * <p>
      * 对于某些特殊的接口，按照其默认实现实例化，例如：

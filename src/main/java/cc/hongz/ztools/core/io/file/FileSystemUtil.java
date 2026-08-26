@@ -23,6 +23,22 @@ import java.util.HashMap;
 public class FileSystemUtil {
 
     /**
+     * 创建 {@link FileSystem}。
+     *
+     * @param path 文件路径，可以是目录或Zip文件等
+     * @return {@link FileSystem}
+     */
+    public static FileSystem create(final String path) {
+        try {
+            final HashMap<String, String> env = new HashMap<>();
+            env.put("create", "true");
+            return FileSystems.newFileSystem(Paths.get(path).toUri(), env);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
      * 创建 Zip的{@link FileSystem}，默认UTF-8编码。
      *
      * @param path 文件路径

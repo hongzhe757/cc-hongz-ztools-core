@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.text.csv;
 
+import cc.hongz.ztools.core.bean.BeanUtil;
 import cc.hongz.ztools.core.lang.Assert;
 
 import java.util.Collection;
@@ -104,6 +105,18 @@ public final class CsvRow implements List<String> {
         }
 
         return fieldMap;
+    }
+
+    /**
+     * 一行数据转换为Bean对象。
+     *
+     * @param <T>   Bean类型
+     * @param clazz bean类
+     * @return Bean
+     * @since 5.3.6
+     */
+    public <T> T toBean(final Class<T> clazz) {
+        return BeanUtil.toBeanIgnoreError(getFieldMap(), clazz);
     }
 
     /**
