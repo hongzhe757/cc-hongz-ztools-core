@@ -19,7 +19,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class AtomicLoader<T> implements Loader<T>, Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** 被加载对象的引用. */
+    /**
+     * 被加载对象的引用。
+     */
     private final AtomicReference<T> reference = new AtomicReference<>();
 
     /**

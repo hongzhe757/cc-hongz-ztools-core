@@ -47,6 +47,11 @@ public class LazyFunLoader<T> extends LazyLoader<T> {
         this.supplier = supplier;
     }
 
+    /**
+     * 初始化被加载的对象。
+     *
+     * @return 被加载的对象
+     */
     @Override
     protected T init() {
         T t = this.supplier.get();

@@ -14,7 +14,9 @@ import java.io.Serializable;
 public abstract class LazyLoader<T> implements Loader<T>, Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** 被加载对象. */
+    /**
+     * 被加载对象。
+     */
     private volatile T object;
 
     /**
