@@ -14,6 +14,9 @@ import java.util.Objects;
  */
 public class PhantomObj<T> extends PhantomReference<T> implements Ref<T> {
 
+    /**
+     * 哈希值缓存。
+     */
     private final int hashCode;
 
     /**
