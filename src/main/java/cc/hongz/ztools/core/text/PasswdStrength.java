@@ -33,7 +33,14 @@ public final class PasswdStrength {
      */
     @SuppressWarnings("checkstyle:TypeName")
     public enum CHAR_TYPE {
-        NUM, SMALL_LETTER, CAPITAL_LETTER, OTHER_CHAR
+        /** 数字. */
+        NUM,
+        /** 小写字母. */
+        SMALL_LETTER,
+        /** 大写字母. */
+        CAPITAL_LETTER,
+        /** 其他字符. */
+        OTHER_CHAR
     }
 
     /**
