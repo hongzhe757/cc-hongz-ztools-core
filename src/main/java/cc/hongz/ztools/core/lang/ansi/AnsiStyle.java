@@ -37,8 +37,16 @@ public enum AnsiStyle implements AnsiElement {
      */
     UNDERLINE(4);
 
+    /**
+     * ANSI 文本样式风格代码。
+     */
     private final int code;
 
+    /**
+     * 构造。
+     *
+     * @param code 样式代码
+     */
     AnsiStyle(final int code) {
         this.code = code;
     }
@@ -53,6 +61,11 @@ public enum AnsiStyle implements AnsiElement {
         return this.code;
     }
 
+    /**
+     * 转换为样式代码字符串。
+     *
+     * @return 样式代码字符串
+     */
     @Override
     public String toString() {
         return StrUtil.toString(this.code);

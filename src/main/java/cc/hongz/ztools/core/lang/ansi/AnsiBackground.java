@@ -97,8 +97,16 @@ public enum AnsiBackground implements AnsiElement {
      */
     BRIGHT_WHITE(107);
 
+    /**
+     * ANSI 背景色代码。
+     */
     private final int code;
 
+    /**
+     * 构造。
+     *
+     * @param code 背景色代码
+     */
     AnsiBackground(final int code) {
         this.code = code;
     }
@@ -113,6 +121,11 @@ public enum AnsiBackground implements AnsiElement {
         return this.code;
     }
 
+    /**
+     * 转换为背景色代码字符串。
+     *
+     * @return 背景色代码字符串
+     */
     @Override
     public String toString() {
         return StrUtil.toString(this.code);

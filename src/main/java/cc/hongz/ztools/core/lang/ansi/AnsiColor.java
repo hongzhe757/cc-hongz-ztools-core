@@ -97,8 +97,16 @@ public enum AnsiColor implements AnsiElement {
      */
     BRIGHT_WHITE(97);
 
+    /**
+     * ANSI 颜色代码。
+     */
     private final int code;
 
+    /**
+     * 构造。
+     *
+     * @param code 颜色代码
+     */
     AnsiColor(final int code) {
         this.code = code;
     }
@@ -113,6 +121,11 @@ public enum AnsiColor implements AnsiElement {
         return this.code;
     }
 
+    /**
+     * 转换为颜色代码字符串。
+     *
+     * @return 颜色代码字符串
+     */
     @Override
     public String toString() {
         return StrUtil.toString(this.code);

@@ -8,9 +8,24 @@ package cc.hongz.ztools.core.lang.ansi;
  */
 public abstract class AnsiEncoder {
 
+    /**
+     * ANSI 编码分隔符。
+     */
     private static final String ENCODE_JOIN = ";";
+
+    /**
+     * ANSI 编码起始符。
+     */
     private static final String ENCODE_START = "\033[";
+
+    /**
+     * ANSI 编码结束符。
+     */
     private static final String ENCODE_END = "m";
+
+    /**
+     * 重置编码。
+     */
     private static final String RESET = "0;" + AnsiColor.DEFAULT;
 
     /**

@@ -14,8 +14,14 @@ import java.util.Objects;
 @SuppressWarnings("checkstyle:MagicNumber")
 public class AnsiColorWrapper {
 
+    /**
+     * 颜色代码。
+     */
     private final int code;
 
+    /**
+     * 位深度。
+     */
     private final AnsiColors.BitDepth bitDepth;
 
     /**
@@ -63,6 +69,12 @@ public class AnsiColorWrapper {
         return Ansi8BitColor.background(this.code);
     }
 
+    /**
+     * 比较两个颜色包装是否相等。
+     *
+     * @param o 待比较对象
+     * @return 相等返回 true，否则 false
+     */
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -75,6 +87,11 @@ public class AnsiColorWrapper {
         return this.code == that.code && this.bitDepth == that.bitDepth;
     }
 
+    /**
+     * 计算哈希值。
+     *
+     * @return 哈希值
+     */
     @Override
     public int hashCode() {
         return Objects.hash(this.code, this.bitDepth);

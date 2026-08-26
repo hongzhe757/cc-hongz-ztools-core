@@ -18,6 +18,9 @@ import java.util.Map;
 @SuppressWarnings("checkstyle:MagicNumber")
 public final class AnsiColors {
 
+    /**
+     * 4bit ANSI 颜色到 Lab 颜色的映射。
+     */
     private static final Map<AnsiColorWrapper, LabColor> ANSI_COLOR_MAP;
 
     /**
@@ -49,6 +52,9 @@ public final class AnsiColors {
         ANSI_COLOR_MAP = Collections.unmodifiableMap(colorMap);
     }
 
+    /**
+     * 8bit 颜色代码对应的 RGB 查找表。
+     */
     private static final int[] ANSI_8BIT_COLOR_CODE_LOOKUP = new int[] { 0x000000, 0x800000, 0x008000, 0x808000,
             0x000080, 0x800080, 0x008080, 0xc0c0c0, 0x808080, 0xff0000, 0x00ff00, 0xffff00, 0x0000ff, 0xff00ff,
             0x00ffff, 0xffffff, 0x000000, 0x00005f, 0x000087, 0x0000af, 0x0000d7, 0x0000ff, 0x005f00, 0x005f5f,
@@ -77,6 +83,9 @@ public final class AnsiColors {
             0x808080, 0x8a8a8a, 0x949494, 0x9e9e9e, 0xa8a8a8, 0xb2b2b2, 0xbcbcbc, 0xc6c6c6, 0xd0d0d0, 0xdadada,
             0xe4e4e4, 0xeeeeee };
 
+    /**
+     * 颜色查找表。
+     */
     private final Map<AnsiColorWrapper, LabColor> lookup;
 
     /**
@@ -138,8 +147,16 @@ public final class AnsiColors {
          */
         EIGHT(8);
 
+        /**
+         * 位深值。
+         */
         private final int bits;
 
+        /**
+         * 构造。
+         *
+         * @param bits 位深值
+         */
         BitDepth(final int bits) {
             this.bits = bits;
         }

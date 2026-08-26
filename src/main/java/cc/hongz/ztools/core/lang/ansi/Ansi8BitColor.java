@@ -21,7 +21,14 @@ import cc.hongz.ztools.core.lang.Assert;
 @SuppressWarnings("checkstyle:MagicNumber")
 public final class Ansi8BitColor implements AnsiElement {
 
+    /**
+     * 前景色前缀。
+     */
     private static final String PREFIX_FORE = "38;5;";
+
+    /**
+     * 背景色前缀。
+     */
     private static final String PREFIX_BACK = "48;5;";
 
     /**
@@ -44,7 +51,14 @@ public final class Ansi8BitColor implements AnsiElement {
         return new Ansi8BitColor(PREFIX_BACK, code);
     }
 
+    /**
+     * 前景或背景前缀。
+     */
     private final String prefix;
+
+    /**
+     * 颜色代码(0-255)。
+     */
     private final int code;
 
     /**
@@ -70,6 +84,12 @@ public final class Ansi8BitColor implements AnsiElement {
         return this.code;
     }
 
+    /**
+     * 比较两个 8bit 颜色是否相等。
+     *
+     * @param obj 待比较对象
+     * @return 相等返回 true，否则 false
+     */
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -82,11 +102,21 @@ public final class Ansi8BitColor implements AnsiElement {
         return this.prefix.equals(other.prefix) && this.code == other.code;
     }
 
+    /**
+     * 计算哈希值。
+     *
+     * @return 哈希值
+     */
     @Override
     public int hashCode() {
         return this.prefix.hashCode() * 31 + this.code;
     }
 
+    /**
+     * 转换为 ANSI 编码字符串。
+     *
+     * @return ANSI 编码字符串
+     */
     @Override
     public String toString() {
         return this.prefix + this.code;
