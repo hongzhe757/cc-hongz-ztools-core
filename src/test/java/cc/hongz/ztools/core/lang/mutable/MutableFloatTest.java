@@ -2,19 +2,23 @@ package cc.hongz.ztools.core.lang.mutable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
  * {@link MutableFloat} 单元测试.
  */
+@DisplayName("MutableFloat 单元测试")
 class MutableFloatTest {
 
+    @DisplayName("默认构造")
     @Test
     void defaultConstructor() {
         MutableFloat m = new MutableFloat();
         assertEquals(0.0f, m.floatValue());
     }
 
+    @DisplayName("float 构造")
     @Test
     void floatConstructor() {
         MutableFloat m = new MutableFloat(3.14f);
@@ -22,23 +26,27 @@ class MutableFloatTest {
         assertEquals(Float.valueOf(3.14f), m.get());
     }
 
+    @DisplayName("Number 构造")
     @Test
     void numberConstructor() {
         MutableFloat m = new MutableFloat(Float.valueOf(2.5f));
         assertEquals(2.5f, m.floatValue());
     }
 
+    @DisplayName("字符串构造")
     @Test
     void stringConstructor() {
         MutableFloat m = new MutableFloat("1.5");
         assertEquals(1.5f, m.floatValue());
     }
 
+    @DisplayName("非法字符串构造")
     @Test
     void stringConstructorInvalid() {
         assertThrows(NumberFormatException.class, () -> new MutableFloat("abc"));
     }
 
+    @DisplayName("设置与获取")
     @Test
     void setAndGet() {
         MutableFloat m = new MutableFloat();
@@ -46,6 +54,7 @@ class MutableFloatTest {
         assertEquals(9.9f, m.get());
     }
 
+    @DisplayName("自增与自减")
     @Test
     void incrementAndDecrement() {
         MutableFloat m = new MutableFloat(5.0f);
@@ -55,6 +64,7 @@ class MutableFloatTest {
         assertEquals(5.0f, m.floatValue());
     }
 
+    @DisplayName("加与减")
     @Test
     void addAndSubtract() {
         MutableFloat m = new MutableFloat(10.0f);
@@ -68,6 +78,7 @@ class MutableFloatTest {
         assertEquals(10.0f, m.floatValue());
     }
 
+    @DisplayName("Number 各类型值")
     @Test
     void numberValues() {
         MutableFloat m = new MutableFloat(7.5f);
@@ -77,6 +88,7 @@ class MutableFloatTest {
         assertEquals(7.5, m.doubleValue(), 0.001);
     }
 
+    @DisplayName("equals 与 hashCode")
     @Test
     void equalsAndHashCode() {
         MutableFloat a = new MutableFloat(10.0f);
@@ -89,6 +101,7 @@ class MutableFloatTest {
         assertNotEquals(a, null);
     }
 
+    @DisplayName("比较大小")
     @Test
     void compareTo() {
         MutableFloat a = new MutableFloat(10.0f);
@@ -100,6 +113,7 @@ class MutableFloatTest {
         assertEquals(0, a.compareTo(c));
     }
 
+    @DisplayName("toString")
     @Test
     void toStringMethod() {
         assertEquals("3.14", new MutableFloat(3.14f).toString());

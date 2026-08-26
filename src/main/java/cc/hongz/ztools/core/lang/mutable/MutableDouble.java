@@ -9,6 +9,15 @@ package cc.hongz.ztools.core.lang.mutable;
 public class MutableDouble extends Number implements Comparable<MutableDouble>, Mutable<Number> {
     private static final long serialVersionUID = 1L;
 
+    /**
+
+
+     * 值。
+
+
+     */
+
+
     private double value;
 
     /**
@@ -45,6 +54,9 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
         this.value = Double.parseDouble(value);
     }
 
+    /**
+     * 获得原始值。
+     */
     @Override
     public Double get() {
         return this.value;
@@ -59,6 +71,9 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
         this.value = newValue;
     }
 
+    /**
+     * 设置值。
+     */
     @Override
     public void set(final Number newValue) {
         this.value = newValue.doubleValue();
@@ -131,21 +146,33 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 转换为 int 值。
+     */
     @Override
     public int intValue() {
         return (int) value;
     }
 
+    /**
+     * 转换为 long 值。
+     */
     @Override
     public long longValue() {
         return (long) value;
     }
 
+    /**
+     * 转换为 float 值。
+     */
     @Override
     public float floatValue() {
         return (float) value;
     }
 
+    /**
+     * 转换为 double 值。
+     */
     @Override
     public double doubleValue() {
         return value;
@@ -171,6 +198,9 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
         return false;
     }
 
+    /**
+     * 计算哈希值。
+     */
     @Override
     public int hashCode() {
         final long bits = Double.doubleToLongBits(value);
@@ -190,6 +220,9 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 转换为字符串。
+     */
     @Override
     public String toString() {
         return String.valueOf(value);

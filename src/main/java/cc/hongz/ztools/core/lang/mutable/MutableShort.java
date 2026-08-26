@@ -9,6 +9,15 @@ package cc.hongz.ztools.core.lang.mutable;
 public class MutableShort extends Number implements Comparable<MutableShort>, Mutable<Number> {
     private static final long serialVersionUID = 1L;
 
+    /**
+
+
+     * 值。
+
+
+     */
+
+
     private short value;
 
     /**
@@ -45,6 +54,9 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
         this.value = Short.parseShort(value);
     }
 
+    /**
+     * 获得原始值。
+     */
     @Override
     public Short get() {
         return this.value;
@@ -59,6 +71,9 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
         this.value = newValue;
     }
 
+    /**
+     * 设置值。
+     */
     @Override
     public void set(final Number newValue) {
         this.value = newValue.shortValue();
@@ -133,26 +148,41 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 转换为 short 值。
+     */
     @Override
     public short shortValue() {
         return value;
     }
 
+    /**
+     * 转换为 int 值。
+     */
     @Override
     public int intValue() {
         return value;
     }
 
+    /**
+     * 转换为 long 值。
+     */
     @Override
     public long longValue() {
         return value;
     }
 
+    /**
+     * 转换为 float 值。
+     */
     @Override
     public float floatValue() {
         return value;
     }
 
+    /**
+     * 转换为 double 值。
+     */
     @Override
     public double doubleValue() {
         return value;
@@ -178,6 +208,9 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
         return false;
     }
 
+    /**
+     * 计算哈希值。
+     */
     @Override
     public int hashCode() {
         return value;
@@ -196,6 +229,9 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 转换为字符串。
+     */
     @Override
     public String toString() {
         return String.valueOf(value);

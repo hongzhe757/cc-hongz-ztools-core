@@ -44,6 +44,9 @@ public class MutablePair<K, V> extends Pair<K, V> implements Mutable<Pair<K, V>>
         return this;
     }
 
+    /**
+     * 获得原始值。
+     */
     @Override
     public Pair<K, V> get() {
         return this;

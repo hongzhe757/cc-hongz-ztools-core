@@ -10,6 +10,15 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 
     private static final long serialVersionUID = 1L;
 
+    /**
+
+
+     * 值。
+
+
+     */
+
+
     private int value;
 
     /**
@@ -46,6 +55,9 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
         this.value = Integer.parseInt(value);
     }
 
+    /**
+     * 获得原始值。
+     */
     @Override
     public Integer get() {
         return this.value;
@@ -60,6 +72,9 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
         this.value = newValue;
     }
 
+    /**
+     * 设置值。
+     */
     @Override
     public void set(final Number newValue) {
         this.value = newValue.intValue();
@@ -85,26 +100,41 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
         return this;
     }
 
+    /**
+     * 转换为 int 值。
+     */
     @Override
     public int intValue() {
         return value;
     }
 
+    /**
+     * 转换为 long 值。
+     */
     @Override
     public long longValue() {
         return value;
     }
 
+    /**
+     * 转换为 float 值。
+     */
     @Override
     public float floatValue() {
         return value;
     }
 
+    /**
+     * 转换为 double 值。
+     */
     @Override
     public double doubleValue() {
         return value;
     }
 
+    /**
+     * 判断是否相等。
+     */
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof MutableInt) {
@@ -113,16 +143,25 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
         return false;
     }
 
+    /**
+     * 计算哈希值。
+     */
     @Override
     public int hashCode() {
         return this.value;
     }
 
+    /**
+     * 比较大小。
+     */
     @Override
     public int compareTo(final MutableInt other) {
         return Integer.compare(this.value, other.value);
     }
 
+    /**
+     * 转换为字符串。
+     */
     @Override
     public String toString() {
         return String.valueOf(value);

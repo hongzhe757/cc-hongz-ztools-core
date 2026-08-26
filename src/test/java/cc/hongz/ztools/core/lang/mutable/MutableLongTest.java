@@ -2,19 +2,23 @@ package cc.hongz.ztools.core.lang.mutable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
  * {@link MutableLong} 单元测试.
  */
+@DisplayName("MutableLong 单元测试")
 class MutableLongTest {
 
+    @DisplayName("默认构造")
     @Test
     void defaultConstructor() {
         MutableLong m = new MutableLong();
         assertEquals(0L, m.longValue());
     }
 
+    @DisplayName("long 构造")
     @Test
     void longConstructor() {
         MutableLong m = new MutableLong(100L);
@@ -22,23 +26,27 @@ class MutableLongTest {
         assertEquals(Long.valueOf(100L), m.get());
     }
 
+    @DisplayName("Number 构造")
     @Test
     void numberConstructor() {
         MutableLong m = new MutableLong(Long.valueOf(50L));
         assertEquals(50L, m.longValue());
     }
 
+    @DisplayName("字符串构造")
     @Test
     void stringConstructor() {
         MutableLong m = new MutableLong("12345");
         assertEquals(12345L, m.longValue());
     }
 
+    @DisplayName("非法字符串构造")
     @Test
     void stringConstructorInvalid() {
         assertThrows(NumberFormatException.class, () -> new MutableLong("abc"));
     }
 
+    @DisplayName("设置与获取")
     @Test
     void setAndGet() {
         MutableLong m = new MutableLong();
@@ -46,6 +54,7 @@ class MutableLongTest {
         assertEquals(999L, m.get());
     }
 
+    @DisplayName("自增与自减")
     @Test
     void incrementAndDecrement() {
         MutableLong m = new MutableLong(5L);
@@ -55,6 +64,7 @@ class MutableLongTest {
         assertEquals(5L, m.longValue());
     }
 
+    @DisplayName("加与减")
     @Test
     void addAndSubtract() {
         MutableLong m = new MutableLong(10L);
@@ -68,6 +78,7 @@ class MutableLongTest {
         assertEquals(10L, m.longValue());
     }
 
+    @DisplayName("Number 各类型值")
     @Test
     void numberValues() {
         MutableLong m = new MutableLong(7L);
@@ -77,6 +88,7 @@ class MutableLongTest {
         assertEquals(7.0d, m.doubleValue());
     }
 
+    @DisplayName("equals 与 hashCode")
     @Test
     void equalsAndHashCode() {
         MutableLong a = new MutableLong(10L);
@@ -89,6 +101,7 @@ class MutableLongTest {
         assertNotEquals(a, null);
     }
 
+    @DisplayName("比较大小")
     @Test
     void compareTo() {
         MutableLong a = new MutableLong(10L);
@@ -100,6 +113,7 @@ class MutableLongTest {
         assertEquals(0, a.compareTo(c));
     }
 
+    @DisplayName("toString")
     @Test
     void toStringMethod() {
         assertEquals("42", new MutableLong(42L).toString());

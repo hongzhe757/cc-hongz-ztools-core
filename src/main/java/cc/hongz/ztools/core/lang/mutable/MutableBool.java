@@ -11,6 +11,15 @@ import java.io.Serializable;
 public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+
+
+     * 值。
+
+
+     */
+
+
     private boolean value;
 
     /**
@@ -38,6 +47,9 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
         this.value = Boolean.parseBoolean(value);
     }
 
+    /**
+     * 获得原始值。
+     */
     @Override
     public Boolean get() {
         return this.value;
@@ -52,6 +64,9 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
         this.value = newValue;
     }
 
+    /**
+     * 设置值。
+     */
     @Override
     public void set(final Boolean newValue) {
         this.value = newValue;
@@ -77,6 +92,9 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
         return false;
     }
 
+    /**
+     * 计算哈希值。
+     */
     @Override
     public int hashCode() {
         return value ? Boolean.TRUE.hashCode() : Boolean.FALSE.hashCode();
@@ -95,6 +113,9 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 转换为字符串。
+     */
     @Override
     public String toString() {
         return String.valueOf(value);

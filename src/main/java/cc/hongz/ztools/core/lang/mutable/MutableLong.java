@@ -9,6 +9,15 @@ package cc.hongz.ztools.core.lang.mutable;
 public class MutableLong extends Number implements Comparable<MutableLong>, Mutable<Number> {
     private static final long serialVersionUID = 1L;
 
+    /**
+
+
+     * 值。
+
+
+     */
+
+
     private long value;
 
     /**
@@ -45,6 +54,9 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
         this.value = Long.parseLong(value);
     }
 
+    /**
+     * 获得原始值。
+     */
     @Override
     public Long get() {
         return this.value;
@@ -59,6 +71,9 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
         this.value = newValue;
     }
 
+    /**
+     * 设置值。
+     */
     @Override
     public void set(final Number newValue) {
         this.value = newValue.longValue();
@@ -135,21 +150,33 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 转换为 int 值。
+     */
     @Override
     public int intValue() {
         return (int) value;
     }
 
+    /**
+     * 转换为 long 值。
+     */
     @Override
     public long longValue() {
         return value;
     }
 
+    /**
+     * 转换为 float 值。
+     */
     @Override
     public float floatValue() {
         return value;
     }
 
+    /**
+     * 转换为 double 值。
+     */
     @Override
     public double doubleValue() {
         return value;
@@ -176,6 +203,9 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
         return false;
     }
 
+    /**
+     * 计算哈希值。
+     */
     @Override
     public int hashCode() {
         return (int) (value ^ (value >>> Integer.SIZE));
@@ -195,6 +225,9 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 转换为字符串。
+     */
     @Override
     public String toString() {
         return String.valueOf(value);

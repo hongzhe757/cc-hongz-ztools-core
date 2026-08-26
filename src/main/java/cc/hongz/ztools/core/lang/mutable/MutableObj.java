@@ -25,6 +25,15 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
         return new MutableObj<>(value);
     }
 
+    /**
+
+
+     * 值。
+
+
+     */
+
+
     private T value;
 
     /**
@@ -43,17 +52,26 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 获得原始值。
+     */
     @Override
     public T get() {
         return this.value;
     }
 
+    /**
+     * 设置值。
+     */
     @Override
     public void set(final T newValue) {
         this.value = newValue;
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 判断是否相等。
+     */
     @Override
     public boolean equals(final Object obj) {
         if (obj == null) {
@@ -69,12 +87,18 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
         return false;
     }
 
+    /**
+     * 计算哈希值。
+     */
     @Override
     public int hashCode() {
         return value == null ? 0 : value.hashCode();
     }
 
     // -----------------------------------------------------------------------
+    /**
+     * 转换为字符串。
+     */
     @Override
     public String toString() {
         return value == null ? "null" : value.toString();
