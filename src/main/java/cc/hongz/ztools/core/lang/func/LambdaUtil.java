@@ -21,6 +21,9 @@ public final class LambdaUtil {
 
     private LambdaUtil() {
     }
+    /**
+     * lambda 解析缓存。
+     */
     private static final WeakKeyValueConcurrentMap<String, SerializedLambda> cache = new WeakKeyValueConcurrentMap<>();
 
     /**
