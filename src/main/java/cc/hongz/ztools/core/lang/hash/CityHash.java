@@ -24,13 +24,31 @@ public final class CityHash {
     }
 
     // Some primes between 2^63 and 2^64 for various uses.
+    /**
+     * 64位质数常量 k0。
+     */
     private static final long k0 = 0xc3a5c85c97cb3127L;
+    /**
+     * 64位质数常量 k1。
+     */
     private static final long k1 = 0xb492b66fbe98f273L;
+    /**
+     * 64位质数常量 k2。
+     */
     private static final long k2 = 0x9ae16a3b2f90404fL;
+    /**
+     * 64位质数常量 kMul。
+     */
     private static final long kMul = 0x9ddfea08eb382d69L;
 
     // Magic numbers for 32-bit hashing.  Copied from Murmur3.
+    /**
+     * 32位哈希魔数常量 c1。
+     */
     private static final int c1 = 0xcc9e2d51;
+    /**
+     * 32位哈希魔数常量 c2。
+     */
     private static final int c2 = 0x1b873593;
 
 

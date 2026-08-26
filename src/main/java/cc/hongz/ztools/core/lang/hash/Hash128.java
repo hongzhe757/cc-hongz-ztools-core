@@ -18,6 +18,12 @@ public interface Hash128<T> extends Hash<T> {
      */
     Number128 hash128(T t);
 
+    /**
+     * 计算 Hash 值。
+     *
+     * @param t 对象
+     * @return Hash 值
+     */
     @Override
     default Number hash(T t) {
         return hash128(t);

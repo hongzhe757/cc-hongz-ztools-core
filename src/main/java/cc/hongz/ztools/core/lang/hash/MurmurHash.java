@@ -30,25 +30,76 @@ public final class MurmurHash implements Serializable {
     }
 
     // Constants for 32 bit variant
+    /**
+     * 32位变体常量 C1。
+     */
     private static final int C1_32 = 0xcc9e2d51;
+    /**
+     * 32位变体常量 C2。
+     */
     private static final int C2_32 = 0x1b873593;
+    /**
+     * 32位变体常量 R1。
+     */
     private static final int R1_32 = 15;
+    /**
+     * 32位变体常量 R2。
+     */
     private static final int R2_32 = 13;
+    /**
+     * 32位变体常量 M。
+     */
     private static final int M_32 = 5;
+    /**
+     * 32位变体常量 N。
+     */
     private static final int N_32 = 0xe6546b64;
 
     // Constants for 128 bit variant
+    /**
+     * 128位变体常量 C1。
+     */
     private static final long C1 = 0x87c37b91114253d5L;
+    /**
+     * 128位变体常量 C2。
+     */
     private static final long C2 = 0x4cf5ad432745937fL;
+    /**
+     * 128位变体常量 R1。
+     */
     private static final int R1 = 31;
+    /**
+     * 128位变体常量 R2。
+     */
     private static final int R2 = 27;
+    /**
+     * 128位变体常量 R3。
+     */
     private static final int R3 = 33;
+    /**
+     * 128位变体常量 M。
+     */
     private static final int M = 5;
+    /**
+     * 128位变体常量 N1。
+     */
     private static final int N1 = 0x52dce729;
+    /**
+     * 128位变体常量 N2。
+     */
     private static final int N2 = 0x38495ab5;
 
+    /**
+     * 默认种子。
+     */
     private static final int DEFAULT_SEED = 0;
+    /**
+     * 默认编码。
+     */
     private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+    /**
+     * 默认字节序。
+     */
     private static final ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
 
     /**

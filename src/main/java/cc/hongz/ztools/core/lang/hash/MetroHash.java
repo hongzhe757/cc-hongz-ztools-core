@@ -28,16 +28,34 @@ public final class MetroHash {
      * hash64 种子加盐.
      */
     private static final long k0_64 = 0xD6D018F5;
+    /**
+     * hash64 种子加盐常量 k1。
+     */
     private static final long k1_64 = 0xA2AA033B;
+    /**
+     * hash64 种子加盐常量 k2。
+     */
     private static final long k2_64 = 0x62992FC1;
+    /**
+     * hash64 种子加盐常量 k3。
+     */
     private static final long k3_64 = 0x30BC5B29;
 
     /**
      * hash128 种子加盐.
      */
     private static final long k0_128 = 0xC83A91E1;
+    /**
+     * hash128 种子加盐常量 k1。
+     */
     private static final long k1_128 = 0x8648DBDB;
+    /**
+     * hash128 种子加盐常量 k2。
+     */
     private static final long k2_128 = 0x7BDEC03B;
+    /**
+     * hash128 种子加盐常量 k3。
+     */
     private static final long k3_128 = 0x2F5870A5;
 
     /**

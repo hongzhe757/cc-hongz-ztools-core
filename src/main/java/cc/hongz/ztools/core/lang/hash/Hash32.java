@@ -17,6 +17,12 @@ public interface Hash32<T> extends Hash<T> {
      */
     int hash32(T t);
 
+    /**
+     * 计算 Hash 值。
+     *
+     * @param t 对象
+     * @return Hash 值
+     */
     @Override
     default Number hash(T t) {
         return hash32(t);

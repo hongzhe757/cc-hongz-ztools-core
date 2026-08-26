@@ -17,6 +17,12 @@ public interface Hash64<T> extends Hash<T> {
      */
     long hash64(T t);
 
+    /**
+     * 计算 Hash 值。
+     *
+     * @param t 对象
+     * @return Hash 值
+     */
     @Override
     default Number hash(T t) {
         return hash64(t);

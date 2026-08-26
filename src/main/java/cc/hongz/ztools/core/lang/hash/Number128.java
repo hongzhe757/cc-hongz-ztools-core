@@ -11,7 +11,14 @@ import java.util.Objects;
 public class Number128 extends Number {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 低位值。
+     */
     private long lowValue;
+
+    /**
+     * 高位值。
+     */
     private long highValue;
 
     /**
@@ -70,26 +77,52 @@ public class Number128 extends Number {
         return new long[]{lowValue, highValue};
     }
 
+    /**
+     * 转换为 int 值。
+     *
+     * @return int 值
+     */
     @Override
     public int intValue() {
         return (int) longValue();
     }
 
+    /**
+     * 转换为 long 值。
+     *
+     * @return long 值
+     */
     @Override
     public long longValue() {
         return this.lowValue;
     }
 
+    /**
+     * 转换为 float 值。
+     *
+     * @return float 值
+     */
     @Override
     public float floatValue() {
         return longValue();
     }
 
+    /**
+     * 转换为 double 值。
+     *
+     * @return double 值
+     */
     @Override
     public double doubleValue() {
         return longValue();
     }
 
+    /**
+     * 判断两个 128 位数字是否相等。
+     *
+     * @param o 待比较对象
+     * @return 相等返回 true，否则 false
+     */
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -102,6 +135,11 @@ public class Number128 extends Number {
         return lowValue == number128.lowValue && highValue == number128.highValue;
     }
 
+    /**
+     * 计算哈希值。
+     *
+     * @return 哈希值
+     */
     @Override
     public int hashCode() {
         return Objects.hash(lowValue, highValue);

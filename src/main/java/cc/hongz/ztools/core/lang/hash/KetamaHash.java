@@ -15,6 +15,12 @@ import java.security.NoSuchAlgorithmException;
 @SuppressWarnings("checkstyle:MagicNumber")
 public class KetamaHash implements Hash64<String>, Hash32<String> {
 
+    /**
+     * 计算 64 位 Hash 值。
+     *
+     * @param key 键
+     * @return 64 位 Hash 值
+     */
     @Override
     public long hash64(final String key) {
         byte[] bKey = md5(key);
@@ -24,11 +30,23 @@ public class KetamaHash implements Hash64<String>, Hash32<String> {
                 | (bKey[0] & 0xFF);
     }
 
+    /**
+     * 计算 32 位 Hash 值。
+     *
+     * @param key 键
+     * @return 32 位 Hash 值
+     */
     @Override
     public int hash32(final String key) {
         return (int) (hash64(key) & 0xffffffffL);
     }
 
+    /**
+     * 计算 Hash 值。
+     *
+     * @param key 键
+     * @return Hash 值
+     */
     @Override
     public Number hash(final String key) {
         return hash64(key);
