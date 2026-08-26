@@ -12,8 +12,17 @@ import java.lang.ref.WeakReference;
  */
 public class WeakInterner<T> implements Interner<T> {
 
+    /**
+     * 规范化对象缓存。
+     */
     private final WeakConcurrentMap<T, WeakReference<T>> cache = new WeakConcurrentMap<>();
 
+    /**
+     * 返回指定对象对应的规范化对象。
+     *
+     * @param sample 对象
+     * @return 规范化对象
+     */
     @Override
     public T intern(final T sample) {
         if (sample == null) {
