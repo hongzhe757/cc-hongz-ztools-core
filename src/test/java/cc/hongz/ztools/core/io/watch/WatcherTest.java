@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.io.watch;
 
 import cc.hongz.ztools.core.io.watch.watchers.IgnoreWatcher;
 import cc.hongz.ztools.core.io.watch.watchers.WatcherChain;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
@@ -15,16 +16,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link Watcher}、{@link SimpleWatcher}、{@link IgnoreWatcher}、{@link WatcherChain} 单元测试.
  */
+@DisplayName("Watcher 单元测试")
 class WatcherTest {
 
     private static final Path DUMMY_PATH = Paths.get(".");
 
+    @DisplayName("SimpleWatcher 继承 IgnoreWatcher")
     @Test
     void simpleWatcherExtendsIgnoreWatcher() {
         SimpleWatcher sw = new SimpleWatcher();
         assertInstanceOf(IgnoreWatcher.class, sw);
     }
 
+    @DisplayName("IgnoreWatcher 不抛异常")
     @Test
     void ignoreWatcherDoesNotThrow() {
         IgnoreWatcher iw = new IgnoreWatcher();
@@ -34,6 +38,7 @@ class WatcherTest {
         assertDoesNotThrow(() -> iw.onOverflow(null, DUMMY_PATH));
     }
 
+    @DisplayName("WatcherChain 委托所有观察者")
     @Test
     void watcherChainDelegatesToAllWatchers() {
         AtomicInteger createCount = new AtomicInteger();
@@ -60,6 +65,7 @@ class WatcherTest {
         assertTrue(modifyCount.get() >= 1);
     }
 
+    @DisplayName("WatcherChain 添加链")
     @Test
     void watcherChainAddChain() {
         AtomicInteger count = new AtomicInteger();
@@ -75,6 +81,7 @@ class WatcherTest {
         assertTrue(count.get() >= 1);
     }
 
+    @DisplayName("WatcherChain 迭代器")
     @Test
     void watcherChainIterator() {
         WatcherChain chain = WatcherChain.create(new IgnoreWatcher());

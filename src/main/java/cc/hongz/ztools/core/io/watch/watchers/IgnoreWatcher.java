@@ -6,7 +6,7 @@ import java.nio.file.WatchEvent;
 import cc.hongz.ztools.core.io.watch.Watcher;
 
 /**
- * 跳过所有事件处理Watcher<br>
+ * 跳过所有事件处理Watcher。 <br>
  * 用户继承此类后实现需要监听的方法
  *
  * @author Looly
@@ -14,19 +14,19 @@ import cc.hongz.ztools.core.io.watch.Watcher;
  */
 public class IgnoreWatcher implements Watcher {
 
-	@Override
-	public void onCreate(WatchEvent<?> event, Path currentPath) {
-	}
+    @Override
+    public void onCreate(final WatchEvent<?> event, final Path currentPath) {
+    }
 
-	@Override
-	public void onModify(WatchEvent<?> event, Path currentPath) {
-	}
+    @Override
+    public void onModify(final WatchEvent<?> event, final Path currentPath) {
+    }
 
-	@Override
-	public void onDelete(WatchEvent<?> event, Path currentPath) {
-	}
+    @Override
+    public void onDelete(final WatchEvent<?> event, final Path currentPath) {
+    }
 
-	@Override
-	public void onOverflow(WatchEvent<?> event, Path currentPath) {
-	}
+    @Override
+    public void onOverflow(final WatchEvent<?> event, final Path currentPath) {
+    }
 }
