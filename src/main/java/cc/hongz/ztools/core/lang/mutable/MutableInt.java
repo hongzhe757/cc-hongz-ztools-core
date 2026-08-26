@@ -101,6 +101,52 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
     }
 
     /**
+     * 增加值。
+     *
+     * @param operand 被增加的值
+     * @return this
+     */
+    public MutableInt add(final int operand) {
+        this.value += operand;
+        return this;
+    }
+
+    /**
+     * 增加值。
+     *
+     * @param operand 被增加的值，非空
+     * @return this
+     * @throws NullPointerException if the object is null
+     */
+    public MutableInt add(final Number operand) {
+        this.value += operand.intValue();
+        return this;
+    }
+
+    /**
+     * 减去值。
+     *
+     * @param operand 被减的值
+     * @return this
+     */
+    public MutableInt subtract(final int operand) {
+        this.value -= operand;
+        return this;
+    }
+
+    /**
+     * 减去值。
+     *
+     * @param operand 被减的值，非空
+     * @return this
+     * @throws NullPointerException if the object is null
+     */
+    public MutableInt subtract(final Number operand) {
+        this.value -= operand.intValue();
+        return this;
+    }
+
+    /**
      * 转换为 int 值。
      */
     @Override
