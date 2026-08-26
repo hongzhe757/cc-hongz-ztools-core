@@ -21,13 +21,8 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 5.5.3
  */
-public final class NioUtil {
-
-    /**
-     * 私有构造，禁止实例化.
-     */
-    private NioUtil() {
-    }
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
+public class NioUtil {
 
     /**
      * 默认缓存大小 8192.
