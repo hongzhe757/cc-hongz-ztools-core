@@ -16,11 +16,17 @@ import cc.hongz.ztools.core.lang.Filter;
 public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implements Copier<T>, Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** 源. */
+    /**
+     * 源。
+     */
     protected T src;
-    /** 目标. */
+    /**
+     * 目标。
+     */
     protected T dest;
-    /** 拷贝过滤器，可以过滤掉不需要拷贝的源. */
+    /**
+     * 拷贝过滤器，可以过滤掉不需要拷贝的源。
+     */
     protected Filter<T> copyFilter;
 
     // ------------------------------------------------------------ Getters and Setters start
