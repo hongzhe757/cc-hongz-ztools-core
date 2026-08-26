@@ -14,7 +14,7 @@ public final class PasswdStrength {
     /**
      * 密码等级枚举.
      */
-    @SuppressWarnings("checkstyle:typename")
+    @SuppressWarnings("checkstyle:TypeName")
     public enum PASSWD_LEVEL {
         /** 弱. */
         EASY,
@@ -31,7 +31,7 @@ public final class PasswdStrength {
     /**
      * 字符类型枚举.
      */
-    @SuppressWarnings("checkstyle:typename")
+    @SuppressWarnings("checkstyle:TypeName")
     public enum CHAR_TYPE {
         NUM, SMALL_LETTER, CAPITAL_LETTER, OTHER_CHAR
     }
@@ -60,7 +60,7 @@ public final class PasswdStrength {
      * @param passwd 密码
      * @return strength level
      */
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     public static int check(final String passwd) {
         if (null == passwd) {
             throw new IllegalArgumentException("password is empty");
@@ -226,7 +226,7 @@ public final class PasswdStrength {
      * @param passwd 密码
      * @return 密码等级枚举
      */
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     public static PASSWD_LEVEL getLevel(final String passwd) {
         final int level = check(passwd);
         switch (level) {
@@ -258,7 +258,7 @@ public final class PasswdStrength {
      * @param c 字符
      * @return 类型
      */
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings("checkstyle:MagicNumber")
     private static CHAR_TYPE checkCharacterType(final char c) {
         if (c >= 48 && c <= 57) {
             return CHAR_TYPE.NUM;
