@@ -11,104 +11,105 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
 /**
- * {@link ReadableByteChannel} 向 {@link WritableByteChannel} 拷贝
+ * {@link ReadableByteChannel} 向 {@link WritableByteChannel} 拷贝。
  *
  * @author looly
  * @since 5.7.8
  */
 public class ChannelCopier extends IoCopier<ReadableByteChannel, WritableByteChannel> {
 
-	/**
-	 * 构造
-	 */
-	public ChannelCopier() {
-		this(IoUtil.DEFAULT_BUFFER_SIZE);
-	}
+    /**
+     * 构造。
+     */
+    public ChannelCopier() {
+        this(IoUtil.DEFAULT_BUFFER_SIZE);
+    }
 
-	/**
-	 * 构造
-	 *
-	 * @param bufferSize 缓存大小
-	 */
-	public ChannelCopier(int bufferSize) {
-		this(bufferSize, -1);
-	}
+    /**
+     * 构造。
+     *
+     * @param bufferSize 缓存大小
+     */
+    public ChannelCopier(final int bufferSize) {
+        this(bufferSize, -1);
+    }
 
-	/**
-	 * 构造
-	 *
-	 * @param bufferSize 缓存大小
-	 * @param count      拷贝总数
-	 */
-	public ChannelCopier(int bufferSize, long count) {
-		this(bufferSize, count, null);
-	}
+    /**
+     * 构造。
+     *
+     * @param bufferSize 缓存大小
+     * @param count      拷贝总数。
+     */
+    public ChannelCopier(final int bufferSize, final long count) {
+        this(bufferSize, count, null);
+    }
 
-	/**
-	 * 构造
-	 *
-	 * @param bufferSize 缓存大小
-	 * @param count      拷贝总数
-	 * @param progress   进度条
-	 */
-	public ChannelCopier(int bufferSize, long count, StreamProgress progress) {
-		super(bufferSize, count, progress);
-	}
+    /**
+     * 构造。
+     *
+     * @param bufferSize 缓存大小
+     * @param count      拷贝总数。
+     * @param progress   进度条。
+     */
+    public ChannelCopier(final int bufferSize, final long count, final StreamProgress progress) {
+        super(bufferSize, count, progress);
+    }
 
-	@Override
-	public long copy(ReadableByteChannel source, WritableByteChannel target) {
-		Assert.notNull(source, "InputStream is null !");
-		Assert.notNull(target, "OutputStream is null !");
+    @Override
+    public long copy(final ReadableByteChannel source, final WritableByteChannel target) {
+        Assert.notNull(source, "InputStream is null !");
+        Assert.notNull(target, "OutputStream is null !");
 
-		final StreamProgress progress = this.progress;
-		if (null != progress) {
-			progress.start();
-		}
-		final long size;
-		try {
-			size = doCopy(source, target, ByteBuffer.allocate(bufferSize(this.count)), progress);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+        final StreamProgress progress = this.progress;
+        if (null != progress) {
+            progress.start();
+        }
+        final long size;
+        try {
+            size = doCopy(source, target, ByteBuffer.allocate(bufferSize(this.count)), progress);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
 
-		if (null != progress) {
-			progress.finish();
-		}
-		return size;
-	}
+        if (null != progress) {
+            progress.finish();
+        }
+        return size;
+    }
 
-	/**
-	 * 执行拷贝，如果限制最大长度，则按照最大长度读取，否则一直读取直到遇到-1
-	 *
-	 * @param source   {@link ReadableByteChannel}
-	 * @param target   {@link WritableByteChannel}
-	 * @param buffer   缓存
-	 * @param progress 进度条
-	 * @return 拷贝总长度
-	 * @throws IOException IO异常
-	 */
-	private long doCopy(ReadableByteChannel source, WritableByteChannel target, ByteBuffer buffer, StreamProgress progress) throws IOException {
-		long numToRead = this.count > 0 ? this.count : Long.MAX_VALUE;
-		long total = 0;
+    /**
+     * 执行拷贝，如果限制最大长度，则按照最大长度读取，否则一直读取直到遇到-1。
+     *
+     * @param source   {@link ReadableByteChannel}
+     * @param target   {@link WritableByteChannel}
+     * @param buffer   缓存
+     * @param progress 进度条。
+     * @return 拷贝总长度
+     * @throws IOException IO异常
+     */
+    private long doCopy(final ReadableByteChannel source, final WritableByteChannel target, final ByteBuffer buffer,
+            final StreamProgress progress) throws IOException {
+        long numToRead = this.count > 0 ? this.count : Long.MAX_VALUE;
+        long total = 0;
 
-		int read;
-		while (numToRead > 0) {
-			read = source.read(buffer);
-			if (read < 0) {
-				// 提前读取到末尾
-				break;
-			}
-			buffer.flip();// 写转读
-			target.write(buffer);
-			buffer.clear();
+        int read;
+        while (numToRead > 0) {
+            read = source.read(buffer);
+            if (read < 0) {
+                // 提前读取到末尾
+                break;
+            }
+            buffer.flip(); // 写转读
+            target.write(buffer);
+            buffer.clear();
 
-			numToRead -= read;
-			total += read;
-			if (null != progress) {
-				progress.progress(this.count, total);
-			}
-		}
+            numToRead -= read;
+            total += read;
+            if (null != progress) {
+                progress.progress(this.count, total);
+            }
+        }
 
-		return total;
-	}
+        return total;
+    }
 }

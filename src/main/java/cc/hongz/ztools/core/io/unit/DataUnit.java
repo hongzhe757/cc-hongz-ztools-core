@@ -4,7 +4,7 @@ import cc.hongz.ztools.core.util.CharUtil;
 import cc.hongz.ztools.core.util.StrUtil;
 
 /**
- * 数据单位封装<p>
+ * 数据单位封装。 <p>
  * 此类来自于：Spring-framework
  *
  * <pre>
@@ -20,78 +20,79 @@ import cc.hongz.ztools.core.util.StrUtil;
  */
 public enum DataUnit {
 
-	/**
-	 * Bytes, 后缀表示为： {@code B}.
-	 */
-	BYTES("B", DataSize.ofBytes(1)),
+    /**
+     * Bytes, 后缀表示为： {@code B}.
+     */
+    BYTES("B", DataSize.ofBytes(1)),
 
-	/**
-	 * Kilobytes, 后缀表示为： {@code KB}.
-	 */
-	KILOBYTES("KB", DataSize.ofKilobytes(1)),
+    /**
+     * Kilobytes, 后缀表示为： {@code KB}.
+     */
+    KILOBYTES("KB", DataSize.ofKilobytes(1)),
 
-	/**
-	 * Megabytes, 后缀表示为： {@code MB}.
-	 */
-	MEGABYTES("MB", DataSize.ofMegabytes(1)),
+    /**
+     * Megabytes, 后缀表示为： {@code MB}.
+     */
+    MEGABYTES("MB", DataSize.ofMegabytes(1)),
 
-	/**
-	 * Gigabytes, 后缀表示为： {@code GB}.
-	 */
-	GIGABYTES("GB", DataSize.ofGigabytes(1)),
+    /**
+     * Gigabytes, 后缀表示为： {@code GB}.
+     */
+    GIGABYTES("GB", DataSize.ofGigabytes(1)),
 
-	/**
-	 * Terabytes, 后缀表示为： {@code TB}.
-	 */
-	TERABYTES("TB", DataSize.ofTerabytes(1));
+    /**
+     * Terabytes, 后缀表示为： {@code TB}.
+     */
+    TERABYTES("TB", DataSize.ofTerabytes(1));
 
-	/**
-	 * 单位后缀
-	 */
-	public static final String[] UNIT_NAMES = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB"};
+    /**
+     * 单位后缀。
+     */
+    public static final String[] UNIT_NAMES = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB"};
 
-	private final String suffix;
-	private final DataSize size;
+    private final String suffix;
+    private final DataSize size;
 
 
-	DataUnit(String suffix, DataSize size) {
-		this.suffix = suffix;
-		this.size = size;
-	}
+    DataUnit(final String suffix, final DataSize size) {
+        this.suffix = suffix;
+        this.size = size;
+    }
 
-	/**
-	 * 单位后缀
-	 *
-	 * @return 单位后缀
-	 * @since 5.8.34
-	 */
-	public String getSuffix() {
-		return this.suffix;
-	}
+    /**
+     * 单位后缀。
+     *
+     * @return 单位后缀。
+     * @since 5.8.34
+     */
+    public String getSuffix() {
+        return this.suffix;
+    }
 
-	DataSize size() {
-		return this.size;
-	}
+    DataSize size() {
+        return this.size;
+    }
 
-	/**
-	 * 通过后缀返回对应的 DataUnit
-	 *
-	 * @param suffix 单位后缀，如KB、GB、GiB等
-	 * @return 匹配到的{@code DataUnit}
-	 * @throws IllegalArgumentException 后缀无法识别报错
-	 */
-	public static DataUnit fromSuffix(String suffix) {
-		// issue#ICXXVF 兼容KiB、MiB、GiB
-		if(StrUtil.length(suffix) == 3 && CharUtil.equals(suffix.charAt(1), 'i', true)){
-			suffix = new String(new char[]{suffix.charAt(0), suffix.charAt(2)});
-		}
+    /**
+     * 通过后缀返回对应的 DataUnit。
+     *
+     * @param suffix 单位后缀，如KB、GB、GiB等
+     * @return 匹配到的{@code DataUnit}
+     * @throws IllegalArgumentException 后缀无法识别报错
+     */
+    public static DataUnit fromSuffix(final String suffix) {
+        // issue#ICXXVF 兼容KiB、MiB、GiB
+        String resolvedSuffix = suffix;
+        if (StrUtil.length(resolvedSuffix) == 3 && CharUtil.equals(resolvedSuffix.charAt(1), 'i', true)) {
+            resolvedSuffix = new String(new char[]{resolvedSuffix.charAt(0), resolvedSuffix.charAt(2)});
+        }
 
-		for (DataUnit candidate : values()) {
-			// 支持类似于 3MB，3M，3m等写法
-			if (StrUtil.startWithIgnoreCase(candidate.suffix, suffix)) {
-				return candidate;
-			}
-		}
-		throw new IllegalArgumentException("Unknown data unit suffix '" + suffix + "'");
-	}
+        for (DataUnit candidate : values()) {
+            // 支持类似于 3MB，3M，3m等写法
+            if (StrUtil.startWithIgnoreCase(candidate.suffix, resolvedSuffix)) {
+                return candidate;
+            }
+        }
+        throw new IllegalArgumentException("Unknown data unit suffix '" + resolvedSuffix + "'");
+    }
 }

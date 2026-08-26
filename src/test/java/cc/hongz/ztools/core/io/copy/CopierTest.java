@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.io.copy;
 
 import cc.hongz.ztools.core.io.IORuntimeException;
 import cc.hongz.ztools.core.io.StreamProgress;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -17,8 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * {@link StreamCopier}、{@link ReaderWriterCopier} 单元测试.
  */
+@DisplayName("StreamCopier 与 ReaderWriterCopier 单元测试")
 class CopierTest {
 
+    @DisplayName("StreamCopier 拷贝字节")
     @Test
     void streamCopierCopiesBytes() {
         byte[] data = "hello world".getBytes(StandardCharsets.UTF_8);
@@ -30,6 +33,7 @@ class CopierTest {
         assertArrayEquals(data, out.toByteArray());
     }
 
+    @DisplayName("StreamCopier 指定缓冲区大小")
     @Test
     void streamCopierWithBufferSize() {
         byte[] data = "test data for buffer".getBytes(StandardCharsets.UTF_8);
@@ -41,6 +45,7 @@ class CopierTest {
         assertArrayEquals(data, out.toByteArray());
     }
 
+    @DisplayName("StreamCopier 指定拷贝数量")
     @Test
     void streamCopierWithCount() {
         byte[] data = "hello world".getBytes(StandardCharsets.UTF_8);
@@ -51,6 +56,7 @@ class CopierTest {
         assertEquals(5, copied);
     }
 
+    @DisplayName("StreamCopier 带进度回调")
     @Test
     void streamCopierWithProgress() {
         byte[] data = "progress test".getBytes(StandardCharsets.UTF_8);
@@ -73,6 +79,7 @@ class CopierTest {
         assertEquals(true, finished[0]);
     }
 
+    @DisplayName("ReaderWriterCopier 拷贝字符")
     @Test
     void readerWriterCopierCopiesChars() {
         String text = "你好世界";
@@ -84,6 +91,7 @@ class CopierTest {
         assertEquals(text, writer.toString());
     }
 
+    @DisplayName("ReaderWriterCopier 指定缓冲区大小")
     @Test
     void readerWriterCopierWithBufferSize() {
         String text = "buffer size test content";
@@ -95,12 +103,14 @@ class CopierTest {
         assertEquals(text, writer.toString());
     }
 
+    @DisplayName("StreamCopier null 源抛异常")
     @Test
     void streamCopierNullSourceThrows() {
         assertThrows(IllegalArgumentException.class,
                 () -> new StreamCopier().copy(null, new ByteArrayOutputStream()));
     }
 
+    @DisplayName("ReaderWriterCopier null 源抛异常")
     @Test
     void readerWriterCopierNullSourceThrows() {
         assertThrows(IllegalArgumentException.class,
