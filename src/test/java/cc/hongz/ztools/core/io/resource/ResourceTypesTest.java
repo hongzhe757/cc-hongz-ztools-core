@@ -1,5 +1,6 @@
 package cc.hongz.ztools.core.io.resource;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -14,8 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * {@link BytesResource}、{@link StringResource}、{@link CharSequenceResource} 单元测试.
  */
+@DisplayName("Resource 类型单元测试")
 class ResourceTypesTest {
 
+    @DisplayName("BytesResource 读取内容")
     @Test
     void bytesResourceReadsContent() throws IOException {
         byte[] data = "hello".getBytes(StandardCharsets.UTF_8);
@@ -27,6 +30,7 @@ class ResourceTypesTest {
         assertArrayEquals(data, resource.readBytes());
     }
 
+    @DisplayName("BytesResource 获取名称")
     @Test
     void bytesResourceGetName() {
         byte[] data = {1, 2, 3};
@@ -34,6 +38,7 @@ class ResourceTypesTest {
         assertEquals("test-bytes", resource.getName());
     }
 
+    @DisplayName("StringResource 读取内容")
     @Test
     void stringResourceReadsContent() throws IOException {
         String text = "你好世界";
@@ -46,6 +51,7 @@ class ResourceTypesTest {
         }
     }
 
+    @DisplayName("StringResource 带编码")
     @Test
     void stringResourceWithCharset() throws IOException {
         String text = "hello charset";
@@ -57,6 +63,7 @@ class ResourceTypesTest {
         }
     }
 
+    @DisplayName("CharSequenceResource 读取内容")
     @Test
     void charSequenceResourceReadsContent() throws IOException {
         CharSequence cs = "test content";
@@ -66,6 +73,7 @@ class ResourceTypesTest {
         assertEquals(cs.toString(), resource.readStr(StandardCharsets.UTF_8));
     }
 
+    @DisplayName("CharSequenceResource 获取名称")
     @Test
     void charSequenceResourceGetName() {
         CharSequenceResource resource = new CharSequenceResource("data", "my-name");
