@@ -17,15 +17,16 @@ import java.util.Properties;
  * @author looly
  * @since 5.7.16
  */
-public final class SystemPropsUtil {
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
+public class SystemPropsUtil {
 
     /** Hutool自定义系统属性：是否解析日期字符串采用严格模式. */
     public static String HUTOOL_DATE_LENIENT = "hutool.date.lenient";
 
     /**
-     * 私有构造，禁止实例化.
+     * 受保护构造，允许子类继承.
      */
-    private SystemPropsUtil() {
+    protected SystemPropsUtil() {
     }
 
     /**
