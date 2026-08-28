@@ -150,7 +150,7 @@ public class ChineseDate {
         this.month = resolvedIsLeapMonth ? chineseMonth + 1 : chineseMonth;
         this.year = chineseYear;
 
-        final DateTime dateTime = lunar2solar(chineseYear, chineseMonth, chineseDay, isLeapMonth);
+        final DateTime dateTime = lunar2solar(chineseYear, chineseMonth, chineseDay, resolvedIsLeapMonth);
         if (null != dateTime) {
             //初始化公历年
             this.gday = dateTime.dayOfMonth();

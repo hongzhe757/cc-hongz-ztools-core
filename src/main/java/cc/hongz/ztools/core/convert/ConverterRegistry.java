@@ -1,10 +1,13 @@
 package cc.hongz.ztools.core.convert;
 
+import cc.hongz.ztools.core.bean.BeanUtil;
+import cc.hongz.ztools.core.bean.RecordUtil;
 import cc.hongz.ztools.core.convert.impl.ArrayConverter;
 import cc.hongz.ztools.core.convert.impl.AtomicBooleanConverter;
 import cc.hongz.ztools.core.convert.impl.AtomicIntegerArrayConverter;
 import cc.hongz.ztools.core.convert.impl.AtomicLongArrayConverter;
 import cc.hongz.ztools.core.convert.impl.AtomicReferenceConverter;
+import cc.hongz.ztools.core.convert.impl.BeanConverter;
 import cc.hongz.ztools.core.convert.impl.BooleanConverter;
 import cc.hongz.ztools.core.convert.impl.CalendarConverter;
 import cc.hongz.ztools.core.convert.impl.CharacterConverter;
@@ -25,6 +28,7 @@ import cc.hongz.ztools.core.convert.impl.PairConverter;
 import cc.hongz.ztools.core.convert.impl.PathConverter;
 import cc.hongz.ztools.core.convert.impl.PeriodConverter;
 import cc.hongz.ztools.core.convert.impl.PrimitiveConverter;
+import cc.hongz.ztools.core.convert.impl.RecordConverter;
 import cc.hongz.ztools.core.convert.impl.ReferenceConverter;
 import cc.hongz.ztools.core.convert.impl.StackTraceElementConverter;
 import cc.hongz.ztools.core.convert.impl.StringConverter;
@@ -302,6 +306,10 @@ public class ConverterRegistry implements Serializable {
             return result;
         }
 
+        // 尝试转Bean
+        if (BeanUtil.isBean(rowType)) {
+            return new BeanConverter<T>(typeValue).convert(valueValue, defaultValue);
+        }
 
         // 无法转换
         throw new ConvertException("Can not Converter from [{}] to [{}]", valueValue.getClass().getName(),
@@ -407,6 +415,11 @@ public class ConverterRegistry implements Serializable {
             return ReflectUtil.newInstanceIfPossible(rowType);
         }
 
+        // record
+        // issue#3985@Github since 5.8.40
+        if (RecordUtil.isRecord(rowType)) {
+            return (T) new RecordConverter(rowType).convert(value, defaultValue);
+        }
 
         // 表示非需要特殊转换的对象
         return null;

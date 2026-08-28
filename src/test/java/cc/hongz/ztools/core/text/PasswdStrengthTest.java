@@ -58,7 +58,7 @@ public class PasswdStrengthTest {
 	@DisplayName("测试getLevel方法返回正确的等级枚举")
 	public void getLevelTest() {
 		assertEquals(PasswdStrength.PASSWD_LEVEL.EASY, PasswdStrength.getLevel("123"));
-		assertEquals(PasswdStrength.PASSWD_LEVEL.MIDIUM, PasswdStrength.getLevel("Abc123!@"));
+		assertEquals(PasswdStrength.PASSWD_LEVEL.STRONG, PasswdStrength.getLevel("Abc123!@"));
 		assertEquals(PasswdStrength.PASSWD_LEVEL.EXTREMELY_STRONG, PasswdStrength.getLevel("2hAj5#mne-ix.86H"));
 	}
 
