@@ -72,18 +72,16 @@ public final class ZipUtil {
         try {
             return new ZipFile(file, ObjectUtil.defaultIfNull(charset, CharsetUtil.CHARSET_UTF_8));
         } catch (IOException e) {
-            if (e instanceof ZipException) {
-                if (e.getMessage().contains("invalid CEN header")) {
-                    final Charset fallback = CharsetUtil.CHARSET_UTF_8.equals(charset)
-                            ? CharsetUtil.CHARSET_GBK : CharsetUtil.CHARSET_UTF_8;
-                    try {
-                        return new ZipFile(file, fallback);
-                    } catch (IOException ex) {
-                        throw new IORuntimeException(ex);
-                    }
-                }
+            if (!(e instanceof ZipException) || !e.getMessage().contains("invalid CEN header")) {
+                throw new IORuntimeException(e);
             }
-             throw new IORuntimeException(e);
+            final Charset fallback = CharsetUtil.CHARSET_UTF_8.equals(charset)
+                    ? CharsetUtil.CHARSET_GBK : CharsetUtil.CHARSET_UTF_8;
+            try {
+                return new ZipFile(file, fallback);
+            } catch (IOException ex) {
+                throw new IORuntimeException(ex);
+            }
         }
     }
 
@@ -128,9 +126,7 @@ public final class ZipUtil {
             final CopyOption... options) throws IORuntimeException {
         try (FileSystem zipFileSystem = FileSystemUtil.createZip(zipPath.toString())) {
             if (Files.isDirectory(appendFilePath)) {
-                Path source = appendFilePath.getParent(); if (null == source) {
-                    source = appendFilePath;
-                }
+                final Path source = ObjectUtil.defaultIfNull(appendFilePath.getParent(), appendFilePath);
                  Files.walkFileTree(appendFilePath, new ZipCopyVisitor(source, zipFileSystem, options));
             } else {
                 Files.copy(appendFilePath, zipFileSystem.getPath(PathUtil.getName(appendFilePath)), options);
@@ -597,10 +593,11 @@ public final class ZipUtil {
      * @return 输入流，未找到返回 null
      */
     public static InputStream get(final ZipFile zipFile, final String path) {
-        final ZipEntry entry = zipFile.getEntry(path); if (null != entry) {
-            return getStream(zipFile, entry);
+        final ZipEntry entry = zipFile.getEntry(path);
+        if (null == entry) {
+            return null;
         }
-         return null;
+        return getStream(zipFile, entry);
     }
 
     /**
@@ -625,10 +622,8 @@ public final class ZipUtil {
      * @throws UtilException IO异常时抛出
      */
     public static File unzip(final InputStream in, final File outFile, final Charset charset) throws UtilException {
-        Charset actualCharset = charset; if (null == actualCharset) {
-            actualCharset = DEFAULT_CHARSET;
-        }
-         return unzip(new ZipInputStream(in, actualCharset), outFile);
+        final Charset actualCharset = ObjectUtil.defaultIfNull(charset, DEFAULT_CHARSET);
+        return unzip(new ZipInputStream(in, actualCharset), outFile);
     }
 
     /**
@@ -932,19 +927,23 @@ public final class ZipUtil {
      * @return 文件列表
      */
     public static List<String> listFileNames(final ZipFile zipFile, final String dir) {
-        String dirStr = dir; if (StrUtil.isNotBlank(dirStr)) {
+        String dirStr = dir;
+        if (StrUtil.isNotBlank(dirStr)) {
             dirStr = StrUtil.addSuffixIfNot(dirStr, StrUtil.SLASH);
         }
-         final List<String> fileNames = new ArrayList<>(); String name;
+        final List<String> fileNames = new ArrayList<>();
         for (ZipEntry entry : new EnumerationIter<>(zipFile.entries())) {
-            name = entry.getName(); if (StrUtil.isEmpty(dirStr) || name.startsWith(dirStr)) {
-                final String nameSuffix = StrUtil.removePrefix(name, dirStr);
-                if (StrUtil.isNotEmpty(nameSuffix) && !StrUtil.contains(nameSuffix, CharUtil.SLASH)) {
-                    fileNames.add(nameSuffix);
-                }
+            String name = entry.getName();
+            if (StrUtil.isNotEmpty(dirStr) && !name.startsWith(dirStr)) {
+                continue;
             }
+            final String nameSuffix = StrUtil.removePrefix(name, dirStr);
+            if (StrUtil.isEmpty(nameSuffix) || StrUtil.contains(nameSuffix, CharUtil.SLASH)) {
+                continue;
+            }
+            fileNames.add(nameSuffix);
         }
-         return fileNames;
+        return fileNames;
     }
 
     // ------------------------------------------------------------ Private end
