@@ -1028,16 +1028,17 @@ public final class XmlUtil {
             } else {
                 newValue = childEle.getTextContent();
             }
-            if (null != newValue) {
-                if (null != value) {
-                    if (value instanceof List) {
-                        ((List<Object>) value).add(newValue);
-                    } else {
-                        map.put(childEle.getNodeName(), CollUtil.newArrayList(value, newValue));
-                    }
-                } else {
-                    map.put(childEle.getNodeName(), newValue);
-                }
+            if (null == newValue) {
+                continue;
+            }
+            if (null == value) {
+                map.put(childEle.getNodeName(), newValue);
+                continue;
+            }
+            if (value instanceof List) {
+                ((List<Object>) value).add(newValue);
+            } else {
+                map.put(childEle.getNodeName(), CollUtil.newArrayList(value, newValue));
             }
         }
         return map;
@@ -1302,11 +1303,12 @@ public final class XmlUtil {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static void appendMap(final Document doc, final Node node, final Map data) {
         data.forEach((key, value) -> {
-            if (null != key) {
-                final Element child = appendChild(node, key.toString());
-                if (null != value) {
-                    append(doc, child, value);
-                }
+            if (null == key) {
+                return;
+            }
+            final Element child = appendChild(node, key.toString());
+            if (null != value) {
+                append(doc, child, value);
             }
         });
     }
@@ -1402,18 +1404,21 @@ public final class XmlUtil {
                     storeAttribute(attribute);
                 }
             }
-            if (false == attributesOnly) {
-                final NodeList childNodes = node.getChildNodes();
-                if (null != childNodes) {
-                    Node item;
-                    final int childLen = childNodes.getLength();
-                    for (int i = 0; i < childLen; i++) {
-                        item = childNodes.item(i);
-                        if (item.getNodeType() == Node.ELEMENT_NODE) {
-                            examineNode(item, false);
-                        }
-                    }
+            if (attributesOnly) {
+                return;
+            }
+            final NodeList childNodes = node.getChildNodes();
+            if (null == childNodes) {
+                return;
+            }
+            Node item;
+            final int childLen = childNodes.getLength();
+            for (int i = 0; i < childLen; i++) {
+                item = childNodes.item(i);
+                if (item.getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
                 }
+                examineNode(item, false);
             }
         }
 

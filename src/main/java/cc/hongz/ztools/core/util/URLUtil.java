@@ -764,24 +764,23 @@ public final class URLUtil {
                 throw new IORuntimeException("File not exist or size is zero!");
             }
             return length;
-        } else {
-            // 如果资源打在jar包中或来自网络，使用网络请求长度
-            // issue#3226, 来自Spring的AbstractFileResolvingResource
-            URLConnection con = null;
-            try {
-                con = url.openConnection();
-                useCachesIfNecessary(con);
-                if (con instanceof HttpURLConnection) {
-                    final HttpURLConnection httpCon = (HttpURLConnection) con;
-                    httpCon.setRequestMethod("HEAD");
-                }
-                return con.getContentLengthLong();
-            } catch (final IOException e) {
-                throw new IORuntimeException(e);
-            } finally {
-                if (con instanceof HttpURLConnection) {
-                    ((HttpURLConnection) con).disconnect();
-                }
+        }
+        // 如果资源打在jar包中或来自网络，使用网络请求长度
+        // issue#3226, 来自Spring的AbstractFileResolvingResource
+        URLConnection con = null;
+        try {
+            con = url.openConnection();
+            useCachesIfNecessary(con);
+            if (con instanceof HttpURLConnection) {
+                final HttpURLConnection httpCon = (HttpURLConnection) con;
+                httpCon.setRequestMethod("HEAD");
+            }
+            return con.getContentLengthLong();
+        } catch (final IOException e) {
+            throw new IORuntimeException(e);
+        } finally {
+            if (con instanceof HttpURLConnection) {
+                ((HttpURLConnection) con).disconnect();
             }
         }
     }
