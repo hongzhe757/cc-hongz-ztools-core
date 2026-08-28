@@ -17,6 +17,11 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
     private static final long serialVersionUID = 4043263744224569870L;
 
     /**
+     * 规范化key（小写）到原始key的映射，用于忽略大小写匹配的同时，遍历时还原原始大小写。
+     */
+    private final Map<Object, K> originalKeyMap = new HashMap<>();
+
+    /**
      * 构造.
      */
     public CaseInsensitiveMap() {
@@ -78,10 +83,84 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
         super(emptyMapBuilder.build(),
                 (Function<Object, K> & Serializable) (key) -> {
                     if (key instanceof CharSequence) {
-                        key = key.toString().toLowerCase();
+                        key = key.toString().toLowerCase().replace("_", "");
                     }
                     //noinspection unchecked
                     return (K) key;
                 });
+    }
+
+    /**
+     * 将查询key映射为原始key：存在大小写不敏感匹配时返回首次写入的原始key，否则返回规范化key。
+     */
+    private K resolveKey(final Object key) {
+        final K lowerKey = customKey(key);
+        final K originalKey = originalKeyMap.get(lowerKey);
+        return null != originalKey ? originalKey : lowerKey;
+    }
+
+    @Override
+    public V put(final K key, final V value) {
+        final K lowerKey = customKey(key);
+        K originalKey = originalKeyMap.get(lowerKey);
+        if (null == originalKey) {
+            originalKey = key;
+            originalKeyMap.put(lowerKey, key);
+        }
+        return getRaw().put(originalKey, value);
+    }
+
+    @Override
+    public V get(final Object key) {
+        return getRaw().get(resolveKey(key));
+    }
+
+    @Override
+    public V getOrDefault(final Object key, final V defaultValue) {
+        return getRaw().getOrDefault(resolveKey(key), defaultValue);
+    }
+
+    @Override
+    public boolean containsKey(final Object key) {
+        return originalKeyMap.containsKey(customKey(key));
+    }
+
+    @Override
+    public V remove(final Object key) {
+        final K lowerKey = customKey(key);
+        final K originalKey = originalKeyMap.remove(lowerKey);
+        return getRaw().remove(null != originalKey ? originalKey : lowerKey);
+    }
+
+    @Override
+    public boolean remove(final Object key, final Object value) {
+        return getRaw().remove(resolveKey(key), value);
+    }
+
+    @Override
+    public boolean replace(final K key, final V oldValue, final V newValue) {
+        return getRaw().replace(resolveKey(key), oldValue, newValue);
+    }
+
+    @Override
+    public V replace(final K key, final V value) {
+        return getRaw().replace(resolveKey(key), value);
+    }
+
+    @Override
+    public V putIfAbsent(final K key, final V value) {
+        final K lowerKey = customKey(key);
+        K originalKey = originalKeyMap.get(lowerKey);
+        if (null == originalKey) {
+            originalKey = key;
+            originalKeyMap.put(lowerKey, key);
+        }
+        return getRaw().putIfAbsent(originalKey, value);
+    }
+
+    @Override
+    public void clear() {
+        originalKeyMap.clear();
+        getRaw().clear();
     }
 }
