@@ -40,27 +40,25 @@ public final class TypeUtil {
      * @return 原始类，如果无法获取原始类，返回 {@code null}
      */
     public static Class<?> getClass(final Type type) {
-        if (null != type) {
-            if (type instanceof Class) {
-                return (Class<?>) type;
-            } else if (type instanceof ParameterizedType) {
-                return (Class<?>) ((ParameterizedType) type).getRawType();
-            } else if (type instanceof GenericArrayType) {
-                final Type componentType = ((GenericArrayType) type).getGenericComponentType();
-                final Class<?> componentClass = getClass(componentType);
-                if (componentClass != null) {
-                    return Array.newInstance(componentClass, 0).getClass();
-                }
-            } else if (type instanceof TypeVariable) {
-                final Type[] bounds = ((TypeVariable<?>) type).getBounds();
-                if (bounds.length == 1) {
-                    return getClass(bounds[0]);
-                }
-            } else if (type instanceof WildcardType) {
-                final Type[] upperBounds = ((WildcardType) type).getUpperBounds();
-                if (upperBounds.length == 1) {
-                    return getClass(upperBounds[0]);
-                }
+        if (type instanceof Class) {
+            return (Class<?>) type;
+        } else if (type instanceof ParameterizedType) {
+            return (Class<?>) ((ParameterizedType) type).getRawType();
+        } else if (type instanceof GenericArrayType) {
+            final Type componentType = ((GenericArrayType) type).getGenericComponentType();
+            final Class<?> componentClass = getClass(componentType);
+            if (componentClass != null) {
+                return Array.newInstance(componentClass, 0).getClass();
+            }
+        } else if (type instanceof TypeVariable) {
+            final Type[] bounds = ((TypeVariable<?>) type).getBounds();
+            if (bounds.length == 1) {
+                return getClass(bounds[0]);
+            }
+        } else if (type instanceof WildcardType) {
+            final Type[] upperBounds = ((WildcardType) type).getUpperBounds();
+            if (upperBounds.length == 1) {
+                return getClass(upperBounds[0]);
             }
         }
         return null;
@@ -85,10 +83,10 @@ public final class TypeUtil {
      */
     public static Type getTypeArgument(final Type type, final int index) {
         final Type[] typeArguments = getTypeArguments(type);
-        if (null != typeArguments && typeArguments.length > index) {
-            return typeArguments[index];
+        if (null == typeArguments || typeArguments.length <= index) {
+            return null;
         }
-        return null;
+        return typeArguments[index];
     }
 
     /**
@@ -158,9 +156,10 @@ public final class TypeUtil {
         if (ArrayUtil.isNotEmpty(genericInterfaces)) {
             for (final Type genericInterface : genericInterfaces) {
                 final ParameterizedType parameterizedType = toParameterizedType(genericInterface);
-                if (null != parameterizedType) {
-                    result.add(parameterizedType);
+                if (null == parameterizedType) {
+                    continue;
                 }
+                result.add(parameterizedType);
             }
         }
         return result.toArray(new ParameterizedType[0]);
@@ -188,7 +187,8 @@ public final class TypeUtil {
             if (type instanceof TypeVariable) {
                 return true;
             }
-        } return false;
+        }
+        return false;
     }
 
     /**
@@ -275,10 +275,10 @@ public final class TypeUtil {
      */
     public static Type getParamType(final Method method, final int index) {
         final Type[] types = getParamTypes(method);
-        if (null != types && types.length > index) {
-            return types[index];
+        if (null == types || types.length <= index) {
+            return null;
         }
-        return null;
+        return types[index];
     }
 
     /**
@@ -291,10 +291,10 @@ public final class TypeUtil {
      */
     public static Class<?> getParamClass(final Method method, final int index) {
         final Class<?>[] classes = getParamClasses(method);
-        if (null != classes && classes.length > index) {
-            return classes[index];
+        if (null == classes || classes.length <= index) {
+            return null;
         }
-        return null;
+        return classes[index];
     }
 
     /**
