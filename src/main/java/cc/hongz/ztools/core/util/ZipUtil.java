@@ -111,7 +111,7 @@ public final class ZipUtil {
         if (out instanceof ZipOutputStream) {
             return (ZipOutputStream) out;
         }
-         return new ZipOutputStream(out, charset);
+        return new ZipOutputStream(out, charset);
     }
 
     /**
@@ -127,7 +127,7 @@ public final class ZipUtil {
         try (FileSystem zipFileSystem = FileSystemUtil.createZip(zipPath.toString())) {
             if (Files.isDirectory(appendFilePath)) {
                 final Path source = ObjectUtil.defaultIfNull(appendFilePath.getParent(), appendFilePath);
-                 Files.walkFileTree(appendFilePath, new ZipCopyVisitor(source, zipFileSystem, options));
+                Files.walkFileTree(appendFilePath, new ZipCopyVisitor(source, zipFileSystem, options));
             } else {
                 Files.copy(appendFilePath, zipFileSystem.getPath(PathUtil.getName(appendFilePath)), options);
             }
@@ -184,7 +184,8 @@ public final class ZipUtil {
      */
     public static File zip(final File srcFile, final Charset charset) throws UtilException {
         final File zipFile = FileUtil.file(srcFile.getParentFile(), FileUtil.mainName(srcFile) + ".zip");
-        zip(zipFile, charset, false, srcFile); return zipFile;
+        zip(zipFile, charset, false, srcFile);
+        return zipFile;
     }
 
     /**
@@ -224,8 +225,10 @@ public final class ZipUtil {
      */
     public static File zip(final String srcPath, final String zipPath, final Charset charset,
             final boolean withSrcDir) throws UtilException {
-        final File srcFile = FileUtil.file(srcPath); final File zipFile = FileUtil.file(zipPath);
-        zip(zipFile, charset, withSrcDir, srcFile); return zipFile;
+        final File srcFile = FileUtil.file(srcPath);
+        final File zipFile = FileUtil.file(zipPath);
+        zip(zipFile, charset, withSrcDir, srcFile);
+        return zipFile;
     }
 
     /**
@@ -269,7 +272,8 @@ public final class ZipUtil {
      */
     public static File zip(final File zipFile, final Charset charset, final boolean withSrcDir,
             final FileFilter filter, final File... srcFiles) throws IORuntimeException {
-        validateFiles(zipFile, srcFiles); ZipWriter.of(zipFile, charset).add(withSrcDir, filter, srcFiles).close();
+        validateFiles(zipFile, srcFiles);
+        ZipWriter.of(zipFile, charset).add(withSrcDir, filter, srcFiles).close();
         return zipFile;
     }
 
@@ -391,7 +395,7 @@ public final class ZipUtil {
         try (ZipWriter zipWriter = ZipWriter.of(zipFile, charset)) {
             zipWriter.add(paths, ins);
         }
-         return zipFile;
+        return zipFile;
     }
 
     /**
@@ -431,7 +435,8 @@ public final class ZipUtil {
      */
     public static File zip(final File zipFile, final Charset charset,
             final Resource... resources) throws UtilException {
-        ZipWriter.of(zipFile, charset).add(resources).close(); return zipFile;
+        ZipWriter.of(zipFile, charset).add(resources).close();
+        return zipFile;
     }
 
     // ------------------------------------------------------------------- Unzip
@@ -558,19 +563,21 @@ public final class ZipUtil {
         if (outFile.exists() && outFile.isFile()) {
             throw new IllegalArgumentException(StrUtil.format("Target path [{}] exist!", outFile.getAbsolutePath()));
         }
-         if (limit > 0) {
-            final Enumeration<? extends ZipEntry> zipEntries = zipFile.entries(); long zipFileSize = 0L;
+        if (limit > 0) {
+            final Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+            long zipFileSize = 0L;
             while (zipEntries.hasMoreElements()) {
-                final ZipEntry zipEntry = zipEntries.nextElement(); zipFileSize += zipEntry.getSize();
+                final ZipEntry zipEntry = zipEntries.nextElement();
+                zipFileSize += zipEntry.getSize();
                 if (zipFileSize > limit) {
                     throw new IllegalArgumentException("The file size exceeds the limit");
                 }
             }
         }
-         try (ZipReader reader = new ZipReader(zipFile)) {
+        try (ZipReader reader = new ZipReader(zipFile)) {
             reader.readTo(outFile);
         }
-         return outFile;
+        return outFile;
     }
 
     /**
@@ -638,7 +645,7 @@ public final class ZipUtil {
         try (ZipReader reader = new ZipReader(zipStream)) {
             reader.readTo(outFile);
         }
-         return outFile;
+        return outFile;
     }
 
     /**
@@ -734,8 +741,10 @@ public final class ZipUtil {
      * @throws UtilException IO异常时抛出
      */
     public static byte[] gzip(final File file) throws UtilException {
-        InputStream in = null; try {
-            in = FileUtil.getInputStream(file); return gzip(in, (int) file.length());
+        InputStream in = null;
+        try {
+            in = FileUtil.getInputStream(file);
+            return gzip(in, (int) file.length());
         } finally {
             IoUtil.close(in);
         }
@@ -761,7 +770,8 @@ public final class ZipUtil {
      * @throws UtilException IO异常时抛出
      */
     public static byte[] gzip(final InputStream in, final int length) throws UtilException {
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream(length); Gzip.of(in, bos).gzip().close();
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
+        Gzip.of(in, bos).gzip().close();
         return bos.toByteArray();
     }
 
@@ -808,7 +818,8 @@ public final class ZipUtil {
      * @throws UtilException IO异常时抛出
      */
     public static byte[] unGzip(final InputStream in, final int length) throws UtilException {
-        FastByteArrayOutputStream bos = new FastByteArrayOutputStream(length); Gzip.of(in, bos).unGzip().close();
+        FastByteArrayOutputStream bos = new FastByteArrayOutputStream(length);
+        Gzip.of(in, bos).unGzip().close();
         return bos.toByteArray();
     }
 
@@ -834,8 +845,10 @@ public final class ZipUtil {
      * @return 压缩后的字节数组
      */
     public static byte[] zlib(final File file, final int level) {
-        InputStream in = null; try {
-            in = FileUtil.getInputStream(file); return zlib(in, level, (int) file.length());
+        InputStream in = null;
+        try {
+            in = FileUtil.getInputStream(file);
+            return zlib(in, level, (int) file.length());
         } finally {
             IoUtil.close(in);
         }
@@ -873,7 +886,8 @@ public final class ZipUtil {
      */
     public static byte[] zlib(final InputStream in, final int level, final int length) {
         final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
-        Deflate.of(in, out, false).deflater(level).close(); return out.toByteArray();
+        Deflate.of(in, out, false).deflater(level).close();
+        return out.toByteArray();
     }
 
     /**
@@ -916,7 +930,8 @@ public final class ZipUtil {
      */
     public static byte[] unZlib(final InputStream in, final int length) {
         final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
-        Deflate.of(in, out, false).inflater().close(); return out.toByteArray();
+        Deflate.of(in, out, false).inflater().close();
+        return out.toByteArray();
     }
 
     /**
@@ -960,19 +975,20 @@ public final class ZipUtil {
             throw new UtilException(StrUtil.format(
                     "Zip file [{}] must not be a directory !", zipFile.getAbsoluteFile()));
         }
-         for (File srcFile : srcFiles) {
+        for (File srcFile : srcFiles) {
             if (null == srcFile) {
                 continue;
             }
-             if (!srcFile.exists()) {
+            if (!srcFile.exists()) {
                 throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
             }
-             File parentFile; try {
+            File parentFile;
+            try {
                 parentFile = zipFile.getCanonicalFile().getParentFile();
             } catch (IOException e) {
                 parentFile = zipFile.getParentFile();
             }
-             if (srcFile.isDirectory() && FileUtil.isSub(srcFile, parentFile)) {
+            if (srcFile.isDirectory() && FileUtil.isSub(srcFile, parentFile)) {
                 throw new UtilException(StrUtil.format(
                         "Zip file path [{}] must not be the child directory of [{}] !",
                         zipFile.getPath(), srcFile.getPath()));
