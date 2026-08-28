@@ -16,7 +16,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Bean转换器，支持：
+ * Bean转换器，支持以下类型。
  * <pre>
  * Map =》 Bean
  * Bean =》 Bean
@@ -89,7 +89,8 @@ public class BeanConverter<T> extends AbstractConverter<T> {
             }
 
             // 限定被转换对象类型
-            return BeanCopier.create(value, ReflectUtil.newInstanceIfPossible(this.beanClass), this.beanType, this.copyOptions).copy();
+            return BeanCopier.create(value, ReflectUtil.newInstanceIfPossible(this.beanClass), this.beanType,
+                    this.copyOptions).copy();
         } else if (value instanceof byte[]) {
             // 尝试反序列化
             return ObjectUtil.deserialize((byte[]) value);
