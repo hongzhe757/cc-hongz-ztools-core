@@ -2,6 +2,7 @@ package cc.hongz.ztools.core.net.url;
 
 import cc.hongz.ztools.core.codec.PercentCodec;
 import cc.hongz.ztools.core.map.MapUtil;
+import cc.hongz.ztools.core.map.TableMap;
 import cc.hongz.ztools.core.net.FormUrlencoded;
 import cc.hongz.ztools.core.net.RFC3986;
 import cc.hongz.ztools.core.net.URLDecoder;
@@ -9,7 +10,6 @@ import cc.hongz.ztools.core.util.StrUtil;
 
 import java.nio.charset.Charset;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -23,7 +23,7 @@ public class UrlQuery {
     /**
      * 查询键值对映射.
      */
-    private final Map<CharSequence, CharSequence> query;
+    private final TableMap<CharSequence, CharSequence> query;
     /**
      * 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'.
      */
@@ -134,10 +134,10 @@ public class UrlQuery {
     public UrlQuery(final Map<? extends CharSequence, ?> queryMap,
             final boolean isFormUrlEncoded) {
         if (MapUtil.isNotEmpty(queryMap)) {
-            query = new LinkedHashMap<>(queryMap.size());
+            query = new TableMap<>(queryMap.size());
             addAll(queryMap);
         } else {
-            query = new LinkedHashMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
+            query = new TableMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
         }
         this.isFormUrlEncoded = isFormUrlEncoded;
     }
