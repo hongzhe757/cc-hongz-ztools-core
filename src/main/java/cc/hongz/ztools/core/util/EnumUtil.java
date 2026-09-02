@@ -469,6 +469,8 @@ public final class EnumUtil {
      *
      * @param enumClass 枚举类
      * @return 枚举类中的枚举值
+     * @author hongz (原作者：looly)
+     * @since 0.0.2
      */
     private static Enum<?>[] getEnums2(final Class<? extends Enum<?>> enumClass) {
         if (null == enumClass) {
@@ -478,11 +480,12 @@ public final class EnumUtil {
         // 递归调用导致 IllegalStateException: Recursive update 的问题
         // 使用 get + putIfAbsent 替代 computeIfAbsent，安全支持递归场景
         Enum<?>[] enums = CACHE.get(enumClass);
-        if (null == enums) {
-            enums = enumClass.getEnumConstants();
-            if (null != enums) {
-                CACHE.putIfAbsent(enumClass, enums);
-            }
+        if (null != enums) {
+            return enums;
+        }
+        enums = enumClass.getEnumConstants();
+        if (null != enums) {
+            CACHE.putIfAbsent(enumClass, enums);
         }
         return enums;
     }
