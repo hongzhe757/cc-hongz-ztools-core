@@ -7,7 +7,7 @@ import java.util.Random;
 /**
  * 原始类型数组工具类.
  *
- * @author looly
+ * @author looly (原作者)
  * @since 5.5.2
  */
 public class PrimitiveArrayUtil {
