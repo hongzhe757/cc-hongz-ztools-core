@@ -1501,15 +1501,18 @@ public final class NumberUtil {
      * @param stop  结束（包含）.
      * @param step  步进.
      * @return 整数列表.
+     * @author hongz (原作者：Looly)
+     * @since 0.0.2
      */
     public static int[] range(final int start, final int stop, final int step) {
         int actualStep = step;
+        if (start == stop) {
+            return new int[]{start};
+        }
         if (start < stop) {
             actualStep = Math.abs(actualStep);
-        } else if (start > stop) {
+        } else {
             actualStep = -Math.abs(actualStep);
-        } else { // start == end
-            return new int[]{start};
         }
 
         int size = Math.abs((stop - start) / actualStep) + 1;
@@ -1542,17 +1545,20 @@ public final class NumberUtil {
      * @param step   步进.
      * @param values 集合.
      * @return 集合.
+     * @author hongz (原作者：Looly)
+     * @since 0.0.2
      */
     public static Collection<Integer> appendRange(final int start, final int stop,
             final int step, final Collection<Integer> values) {
         int actualStep = step;
-        if (start < stop) {
-            actualStep = Math.abs(actualStep);
-        } else if (start > stop) {
-            actualStep = -Math.abs(actualStep);
-        } else { // start == end
+        if (start == stop) {
             values.add(start);
             return values;
+        }
+        if (start < stop) {
+            actualStep = Math.abs(actualStep);
+        } else {
+            actualStep = -Math.abs(actualStep);
         }
 
         for (int i = start; (actualStep > 0) ? i <= stop : i >= stop; i += actualStep) {
