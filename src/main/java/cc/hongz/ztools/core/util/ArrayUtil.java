@@ -65,15 +65,17 @@ public class ArrayUtil extends PrimitiveArrayUtil {
      *
      * @param array 数组
      * @return 是否为空
+     * @author hongz (原作者：Looly 原版本：4.6.9)
+     * @since 0.0.2
      */
     public static boolean isEmpty(final Object array) {
-        if (array != null) {
-            if (isArray(array)) {
-                return 0 == Array.getLength(array);
-            }
-            return false;
+        if (array == null) {
+            return true;
         }
-        return true;
+        if (isArray(array)) {
+            return 0 == Array.getLength(array);
+        }
+        return false;
     }
 
     // ---------------------------------------------------------------------- isNotEmpty
@@ -322,19 +324,20 @@ public class ArrayUtil extends PrimitiveArrayUtil {
      * @param index  位置，大于长度追加，否则替换
      * @param value  新值
      * @return 新数组或原有数组
+     * @author hongz (原作者：Looly 原版本：4.1.2)
+     * @since 0.0.2
      */
     public static <T> T[] setOrAppend(final T[] buffer, final int index, final T value) {
         if (index < buffer.length) {
             Array.set(buffer, index, value);
             return buffer;
-        } else {
-            if (ArrayUtil.isEmpty(buffer)) {
-                final T[] values = newArray(value.getClass(), 1);
-                values[0] = value;
-                return append(buffer, values);
-            }
-            return append(buffer, value);
         }
+        if (ArrayUtil.isEmpty(buffer)) {
+            final T[] values = newArray(value.getClass(), 1);
+            values[0] = value;
+            return append(buffer, values);
+        }
+        return append(buffer, value);
     }
 
     /**
@@ -824,13 +827,16 @@ public class ArrayUtil extends PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回 {@link #INDEX_NOT_FOUND}
+     * @author hongz (原作者：Looly 原版本：3.1.2)
+     * @since 0.0.2
      */
     public static int indexOfIgnoreCase(final CharSequence[] array, final CharSequence value) {
-        if (null != array) {
-            for (int i = 0; i < array.length; i++) {
-                if (StrUtil.equalsIgnoreCase(array[i], value)) {
-                    return i;
-                }
+        if (null == array) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (StrUtil.equalsIgnoreCase(array[i], value)) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -859,13 +865,16 @@ public class ArrayUtil extends PrimitiveArrayUtil {
      * @param value      被检查的元素
      * @param endInclude 查找方式为从后向前查找，查找的数组结束位置
      * @return 数组中指定元素所在位置，未找到返回 {@link #INDEX_NOT_FOUND}
+     * @author hongz (原作者：Looly 原版本：5.7.3)
+     * @since 0.0.2
      */
     public static <T> int lastIndexOf(final T[] array, final Object value, final int endInclude) {
-        if (isNotEmpty(array)) {
-            for (int i = endInclude; i >= 0; i--) {
-                if (ObjectUtil.equal(value, array[i])) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = endInclude; i >= 0; i--) {
+            if (ObjectUtil.equal(value, array[i])) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
