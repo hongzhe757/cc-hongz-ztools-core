@@ -314,16 +314,18 @@ public final class ReflectUtil {
      * @param obj    bean对象，如果是static字段，此处为类class
      * @param filter 字段过滤器，，{@code null}返回原集合
      * @return 字段值数组
-     * @since 5.8.23
+     * @author hongz (原作者：Looly 原版本：5.8.23)
+     * @since 0.0.2
      */
     public static Object[] getFieldsValue(final Object obj, final Filter<Field> filter) {
-        if (null != obj) {
-            final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass(), filter);
-            if (null != fields) {
-                return ArrayUtil.map(fields, Object.class, field -> getFieldValue(obj, field));
-            }
+        if (null == obj) {
+            return null;
         }
-        return null;
+        final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass(), filter);
+        if (null == fields) {
+            return null;
+        }
+        return ArrayUtil.map(fields, Object.class, field -> getFieldValue(obj, field));
     }
 
     /**
