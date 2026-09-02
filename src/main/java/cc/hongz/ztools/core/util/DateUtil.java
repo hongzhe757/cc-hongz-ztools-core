@@ -306,6 +306,8 @@ public final class DateUtil {
      * @param birthday      生日
      * @param dateToCompare 需要对比的日期
      * @return 年龄
+     * @author hongz (原作者：xiaoleilu)
+     * @since 0.0.2
      */
     public static int age(final Date birthday, final Date dateToCompare) {
         if (birthday == null) {
@@ -324,14 +326,8 @@ public final class DateUtil {
         final int dayBirth = cal.get(Calendar.DAY_OF_MONTH);
 
         int age = yearNow - yearBirth;
-        if (monthNow <= monthBirth) {
-            if (monthNow == monthBirth) {
-                if (dayNow <= dayBirth) {
-                    age--;
-                }
-            } else {
-                age--;
-            }
+        if (monthNow < monthBirth || (monthNow == monthBirth && dayNow <= dayBirth)) {
+            age--;
         }
         return age;
     }

@@ -136,16 +136,19 @@ public final class ClassLoaderUtil {
      * </pre>
      *
      * @return 类加载器
+     * @author hongz (原作者：Looly)
+     * @since 0.0.2
      */
     public static ClassLoader getClassLoader() {
         ClassLoader classLoader = getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = ClassLoaderUtil.class.getClassLoader();
-            if (null == classLoader) {
-                classLoader = getSystemClassLoader();
-            }
+        if (classLoader != null) {
+            return classLoader;
         }
-        return classLoader;
+        classLoader = ClassLoaderUtil.class.getClassLoader();
+        if (classLoader != null) {
+            return classLoader;
+        }
+        return getSystemClassLoader();
     }
 
     // ----------------------------------------------------------------------------------- loadClass
