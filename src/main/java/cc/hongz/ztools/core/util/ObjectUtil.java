@@ -575,15 +575,18 @@ public class ObjectUtil {
      * @param <T> 对象类型
      * @param obj 被克隆对象
      * @return 克隆后的对象
+     * @author hongz (原作者：Looly)
+     * @since 0.0.2
      */
     public static <T> T clone(final T obj) {
         T result = ArrayUtil.clone(obj);
-        if (null == result) {
-            if (obj instanceof Cloneable) {
-                result = ReflectUtil.invoke(obj, "clone");
-            } else {
-                result = cloneByStream(obj);
-            }
+        if (null != result) {
+            return result;
+        }
+        if (obj instanceof Cloneable) {
+            result = ReflectUtil.invoke(obj, "clone");
+        } else {
+            result = cloneByStream(obj);
         }
         return result;
     }
