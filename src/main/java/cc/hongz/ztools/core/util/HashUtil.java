@@ -328,6 +328,18 @@ public final class HashUtil {
     // ==================== zobrist 常量 ====================
 
     /**
+     * 位掩码 bit 0.
+     */
+    private static final int ZOBRIST_BIT_0 = 0x01;
+    /**
+     * 位掩码 bit 1.
+     */
+    private static final int ZOBRIST_BIT_1 = 0x02;
+    /**
+     * 位掩码 bit 2.
+     */
+    private static final int ZOBRIST_BIT_2 = 0x04;
+    /**
      * 位掩码 bit 3.
      */
     private static final int ZOBRIST_BIT_3 = 0x08;
@@ -339,6 +351,14 @@ public final class HashUtil {
      * 位掩码 bit 5.
      */
     private static final int ZOBRIST_BIT_5 = 0x20;
+    /**
+     * 位掩码 bit 6.
+     */
+    private static final int ZOBRIST_BIT_6 = 0x40;
+    /**
+     * 位掩码 bit 7.
+     */
+    private static final int ZOBRIST_BIT_7 = 0x80;
 
     private HashUtil() {
     }
@@ -414,18 +434,20 @@ public final class HashUtil {
      * @param mask 掩码
      * @param tab  tab
      * @return hash值
+     * @author hongz (原作者：Goodzzp, Looly)
+     * @since 0.0.2
      */
     public static int universal(final char[] key, final int mask, final int[] tab) {
         int hash = key.length, i, len = key.length;
         for (i = 0; i < (len << UNIVERSAL_BYTE_SHIFT); i += BITS_PER_BYTE) {
             char k = key[i >> UNIVERSAL_BYTE_SHIFT];
-            if ((k & 0x01) == 0) {
+            if ((k & ZOBRIST_BIT_0) == 0) {
                 hash ^= tab[i];
             }
-            if ((k & 0x02) == 0) {
+            if ((k & ZOBRIST_BIT_1) == 0) {
                 hash ^= tab[i + 1];
             }
-            if ((k & 0x04) == 0) {
+            if ((k & ZOBRIST_BIT_2) == 0) {
                 hash ^= tab[i + 2];
             }
             if ((k & ZOBRIST_BIT_3) == 0) {
@@ -437,10 +459,10 @@ public final class HashUtil {
             if ((k & ZOBRIST_BIT_5) == 0) {
                 hash ^= tab[i + 5];
             }
-            if ((k & 0x40) == 0) {
+            if ((k & ZOBRIST_BIT_6) == 0) {
                 hash ^= tab[i + 6];
             }
-            if ((k & 0x80) == 0) {
+            if ((k & ZOBRIST_BIT_7) == 0) {
                 hash ^= tab[i + 7];
             }
         }
