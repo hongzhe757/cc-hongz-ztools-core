@@ -107,23 +107,23 @@ public final class JNDIUtil {
      * @return 过滤后的环境参数
      */
     private static Map<String, String> validateEnvironment(final Map<String, String> environment) {
-        if (MapUtil.isNotEmpty(environment)) {
-            // 检查 PROVIDER_URL
-            String providerUrl = environment.get("java.naming.provider.url");
-            if (StrUtil.isNotBlank(providerUrl) && !isSafeProtocol(providerUrl)) {
-                throw new UtilException("JNDI protocol not allowed: " + providerUrl);
-            }
+        if (MapUtil.isEmpty(environment)) {
+            return environment;
+        }
 
-            // 检查 INITIAL_CONTEXT_FACTORY
-            String factory = environment.get("java.naming.factory.initial");
-            if (StrUtil.isNotBlank(factory)) {
-                // 只允许安全的工厂类
-                if (!factory.startsWith("com.sun.jndi.dns.") &&
-                    !factory.startsWith("com.sun.jndi.ldap.") &&
-                    !factory.startsWith("com.sun.jndi.rmi.")) {
-                    throw new UtilException("JNDI factory not allowed: " + factory);
-                }
-            }
+        // 检查 PROVIDER_URL
+        String providerUrl = environment.get("java.naming.provider.url");
+        if (StrUtil.isNotBlank(providerUrl) && !isSafeProtocol(providerUrl)) {
+            throw new UtilException("JNDI protocol not allowed: " + providerUrl);
+        }
+
+        // 检查 INITIAL_CONTEXT_FACTORY
+        String factory = environment.get("java.naming.factory.initial");
+        if (StrUtil.isNotBlank(factory) &&
+            !factory.startsWith("com.sun.jndi.dns.") &&
+            !factory.startsWith("com.sun.jndi.ldap.") &&
+            !factory.startsWith("com.sun.jndi.rmi.")) {
+            throw new UtilException("JNDI factory not allowed: " + factory);
         }
 
         return environment;

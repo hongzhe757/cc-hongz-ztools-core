@@ -94,13 +94,14 @@ public final class JdkUtil {
 
         try {
             String javaSpecVer = System.getProperty("java.specification.version");
-            if (StrUtil.isNotBlank(javaSpecVer)) {
-                if (javaSpecVer.startsWith("1.")) {
-                    javaSpecVer = javaSpecVer.substring(2);
-                }
-                if (javaSpecVer.indexOf('.') == -1) {
-                    jvmVersion = Integer.parseInt(javaSpecVer);
-                }
+            if (StrUtil.isBlank(javaSpecVer)) {
+                return jvmVersion;
+            }
+            if (javaSpecVer.startsWith("1.")) {
+                javaSpecVer = javaSpecVer.substring(2);
+            }
+            if (javaSpecVer.indexOf('.') == -1) {
+                jvmVersion = Integer.parseInt(javaSpecVer);
             }
         } catch (Throwable ignore) {
             // 默认JDK8
