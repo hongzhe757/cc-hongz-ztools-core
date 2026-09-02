@@ -565,14 +565,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int indexOf(final long[] array, final long value) {
-        if (isNotEmpty(array)) {
-            for (int i = 0; i < array.length; i++) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -584,14 +587,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int lastIndexOf(final long[] array, final long value) {
-        if (isNotEmpty(array)) {
-            for (int i = array.length - 1; i >= 0; i--) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -615,14 +621,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int indexOf(final int[] array, final int value) {
-        if (isNotEmpty(array)) {
-            for (int i = 0; i < array.length; i++) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -634,14 +643,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int lastIndexOf(final int[] array, final int value) {
-        if (isNotEmpty(array)) {
-            for (int i = array.length - 1; i >= 0; i--) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -665,14 +677,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int indexOf(final short[] array, final short value) {
-        if (isNotEmpty(array)) {
-            for (int i = 0; i < array.length; i++) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -684,14 +699,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int lastIndexOf(final short[] array, final short value) {
-        if (isNotEmpty(array)) {
-            for (int i = array.length - 1; i >= 0; i--) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -715,14 +733,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int indexOf(final char[] array, final char value) {
-        if (isNotEmpty(array)) {
-            for (int i = 0; i < array.length; i++) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -734,14 +755,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int lastIndexOf(final char[] array, final char value) {
-        if (isNotEmpty(array)) {
-            for (int i = array.length - 1; i >= 0; i--) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -765,14 +789,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int indexOf(final byte[] array, final byte value) {
-        if (isNotEmpty(array)) {
-            for (int i = 0; i < array.length; i++) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -784,14 +811,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int lastIndexOf(final byte[] array, final byte value) {
-        if (isNotEmpty(array)) {
-            for (int i = array.length - 1; i >= 0; i--) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -815,14 +845,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int indexOf(final double[] array, final double value) {
-        if (isNotEmpty(array)) {
-            for (int i = 0; i < array.length; i++) {
-                if (NumberUtil.equals(value, array[i])) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (NumberUtil.equals(value, array[i])) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -834,14 +867,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int lastIndexOf(final double[] array, final double value) {
-        if (isNotEmpty(array)) {
-            for (int i = array.length - 1; i >= 0; i--) {
-                if (NumberUtil.equals(value, array[i])) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (NumberUtil.equals(value, array[i])) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -865,14 +901,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int indexOf(final float[] array, final float value) {
-        if (isNotEmpty(array)) {
-            for (int i = 0; i < array.length; i++) {
-                if (NumberUtil.equals(value, array[i])) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (NumberUtil.equals(value, array[i])) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -884,14 +923,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int lastIndexOf(final float[] array, final float value) {
-        if (isNotEmpty(array)) {
-            for (int i = array.length - 1; i >= 0; i--) {
-                if (NumberUtil.equals(value, array[i])) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (NumberUtil.equals(value, array[i])) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -915,14 +957,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int indexOf(final boolean[] array, final boolean value) {
-        if (isNotEmpty(array)) {
-            for (int i = 0; i < array.length; i++) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
@@ -934,14 +979,17 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     * @author hongz
      * @since 3.0.7
+     * @since 0.0.2
      */
     public static int lastIndexOf(final boolean[] array, final boolean value) {
-        if (isNotEmpty(array)) {
-            for (int i = array.length - 1; i >= 0; i--) {
-                if (value == array[i]) {
-                    return i;
-                }
+        if (isEmpty(array)) {
+            return INDEX_NOT_FOUND;
+        }
+        for (int i = array.length - 1; i >= 0; i--) {
+            if (value == array[i]) {
+                return i;
             }
         }
         return INDEX_NOT_FOUND;
