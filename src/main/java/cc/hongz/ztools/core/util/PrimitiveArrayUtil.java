@@ -565,9 +565,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int indexOf(final long[] array, final long value) {
         if (isEmpty(array)) {
@@ -587,9 +586,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int lastIndexOf(final long[] array, final long value) {
         if (isEmpty(array)) {
@@ -621,9 +619,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int indexOf(final int[] array, final int value) {
         if (isEmpty(array)) {
@@ -643,9 +640,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int lastIndexOf(final int[] array, final int value) {
         if (isEmpty(array)) {
@@ -677,9 +673,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int indexOf(final short[] array, final short value) {
         if (isEmpty(array)) {
@@ -699,9 +694,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int lastIndexOf(final short[] array, final short value) {
         if (isEmpty(array)) {
@@ -733,9 +727,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int indexOf(final char[] array, final char value) {
         if (isEmpty(array)) {
@@ -755,9 +748,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int lastIndexOf(final char[] array, final char value) {
         if (isEmpty(array)) {
@@ -789,9 +781,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int indexOf(final byte[] array, final byte value) {
         if (isEmpty(array)) {
@@ -811,9 +802,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int lastIndexOf(final byte[] array, final byte value) {
         if (isEmpty(array)) {
@@ -845,9 +835,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int indexOf(final double[] array, final double value) {
         if (isEmpty(array)) {
@@ -867,9 +856,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int lastIndexOf(final double[] array, final double value) {
         if (isEmpty(array)) {
@@ -901,9 +889,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int indexOf(final float[] array, final float value) {
         if (isEmpty(array)) {
@@ -923,9 +910,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int lastIndexOf(final float[] array, final float value) {
         if (isEmpty(array)) {
@@ -957,9 +943,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int indexOf(final boolean[] array, final boolean value) {
         if (isEmpty(array)) {
@@ -979,9 +964,8 @@ public class PrimitiveArrayUtil {
      * @param array 数组
      * @param value 被检查的元素
      * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
-     * @author hongz
+     * @author hongz (重构 0.0.2)
      * @since 3.0.7
-     * @since 0.0.2
      */
     public static int lastIndexOf(final boolean[] array, final boolean value) {
         if (isEmpty(array)) {
