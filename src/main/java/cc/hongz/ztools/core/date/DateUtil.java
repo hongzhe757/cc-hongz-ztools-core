@@ -155,7 +155,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 当前时间，转换为{@link DateTime}对象.
+     * 当前时间，转换为 {@link DateTime} 对象.
      *
      * @return 当前时间
      */
@@ -164,7 +164,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 当前时间，转换为{@link DateTime}对象，忽略毫秒部分.
+     * 当前时间，转换为 {@link DateTime} 对象，忽略毫秒部分.
      *
      * @return 当前时间
      * @since 4.6.2
@@ -1127,7 +1127,7 @@ public final class DateUtil extends CalendarUtil {
     }
 
     /**
-     * 将日期字符串转换为{@link DateTime}对象，格式：.。 <br>
+     * 将日期字符串转换为 {@link DateTime} 对象，格式：.。 <br>
      * <ol>
      * <li>yyyy-MM-dd HH:mm:ss</li>
      * <li>yyyy/MM/dd HH:mm:ss</li>

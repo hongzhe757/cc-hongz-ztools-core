@@ -120,12 +120,12 @@ public final class CharUtil {
     public static final char COMMA = ',';
 
     /**
-     * 花括号（左） {@code '{'}.
+     * 花括号（左） '{'.
      */
     public static final char DELIM_START = '{';
 
     /**
-     * 花括号（右） {@code '}'}.
+     * 花括号（右） '}'.
      */
     public static final char DELIM_END = '}';
 

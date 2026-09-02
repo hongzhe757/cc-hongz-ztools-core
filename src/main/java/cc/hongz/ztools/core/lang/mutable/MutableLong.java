@@ -4,6 +4,7 @@ package cc.hongz.ztools.core.lang.mutable;
  * 可变 {@code long} 类型.
  *
  * @see Long
+ * @author looly (原作者)
  * @since 3.0.1
  */
 public class MutableLong extends Number implements Comparable<MutableLong>, Mutable<Number> {

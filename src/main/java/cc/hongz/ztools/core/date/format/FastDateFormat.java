@@ -27,6 +27,7 @@ import java.util.TimeZone;
  * </p>
  *
  * 感谢 Apache Commons Lang 3.5
+ * @author looly (原作者)
  * @since 2.16.2
  */
 public class FastDateFormat extends Format implements DateParser, DatePrinter {

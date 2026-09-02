@@ -41,6 +41,8 @@ import java.util.Set;
  * </pre>
  * <p>
  * 来自Apache Commons Lang改造.
+ *
+ * @author looly (原作者)
  */
 public class EqualsBuilder implements Builder<Boolean> {
     private static final long serialVersionUID = 1L;

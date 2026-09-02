@@ -4,6 +4,7 @@ package cc.hongz.ztools.core.lang.mutable;
  * 可变 {@code double} 类型.
  *
  * @see Double
+ * @author looly (原作者)
  * @since 3.0.1
  */
 public class MutableDouble extends Number implements Comparable<MutableDouble>, Mutable<Number> {

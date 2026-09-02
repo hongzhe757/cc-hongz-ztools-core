@@ -9,6 +9,7 @@ import java.util.Iterator;
  * 通过实现{@link #reset()}，重置此{@link Iterator}后可实现复用重新遍历。
  *
  * @param <E> 元素类型
+ * @author looly (原作者)
  * @since 5.8.0
  */
 public interface ResettableIter<E> extends Iterator<E> {

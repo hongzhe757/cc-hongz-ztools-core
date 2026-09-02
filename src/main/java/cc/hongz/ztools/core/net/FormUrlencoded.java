@@ -6,6 +6,7 @@ import cc.hongz.ztools.core.codec.PercentCodec;
  * application/x-www-form-urlencoded，遵循W3C HTML Form content types规范，
  * 如空格须转+，+须被编码.
  *
+ * @author looly (原作者)
  * @since 5.7.16
  */
 public final class FormUrlencoded {

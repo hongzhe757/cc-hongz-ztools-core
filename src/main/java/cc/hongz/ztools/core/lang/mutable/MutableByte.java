@@ -4,6 +4,7 @@ package cc.hongz.ztools.core.lang.mutable;
  * 可变 {@code byte} 类型.
  *
  * @see Byte
+ * @author looly (原作者)
  * @since 3.0.1
  */
 public class MutableByte extends Number implements Comparable<MutableByte>, Mutable<Number> {

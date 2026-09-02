@@ -8,6 +8,8 @@ import java.util.Objects;
  * 软引用对象，在GC报告内存不足时会被GC回收.
  *
  * @param <T> 键类型
+ *
+ * @author looly (原作者)
  */
 public class SoftObj<T> extends SoftReference<T> implements Ref<T> {
     /**

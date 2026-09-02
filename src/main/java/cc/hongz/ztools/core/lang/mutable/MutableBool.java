@@ -6,6 +6,7 @@ import java.io.Serializable;
  * 可变 {@code boolean} 类型.
  *
  * @see Boolean
+ * @author looly (原作者)
  * @since 3.0.1
  */
 public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, Serializable {

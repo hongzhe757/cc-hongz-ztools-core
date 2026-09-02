@@ -16,6 +16,8 @@ import java.util.Objects;
  * 树构建器.
  *
  * @param <E> ID类型
+ *
+ * @author looly (原作者)
  */
 public class TreeBuilder<E> implements Builder<Tree<E>> {
     private static final long serialVersionUID = 1L;

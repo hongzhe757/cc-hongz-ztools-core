@@ -226,7 +226,7 @@ public class Img implements Flushable, Serializable {
     /**
      * 设置图片的背景色。
      *
-     * @param backgroundColor{@link Color} 背景色
+     * @param backgroundColor {@link Color} 背景色
      * @return this
      */
     public Img setBackgroundColor(final Color newBackgroundColor) {

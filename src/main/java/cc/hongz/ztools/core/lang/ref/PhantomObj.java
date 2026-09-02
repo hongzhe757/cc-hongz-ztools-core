@@ -11,6 +11,8 @@ import java.util.Objects;
  * 此时对象未被真正回收，要等到{@link ReferenceQueue}被真正处理后才会被回收.
  *
  * @param <T> 键类型
+ *
+ * @author looly (原作者)
  */
 public class PhantomObj<T> extends PhantomReference<T> implements Ref<T> {
 

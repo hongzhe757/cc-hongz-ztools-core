@@ -11,6 +11,7 @@ import java.util.Map;
 /**
  * Bean属性拷贝到Map中的拷贝器.
  *
+ * @author looly (原作者)
  * @since 5.8.0
  */
 @SuppressWarnings("rawtypes")

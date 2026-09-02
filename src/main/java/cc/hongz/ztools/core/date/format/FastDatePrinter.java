@@ -19,6 +19,8 @@ import java.util.concurrent.ConcurrentMap;
  * 感谢 Apache Commons Lang 3.5
  *
  * @see FastDateParser
+ *
+ * @author looly (原作者)
  */
 @SuppressWarnings("checkstyle:MagicNumber")
 public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {

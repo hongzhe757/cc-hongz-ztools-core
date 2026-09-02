@@ -5,6 +5,7 @@ package cc.hongz.ztools.core.lang.generator;
  * 通过实现此接口可以自定义生成对象的策略.
  *
  * @param <T> 生成对象类型
+ * @author looly (原作者)
  * @since 5.4.3
  */
 public interface Generator<T> {

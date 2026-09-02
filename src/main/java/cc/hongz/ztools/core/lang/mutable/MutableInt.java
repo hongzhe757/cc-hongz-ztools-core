@@ -4,6 +4,7 @@ package cc.hongz.ztools.core.lang.mutable;
  * 可变 {@code int} 类型.
  *
  * @see Integer
+ * @author looly (原作者)
  * @since 3.0.1
  */
 public class MutableInt extends Number implements Comparable<MutableInt>, Mutable<Number> {

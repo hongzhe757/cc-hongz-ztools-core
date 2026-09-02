@@ -74,10 +74,10 @@ public class NumberConverter extends AbstractConverter<Number> {
         return convert(value, this.targetType, this::convertToStr);
     }
 
-    @Override
     /**
      * 转为字符串。
      */
+    @Override
     protected String convertToStr(final Object value) {
         final String result = StrUtil.trim(super.convertToStr(value));
         if (null != result && result.length() > 1) {

@@ -49,11 +49,11 @@ public interface CharPool {
      */
     char COMMA = ',';
     /**
-     * 字符常量：花括号（左） {@code '{'}.
+     * 字符常量：花括号（左） '{'.
      */
     char DELIM_START = '{';
     /**
-     * 字符常量：花括号（右） {@code '}'}.
+     * 字符常量：花括号（右） '}'.
      */
     char DELIM_END = '}';
     /**

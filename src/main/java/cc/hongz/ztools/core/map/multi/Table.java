@@ -18,6 +18,7 @@ import java.util.Set;
  * @param <R> 行键类型
  * @param <C> 列键类型
  * @param <V> 值类型
+ * @author looly (原作者)
  * @since 5.7.23
  */
 public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {

@@ -7,6 +7,7 @@ import cc.hongz.ztools.core.lang.Pair;
  *
  * @param <K> 键类型
  * @param <V> 值类型
+ * @author looly (原作者)
  * @since 5.7.16
  */
 public class MutablePair<K, V> extends Pair<K, V> implements Mutable<Pair<K, V>> {

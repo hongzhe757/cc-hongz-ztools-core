@@ -6,6 +6,8 @@ import java.util.Objects;
  * 强引用对象，不回收.
  *
  * @param <T> 键类型
+ *
+ * @author looly (原作者)
  */
 public class StrongObj<T> implements Ref<T> {
 

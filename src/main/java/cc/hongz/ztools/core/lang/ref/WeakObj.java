@@ -10,6 +10,8 @@ import java.util.Objects;
  * 弱引用对象，在GC时发现弱引用会回收其对象.
  *
  * @param <T> 键类型
+ *
+ * @author looly (原作者)
  */
 public class WeakObj<T> extends WeakReference<T> implements Ref<T> {
     /**

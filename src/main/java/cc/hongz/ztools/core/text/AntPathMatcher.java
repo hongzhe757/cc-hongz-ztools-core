@@ -51,9 +51,6 @@ public class AntPathMatcher {
     /**
      * Default path separator: "/".
      */
-    /**
-     * Default path separator: "/".
-     */
     public static final String DEFAULT_PATH_SEPARATOR = StrUtil.SLASH;
 
     /**

@@ -52,10 +52,10 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
         return PrimitiveConverter.convert(value, this.targetType, this::convertToStr);
     }
 
-    @Override
     /**
      * 转为字符串。
      */
+    @Override
     protected String convertToStr(final Object value) {
         return StrUtil.trim(super.convertToStr(value));
     }

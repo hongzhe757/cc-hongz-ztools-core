@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
  * 感谢 Apache Commons Lang 3.5
  *
  * @see FastDatePrinter
+ * @author looly (原作者)
  * @since 2.16.2
  */
 @SuppressWarnings("checkstyle:MagicNumber")

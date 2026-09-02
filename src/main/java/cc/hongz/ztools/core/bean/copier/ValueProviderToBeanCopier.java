@@ -12,6 +12,7 @@ import java.util.Map;
  * {@link ValueProvider}属性拷贝到Bean中的拷贝器.
  *
  * @param <T> 目标Bean类型
+ * @author looly (原作者)
  * @since 5.8.0
  */
 public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String>, T> {

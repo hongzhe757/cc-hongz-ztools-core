@@ -542,7 +542,7 @@ public class CollUtil {
      *
      * @param <T>        集合元素类型
      * @param collection 集合
-     * @return{@link Map}
+     * @return {@link Map}
      */
     public static <T> Map<T, Integer> countMap(final Iterable<T> collection) {
         return IterUtil.countMap(null == collection ? null : collection.iterator());
@@ -586,7 +586,7 @@ public class CollUtil {
      * 以 conjunction 为分隔符将集合转换为字符串。
      *
      * @param <T>         集合元素类型
-     * @param iterable{@link Iterable}
+     * @param iterable {@link Iterable}
      * @param conjunction 分隔符
      * @param func        集合元素转换器
      * @return 连接后的字符串
@@ -603,7 +603,7 @@ public class CollUtil {
      * 以 conjunction 为分隔符将集合转换为字符串。
      *
      * @param <T>         集合元素类型
-     * @param iterable{@link Iterable}
+     * @param iterable {@link Iterable}
      * @param conjunction 分隔符
      * @return 连接后的字符串
      */
@@ -618,7 +618,7 @@ public class CollUtil {
      * 以 conjunction 为分隔符将集合转换为字符串。
      *
      * @param <T>         集合元素类型
-     * @param iterable{@link Iterable}
+     * @param iterable {@link Iterable}
      * @param conjunction 分隔符
      * @param prefix      每个元素添加的前缀
      * @param suffix      每个元素添加的后缀
@@ -758,7 +758,7 @@ public class CollUtil {
      *
      * @param <T>      集合元素类型
      * @param isSorted 是否有序
-     * @param iter{@link Iterator}
+     * @param iter {@link Iterator}
      * @return HashSet对象
      */
     public static <T> HashSet<T> newHashSet(final boolean isSorted, final Iterator<T> iter) {
@@ -777,7 +777,7 @@ public class CollUtil {
      *
      * @param <T>         集合元素类型
      * @param isSorted    是否有序
-     * @param enumeration{@link Enumeration}
+     * @param enumeration {@link Enumeration}
      * @return HashSet对象
      */
     public static <T> HashSet<T> newHashSet(final boolean isSorted, final Enumeration<T> enumeration) {
@@ -932,7 +932,7 @@ public class CollUtil {
      *
      * @param <T>        集合元素类型
      * @param collection 集合
-     * @return{@link ArrayList}
+     * @return {@link ArrayList}
      */
     public static <T> ArrayList<T> distinct(final Collection<T> collection) {
         if (isEmpty(collection)) {
@@ -952,7 +952,7 @@ public class CollUtil {
      * @param collection      集合
      * @param uniqueGenerator 唯一键生成器
      * @param override        是否覆盖模式
-     * @return{@link ArrayList}
+     * @return {@link ArrayList}
      */
     public static <T, K> List<T> distinct(final Collection<T> collection, final Function<T, K> uniqueGenerator,
             final boolean override) {

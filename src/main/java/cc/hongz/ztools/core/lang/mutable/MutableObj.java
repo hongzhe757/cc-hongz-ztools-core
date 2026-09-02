@@ -8,6 +8,7 @@ import java.io.Serializable;
  * 可变 {@code Object}.
  *
  * @param <T> 可变的类型
+ * @author looly (原作者)
  * @since 3.0.1
  */
 public class MutableObj<T> implements Mutable<T>, Serializable {

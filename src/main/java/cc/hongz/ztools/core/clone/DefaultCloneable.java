@@ -6,6 +6,7 @@ import cc.hongz.ztools.core.util.ReflectUtil;
  * 克隆默认实现接口，用于实现返回指定泛型类型的克隆方法.
  *
  * @param <T> 泛型类型
+ * @author looly (原作者)
  * @since 5.7.17
  */
 public interface DefaultCloneable<T> extends java.lang.Cloneable {

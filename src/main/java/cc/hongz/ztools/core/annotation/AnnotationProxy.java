@@ -15,6 +15,7 @@ import java.util.Map;
  * 通过代理指定注解，可以自定义调用注解的方法逻辑，如支持{@link Alias} 注解
  *
  * @param <T> 注解类型
+ * @author looly (原作者)
  * @since 5.7.23
  */
 public class AnnotationProxy<T extends Annotation> implements Annotation, InvocationHandler, Serializable {
