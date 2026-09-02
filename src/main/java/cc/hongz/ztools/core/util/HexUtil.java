@@ -480,16 +480,15 @@ public final class HexUtil {
      * @return 去除前缀后的字符串
      */
     private static String removeHexPrefix(final String hexStr) {
-        if (StrUtil.length(hexStr) > SINGLE_HEX_LEN) {
-            final char c0 = hexStr.charAt(0);
-            switch (c0) {
-                case '0':
-                    if (hexStr.charAt(SINGLE_HEX_LEN) == 'x' || hexStr.charAt(SINGLE_HEX_LEN) == 'X') {
-                        return hexStr.substring(HEX_PREFIX_LEN);
-                    }
-                case '#':
-                    return hexStr.substring(SINGLE_HEX_LEN);
-            }
+        if (StrUtil.length(hexStr) <= SINGLE_HEX_LEN) {
+            return hexStr;
+        }
+        final char c0 = hexStr.charAt(0);
+        if ('0' == c0 && ('x' == hexStr.charAt(SINGLE_HEX_LEN) || 'X' == hexStr.charAt(SINGLE_HEX_LEN))) {
+            return hexStr.substring(HEX_PREFIX_LEN);
+        }
+        if ('0' == c0 || '#' == c0) {
+            return hexStr.substring(SINGLE_HEX_LEN);
         }
         return hexStr;
     }
