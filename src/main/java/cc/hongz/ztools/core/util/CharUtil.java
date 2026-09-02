@@ -499,17 +499,20 @@ public final class CharUtil {
      * @param c 被转换的字符
      * @return 转换后的字符
      * @see <a href="https://en.wikipedia.org/wiki/Enclosed_Alphanumerics">Enclosed Alphanumerics</a>
-     * @since 5.6.2
+     * @author hongz (原作者：looly 原版本：5.6.2)
+     * @since 0.0.2
      */
     public static char toCloseChar(final char c) {
-        int result = c; if (c >= '1' && c <= '9') {
-            result = '\u2460' + c - '1';
-        } else if (c >= 'A' && c <= 'Z') {
-            result = '\u24B6' + c - 'A';
-        } else if (c >= 'a' && c <= 'z') {
-            result = '\u24D0' + c - 'a';
+        if (c >= '1' && c <= '9') {
+            return (char) ('\u2460' + c - '1');
         }
-        return (char) result;
+        if (c >= 'A' && c <= 'Z') {
+            return (char) ('\u24B6' + c - 'A');
+        }
+        if (c >= 'a' && c <= 'z') {
+            return (char) ('\u24D0' + c - 'a');
+        }
+        return c;
     }
 
     /**
