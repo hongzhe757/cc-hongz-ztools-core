@@ -368,31 +368,33 @@ public final class ModifierUtil {
      *
      * @param field 被修改的field，不可以为空
      * @throws UtilException IllegalAccessException等异常包装
-     * @author dazer
-     * @since 5.8.8
+     * @author hongz (原作者：dazer 原版本：5.8.8)
+     * @since 0.0.2
      */
     public static void removeFinalModify(final Field field) {
-        if (field != null) {
-            if (hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
-                //将字段的访问权限设为true：即去除private修饰符的影响
-                if (false == field.isAccessible()) {
-                    field.setAccessible(true);
-                }
-                try {
-                    //去除final修饰符的影响，将字段设为可修改的
-                    final Field modifiersField = Field.class.getDeclaredField("modifiers");
-                    //Field 的 modifiers 是私有的
-                    modifiersField.setAccessible(true);
-                    //& ：位与运算符，按位与；
-                    //~ ：位非运算符，按位取反；
-                    modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-                } catch (final NoSuchFieldException | IllegalAccessException e) {
-                    //内部，工具类，基本不抛出异常
-                    final String msg = "IllegalAccess for "
-                            + field.getDeclaringClass() + "." + field.getName();
-                    throw new UtilException(e, msg);
-                }
-            }
+        if (field == null) {
+            return;
+        }
+        if (false == hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
+            return;
+        }
+        //将字段的访问权限设为true：即去除private修饰符的影响
+        if (false == field.isAccessible()) {
+            field.setAccessible(true);
+        }
+        try {
+            //去除final修饰符的影响，将字段设为可修改的
+            final Field modifiersField = Field.class.getDeclaredField("modifiers");
+            //Field 的 modifiers 是私有的
+            modifiersField.setAccessible(true);
+            //& ：位与运算符，按位与；
+            //~ ：位非运算符，按位取反；
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+        } catch (final NoSuchFieldException | IllegalAccessException e) {
+            //内部，工具类，基本不抛出异常
+            final String msg = "IllegalAccess for "
+                    + field.getDeclaringClass() + "." + field.getName();
+            throw new UtilException(e, msg);
         }
     }
 
