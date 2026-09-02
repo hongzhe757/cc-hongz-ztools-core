@@ -47,12 +47,14 @@ public final class StrUtil extends CharSequenceUtil implements StrPool {
      * @param obj 对象
      * @return 如果为字符串是否为空串
      * @see StrUtil#isBlank(CharSequence)
-     * @since 3.3.0
+     * @author hongz (原作者：looly 原版本：3.3.0)
+     * @since 0.0.2
      */
     public static boolean isBlankIfStr(final Object obj) {
         if (null == obj) {
             return true;
-        } else if (obj instanceof CharSequence) {
+        }
+        if (obj instanceof CharSequence) {
             return isBlank((CharSequence) obj);
         }
         return false;
@@ -78,12 +80,14 @@ public final class StrUtil extends CharSequenceUtil implements StrPool {
      *
      * @param obj 对象
      * @return 如果为字符串是否为空串
-     * @since 3.3.0
+     * @author hongz (原作者：looly 原版本：3.3.0)
+     * @since 0.0.2
      */
     public static boolean isEmptyIfStr(final Object obj) {
         if (null == obj) {
             return true;
-        } else if (obj instanceof CharSequence) {
+        }
+        if (obj instanceof CharSequence) {
             return 0 == ((CharSequence) obj).length();
         }
         return false;
@@ -95,17 +99,19 @@ public final class StrUtil extends CharSequenceUtil implements StrPool {
      * 给定字符串数组全部做去首尾空格.
      *
      * @param strs 字符串数组
+     * @author hongz (原作者：looly)
+     * @since 0.0.2
      */
     public static void trim(final String[] strs) {
         if (null == strs) {
             return;
         }
-        String str;
         for (int i = 0; i < strs.length; i++) {
-            str = strs[i];
-            if (null != str) {
-                strs[i] = trim(str);
+            final String str = strs[i];
+            if (null == str) {
+                continue;
             }
+            strs[i] = trim(str);
         }
     }
 
