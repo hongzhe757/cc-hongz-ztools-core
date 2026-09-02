@@ -260,7 +260,8 @@ public final class ReUtil {
      * @param pattern 匹配的正则
      * @param content 被匹配的内容
      * @return 命名捕获组，key为分组名，value为对应值
-     * @since 5.7.15
+     * @author hongz (原作者：xiaoleilu 原版本：5.7.15)
+     * @since 0.0.2
      */
     public static Map<String, String> getAllGroupNames(final Pattern pattern, final CharSequence content) {
         if (null == content || null == pattern) {
@@ -268,12 +269,13 @@ public final class ReUtil {
         }
         final Matcher m = pattern.matcher(content);
         final Map<String, String> result = MapUtil.newHashMap(m.groupCount());
-        if (m.find()) {
-            // 通过反射获取 namedGroups 方法
-            final Map<String, Integer> map = ReflectUtil.invoke(pattern, "namedGroups");
-            if (null != map) {
-                map.forEach((key, value) -> result.put(key, m.group(value)));
-            }
+        if (false == m.find()) {
+            return result;
+        }
+        // 通过反射获取 namedGroups 方法
+        final Map<String, Integer> map = ReflectUtil.invoke(pattern, "namedGroups");
+        if (null != map) {
+            map.forEach((key, value) -> result.put(key, m.group(value)));
         }
         return result;
     }
@@ -455,16 +457,17 @@ public final class ReUtil {
      * @param pattern 正则
      * @param str     被匹配的内容
      * @return 删除后剩余的内容
-     * @since 5.6.5
+     * @author hongz (原作者：xiaoleilu 原版本：5.6.5)
+     * @since 0.0.2
      */
     public static String delLast(final Pattern pattern, final CharSequence str) {
-        if (null != pattern && StrUtil.isNotEmpty(str)) {
-            final MatchResult matchResult = lastIndexOf(pattern, str);
-            if (null != matchResult) {
-                return StrUtil.subPre(str, matchResult.start()) + StrUtil.subSuf(str, matchResult.end());
-            }
+        if (null == pattern || StrUtil.isEmpty(str)) {
+            return StrUtil.str(str);
         }
-
+        final MatchResult matchResult = lastIndexOf(pattern, str);
+        if (null != matchResult) {
+            return StrUtil.subPre(str, matchResult.start()) + StrUtil.subSuf(str, matchResult.end());
+        }
         return StrUtil.str(str);
     }
 
