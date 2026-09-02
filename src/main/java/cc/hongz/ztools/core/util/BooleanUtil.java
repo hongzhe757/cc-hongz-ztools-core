@@ -163,16 +163,19 @@ public final class BooleanUtil {
      *
      * @param valueStr 字符串，可以为 {@code null}
      * @return {@link Boolean#TRUE}、{@link Boolean#FALSE} 或 {@code null}
-     * @since 5.8.1
+     * @author hongz (原作者：looly 原版本：5.8.1)
+     * @since 0.0.2
      */
     public static Boolean toBooleanObject(final String valueStr) {
-        if (StrUtil.isNotBlank(valueStr)) {
-            final String normalized = valueStr.trim().toLowerCase();
-            if (TRUE_SET.contains(normalized)) {
-                return Boolean.TRUE;
-            } else if (FALSE_SET.contains(normalized)) {
-                return Boolean.FALSE;
-            }
+        if (StrUtil.isBlank(valueStr)) {
+            return null;
+        }
+        final String normalized = valueStr.trim().toLowerCase();
+        if (TRUE_SET.contains(normalized)) {
+            return Boolean.TRUE;
+        }
+        if (FALSE_SET.contains(normalized)) {
+            return Boolean.FALSE;
         }
         return null;
     }
